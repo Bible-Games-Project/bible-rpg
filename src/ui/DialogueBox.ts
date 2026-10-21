@@ -147,6 +147,13 @@ export class DialogueBox {
     this.nextLine();
   }
 
+  /** Close at once (e.g. when leaving the game); resolves the pending show(). */
+  dismiss(): void {
+    if (!this.open) return;
+    this.queue = [];
+    this.close();
+  }
+
   private close(): void {
     cancelAnimationFrame(this.raf);
     this.open = false;

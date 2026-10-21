@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { audio, type Mood } from '../core/audio';
 import { input, type InputLayer } from '../core/input';
-import { t, tList, hasKey } from '../core/i18n';
+import { t, tRaw, interpolate } from '../core/i18n';
 import { settings } from '../core/settings';
 import { CHARACTERS, type PlayableId } from '../data/characters';
 import { ANIMALS } from '../data/animals';
@@ -55,12 +55,13 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private canSwitch = false;
   private following = false;
   private control = true;
+  /** an interaction is being handled (separate from cutscenes, which own `control`) */
+  private busy = false;
   private interactions: InteractSpec[] = [];
   private currentInteract: InteractSpec | null = null;
   private objectiveTarget: ObjectiveTarget = null;
   private marker!: Phaser.GameObjects.Sprite;
   private tint!: Phaser.GameObjects.Rectangle;
-  private timeOfDay: TimeOfDay = 'day';
   private glow!: Phaser.GameObjects.Image;
   private rays!: Phaser.GameObjects.Image;
   private godLit = false;
@@ -74,8 +75,6 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private runner!: MissionRunner;
   private stepTimer = 0;
   private followStuck = 0;
-  private serpentState: 'hidden' | 'tree' | 'ground' = 'hidden';
-  private lastPlayerPos = { x: 0, y: 0 };
 
   constructor() {
     super('eden');
@@ -135,7 +134,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
           return true;
         }
         if (a === 'interact') {
-          if (this.control && this.currentInteract) this.useInteract(this.currentInteract);
+          if (this.canAct() && this.currentInteract) void this.useInteract(this.currentInteract);
           return true;
         }
         if (a === 'switch') {
@@ -152,6 +151,11 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     // missions
     this.runner = new MissionRunner(this, data.mode);
     void this.runner.start();
+  }
+
+  /** Stop the mission scripts (before the scene is left). */
+  halt(): void {
+    this.runner?.stop();
   }
 
   private teardown(): void {
@@ -201,10 +205,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   }
 
   switchCharacter(): void {
-    if (!this.canSwitch || !this.control || !this.eve.visible || ui().dialogue.open) return;
+    if (!this.canSwitch || !this.canAct() || !this.eve.visible || ui().dialogue.open) return;
     this.setActive(this.active === 'adam' ? 'eve' : 'adam');
     audio.play('uiSelect');
-    this.runner.notify('switch');
   }
 
   private updateCharacterChip(): void {
@@ -216,10 +219,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   // --------------------------------------------------------------- dialogue
 
   say(id: string, params?: Record<string, string | number>): Promise<void> {
-    const key = `eden.dialogue.${id}`;
-    const raw = (hasKey(key) ? (tList(`${key}`) as unknown as string[]) : []) as unknown[];
-    // dialogue entries are objects {s, t, ref}; tList returns them untouched
-    const lines: Line[] = (raw as { s: string; t: string; ref?: string }[]).map((l) => ({
+    const raw = tRaw<{ s: string; t: string; ref?: string }[]>(`eden.dialogue.${id}`);
+    if (!Array.isArray(raw)) console.warn(`[dialogue] missing: ${id}`);
+    const lines: Line[] = (Array.isArray(raw) ? raw : []).map((l) => ({
       speaker: l.s,
       text: interpolate(l.t, params),
       ref: l.ref,
@@ -277,8 +279,13 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.interactions = [];
   }
 
+  /** The player may move and use things (no cutscene, no interaction in progress). */
+  private canAct(): boolean {
+    return this.control && !this.busy;
+  }
+
   private async useInteract(spec: InteractSpec): Promise<void> {
-    this.control = false;
+    this.busy = true;
     this.player().stop();
     const at = typeof spec.at === 'function' ? spec.at() : spec.at;
     this.player().face({ x: at[0], y: at[1] });
@@ -286,7 +293,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     try {
       await spec.onUse();
     } finally {
-      this.control = true;
+      this.busy = false;
     }
   }
 
@@ -374,6 +381,12 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     cam.startFollow(this.player().sprite, true, 0.12, 0.12, 0, 40);
   }
 
+  cameraSnap(): void {
+    const p = this.player();
+    this.cameras.main.centerOn(p.x, p.y - 40);
+    this.cameraFollow();
+  }
+
   fade(to: number, ms = 700, color = '#000'): Promise<void> {
     return ui().hud.fade(to, ms, color);
   }
@@ -384,7 +397,6 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   }
 
   setTime(time: TimeOfDay): void {
-    this.timeOfDay = time;
     const tt = TINTS[time];
     this.tweens.add({ targets: this.tint, fillAlpha: tt.alpha, duration: 1200 });
     this.tint.fillColor = tt.color;
@@ -533,8 +545,28 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     return this.animals.get(id);
   }
 
+  animalStay(id: string, on: boolean): void {
+    this.animals.freeze(id, on);
+  }
+
+  private sleepImage: Phaser.GameObjects.Image | null = null;
+
+  sleeping(on: boolean): void {
+    this.sleepImage?.destroy();
+    this.sleepImage = null;
+    if (!on) {
+      this.adam.setVisible(true);
+      return;
+    }
+    const a = MANIFEST.sprites['adam-sleeping'];
+    this.sleepImage = this.add
+      .image(this.adam.x, this.adam.y, 'adam-sleeping')
+      .setOrigin(a.anchorX / a.frameWidth, (a.anchorY + 1) / a.frameHeight)
+      .setDepth(this.adam.y);
+    this.adam.setVisible(false);
+  }
+
   serpentPose(pose: 'hidden' | 'tree' | 'ground'): void {
-    this.serpentState = pose;
     const s = this.serpent;
     if (pose === 'hidden') {
       s.setVisible(false);
@@ -542,9 +574,10 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     }
     s.sheet = pose === 'tree' ? 'serpent-tree' : 'serpent-ground';
     s.setVisible(true);
+    s.depthBias = 0;
     if (pose === 'tree') {
       s.setPosition(POINTS.serpentBranch[0], POINTS.serpentBranch[1]);
-      s.sprite.setDepth(this.treeAt('forbiddenTree')[1] + 1);
+      s.depthBias = this.treeAt('forbiddenTree')[1] - POINTS.serpentBranch[1] + 2;
     }
     s.refresh(true);
   }
@@ -689,7 +722,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   update(time: number, delta: number): void {
     const dt = delta / 1000;
     const p = this.player();
-    const canMove = this.control && !p.scripted && input.movementAllowed(this.layer) && !ui().dialogue.open;
+    const canMove = this.canAct() && !p.scripted && input.movementAllowed(this.layer) && !ui().dialogue.open;
     if (canMove) {
       const v = input.moveVector();
       const speed = CHARACTERS[this.active].speed;
@@ -715,36 +748,44 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     // river sound when near the water
     const rd = this.terrain.riverDistance(p.x, p.y);
     audio.setWaterLevel(1 - Math.min(1, Math.max(0, rd) / 380));
-    this.lastPlayerPos = { x: p.x, y: p.y };
   }
 
   private updateFollower(dt: number): void {
     const leader = this.player();
     const f = this.other();
-    if (!this.following || !f.visible || f.scripted || !this.control) {
+    if (!this.following || !f.visible || f.scripted || !this.canAct()) {
       if (!f.scripted) f.stop();
       return;
     }
-    const dx = leader.x - f.x;
-    const dy = leader.y - f.y;
-    const dist = Math.hypot(dx, dy);
+    const dist = Math.hypot(leader.x - f.x, leader.y - f.y);
     if (dist > 520) {
       // too far (e.g. after a scene change): reappear just behind the leader
       f.setPosition(leader.x - 30, leader.y + 12);
       this.followStuck = 0;
       return;
     }
-    if (dist > 64) {
-      const sp = CHARACTERS[f.id].speed * (dist > 160 ? 1.1 : 0.95);
+    // walk to a spot beside the leader (never on top of them)
+    const side = f.x < leader.x ? -1 : 1;
+    const tx = leader.x + side * 46;
+    const ty = leader.y + 6;
+    const dx = tx - f.x;
+    const dy = ty - f.y;
+    const gap = Math.hypot(dx, dy);
+    if (dist > 64 || gap > 30) {
+      const sp = CHARACTERS[f.id].speed * (dist > 160 ? 1.1 : gap < 60 ? 0.6 : 0.95);
       const before = { x: f.x, y: f.y };
-      f.move((dx / dist) * sp, (dy / dist) * sp);
+      f.move((dx / gap) * sp, (dy / gap) * sp);
       this.followStuck = Math.hypot(f.x - before.x, f.y - before.y) < 0.2 ? this.followStuck + dt : 0;
       if (this.followStuck > 1.2 && !this.cameras.main.worldView.contains(f.x, f.y)) {
-        f.setPosition(leader.x - 30, leader.y + 12);
+        f.setPosition(tx, ty);
         this.followStuck = 0;
       }
     } else {
       f.stop();
+      if (!leader.moving) {
+        const want: Facing = leader.facing === 'up' || leader.facing === 'down' ? leader.facing : leader.x < f.x ? 'left' : 'right';
+        if (f.facing !== want) f.face(want);
+      }
     }
   }
 
@@ -759,7 +800,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
 
   private updateInteractPrompt(): void {
     const p = this.player();
-    if (!this.control || ui().dialogue.open) {
+    if (!this.canAct() || ui().dialogue.open) {
       if (this.currentInteract) ui().hud.setPrompt(null);
       this.currentInteract = null;
       return;
@@ -799,7 +840,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private updateObjectiveIndicator(time: number): void {
     const pts = this.objectivePoints();
     const hud = ui().hud;
-    if (!pts.length || !this.control) {
+    if (!pts.length || !this.canAct()) {
       hud.setArrow(null);
       this.marker.setVisible(false);
       return;
@@ -842,11 +883,6 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     const k = Math.min(Math.abs(kx), Math.abs(ky));
     hud.setArrow(cx + Math.cos(ang) * k, cy + Math.sin(ang) * k, ang);
   }
-}
-
-function interpolate(s: string, params?: Record<string, string | number>): string {
-  if (!params) return s;
-  return s.replace(/\{(\w+)\}/g, (_, k: string) => (k in params ? String(params[k]) : `{${k}}`));
 }
 
 export const WORLD_TILE = TILE;

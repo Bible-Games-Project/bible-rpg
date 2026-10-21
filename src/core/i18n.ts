@@ -1,9 +1,10 @@
 import { settings } from './settings';
 
 /**
- * Localisation. Every user-facing string lives in src/i18n/<language>/*.json
- * (one file per namespace; the file name is the first key segment, e.g.
- * ui.json -> "ui.menu.play"). Gameplay code only ever uses keys.
+ * Localisation. Every user-facing string lives in src/i18n/<language>/*.json.
+ * ui.json holds the interface strings at the root (e.g. "menu.play"); every
+ * other file is a namespace named after the file (eden.json ->
+ * "eden.missions.m01.title"). Gameplay code only ever uses keys.
  *
  * To add a language: create src/i18n/<code>/ with the same files and add it
  * to LANGUAGES. Missing keys fall back to English.
@@ -19,7 +20,8 @@ export const LANGUAGES: LanguageInfo[] = [{ code: 'en', nativeName: 'English', d
 
 const FALLBACK = 'en';
 
-type Tree = { [k: string]: string | string[] | Tree };
+type Node = string | string[] | Tree | Node[] | { [k: string]: unknown };
+type Tree = { [k: string]: Node };
 
 const modules = import.meta.glob('../i18n/*/*.json', { eager: true, import: 'default' }) as Record<string, Tree>;
 
@@ -29,14 +31,17 @@ for (const [path, data] of Object.entries(modules)) {
   if (!m) continue;
   const [, lang, ns] = m;
   bundles[lang] ??= {};
-  bundles[lang][ns] = data;
+  // ui.json holds the interface strings at the root ("menu.play");
+  // every other file is a namespace ("eden.missions.m01.title")
+  if (ns === 'ui') Object.assign(bundles[lang], data);
+  else bundles[lang][ns] = data;
 }
 
-function lookup(lang: string, key: string): string | string[] | Tree | undefined {
-  let node: string | string[] | Tree | undefined = bundles[lang];
+function lookup(lang: string, key: string): Node | undefined {
+  let node: Node | undefined = bundles[lang];
   for (const part of key.split('.')) {
     if (node === undefined || typeof node === 'string' || Array.isArray(node)) return undefined;
-    node = node[part];
+    node = (node as Tree)[part];
   }
   return node;
 }
@@ -69,8 +74,16 @@ export function tList(key: string, params?: Record<string, string | number>): st
   let v = lookup(lang, key);
   if (!Array.isArray(v)) v = lookup(FALLBACK, key);
   if (!Array.isArray(v)) return typeof v === 'string' ? [interpolate(v, params)] : [];
-  return v.map((s) => interpolate(s, params));
+  return (v as unknown[]).filter((s): s is string => typeof s === 'string').map((s) => interpolate(s, params));
 }
+
+/** Raw structured entry (e.g. a list of dialogue objects), with fallback. */
+export function tRaw<T = unknown>(key: string): T | undefined {
+  const v = lookup(currentLanguage().code, key) ?? lookup(FALLBACK, key);
+  return v as T | undefined;
+}
+
+export { interpolate };
 
 export function hasKey(key: string): boolean {
   return lookup(currentLanguage().code, key) !== undefined || lookup(FALLBACK, key) !== undefined;

@@ -166,7 +166,7 @@ export class WorldObjects {
   }
 
   private inKeyZone(x: number, y: number, pad = 0): boolean {
-    const keep = ['plot', 'midst', 'rest', 'share', 'exit', 'godGrove'];
+    const keep = ['plot', 'midst', 'rest', 'share', 'exit', 'godGrove', 'gather'];
     return keep.some((k) => Math.hypot(x - ZONES[k].x, y - ZONES[k].y) < ZONES[k].r + pad);
   }
 

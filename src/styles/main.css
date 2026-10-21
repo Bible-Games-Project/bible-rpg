@@ -458,6 +458,7 @@ select:focus-visible {
 .page-header {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 12px;
 }
@@ -880,7 +881,7 @@ select:focus-visible {
   flex-direction: column;
   align-items: flex-start;
   pointer-events: auto;
-  z-index: 30;
+  z-index: 42; /* above the fader: scripture cards stay readable during night fades */
 }
 
 .dialogue .portrait-frame {
@@ -895,9 +896,22 @@ select:focus-visible {
 
 .dialogue .portrait-frame canvas {
   display: block;
+  width: calc(64px * 3 * var(--ui-scale));
+  height: calc(66px * 3 * var(--ui-scale));
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   background: linear-gradient(#26324a, #182032);
+}
+
+.dialogue .portrait-frame.divine canvas {
+  background: radial-gradient(circle at 50% 40%, #fff6d8 0%, #f3d98c 45%, #b98a3e 100%);
+}
+
+@media (max-height: 640px), (max-width: 560px) {
+  .dialogue .portrait-frame canvas {
+    width: calc(64px * 2 * var(--ui-scale));
+    height: calc(66px * 2 * var(--ui-scale));
+  }
 }
 
 .dialogue .box {
@@ -1220,4 +1234,51 @@ select:focus-visible {
 :root[data-reduce-motion='true'] * {
   animation-duration: 1ms !important;
   transition-duration: 1ms !important;
+}
+
+/* pause menu */
+.pause-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0 6px;
+}
+
+.pause-menu .hint {
+  font-size: var(--fs-s);
+  margin: 10px 0 0;
+}
+
+.chapter-card .next {
+  color: var(--gold);
+}
+
+@media (max-width: 560px) {
+  .page-header h1 {
+    font-size: var(--fs-l);
+  }
+
+  .page-header .spacer {
+    display: none;
+  }
+
+  .page-header .tabs {
+    width: 100%;
+  }
+
+  .page-header .tabs .btn {
+    flex: 1;
+  }
+}
+
+/* short screens (phones held sideways) */
+@media (max-height: 500px) {
+  :root {
+    --ui-scale: 0.8;
+  }
+}
+
+/* the dialogue box sits where the touch buttons are; tapping the box advances */
+.dialogue:not([hidden]) ~ .touch-controls {
+  visibility: hidden;
 }

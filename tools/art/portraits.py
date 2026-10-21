@@ -519,6 +519,8 @@ def build(out_dir: str) -> dict:
                 Image.fromarray(img).save(os.path.join(out_dir, fn), optimize=True)
                 entry[kind].append({'file': f'assets/portraits/{fn}', 'x': x, 'y': y, 'w': int(img.shape[1]), 'h': int(img.shape[0])})
         manifest[name] = entry
+    # browser tab icon: Adam's face at native resolution (no scaling)
+    Image.fromarray(adam[10:42, 16:48]).save(os.path.join(out_dir, '..', '..', 'favicon.png'), optimize=True)
     return manifest
 
 

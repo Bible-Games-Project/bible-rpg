@@ -68,6 +68,12 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
   let selected: string = initial === 'ot' ? 'eden' : chaptersOf('nt')[0].id;
   const mapInner = h('div', { class: 'story-map-inner' });
   const map = h('div', { class: 'story-map', tabindex: '-1' }, mapInner);
+  // shrink the route to fit short screens (e.g. a phone held sideways)
+  const fit = () => {
+    const avail = map.clientHeight - 4;
+    if (avail > 0) mapInner.style.setProperty('zoom', String(Math.max(0.45, Math.min(1, avail / MAP_HEIGHT))));
+  };
+  new ResizeObserver(fit).observe(map);
   const detail = h('div', { class: 'panel story-detail', 'aria-live': 'polite' });
   const otTab = h('button', { class: 'btn small', role: 'tab' }, t('map.oldTestament'));
   const ntTab = h('button', { class: 'btn small', role: 'tab' }, t('map.newTestament'));
@@ -183,7 +189,7 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
         'div',
         { class: 'info' },
         h('h2', {}, t(`stories.${c.id}.title`)),
-        h('p', {}, `${c.reference} · ${statusLabel(c, st) || t('map.start')}`),
+        h('p', {}, `${c.reference} · ${statusLabel(c, st) || t('map.available')}`),
         h('p', {}, t(`stories.${c.id}.summary`)),
         note ? h('p', { style: 'margin-top:6px;color:var(--sunset)' }, note) : null,
       ),

@@ -6,6 +6,8 @@ export interface UiBridge {
   hud: HUD;
   dialogue: DialogueBox;
   openPause(): void;
+  /** Title card shown when a chapter starts; resolves when dismissed. */
+  chapterIntro(): Promise<void>;
   chapterComplete(): void;
   exitToMenu(): void;
 }

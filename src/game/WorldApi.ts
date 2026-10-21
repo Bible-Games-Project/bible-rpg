@@ -55,6 +55,8 @@ export interface WorldApi {
   face(actor: Actor, target: Facing | Actor): void;
   cameraTo(at: Pt | Actor, ms?: number): Promise<void>;
   cameraFollow(): void;
+  /** Centre the camera on the player at once (no glide). */
+  cameraSnap(): void;
   fade(to: number, ms?: number, color?: string): Promise<void>;
   setOutfit(outfit: string): void;
   setTime(t: TimeOfDay): void;
@@ -82,6 +84,10 @@ export interface WorldApi {
   pickFruit(tree: string, index: number): void;
   treeAt(id: string): Pt;
   animal(id: string): Actor | undefined;
+  /** Keep an animal where a scene put it (true) or let it wander again. */
+  animalStay(id: string, on: boolean): void;
+  /** Adam lying asleep under the oak (Genesis 2:21). */
+  sleeping(on: boolean): void;
   serpentPose(pose: 'hidden' | 'tree' | 'ground'): void;
   thorns(on: boolean): void;
   openExit(open: boolean): void;

@@ -17,7 +17,7 @@ interface Brain {
 export class Animals {
   readonly brains: Brain[] = [];
 
-  constructor(private scene: Phaser.Scene, private terrain: Terrain) {
+  constructor(scene: Phaser.Scene, private terrain: Terrain) {
     for (const def of ANIMALS) {
       const sheet = `animal-${def.species}`;
       const a = MANIFEST.sprites[sheet];

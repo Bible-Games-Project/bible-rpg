@@ -175,8 +175,8 @@
     "m08_hide": [
       { "s": "narrator", "t": "Gameplay: hide among the ferns, bushes and trees until the time runs out. Stay out of the open." }
     ],
-    "m08_call": [
-      { "s": "god", "t": "Where are you?", "ref": "Genesis 3:9" },
+    "m08_call": [{ "s": "god", "t": "Where are you?", "ref": "Genesis 3:9" }],
+    "m08_answer": [
       { "s": "adam", "t": "I heard your voice in the garden, and I was afraid, because I was naked; and I hid myself.", "ref": "Genesis 3:10" },
       { "s": "god", "t": "Who told you that you were naked? Have you eaten from the tree of which I commanded you not to eat?", "ref": "Genesis 3:11" },
       { "s": "adam", "t": "The woman whom you gave to be with me — she gave me fruit of the tree, and I ate.", "ref": "Genesis 3:12" },

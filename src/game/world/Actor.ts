@@ -46,6 +46,8 @@ export class Actor {
   private lastAnim = '';
   /** offset the sprite vertically (e.g. a dove hopping or flying) */
   lift = 0;
+  /** added to the depth (e.g. the serpent drawn on a branch, in front of the canopy) */
+  depthBias = 0;
 
   constructor(scene: Phaser.Scene, o: ActorOptions) {
     this.scene = scene;
@@ -222,7 +224,7 @@ export class Actor {
     const x = Math.round(this.feet.x);
     const y = Math.round(this.feet.y);
     this.sprite.setPosition(x, y - this.lift);
-    this.sprite.setDepth(y);
+    this.sprite.setDepth(y + this.depthBias);
     this.shadow?.setPosition(x, y);
     this.emoteSprite?.setPosition(x, this.topY() - 6);
     if (this.heldSprite) this.heldSprite.setPosition(x + (this.facing === 'left' ? -10 : this.facing === 'right' ? 10 : 0), y - 52).setDepth(y + 1);
