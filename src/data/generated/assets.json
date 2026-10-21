@@ -722,6 +722,1241 @@
    "frames": 16,
    "anchorX": 36,
    "anchorY": 36
+  },
+  "grass-tuft-0": {
+   "file": "assets/props/grass-tuft-0.png",
+   "frameWidth": 18,
+   "frameHeight": 14,
+   "frames": 1,
+   "anchorX": 9,
+   "anchorY": 13
+  },
+  "grass-tuft-1": {
+   "file": "assets/props/grass-tuft-1.png",
+   "frameWidth": 18,
+   "frameHeight": 14,
+   "frames": 1,
+   "anchorX": 9,
+   "anchorY": 13
+  },
+  "grass-tuft-2": {
+   "file": "assets/props/grass-tuft-2.png",
+   "frameWidth": 18,
+   "frameHeight": 14,
+   "frames": 1,
+   "anchorX": 9,
+   "anchorY": 13
+  },
+  "flowers-white": {
+   "file": "assets/props/flowers-white.png",
+   "frameWidth": 22,
+   "frameHeight": 16,
+   "frames": 1,
+   "anchorX": 11,
+   "anchorY": 15
+  },
+  "flowers-yellow": {
+   "file": "assets/props/flowers-yellow.png",
+   "frameWidth": 22,
+   "frameHeight": 16,
+   "frames": 1,
+   "anchorX": 11,
+   "anchorY": 15
+  },
+  "flowers-red": {
+   "file": "assets/props/flowers-red.png",
+   "frameWidth": 22,
+   "frameHeight": 16,
+   "frames": 1,
+   "anchorX": 11,
+   "anchorY": 15
+  },
+  "flowers-blue": {
+   "file": "assets/props/flowers-blue.png",
+   "frameWidth": 22,
+   "frameHeight": 16,
+   "frames": 1,
+   "anchorX": 11,
+   "anchorY": 15
+  },
+  "flowers-pink": {
+   "file": "assets/props/flowers-pink.png",
+   "frameWidth": 22,
+   "frameHeight": 16,
+   "frames": 1,
+   "anchorX": 11,
+   "anchorY": 15
+  },
+  "flowers-purple": {
+   "file": "assets/props/flowers-purple.png",
+   "frameWidth": 22,
+   "frameHeight": 16,
+   "frames": 1,
+   "anchorX": 11,
+   "anchorY": 15
+  },
+  "fern-a": {
+   "file": "assets/props/fern-a.png",
+   "frameWidth": 44,
+   "frameHeight": 32,
+   "frames": 1,
+   "anchorX": 22,
+   "anchorY": 31
+  },
+  "fern-b": {
+   "file": "assets/props/fern-b.png",
+   "frameWidth": 56,
+   "frameHeight": 40,
+   "frames": 1,
+   "anchorX": 28,
+   "anchorY": 39
+  },
+  "reeds": {
+   "file": "assets/props/reeds.png",
+   "frameWidth": 26,
+   "frameHeight": 44,
+   "frames": 1,
+   "anchorX": 13,
+   "anchorY": 43
+  },
+  "lily-pad": {
+   "file": "assets/props/lily-pad.png",
+   "frameWidth": 22,
+   "frameHeight": 12,
+   "frames": 1,
+   "anchorX": 11,
+   "anchorY": 5
+  },
+  "mushrooms": {
+   "file": "assets/props/mushrooms.png",
+   "frameWidth": 16,
+   "frameHeight": 12,
+   "frames": 1,
+   "anchorX": 8,
+   "anchorY": 11
+  },
+  "grain-plant": {
+   "file": "assets/props/grain-plant.png",
+   "frameWidth": 34,
+   "frameHeight": 40,
+   "frames": 1,
+   "anchorX": 17,
+   "anchorY": 39
+  },
+  "thistle": {
+   "file": "assets/props/thistle.png",
+   "frameWidth": 30,
+   "frameHeight": 32,
+   "frames": 1,
+   "anchorX": 15,
+   "anchorY": 31
+  },
+  "thorns": {
+   "file": "assets/props/thorns.png",
+   "frameWidth": 40,
+   "frameHeight": 22,
+   "frames": 1,
+   "anchorX": 20,
+   "anchorY": 21
+  },
+  "rock-small": {
+   "file": "assets/props/rock-small.png",
+   "frameWidth": 20,
+   "frameHeight": 13,
+   "frames": 1,
+   "anchorX": 10,
+   "anchorY": 12
+  },
+  "rock-medium": {
+   "file": "assets/props/rock-medium.png",
+   "frameWidth": 40,
+   "frameHeight": 28,
+   "frames": 1,
+   "anchorX": 20,
+   "anchorY": 27
+  },
+  "rock-large": {
+   "file": "assets/props/rock-large.png",
+   "frameWidth": 70,
+   "frameHeight": 48,
+   "frames": 1,
+   "anchorX": 35,
+   "anchorY": 47
+  },
+  "rock-mossy": {
+   "file": "assets/props/rock-mossy.png",
+   "frameWidth": 54,
+   "frameHeight": 38,
+   "frames": 1,
+   "anchorX": 27,
+   "anchorY": 37
+  },
+  "stepping-stone": {
+   "file": "assets/props/stepping-stone.png",
+   "frameWidth": 30,
+   "frameHeight": 16,
+   "frames": 1,
+   "anchorX": 15,
+   "anchorY": 7
+  },
+  "log": {
+   "file": "assets/props/log.png",
+   "frameWidth": 84,
+   "frameHeight": 28,
+   "frames": 1,
+   "anchorX": 42,
+   "anchorY": 27
+  },
+  "flat-stone": {
+   "file": "assets/props/flat-stone.png",
+   "frameWidth": 46,
+   "frameHeight": 22,
+   "frames": 1,
+   "anchorX": 23,
+   "anchorY": 21
+  },
+  "soil-marked": {
+   "file": "assets/props/soil-marked.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 1,
+   "anchorX": 16,
+   "anchorY": 15
+  },
+  "soil-tilled": {
+   "file": "assets/props/soil-tilled.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 1,
+   "anchorX": 16,
+   "anchorY": 15
+  },
+  "soil-seeded": {
+   "file": "assets/props/soil-seeded.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 1,
+   "anchorX": 16,
+   "anchorY": 15
+  },
+  "soil-watered": {
+   "file": "assets/props/soil-watered.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 1,
+   "anchorX": 16,
+   "anchorY": 15
+  },
+  "plant-sprout": {
+   "file": "assets/props/plant-sprout.png",
+   "frameWidth": 32,
+   "frameHeight": 34,
+   "frames": 1,
+   "anchorX": 16,
+   "anchorY": 33
+  },
+  "plant-young": {
+   "file": "assets/props/plant-young.png",
+   "frameWidth": 32,
+   "frameHeight": 34,
+   "frames": 1,
+   "anchorX": 16,
+   "anchorY": 33
+  },
+  "plant-grown": {
+   "file": "assets/props/plant-grown.png",
+   "frameWidth": 32,
+   "frameHeight": 34,
+   "frames": 1,
+   "anchorX": 16,
+   "anchorY": 33
+  },
+  "digging-stick": {
+   "file": "assets/props/digging-stick.png",
+   "frameWidth": 40,
+   "frameHeight": 14,
+   "frames": 1,
+   "anchorX": 20,
+   "anchorY": 11
+  },
+  "gourd": {
+   "file": "assets/props/gourd.png",
+   "frameWidth": 16,
+   "frameHeight": 22,
+   "frames": 1,
+   "anchorX": 8,
+   "anchorY": 21
+  },
+  "gourd-full": {
+   "file": "assets/props/gourd-full.png",
+   "frameWidth": 16,
+   "frameHeight": 22,
+   "frames": 1,
+   "anchorX": 8,
+   "anchorY": 21
+  },
+  "basket": {
+   "file": "assets/props/basket.png",
+   "frameWidth": 26,
+   "frameHeight": 22,
+   "frames": 1,
+   "anchorX": 13,
+   "anchorY": 21
+  },
+  "basket-full": {
+   "file": "assets/props/basket-full.png",
+   "frameWidth": 26,
+   "frameHeight": 22,
+   "frames": 1,
+   "anchorX": 13,
+   "anchorY": 21
+  },
+  "fruit-fig": {
+   "file": "assets/props/fruit-fig.png",
+   "frameWidth": 10,
+   "frameHeight": 11,
+   "frames": 1,
+   "anchorX": 5,
+   "anchorY": 1
+  },
+  "fruit-pomegranate": {
+   "file": "assets/props/fruit-pomegranate.png",
+   "frameWidth": 12,
+   "frameHeight": 13,
+   "frames": 1,
+   "anchorX": 6,
+   "anchorY": 1
+  },
+  "fruit-dates": {
+   "file": "assets/props/fruit-dates.png",
+   "frameWidth": 12,
+   "frameHeight": 14,
+   "frames": 1,
+   "anchorX": 6,
+   "anchorY": 1
+  },
+  "fruit-grapes": {
+   "file": "assets/props/fruit-grapes.png",
+   "frameWidth": 12,
+   "frameHeight": 15,
+   "frames": 1,
+   "anchorX": 6,
+   "anchorY": 2
+  },
+  "fruit-forbidden": {
+   "file": "assets/props/fruit-forbidden.png",
+   "frameWidth": 12,
+   "frameHeight": 13,
+   "frames": 1,
+   "anchorX": 6,
+   "anchorY": 1
+  },
+  "fruit-life": {
+   "file": "assets/props/fruit-life.png",
+   "frameWidth": 11,
+   "frameHeight": 12,
+   "frames": 1,
+   "anchorX": 5,
+   "anchorY": 1
+  },
+  "fig-leaf": {
+   "file": "assets/props/fig-leaf.png",
+   "frameWidth": 18,
+   "frameHeight": 20,
+   "frames": 1,
+   "anchorX": 9,
+   "anchorY": 19
+  },
+  "seeds": {
+   "file": "assets/props/seeds.png",
+   "frameWidth": 18,
+   "frameHeight": 16,
+   "frames": 1,
+   "anchorX": 9,
+   "anchorY": 15
+  },
+  "water-drop": {
+   "file": "assets/props/water-drop.png",
+   "frameWidth": 16,
+   "frameHeight": 18,
+   "frames": 1,
+   "anchorX": 8,
+   "anchorY": 17
+  },
+  "fx-sparkle": {
+   "file": "assets/props/fx-sparkle.png",
+   "frameWidth": 11,
+   "frameHeight": 11,
+   "frames": 4,
+   "anchorX": 5,
+   "anchorY": 5
+  },
+  "fx-mist": {
+   "file": "assets/props/fx-mist.png",
+   "frameWidth": 48,
+   "frameHeight": 22,
+   "frames": 1,
+   "anchorX": 24,
+   "anchorY": 10
+  },
+  "fx-splash": {
+   "file": "assets/props/fx-splash.png",
+   "frameWidth": 22,
+   "frameHeight": 14,
+   "frames": 3,
+   "anchorX": 11,
+   "anchorY": 9
+  },
+  "fx-leaf": {
+   "file": "assets/props/fx-leaf.png",
+   "frameWidth": 7,
+   "frameHeight": 7,
+   "frames": 2,
+   "anchorX": 3,
+   "anchorY": 3
+  },
+  "fx-firefly": {
+   "file": "assets/props/fx-firefly.png",
+   "frameWidth": 9,
+   "frameHeight": 9,
+   "frames": 1,
+   "anchorX": 4,
+   "anchorY": 4
+  },
+  "shadow-small": {
+   "file": "assets/props/shadow-small.png",
+   "frameWidth": 26,
+   "frameHeight": 9,
+   "frames": 1,
+   "anchorX": 13,
+   "anchorY": 4
+  },
+  "shadow-medium": {
+   "file": "assets/props/shadow-medium.png",
+   "frameWidth": 46,
+   "frameHeight": 14,
+   "frames": 1,
+   "anchorX": 23,
+   "anchorY": 6
+  },
+  "shadow-large": {
+   "file": "assets/props/shadow-large.png",
+   "frameWidth": 90,
+   "frameHeight": 24,
+   "frames": 1,
+   "anchorX": 45,
+   "anchorY": 11
+  },
+  "god-glow": {
+   "file": "assets/props/god-glow.png",
+   "frameWidth": 176,
+   "frameHeight": 216,
+   "frames": 1,
+   "anchorX": 88,
+   "anchorY": 176
+  },
+  "god-rays": {
+   "file": "assets/props/god-rays.png",
+   "frameWidth": 220,
+   "frameHeight": 240,
+   "frames": 1,
+   "anchorX": 110,
+   "anchorY": 148
+  },
+  "emote-exclaim": {
+   "file": "assets/props/emote-exclaim.png",
+   "frameWidth": 18,
+   "frameHeight": 20,
+   "frames": 1,
+   "anchorX": 9,
+   "anchorY": 19
+  },
+  "emote-question": {
+   "file": "assets/props/emote-question.png",
+   "frameWidth": 18,
+   "frameHeight": 20,
+   "frames": 1,
+   "anchorX": 9,
+   "anchorY": 19
+  },
+  "emote-dots": {
+   "file": "assets/props/emote-dots.png",
+   "frameWidth": 18,
+   "frameHeight": 20,
+   "frames": 1,
+   "anchorX": 9,
+   "anchorY": 19
+  },
+  "emote-heart": {
+   "file": "assets/props/emote-heart.png",
+   "frameWidth": 18,
+   "frameHeight": 20,
+   "frames": 1,
+   "anchorX": 9,
+   "anchorY": 19
+  },
+  "emote-drop": {
+   "file": "assets/props/emote-drop.png",
+   "frameWidth": 18,
+   "frameHeight": 20,
+   "frames": 1,
+   "anchorX": 9,
+   "anchorY": 19
+  },
+  "marker": {
+   "file": "assets/props/marker.png",
+   "frameWidth": 18,
+   "frameHeight": 20,
+   "frames": 4,
+   "anchorX": 9,
+   "anchorY": 19
   }
+ },
+ "trees": {
+  "oak-large-a": {
+   "trunk": "assets/trees/oak-large-a-trunk.png",
+   "canopy": "assets/trees/oak-large-a-canopy.png",
+   "width": 224,
+   "height": 256,
+   "anchorX": 112,
+   "anchorY": 250,
+   "collider": [
+    96,
+    238,
+    32,
+    14
+   ],
+   "fruit": [],
+   "kind": "tree"
+  },
+  "oak-large-b": {
+   "trunk": "assets/trees/oak-large-b-trunk.png",
+   "canopy": "assets/trees/oak-large-b-canopy.png",
+   "width": 224,
+   "height": 256,
+   "anchorX": 112,
+   "anchorY": 250,
+   "collider": [
+    96,
+    238,
+    32,
+    14
+   ],
+   "fruit": [],
+   "kind": "tree"
+  },
+  "oak-medium-a": {
+   "trunk": "assets/trees/oak-medium-a-trunk.png",
+   "canopy": "assets/trees/oak-medium-a-canopy.png",
+   "width": 173,
+   "height": 198,
+   "anchorX": 86,
+   "anchorY": 192,
+   "collider": [
+    73,
+    180,
+    25,
+    14
+   ],
+   "fruit": [],
+   "kind": "tree"
+  },
+  "oak-medium-b": {
+   "trunk": "assets/trees/oak-medium-b-trunk.png",
+   "canopy": "assets/trees/oak-medium-b-canopy.png",
+   "width": 173,
+   "height": 198,
+   "anchorX": 86,
+   "anchorY": 192,
+   "collider": [
+    73,
+    180,
+    25,
+    14
+   ],
+   "fruit": [],
+   "kind": "tree"
+  },
+  "oak-small-a": {
+   "trunk": "assets/trees/oak-small-a-trunk.png",
+   "canopy": "assets/trees/oak-small-a-canopy.png",
+   "width": 123,
+   "height": 140,
+   "anchorX": 61,
+   "anchorY": 134,
+   "collider": [
+    51,
+    122,
+    19,
+    14
+   ],
+   "fruit": [],
+   "kind": "tree"
+  },
+  "oak-small-b": {
+   "trunk": "assets/trees/oak-small-b-trunk.png",
+   "canopy": "assets/trees/oak-small-b-canopy.png",
+   "width": 123,
+   "height": 140,
+   "anchorX": 61,
+   "anchorY": 134,
+   "collider": [
+    51,
+    122,
+    19,
+    14
+   ],
+   "fruit": [],
+   "kind": "tree"
+  },
+  "blossom": {
+   "trunk": "assets/trees/blossom-trunk.png",
+   "canopy": "assets/trees/blossom-canopy.png",
+   "width": 173,
+   "height": 198,
+   "anchorX": 86,
+   "anchorY": 192,
+   "collider": [
+    73,
+    180,
+    25,
+    14
+   ],
+   "fruit": [],
+   "kind": "tree"
+  },
+  "cypress-a": {
+   "trunk": "assets/trees/cypress-a-trunk.png",
+   "canopy": "assets/trees/cypress-a-canopy.png",
+   "width": 92,
+   "height": 220,
+   "anchorX": 46,
+   "anchorY": 214,
+   "collider": [
+    37,
+    202,
+    18,
+    14
+   ],
+   "fruit": [],
+   "kind": "tree"
+  },
+  "cypress-b": {
+   "trunk": "assets/trees/cypress-b-trunk.png",
+   "canopy": "assets/trees/cypress-b-canopy.png",
+   "width": 92,
+   "height": 220,
+   "anchorX": 46,
+   "anchorY": 214,
+   "collider": [
+    37,
+    202,
+    18,
+    14
+   ],
+   "fruit": [],
+   "kind": "tree"
+  },
+  "fig-a": {
+   "trunk": "assets/trees/fig-a-trunk.png",
+   "canopy": "assets/trees/fig-a-canopy.png",
+   "width": 196,
+   "height": 184,
+   "anchorX": 98,
+   "anchorY": 178,
+   "collider": [
+    86,
+    166,
+    24,
+    14
+   ],
+   "fruit": [
+    [
+     72,
+     80
+    ],
+    [
+     133,
+     41
+    ],
+    [
+     122,
+     77
+    ],
+    [
+     42,
+     62
+    ],
+    [
+     148,
+     65
+    ],
+    [
+     139,
+     93
+    ],
+    [
+     113,
+     59
+    ],
+    [
+     39,
+     97
+    ],
+    [
+     76,
+     107
+    ],
+    [
+     152,
+     110
+    ]
+   ],
+   "kind": "fig"
+  },
+  "fig-b": {
+   "trunk": "assets/trees/fig-b-trunk.png",
+   "canopy": "assets/trees/fig-b-canopy.png",
+   "width": 196,
+   "height": 184,
+   "anchorX": 98,
+   "anchorY": 178,
+   "collider": [
+    86,
+    166,
+    24,
+    14
+   ],
+   "fruit": [
+    [
+     143,
+     45
+    ],
+    [
+     122,
+     90
+    ],
+    [
+     89,
+     119
+    ],
+    [
+     106,
+     43
+    ],
+    [
+     64,
+     46
+    ],
+    [
+     55,
+     98
+    ],
+    [
+     145,
+     90
+    ],
+    [
+     78,
+     81
+    ],
+    [
+     74,
+     105
+    ],
+    [
+     109,
+     72
+    ]
+   ],
+   "kind": "fig"
+  },
+  "pomegranate-a": {
+   "trunk": "assets/trees/pomegranate-a-trunk.png",
+   "canopy": "assets/trees/pomegranate-a-canopy.png",
+   "width": 148,
+   "height": 160,
+   "anchorX": 74,
+   "anchorY": 154,
+   "collider": [
+    64,
+    142,
+    19,
+    14
+   ],
+   "fruit": [
+    [
+     110,
+     84
+    ],
+    [
+     95,
+     53
+    ],
+    [
+     74,
+     60
+    ],
+    [
+     52,
+     48
+    ],
+    [
+     33,
+     57
+    ],
+    [
+     61,
+     78
+    ],
+    [
+     80,
+     37
+    ],
+    [
+     97,
+     97
+    ],
+    [
+     87,
+     81
+    ]
+   ],
+   "kind": "pomegranate"
+  },
+  "pomegranate-b": {
+   "trunk": "assets/trees/pomegranate-b-trunk.png",
+   "canopy": "assets/trees/pomegranate-b-canopy.png",
+   "width": 148,
+   "height": 160,
+   "anchorX": 74,
+   "anchorY": 154,
+   "collider": [
+    64,
+    142,
+    19,
+    14
+   ],
+   "fruit": [
+    [
+     75,
+     80
+    ],
+    [
+     89,
+     95
+    ],
+    [
+     62,
+     66
+    ],
+    [
+     78,
+     30
+    ],
+    [
+     36,
+     49
+    ],
+    [
+     101,
+     65
+    ],
+    [
+     54,
+     42
+    ],
+    [
+     50,
+     96
+    ],
+    [
+     102,
+     34
+    ]
+   ],
+   "kind": "pomegranate"
+  },
+  "olive-a": {
+   "trunk": "assets/trees/olive-a-trunk.png",
+   "canopy": "assets/trees/olive-a-canopy.png",
+   "width": 188,
+   "height": 184,
+   "anchorX": 94,
+   "anchorY": 178,
+   "collider": [
+    80,
+    166,
+    28,
+    14
+   ],
+   "fruit": [],
+   "kind": "tree"
+  },
+  "olive-b": {
+   "trunk": "assets/trees/olive-b-trunk.png",
+   "canopy": "assets/trees/olive-b-canopy.png",
+   "width": 188,
+   "height": 184,
+   "anchorX": 94,
+   "anchorY": 178,
+   "collider": [
+    80,
+    166,
+    28,
+    14
+   ],
+   "fruit": [],
+   "kind": "tree"
+  },
+  "palm-a": {
+   "trunk": "assets/trees/palm-a-trunk.png",
+   "canopy": "assets/trees/palm-a-canopy.png",
+   "width": 176,
+   "height": 248,
+   "anchorX": 88,
+   "anchorY": 242,
+   "collider": [
+    80,
+    230,
+    17,
+    14
+   ],
+   "fruit": [
+    [
+     87,
+     79
+    ],
+    [
+     107,
+     78
+    ],
+    [
+     96,
+     75
+    ]
+   ],
+   "kind": "date"
+  },
+  "palm-b": {
+   "trunk": "assets/trees/palm-b-trunk.png",
+   "canopy": "assets/trees/palm-b-canopy.png",
+   "width": 176,
+   "height": 248,
+   "anchorX": 88,
+   "anchorY": 242,
+   "collider": [
+    80,
+    230,
+    17,
+    14
+   ],
+   "fruit": [
+    [
+     62,
+     79
+    ],
+    [
+     82,
+     78
+    ],
+    [
+     71,
+     75
+    ]
+   ],
+   "kind": "date"
+  },
+  "forbidden-tree": {
+   "trunk": "assets/trees/forbidden-tree-trunk.png",
+   "canopy": "assets/trees/forbidden-tree-canopy.png",
+   "width": 304,
+   "height": 312,
+   "anchorX": 152,
+   "anchorY": 300,
+   "collider": [
+    128,
+    282,
+    49,
+    20
+   ],
+   "fruit": [
+    [
+     78,
+     178
+    ],
+    [
+     172,
+     113
+    ],
+    [
+     50,
+     133
+    ],
+    [
+     251,
+     119
+    ],
+    [
+     91,
+     137
+    ],
+    [
+     80,
+     84
+    ],
+    [
+     231,
+     177
+    ],
+    [
+     115,
+     43
+    ],
+    [
+     143,
+     102
+    ],
+    [
+     154,
+     47
+    ],
+    [
+     134,
+     171
+    ],
+    [
+     55,
+     160
+    ],
+    [
+     228,
+     55
+    ],
+    [
+     180,
+     163
+    ],
+    [
+     144,
+     138
+    ],
+    [
+     204,
+     72
+    ],
+    [
+     100,
+     113
+    ],
+    [
+     139,
+     74
+    ]
+   ],
+   "kind": "forbidden"
+  },
+  "tree-of-life": {
+   "trunk": "assets/trees/tree-of-life-trunk.png",
+   "canopy": "assets/trees/tree-of-life-canopy.png",
+   "width": 272,
+   "height": 328,
+   "anchorX": 136,
+   "anchorY": 316,
+   "collider": [
+    114,
+    298,
+    45,
+    20
+   ],
+   "fruit": [
+    [
+     76,
+     137
+    ],
+    [
+     168,
+     182
+    ],
+    [
+     196,
+     65
+    ],
+    [
+     70,
+     59
+    ],
+    [
+     96,
+     78
+    ],
+    [
+     117,
+     34
+    ],
+    [
+     220,
+     124
+    ],
+    [
+     87,
+     169
+    ],
+    [
+     185,
+     104
+    ],
+    [
+     144,
+     158
+    ],
+    [
+     54,
+     80
+    ],
+    [
+     166,
+     52
+    ],
+    [
+     195,
+     187
+    ],
+    [
+     218,
+     90
+    ],
+    [
+     111,
+     174
+    ],
+    [
+     76,
+     101
+    ]
+   ],
+   "kind": "life"
+  },
+  "bush-round": {
+   "trunk": "assets/trees/bush-round-trunk.png",
+   "canopy": "assets/trees/bush-round-canopy.png",
+   "width": 76,
+   "height": 62,
+   "anchorX": 38,
+   "anchorY": 56,
+   "collider": [
+    16,
+    46,
+    45,
+    12
+   ],
+   "fruit": [],
+   "kind": "bush"
+  },
+  "bush-dark": {
+   "trunk": "assets/trees/bush-dark-trunk.png",
+   "canopy": "assets/trees/bush-dark-canopy.png",
+   "width": 76,
+   "height": 62,
+   "anchorX": 38,
+   "anchorY": 56,
+   "collider": [
+    16,
+    46,
+    45,
+    12
+   ],
+   "fruit": [],
+   "kind": "bush"
+  },
+  "bush-flower": {
+   "trunk": "assets/trees/bush-flower-trunk.png",
+   "canopy": "assets/trees/bush-flower-canopy.png",
+   "width": 76,
+   "height": 62,
+   "anchorX": 38,
+   "anchorY": 56,
+   "collider": [
+    16,
+    46,
+    45,
+    12
+   ],
+   "fruit": [],
+   "kind": "bush"
+  },
+  "bush-berry": {
+   "trunk": "assets/trees/bush-berry-trunk.png",
+   "canopy": "assets/trees/bush-berry-canopy.png",
+   "width": 76,
+   "height": 62,
+   "anchorX": 38,
+   "anchorY": 56,
+   "collider": [
+    16,
+    46,
+    45,
+    12
+   ],
+   "fruit": [],
+   "kind": "bush"
+  },
+  "grapevine": {
+   "trunk": "assets/trees/grapevine-trunk.png",
+   "canopy": "assets/trees/grapevine-canopy.png",
+   "width": 104,
+   "height": 84,
+   "anchorX": 52,
+   "anchorY": 76,
+   "collider": [
+    18,
+    60,
+    69,
+    18
+   ],
+   "fruit": [
+    [
+     26,
+     50
+    ],
+    [
+     50,
+     42
+    ],
+    [
+     74,
+     50
+    ],
+    [
+     40,
+     58
+    ]
+   ],
+   "kind": "grape"
+  }
+ },
+ "tiles": {
+  "file": "assets/tiles/eden-tiles.png",
+  "tileSize": 32,
+  "columns": 16,
+  "grass": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "flowers": [
+   6,
+   7
+  ],
+  "path": 8,
+  "water": [
+   24,
+   40,
+   56
+  ],
+  "dry": 72
  }
 }

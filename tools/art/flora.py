@@ -256,7 +256,8 @@ def fig(seed):
         a = rng.uniform(math.pi * 0.9, math.pi * 2.1)
         cx, cy = 98 + math.cos(a) * 66, 80 + math.sin(a) * 46
         lm = px.m_ellipse(w, h, cx, cy, 6.5, 5.5) | px.m_ellipse(w, h, cx - 5, cy - 3, 4.2, 4) | px.m_ellipse(w, h, cx + 5, cy - 3, 4.2, 4)
-        px.shade(c, lm, P['fig'], px.normals_ellipsoid(w, h, cx - 1, cy - 1, 9, 8), lo=3, hi=7, ambient=0.0)
+        lm &= ~cm | px.dilate(px.edge(cm), True)
+        px.shade(c, lm, P['fig'], px.normals_ellipsoid(w, h, cx - 1, cy - 1, 9, 8), lo=2, hi=6, ambient=0.0)
         px.outline_inner(c, lm, P['fig'][0])
         cm |= lm
     fr = fruit_slots(cm, rng, 10, (36, 160), (40, 124), 360)
@@ -349,12 +350,12 @@ def palm(seed):
             tt = sgi / segs
             x = crown_x + math.cos(a) * ln * tt
             y = top + 4 + math.sin(a) * ln * tt * 0.7 + droop * (ln * tt) ** 2 / ln * 0.9
-            r = 2.6 * (1 - tt) + 0.9
+            r = 2.8 * (1 - tt) + 1.0
             seg = px.m_capsule(w, h, prev[0], prev[1], x, y, r, r)
             for side in (-1, 1):
-                lx = x + side * math.cos(a + math.pi / 2) * (9.0 * (1 - tt * 0.7))
-                ly = y + 6.0 * (1 - tt * 0.5)
-                seg |= px.m_capsule(w, h, x, y, lx, ly, 1.4, 0.8)
+                lx = x + side * math.cos(a + math.pi / 2) * (13.0 * (1 - tt * 0.6))
+                ly = y + 9.0 * (1 - tt * 0.4)
+                seg |= px.m_capsule(w, h, x, y, lx, ly, 1.9, 1.0)
             n = px.normals_capsules(w, h, [(prev[0], prev[1], x, y, 6.0, 6.0)])
             tone = 6 if k % 2 else 7
             v = px.lambert(n[0], n[1], n[2], ambient=0.0)
@@ -393,14 +394,18 @@ def tree_of_life():
     lobes = jitter([(136, 112, 100, 80), (68, 144, 48, 40), (204, 144, 48, 40), (136, 52, 68, 44), (100, 192, 48, 24), (172, 192, 48, 24)], rng, 6)
     c, cm = canopy(w, h, lobes, P['leaf'], rng, clump=(9.0, 13.0))
     ys, xs = np.where(cm & ~px.edge(cm))
-    for _ in range(int(cm.sum() / 45)):
+    lk = px.ramp_lookup(P['leaf'])
+    for _ in range(int(cm.sum() / 140)):
         i = rng.randrange(len(xs))
         y, x = ys[i], xs[i]
-        c[y, x] = P['flower_white'][5]
-        if x + 1 < w and cm[y, x + 1]:
-            c[y, x + 1] = P['flower_white'][4]
-        if y + 1 < h and cm[y + 1, x]:
-            c[y + 1, x] = P['flower_white'][3]
+        if lk.get(tuple(c[y, x, :3]), 0) < 5:
+            continue          # blossoms only where the foliage is lit
+        for dx, dy, k in ((0, 0, 5), (1, 0, 4), (-1, 0, 4), (0, -1, 4), (0, 1, 3)):
+            yy, xx = y + dy, x + dx
+            if 0 <= yy < h and 0 <= xx < w and cm[yy, xx]:
+                c[yy, xx] = P['flower_white'][k]
+        if y + 2 < h and cm[y + 2, x]:
+            c[y + 2, x] = P['leaf'][2]
     fr = fruit_slots(cm, rng, 16, (44, 228), (32, 200), 600)
     return finish(t, tm, c, 212, w, h, (bx, by), 18.0, gold_bark, fruit=fr, kind='life', collider=(bx - 22, by - 18, 45, 20))
 
@@ -501,3 +506,7 @@ if __name__ == '__main__':
         px.over(c, i, x, H - i.shape[0])
         x += i.shape[1] + 8
     px.preview(c, sys.argv[1], 1, (74, 114, 48, 255))
+
+
+def build(m: dict, save, strip, sheet_entry) -> None:
+    build_trees(m, save)

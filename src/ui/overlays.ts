@@ -44,7 +44,7 @@ export function openOverlay(content: HTMLElement, onEscape?: () => void): Overla
     modal: true,
     allowMovement: false,
     onAction: (a) => {
-      if (a === 'pause' || a === 'cancel') {
+      if (a === 'pause') {
         onEscape?.();
         return true;
       }

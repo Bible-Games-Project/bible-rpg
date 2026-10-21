@@ -95,7 +95,7 @@ def build_portraits(m: dict) -> None:
     print('  portraits:', ', '.join(m['portraits']))
 
 
-GROUPS = ['references', 'portraits', 'chars', 'creatures', 'flora', 'terrain', 'items', 'ui']
+GROUPS = ['references', 'portraits', 'chars', 'creatures', 'flora', 'terrain', 'items']
 
 
 def main() -> None:
