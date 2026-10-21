@@ -1,11 +1,20 @@
 {
   "name": "bible-rpg",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "mkdir -p dist && cp index.html dist/"
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "art": "python3 tools/art/build_all.py"
+  },
+  "dependencies": {
+    "phaser": "3.90.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
+    "vite": "^7.3.6",
     "@capacitor/core": "^8.0.0",
     "@capacitor/cli": "^8.0.0",
     "@capacitor/ios": "^8.0.0",
