@@ -109,9 +109,11 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   calls refused past `ART_BUDGET_USD`). Draft at `--quality low`, finish at
   medium, and group many subjects per image to stay in budget. Commit every
   generated image: they are paid for. `tools/art/ingest.py` cuts a sheet into
-  native-grid sprites. It needs `OPENAI_API_KEY` in the environment secrets and
-  `api.openai.com` allowed in the network policy; never ask the maintainer to
-  paste a key into the chat.
+  native-grid sprites. The OpenAI key is a Bearer network secret of the cloud
+  environment for `api.openai.com` (path prefix `/v1/images/`): the proxy adds
+  it, so it is not an environment variable. A 401 means the secret is missing
+  or the session predates it. Never ask the maintainer to paste a key into
+  the chat.
 
 ### Biblical content
 

@@ -11,9 +11,10 @@ before it is sent if the worst-case cost would take the total past the
 budget (ART_BUDGET_USD, default 5). The maintainer's OpenAI account also has
 prepaid credit with auto-recharge off, so the budget is enforced twice.
 
-Needs OPENAI_API_KEY in the environment (stored in the cloud environment's
-secrets, never in the repository or the chat) and api.openai.com allowed by
-the environment's network policy. Uses only the standard library.
+The key is a Bearer network secret of the cloud environment for
+api.openai.com: the environment's proxy adds it to requests, so this script
+never sees it. OPENAI_API_KEY is used instead when set (local runs). Never put
+a key in the repository or the chat. Uses only the standard library.
 """
 
 from __future__ import annotations
@@ -113,8 +114,6 @@ def multipart(fields: dict, files: list[tuple[str, str]]) -> tuple[bytes, str]:
 
 def call(spec: dict, job: dict, quality: str) -> dict:
     key = os.environ.get('OPENAI_API_KEY')
-    if not key:
-        sys.exit('OPENAI_API_KEY is not set (add it to the cloud environment secrets).')
     refs = [os.path.join(ROOT, r) for r in job.get('references', [])]
     fields = {'model': MODEL, 'prompt': full_prompt(spec, job), 'size': job.get('size', '1024x1024'), 'quality': quality, 'n': '1'}
     if refs:
@@ -123,7 +122,10 @@ def call(spec: dict, job: dict, quality: str) -> dict:
     else:
         body, ctype = json.dumps(fields | {'n': 1}).encode(), 'application/json'
         url = f'{API}/generations'
-    req = urllib.request.Request(url, data=body, headers={'Authorization': f'Bearer {key}', 'Content-Type': ctype})
+    headers = {'Content-Type': ctype}
+    if key:
+        headers['Authorization'] = f'Bearer {key}'
+    req = urllib.request.Request(url, data=body, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=600) as r:
             return json.load(r)
