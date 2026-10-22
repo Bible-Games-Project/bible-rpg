@@ -103,9 +103,15 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   (numpy + Pillow only): `bun run art` regenerates `public/assets/**` and
   `src/data/generated/assets.json`. Edit the generators, not the PNGs.
   The palette is sampled from the references (`tools/art/style.py`).
-- No image-generation service is reachable from the cloud environment
-  (api.openai.com is blocked by the network policy). Never ask the maintainer
-  to paste an API key into the chat.
+- New art comes from the OpenAI Image API (maintainer's decision), with a
+  hard total budget of 5 USD: `tools/art/gen_images.py` (jobs and prompts in
+  `art/prompts/eden.json`, every call logged in `art/generated/ledger.json`,
+  calls refused past `ART_BUDGET_USD`). Draft at `--quality low`, finish at
+  medium, and group many subjects per image to stay in budget. Commit every
+  generated image: they are paid for. `tools/art/ingest.py` cuts a sheet into
+  native-grid sprites. It needs `OPENAI_API_KEY` in the environment secrets and
+  `api.openai.com` allowed in the network policy; never ask the maintainer to
+  paste a key into the chat.
 
 ### Biblical content
 

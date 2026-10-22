@@ -1,0 +1,75 @@
+{
+  "style": "STYLE RULES: Hand-made pixel art in exactly the style of the reference image(s): crisp square pixels on a strict grid (each art pixel is one solid square block of image pixels), no anti-aliasing, no blur, no soft gradients between blocks, no noisy dithering. Warm natural palette, soft painterly shading with light from the upper left, thin dark-brown outlines, just like the reference. The reference images show the style and scale only: draw new subjects, do not copy or edit the reference. BACKGROUND: one flat solid magenta color (#FF00FF) everywhere around the subjects, with no shadows, ground, grass, scenery, glow or texture on it. Leave clear magenta space between separate subjects. No text, letters, numbers, labels, borders or frames.",
+  "jobs": [
+    {
+      "id": "eve-sprite",
+      "title": "Eve, full body, front / back / side",
+      "size": "1536x1024",
+      "references": ["art/prompts/refs/adam-sprite.png"],
+      "prompt": "Game character sprite of Eve, the first woman (Genesis 2), made to match Adam in the reference: same pixel scale (each art pixel is an 8x8 block), same height (about 116 art pixels tall, from the top of the head to the soles), same proportions, palette and shading. Long wavy dark-brown hair reaching her waist, warm olive skin, kind face. Modest clothing of large overlapping green leaves: a leaf top that covers her chest and shoulders and a leaf skirt down to the knees, like Adam's leaf skirt. Barefoot. Draw her three times in one row, full body, standing still with arms relaxed: 1) facing the viewer, 2) seen from behind, 3) facing right in side profile like the reference."
+    },
+    {
+      "id": "god-sprite",
+      "title": "The LORD God, full body, front / back / side",
+      "size": "1536x1024",
+      "references": ["art/prompts/refs/adam-sprite.png"],
+      "prompt": "Game character sprite of the LORD God for a family Bible game: a radiant, gentle and dignified elderly man, never frightening. Long white hair and a long white beard, a long flowing white robe with a simple golden sash and thin golden trim at the hems and sleeves, bare feet, a faint warm golden rim of light on the figure itself (not on the background). Same pixel scale as Adam in the reference (8x8 blocks) and slightly taller (about 122 art pixels tall). Draw him three times in one row, full body, standing still: 1) facing the viewer, 2) seen from behind, 3) facing right in side profile."
+    },
+    {
+      "id": "eve-portrait",
+      "title": "Eve, dialogue portrait",
+      "size": "1024x1024",
+      "references": ["art/prompts/refs/adam-portrait.png"],
+      "prompt": "Dialogue portrait of Eve, the first woman, matching the reference portrait of Adam exactly in framing, size, pixel scale, palette and shading: head and shoulders, facing the viewer, centered, the same distance from the camera. Long wavy dark-brown hair falling over her shoulders, warm olive skin, gentle and bright expression, the top of a garment of green leaves covering her chest."
+    },
+    {
+      "id": "god-portrait",
+      "title": "The LORD God, dialogue portrait",
+      "size": "1024x1024",
+      "references": ["art/prompts/refs/adam-portrait.png"],
+      "prompt": "Dialogue portrait of the LORD God for a family Bible game, matching the reference portrait of Adam exactly in framing, size, pixel scale and shading: head and shoulders, facing the viewer, centered. A kind, wise and majestic elderly man with long white hair and a long white beard, warm loving eyes, a white robe with thin golden trim at the neck, soft warm light on his face. Peaceful, never frightening."
+    },
+    {
+      "id": "trees-garden",
+      "title": "Garden trees: oak, fig, pomegranate",
+      "size": "1536x1024",
+      "references": ["art/reference/main-menu.webp"],
+      "prompt": "Three separate trees for a top-down three-quarter view pixel art RPG (like Stardew Valley), in the pixel style of the trees in the reference image: 1) a large broad oak, 2) a fig tree with big lobed leaves and small purple figs, 3) a pomegranate tree with red pomegranates. Each tree shows its trunk and roots at the bottom and a full, rounded, leafy canopy. Side by side in one row, all the same pixel scale (art pixels of 4x4 blocks), each tree about 300 image pixels wide and 750 image pixels tall."
+    },
+    {
+      "id": "trees-land",
+      "title": "Garden trees: olive, date palm, cypress",
+      "size": "1536x1024",
+      "references": ["art/reference/main-menu.webp"],
+      "prompt": "Three separate trees for a top-down three-quarter view pixel art RPG (like Stardew Valley), in the pixel style of the trees in the reference image: 1) a gnarled olive tree with silver-green leaves, 2) a date palm with hanging clusters of dates, 3) a tall slender dark-green cypress. Each tree shows its trunk at the bottom. Side by side in one row, all the same pixel scale (art pixels of 4x4 blocks), each tree about 300 image pixels wide and up to 850 image pixels tall."
+    },
+    {
+      "id": "trees-sacred",
+      "title": "Tree of life and tree of knowledge",
+      "size": "1536x1024",
+      "references": ["art/reference/main-menu.webp"],
+      "prompt": "Two majestic trees for the midst of the Garden of Eden, top-down three-quarter view pixel art RPG, in the pixel style of the tree in the reference image: 1) the tree of life: wide, ancient and serene, lush bright leaves with soft golden highlights and small glowing golden-white fruit; 2) the tree of the knowledge of good and evil: beautiful and inviting, deep glossy green leaves and shiny red fruit. Trunk and roots visible at the bottom, full canopies. Side by side, same pixel scale (art pixels of 4x4 blocks), each about 600 image pixels wide and 900 image pixels tall."
+    },
+    {
+      "id": "animals",
+      "title": "Eight animals, side view",
+      "size": "1536x1024",
+      "references": ["art/prompts/refs/adam-sprite.png"],
+      "prompt": "Eight animals of the Garden of Eden as pixel art game sprites in the same style as the reference, all seen from the side, facing right, standing calmly, arranged in two rows of four with space between them: top row horse (brown), camel (one hump, sandy), lion (golden with a full mane), deer (red-brown stag with antlers); bottom row sheep (white wool), goat (brown and white with small horns), hare (brown, long ears), dove (white, standing). Same pixel scale for all (art pixels of 4x4 blocks) and realistic sizes relative to each other: the camel and horse are the biggest, the hare and dove the smallest."
+    },
+    {
+      "id": "cherub",
+      "title": "Cherub and flaming sword",
+      "size": "1536x1024",
+      "references": ["art/prompts/refs/adam-sprite.png"],
+      "prompt": "Pixel art game sprites for Genesis 3:24, in the same style as the reference: 1) a cherub, a majestic angelic guardian standing in front view, noble calm face, white and golden garments, two large feathered wings spread wide, about 1.4 times the height of the man in the reference (same 8x8 pixel scale); 2) separately, to its right, a flaming sword floating upright, point down, its blade wrapped in bright orange and yellow flames."
+    },
+    {
+      "id": "serpent",
+      "title": "The serpent, on a branch and on the ground",
+      "size": "1536x1024",
+      "references": ["art/reference/main-menu.webp"],
+      "prompt": "The serpent of Genesis 3 as pixel art game sprites, in the style of the green serpent in the reference image: attractive and cunning, not monstrous, green with a subtle darker pattern and a pale belly. 1) The serpent coiled around a short horizontal tree branch (only the branch, no tree), head raised and looking left. 2) Separately, the same serpent crawling on the ground, seen from the side, facing right, long and low. Same pixel scale for both (art pixels of 4x4 blocks)."
+    }
+  ]
+}
