@@ -5,14 +5,18 @@
       "id": "eve-sprite",
       "title": "Eve, full body, front / back / side",
       "size": "1536x1024",
-      "references": ["art/prompts/refs/adam-sprite.png"],
+      "references": [
+        "art/prompts/refs/adam-sprite.png"
+      ],
       "prompt": "Game character sprite of Eve, the first woman (Genesis 2), made to match Adam in the reference: same pixel scale (each art pixel is an 8x8 block), same height (about 116 art pixels tall, from the top of the head to the soles), same proportions, palette and shading. Long wavy dark-brown hair reaching her waist, warm olive skin, kind face. Modest clothing of large overlapping green leaves: a leaf top that covers her chest and shoulders and a leaf skirt down to the knees, like Adam's leaf skirt. Barefoot. Draw her three times in one row, full body, standing still with arms relaxed: 1) facing the viewer, 2) seen from behind, 3) facing right in side profile like the reference."
     },
     {
       "id": "god-sprite",
       "title": "The LORD God, full body, front / back / side",
       "size": "1536x1024",
-      "references": ["art/prompts/refs/adam-sprite.png"],
+      "references": [
+        "art/prompts/refs/adam-sprite.png"
+      ],
       "prompt": "Game character sprite of the LORD God for a family Bible game: a radiant, gentle and dignified elderly man, never frightening. Long white hair and a long white beard, a long flowing white robe with a simple golden sash and thin golden trim at the hems and sleeves, bare feet. No glow, halo, aura or colored rim light around him and no outline of any color around the figure (the game adds the light itself). Same pixel scale as Adam in the reference (8x8 blocks) and slightly taller (about 122 art pixels tall). Draw him three times in one row, full body, standing still: 1) facing the viewer, 2) seen from behind, 3) facing right in side profile."
     },
     {
@@ -20,57 +24,328 @@
       "title": "Eve, dialogue portrait",
       "approved": "art/generated/eve-portrait/20261022-184754-low.png",
       "size": "1024x1024",
-      "references": ["art/prompts/refs/adam-portrait.png"],
+      "references": [
+        "art/prompts/refs/adam-portrait.png"
+      ],
       "prompt": "Dialogue portrait of Eve, the first woman, matching the reference portrait of Adam exactly in framing, size, pixel scale, palette and shading: head and shoulders, facing the viewer, centered, the same distance from the camera. Long wavy dark-brown hair falling over her shoulders, warm olive skin, gentle and bright expression, the top of a garment of green leaves covering her chest."
     },
     {
       "id": "god-portrait",
       "title": "The LORD God, dialogue portrait",
       "size": "1024x1024",
-      "references": ["art/prompts/refs/adam-portrait.png"],
-      "prompt": "Dialogue portrait of the LORD God for a family Bible game, matching the reference portrait of Adam exactly in framing, size, pixel scale and shading: head and shoulders, facing the viewer, centered. A kind, wise and majestic elderly man with long white hair and a long white beard, warm loving eyes, a white robe with thin golden trim at the neck, soft warm light on his face. Peaceful, never frightening."
+      "references": [
+        "art/prompts/refs/adam-portrait.png"
+      ],
+      "prompt": "Dialogue portrait of the LORD God for a family Bible game, matching the reference portrait of Adam exactly in framing, size, pixel scale and shading: head and shoulders, facing the viewer, centered. A kind, wise and majestic elderly man with long white hair and a long white beard, warm loving eyes, a white robe with thin golden trim at the neck, soft warm light on his face. Peaceful, never frightening.",
+      "approved": "art/generated/god-portrait/20261022-190257-low.png"
     },
     {
       "id": "trees-garden",
       "title": "Garden trees: oak, fig, pomegranate",
       "size": "1536x1024",
-      "references": ["art/reference/main-menu.webp"],
+      "references": [
+        "art/reference/main-menu.webp"
+      ],
       "prompt": "Three separate trees for a top-down three-quarter view pixel art RPG (like Stardew Valley), in the pixel style of the trees in the reference image: 1) a large broad oak, 2) a fig tree with big lobed leaves and small purple figs, 3) a pomegranate tree with red pomegranates. Each tree shows its trunk and roots at the bottom and a full, rounded, leafy canopy. Side by side in one row, all the same pixel scale (art pixels of 4x4 blocks), each tree about 300 image pixels wide and 750 image pixels tall."
     },
     {
       "id": "trees-land",
       "title": "Garden trees: olive, date palm, cypress",
       "size": "1536x1024",
-      "references": ["art/reference/main-menu.webp"],
+      "references": [
+        "art/reference/main-menu.webp"
+      ],
       "prompt": "Three separate trees for a top-down three-quarter view pixel art RPG (like Stardew Valley), in the pixel style of the trees in the reference image: 1) a gnarled olive tree with silver-green leaves, 2) a date palm with hanging clusters of dates, 3) a tall slender dark-green cypress. Each tree shows its trunk at the bottom. Side by side in one row, all the same pixel scale (art pixels of 4x4 blocks), each tree about 300 image pixels wide and up to 850 image pixels tall."
     },
     {
       "id": "trees-sacred",
       "title": "Tree of life and tree of knowledge",
       "size": "1536x1024",
-      "references": ["art/reference/main-menu.webp"],
+      "references": [
+        "art/reference/main-menu.webp"
+      ],
       "prompt": "Two majestic trees for the midst of the Garden of Eden, top-down three-quarter view pixel art RPG, in the pixel style of the tree in the reference image: 1) the tree of life: wide, ancient and serene, lush bright leaves with soft golden highlights and small glowing golden-white fruit; 2) the tree of the knowledge of good and evil: beautiful and inviting, deep glossy green leaves and shiny red fruit. Trunk and roots visible at the bottom, full canopies. Side by side, same pixel scale (art pixels of 4x4 blocks), each about 600 image pixels wide and 900 image pixels tall."
     },
     {
       "id": "animals",
       "title": "Eight animals, side view",
       "size": "1536x1024",
-      "references": ["art/prompts/refs/adam-sprite.png"],
+      "references": [
+        "art/prompts/refs/adam-sprite.png"
+      ],
       "prompt": "Eight animals of the Garden of Eden as pixel art game sprites in the same style as the reference, all seen from the side, facing right, standing calmly, arranged in two rows of four with space between them: top row horse (brown), camel (one hump, sandy), lion (golden with a full mane), deer (red-brown stag with antlers); bottom row sheep (white wool), goat (brown and white with small horns), hare (brown, long ears), dove (white, standing). Same pixel scale for all (art pixels of 4x4 blocks) and realistic sizes relative to each other: the camel and horse are the biggest, the hare and dove the smallest."
     },
     {
       "id": "cherub",
       "title": "Cherub and flaming sword",
       "size": "1536x1024",
-      "references": ["art/prompts/refs/adam-sprite.png"],
+      "references": [
+        "art/prompts/refs/adam-sprite.png"
+      ],
       "prompt": "Pixel art game sprites for Genesis 3:24, in the same style as the reference: 1) a cherub, a majestic angelic guardian standing in front view, noble calm face, white and golden garments, two large feathered wings spread wide, about 1.4 times the height of the man in the reference (same 8x8 pixel scale); 2) separately, to its right, a flaming sword floating upright, point down, its blade wrapped in bright orange and yellow flames."
     },
     {
       "id": "serpent",
       "title": "The serpent, on a branch and on the ground",
       "size": "1536x1024",
-      "references": ["art/reference/main-menu.webp"],
+      "references": [
+        "art/reference/main-menu.webp"
+      ],
       "prompt": "The serpent of Genesis 3 as pixel art game sprites, in the style of the green serpent in the reference image: attractive and cunning, not monstrous, green with a subtle darker pattern and a pale belly. 1) The serpent coiled around a short horizontal tree branch (only the branch, no tree), head raised and looking left. 2) Separately, the same serpent crawling on the ground, seen from the side, facing right, long and low. Same pixel scale for both (art pixels of 4x4 blocks)."
+    },
+    {
+      "id": "adam-sprite",
+      "title": "Adam, full body, front / back / side (new style)",
+      "size": "1536x1024",
+      "references": [
+        "art/prompts/refs/adam-sprite.png"
+      ],
+      "prompt": "Game character sprite of Adam, the first man, redrawn from the reference with the same design: curly dark-brown hair, full dark beard, strong build, warm tan skin, a skirt of large overlapping green leaves to the knees, barefoot. Same height and pixel scale as the reference (about 116 art pixels tall, 8x8 blocks). Draw him three times in one row, full body, standing still with arms relaxed: 1) facing the viewer, 2) seen from behind, 3) facing right in side profile."
+    },
+    {
+      "id": "walk-adam-leaves-down",
+      "title": "adam leaves walk down",
+      "size": "1536x1024",
+      "references": [
+        "@adam-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Adam (the man in the reference image), wearing exactly the clothing shown in the reference, walking toward the viewer (front view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-adam-leaves-up",
+      "title": "adam leaves walk up",
+      "size": "1536x1024",
+      "references": [
+        "@adam-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Adam (the man in the reference image), wearing exactly the clothing shown in the reference, walking away from the viewer (back view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-adam-leaves-right",
+      "title": "adam leaves walk right",
+      "size": "1536x1024",
+      "references": [
+        "@adam-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Adam (the man in the reference image), wearing exactly the clothing shown in the reference, walking to the right (side profile). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-adam-fig-down",
+      "title": "adam fig walk down",
+      "size": "1536x1024",
+      "references": [
+        "@adam-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Adam (the man in the reference image), wearing, instead of the clothing in the reference, simple coverings sewn from broad lobed fig leaves stitched together (Genesis 3:7): a fig-leaf apron to the knees, walking toward the viewer (front view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-adam-fig-up",
+      "title": "adam fig walk up",
+      "size": "1536x1024",
+      "references": [
+        "@adam-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Adam (the man in the reference image), wearing, instead of the clothing in the reference, simple coverings sewn from broad lobed fig leaves stitched together (Genesis 3:7): a fig-leaf apron to the knees, walking away from the viewer (back view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-adam-fig-right",
+      "title": "adam fig walk right",
+      "size": "1536x1024",
+      "references": [
+        "@adam-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Adam (the man in the reference image), wearing, instead of the clothing in the reference, simple coverings sewn from broad lobed fig leaves stitched together (Genesis 3:7): a fig-leaf apron to the knees, walking to the right (side profile). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-adam-tunic-down",
+      "title": "adam tunic walk down",
+      "size": "1536x1024",
+      "references": [
+        "@adam-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Adam (the man in the reference image), wearing, instead of the clothing in the reference, a simple knee-length tunic made of animal skins (Genesis 3:21): soft tan and brown leather with rough natural edges, short sleeves, a thin leather cord at the waist, walking toward the viewer (front view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-adam-tunic-up",
+      "title": "adam tunic walk up",
+      "size": "1536x1024",
+      "references": [
+        "@adam-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Adam (the man in the reference image), wearing, instead of the clothing in the reference, a simple knee-length tunic made of animal skins (Genesis 3:21): soft tan and brown leather with rough natural edges, short sleeves, a thin leather cord at the waist, walking away from the viewer (back view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-adam-tunic-right",
+      "title": "adam tunic walk right",
+      "size": "1536x1024",
+      "references": [
+        "@adam-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Adam (the man in the reference image), wearing, instead of the clothing in the reference, a simple knee-length tunic made of animal skins (Genesis 3:21): soft tan and brown leather with rough natural edges, short sleeves, a thin leather cord at the waist, walking to the right (side profile). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-eve-leaves-down",
+      "title": "eve leaves walk down",
+      "size": "1536x1024",
+      "references": [
+        "@eve-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Eve (the woman in the reference image), wearing exactly the clothing shown in the reference, walking toward the viewer (front view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-eve-leaves-up",
+      "title": "eve leaves walk up",
+      "size": "1536x1024",
+      "references": [
+        "@eve-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Eve (the woman in the reference image), wearing exactly the clothing shown in the reference, walking away from the viewer (back view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-eve-leaves-right",
+      "title": "eve leaves walk right",
+      "size": "1536x1024",
+      "references": [
+        "@eve-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Eve (the woman in the reference image), wearing exactly the clothing shown in the reference, walking to the right (side profile). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-eve-fig-down",
+      "title": "eve fig walk down",
+      "size": "1536x1024",
+      "references": [
+        "@eve-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Eve (the woman in the reference image), wearing, instead of the clothing in the reference, simple coverings sewn from broad lobed fig leaves stitched together (Genesis 3:7): a fig-leaf apron to the knees and a fig-leaf top covering her chest, walking toward the viewer (front view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-eve-fig-up",
+      "title": "eve fig walk up",
+      "size": "1536x1024",
+      "references": [
+        "@eve-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Eve (the woman in the reference image), wearing, instead of the clothing in the reference, simple coverings sewn from broad lobed fig leaves stitched together (Genesis 3:7): a fig-leaf apron to the knees and a fig-leaf top covering her chest, walking away from the viewer (back view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-eve-fig-right",
+      "title": "eve fig walk right",
+      "size": "1536x1024",
+      "references": [
+        "@eve-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Eve (the woman in the reference image), wearing, instead of the clothing in the reference, simple coverings sewn from broad lobed fig leaves stitched together (Genesis 3:7): a fig-leaf apron to the knees and a fig-leaf top covering her chest, walking to the right (side profile). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-eve-tunic-down",
+      "title": "eve tunic walk down",
+      "size": "1536x1024",
+      "references": [
+        "@eve-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Eve (the woman in the reference image), wearing, instead of the clothing in the reference, a simple knee-length tunic made of animal skins (Genesis 3:21): soft tan and brown leather with rough natural edges, short sleeves, a thin leather cord at the waist, walking toward the viewer (front view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-eve-tunic-up",
+      "title": "eve tunic walk up",
+      "size": "1536x1024",
+      "references": [
+        "@eve-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Eve (the woman in the reference image), wearing, instead of the clothing in the reference, a simple knee-length tunic made of animal skins (Genesis 3:21): soft tan and brown leather with rough natural edges, short sleeves, a thin leather cord at the waist, walking away from the viewer (back view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-eve-tunic-right",
+      "title": "eve tunic walk right",
+      "size": "1536x1024",
+      "references": [
+        "@eve-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of Eve (the woman in the reference image), wearing, instead of the clothing in the reference, a simple knee-length tunic made of animal skins (Genesis 3:21): soft tan and brown leather with rough natural edges, short sleeves, a thin leather cord at the waist, walking to the right (side profile). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-god-robe-down",
+      "title": "god robe walk down",
+      "size": "1536x1024",
+      "references": [
+        "@god-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of the LORD God (the elderly man in the white robe in the reference image), wearing exactly the white robe with the golden sash shown in the reference, with no glow or halo, walking toward the viewer (front view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-god-robe-up",
+      "title": "god robe walk up",
+      "size": "1536x1024",
+      "references": [
+        "@god-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of the LORD God (the elderly man in the white robe in the reference image), wearing exactly the white robe with the golden sash shown in the reference, with no glow or halo, walking away from the viewer (back view). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-god-robe-right",
+      "title": "god robe walk right",
+      "size": "1536x1024",
+      "references": [
+        "@god-sprite"
+      ],
+      "prompt": "Walk-cycle animation strip of the LORD God (the elderly man in the white robe in the reference image), wearing exactly the white robe with the golden sash shown in the reference, with no glow or halo, walking to the right (side profile). Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference image: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colors); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "serpent-portrait",
+      "title": "The serpent, dialogue portrait",
+      "size": "1024x1024",
+      "references": [
+        "art/prompts/refs/adam-portrait.png",
+        "@serpent"
+      ],
+      "prompt": "Dialogue portrait of the serpent of Genesis 3 (the green serpent in the second reference image), framed exactly like the portrait in the first reference: head and upper coils filling the frame, facing the viewer slightly turned, cunning but not monstrous, clever eyes, forked tongue just visible."
+    },
+    {
+      "id": "trees-small",
+      "title": "Medium oak, small oak, almond blossom",
+      "size": "1536x1024",
+      "references": [
+        "art/reference/main-menu.webp",
+        "@trees-garden"
+      ],
+      "prompt": "Three separate trees in exactly the style of the trees in the second reference image (top-down three-quarter view pixel art RPG): 1) a medium oak, 2) a small young oak, 3) an almond tree covered in white and pink blossom. Trunk and roots visible at the bottom. Side by side in one row, same pixel scale as the second reference (art pixels of 4x4 blocks); the medium oak about 80% and the small oak about 60% of the height of the big oak in the reference."
+    },
+    {
+      "id": "bushes",
+      "title": "Bushes and grapevine",
+      "size": "1536x1024",
+      "references": [
+        "@trees-garden"
+      ],
+      "prompt": "Five separate plants in exactly the style of the reference trees (top-down three-quarter view pixel art RPG), arranged in one row with space between them: 1) a round green bush, 2) a dense dark-green bush, 3) a bush with small white and pink flowers, 4) a bush with small red berries, 5) a grapevine climbing a short wooden post, with bunches of purple grapes. Same pixel scale as the reference (4x4 blocks), each about 220 image pixels tall."
+    },
+    {
+      "id": "props-nature",
+      "title": "Rocks, logs, ferns, flowers, reeds",
+      "size": "1536x1024",
+      "references": [
+        "@trees-garden"
+      ],
+      "prompt": "A sheet of small nature props for a top-down three-quarter view pixel art RPG, in exactly the style of the reference: in a loose grid with clear space between every item: a large grey boulder, a medium rock, a small pebble, a mossy rock, a fallen log, two different ferns, six small clumps of wildflowers (white, yellow, blue, pink, red, purple), three small grass tufts, a clump of river reeds, a floating lily pad with a flower, a small cluster of mushrooms, a flat sitting stone, a wheat-like wild grain plant. Same pixel scale as the reference (4x4 blocks)."
+    },
+    {
+      "id": "props-items",
+      "title": "Basket, gourd, digging stick, fruit, fig leaf",
+      "size": "1536x1024",
+      "references": [
+        "@trees-garden"
+      ],
+      "prompt": "A sheet of small item sprites for a pixel art RPG, in exactly the style of the reference, each item separate with clear space around it, in a loose grid: an empty woven reed basket, the same basket full of fruit, a dry gourd for carrying water, the same gourd shown wet and full, a straight wooden digging stick lying on the ground, a small pouch of seeds, one broad fig leaf, a single fig, a single pomegranate, a cluster of dates, a bunch of purple grapes, a single shiny red fruit, a single glowing golden fruit. Same pixel scale as the reference (4x4 blocks), items small (most about 60 to 120 image pixels)."
+    },
+    {
+      "id": "terrain",
+      "title": "Ground swatches",
+      "size": "1536x1024",
+      "references": [
+        "art/reference/main-menu.webp"
+      ],
+      "prompt": "Five large square swatches of top-down pixel art ground textures for an RPG, in the style of the reference, side by side with magenta gaps between them: 1) lush short grass, 2) grass with tiny scattered flowers, 3) a packed dirt path, 4) clear river water seen from above, 5) dry cracked earth. Each swatch is a flat, evenly lit, repeating texture with no objects, no perspective and no border, about 280 image pixels square, pixel scale 4x4 blocks."
     }
   ]
 }

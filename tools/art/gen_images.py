@@ -112,9 +112,28 @@ def multipart(fields: dict, files: list[tuple[str, str]]) -> tuple[bytes, str]:
     return b''.join(parts), f'multipart/form-data; boundary={boundary}'
 
 
+def output_of(spec: dict, jid: str) -> str:
+    """The image a job settled on: its `approved` file, else its latest
+    medium-quality output, else its latest output."""
+    job = next((j for j in spec['jobs'] if j['id'] == jid), None)
+    if job and job.get('approved'):
+        return job['approved']
+    folder = os.path.join(OUT, jid)
+    files = sorted(f for f in os.listdir(folder) if f.endswith('.png')) if os.path.isdir(folder) else []
+    if not files:
+        sys.exit(f'Reference @{jid} has no output yet; generate it first.')
+    medium = [f for f in files if f.endswith('-medium.png')]
+    return os.path.relpath(os.path.join(folder, (medium or files)[-1]), ROOT)
+
+
+def reference_paths(spec: dict, job: dict) -> list[str]:
+    """References are repository paths, or @job for another job's output."""
+    return [os.path.join(ROOT, output_of(spec, r[1:]) if r.startswith('@') else r) for r in job.get('references', [])]
+
+
 def call(spec: dict, job: dict, quality: str) -> dict:
     key = os.environ.get('OPENAI_API_KEY')
-    refs = [os.path.join(ROOT, r) for r in job.get('references', [])]
+    refs = reference_paths(spec, job)
     fields = {'model': MODEL, 'prompt': full_prompt(spec, job), 'size': job.get('size', '1024x1024'), 'quality': quality, 'n': '1'}
     if refs:
         body, ctype = multipart(fields, [('image[]', r) for r in refs])
