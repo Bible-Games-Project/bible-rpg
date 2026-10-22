@@ -107,7 +107,7 @@ export const POINTS: Record<string, Pt> = {
 };
 
 export const ZONES: Record<string, Zone> = {
-  plot: { x: 1450, y: 1250, r: 170 },
+  plot: { x: 1450, y: 1200, r: 170 },
   midst: { x: 2830, y: 1500, r: 230 },
   meadow: { x: 3300, y: 650, r: 520 },
   gather: { x: 3220, y: 770, r: 210 },
@@ -123,9 +123,9 @@ export const ZONES: Record<string, Zone> = {
 
 /** Garden plot patches for the farming activity (mission 1). */
 export const PLOT_PATCHES: Pt[] = [
-  [1400, 1254],
-  [1446, 1254],
-  [1492, 1254],
+  [1398, 1176],
+  [1446, 1176],
+  [1494, 1176],
 ];
 
 /** God's walk through the grove in the cool of the day (mission 8). */

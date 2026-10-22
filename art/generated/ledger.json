@@ -1027,5 +1027,26 @@
    "total_tokens": 1996
   },
   "at": "20261022-191711"
+ },
+ {
+  "job": "props-farm",
+  "file": "art/generated/props-farm/20261022-192719-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.019,
+  "usage": {
+   "input_tokens": 1938,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 402
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 2096
+  },
+  "at": "20261022-192719"
  }
 ]

@@ -346,6 +346,15 @@
         "art/reference/main-menu.webp"
       ],
       "prompt": "Five large square swatches of top-down pixel art ground textures for an RPG, in the style of the reference, side by side with magenta gaps between them: 1) lush short grass, 2) grass with tiny scattered flowers, 3) a packed dirt path, 4) clear river water seen from above, 5) dry cracked earth. Each swatch is a flat, evenly lit, repeating texture with no objects, no perspective and no border, about 280 image pixels square, pixel scale 4x4 blocks."
+    },
+    {
+      "id": "props-farm",
+      "title": "Garden plot, plants, thorns, stepping stone",
+      "size": "1536x1024",
+      "references": [
+        "@trees-garden"
+      ],
+      "prompt": "A sheet of small farming and plant sprites for a top-down three-quarter view pixel art RPG, in exactly the style of the reference, in two rows of five with clear space between every item. Top row: 1) a small square patch of grass with its corners marked by four little stones, 2) a square patch of freshly tilled dark-brown soil with furrows, 3) the same tilled patch with seeds in small holes, 4) the same patch darker and wet after watering, 5) a tiny green sprout. Bottom row: 6) a young leafy vegetable plant, 7) a fully grown leafy plant with small yellow flowers, 8) a low tangled thorny bramble, 9) a spiky purple thistle, 10) a flat round stepping stone seen from above. Same pixel scale as the reference (4x4 blocks)."
     }
   ]
 }

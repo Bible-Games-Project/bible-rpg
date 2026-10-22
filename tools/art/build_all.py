@@ -1,10 +1,11 @@
 """Build every game sprite and the asset manifest.
 
     python3 tools/art/build_all.py            # everything
-    python3 tools/art/build_all.py chars      # one group (chars, portraits, creatures, flora, terrain, items, ui)
+    python3 tools/art/build_all.py chars      # one group (chars, portraits, creatures, flora, terrain, items, from_generated)
 
-Sources: the supplied references in art/reference (never modified) and the
-generators in this folder. Output: public/assets/** and
+Sources: the supplied references in art/reference (never modified), the
+generators in this folder and, last, the generated art in art/generated
+(from_generated.py), which replaces the procedural sprites it covers. Output: public/assets/** and
 src/data/generated/assets.json (merged, so groups can be rebuilt alone).
 """
 
@@ -95,7 +96,7 @@ def build_portraits(m: dict) -> None:
     print('  portraits:', ', '.join(m['portraits']))
 
 
-GROUPS = ['references', 'portraits', 'chars', 'creatures', 'flora', 'terrain', 'items']
+GROUPS = ['references', 'portraits', 'chars', 'creatures', 'flora', 'terrain', 'items', 'from_generated']
 
 
 def main() -> None:
