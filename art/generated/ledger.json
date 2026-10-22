@@ -418,5 +418,26 @@
    "total_tokens": 3209
   },
   "at": "20261022-190202"
+ },
+ {
+  "job": "god-portrait",
+  "file": "art/generated/god-portrait/20261022-190257-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0156,
+  "usage": {
+   "input_tokens": 1328,
+   "input_tokens_details": {
+    "image_tokens": 1024,
+    "text_tokens": 304
+   },
+   "output_tokens": 196,
+   "output_tokens_details": {
+    "image_tokens": 196,
+    "text_tokens": 0
+   },
+   "total_tokens": 1524
+  },
+  "at": "20261022-190257"
  }
 ]
