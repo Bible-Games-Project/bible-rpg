@@ -1,5 +1,5 @@
 {
-  "style": "STYLE RULES: Hand-made pixel art in exactly the style of the reference image(s): crisp square pixels on a strict grid (each art pixel is one solid square block of image pixels), no anti-aliasing, no blur, no soft gradients between blocks, no noisy dithering. Warm natural palette, soft painterly shading with light from the upper left, thin dark-brown outlines, just like the reference. The reference images show the style and scale only: draw new subjects, do not copy or edit the reference. BACKGROUND: one flat solid magenta color (#FF00FF) everywhere around the subjects, with no shadows, ground, grass, scenery, glow or texture on it. Leave clear magenta space between separate subjects. No text, letters, numbers, labels, borders or frames.",
+  "style": "STYLE RULES: Hand-made pixel art in exactly the style of the reference image(s): crisp square pixels on a strict grid (each art pixel is one solid square block of image pixels), no anti-aliasing, no blur, no soft gradients between blocks, no noisy dithering. Warm natural palette, soft painterly shading with light from the upper left. NO OUTLINES: never draw black, dark-brown or dark contour lines around the subjects or around their parts; shapes are defined only by their colors, light and shadow, and where an edge needs separation use just a slightly darker shade of that area's own color. The reference images show the palette, pixel size and scale only (ignore their dark outlines): draw new subjects, do not copy or edit the reference. BACKGROUND: one flat solid magenta color (#FF00FF) everywhere around the subjects, with no shadows, ground, grass, scenery, glow or texture on it. Leave clear magenta space between separate subjects. No text, letters, numbers, labels, borders or frames.",
   "jobs": [
     {
       "id": "eve-sprite",
@@ -13,11 +13,12 @@
       "title": "The LORD God, full body, front / back / side",
       "size": "1536x1024",
       "references": ["art/prompts/refs/adam-sprite.png"],
-      "prompt": "Game character sprite of the LORD God for a family Bible game: a radiant, gentle and dignified elderly man, never frightening. Long white hair and a long white beard, a long flowing white robe with a simple golden sash and thin golden trim at the hems and sleeves, bare feet, a faint warm golden rim of light on the figure itself (not on the background). Same pixel scale as Adam in the reference (8x8 blocks) and slightly taller (about 122 art pixels tall). Draw him three times in one row, full body, standing still: 1) facing the viewer, 2) seen from behind, 3) facing right in side profile."
+      "prompt": "Game character sprite of the LORD God for a family Bible game: a radiant, gentle and dignified elderly man, never frightening. Long white hair and a long white beard, a long flowing white robe with a simple golden sash and thin golden trim at the hems and sleeves, bare feet. No glow, halo, aura or colored rim light around him and no outline of any color around the figure (the game adds the light itself). Same pixel scale as Adam in the reference (8x8 blocks) and slightly taller (about 122 art pixels tall). Draw him three times in one row, full body, standing still: 1) facing the viewer, 2) seen from behind, 3) facing right in side profile."
     },
     {
       "id": "eve-portrait",
       "title": "Eve, dialogue portrait",
+      "approved": "art/generated/eve-portrait/20261022-184754-low.png",
       "size": "1024x1024",
       "references": ["art/prompts/refs/adam-portrait.png"],
       "prompt": "Dialogue portrait of Eve, the first woman, matching the reference portrait of Adam exactly in framing, size, pixel scale, palette and shading: head and shoulders, facing the viewer, centered, the same distance from the camera. Long wavy dark-brown hair falling over her shoulders, warm olive skin, gentle and bright expression, the top of a garment of green leaves covering her chest."
