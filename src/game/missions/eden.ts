@@ -682,7 +682,7 @@ const m08: MissionDef = {
     w.show(w.god, [2200, 2330], 'right');
     w.godLight(true);
     w.sfx('holy');
-    await w.stealth(60);
+    await w.stealth(20);
 
     // the LORD God calls, and they come out
     w.cutscene(true);

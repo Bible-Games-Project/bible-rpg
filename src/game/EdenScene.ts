@@ -22,6 +22,12 @@ export interface EdenStartData {
   mode: 'continue' | 'new';
 }
 
+/** World pixels of height on screen, and the narrowest view (portrait phones). */
+const VIEW_HEIGHT = 1000;
+const VIEW_MIN_WIDTH = 640;
+/** Never smaller than this, so characters stay readable on small screens. */
+const MIN_ZOOM = 0.5;
+
 const ITEM_ICONS: Record<string, string> = {
   stick: 'digging-stick',
   seeds: 'seeds',
@@ -62,6 +68,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private objectiveTarget: ObjectiveTarget = null;
   private marker!: Phaser.GameObjects.Sprite;
   private tint!: Phaser.GameObjects.Rectangle;
+  private smoothArt = false;
   private glow!: Phaser.GameObjects.Image;
   private rays!: Phaser.GameObjects.Image;
   private godLit = false;
@@ -165,10 +172,22 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.runner?.stop();
   }
 
+  /**
+   * About 1000 world px of height on screen (the maintainer wanted the world
+   * seen from farther away). Below 1 the art is scaled down smoothly (linear
+   * filtering); from 1 up the zoom is a whole number, so pixels stay square.
+   */
   private applyZoom(): void {
     const w = this.scale.width;
     const h = this.scale.height;
-    const z = Math.max(1, Math.min(Math.round(h / 560), Math.floor(w / 420)));
+    const fit = Math.min(h / VIEW_HEIGHT, w / VIEW_MIN_WIDTH);
+    const z = fit >= 1 ? Math.max(1, Math.round(fit)) : Math.max(MIN_ZOOM, fit);
+    const smooth = z < 1;
+    if (smooth !== this.smoothArt) {
+      this.smoothArt = smooth;
+      const mode = smooth ? Phaser.Textures.FilterMode.LINEAR : Phaser.Textures.FilterMode.NEAREST;
+      for (const key of this.textures.getTextureKeys()) this.textures.get(key).setFilter(mode);
+    }
     this.cameras.main.setZoom(z);
     this.tint.setSize(w / z + 64, h / z + 64);
     this.tint.setPosition(w / 2 - w / z / 2 - 32, h / 2 - h / z / 2 - 32);

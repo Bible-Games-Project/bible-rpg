@@ -13,9 +13,12 @@ export interface TreeInstance {
   y: number;
   trunk: Phaser.GameObjects.Image;
   canopy: Phaser.GameObjects.Image;
+  /** the canopy with see-through leaves, shown while it hides the player */
+  veil: Phaser.GameObjects.Image;
+  /** 0 = canopy opaque, 1 = see-through */
+  fade: number;
   bounds: Phaser.Geom.Rectangle;
   fruit: FruitInstance[];
-  fadeTarget: number;
 }
 
 export interface FruitInstance {
@@ -23,6 +26,8 @@ export interface FruitInstance {
   tree: TreeInstance;
   type: string;
   picked: boolean;
+  /** opacity of the see-through canopy at this fruit's height */
+  veil: number;
 }
 
 export interface PropInstance {
@@ -101,6 +106,8 @@ export class WorldObjects {
     const oy = (t.anchorY + 1) / t.height;
     const trunk = this.scene.add.image(p.x, p.y, `tree:${k.tree}:trunk`).setOrigin(ox, oy).setDepth(p.y).setFlipX(!!p.flip);
     const canopy = this.scene.add.image(p.x, p.y, `tree:${k.tree}:canopy`).setOrigin(ox, oy).setDepth(p.y + 0.1).setFlipX(!!p.flip);
+    const veilTex = canopyVeil(this.scene, k.tree!);
+    const veil = this.scene.add.image(p.x, p.y, veilTex.key).setOrigin(ox, oy).setDepth(p.y + 0.1).setFlipX(!!p.flip).setAlpha(0).setVisible(false);
     const shadowW = Math.min(t.width * 0.62, 190);
     const sh = this.scene.add.image(p.x, p.y - 2, 'shadow-large').setDepth(DEPTH_GROUND + 10).setAlpha(0.75);
     sh.setScale(shadowW / 90, Math.max(0.6, shadowW / 180));
@@ -110,7 +117,7 @@ export class WorldObjects {
     const rect = this.scene.add.rectangle(colX, colY, cw, ch).setVisible(false);
     this.colliders.add(rect);
     const bounds = new Phaser.Geom.Rectangle(p.x - t.anchorX, p.y - t.anchorY, t.width, t.anchorY - 14);
-    const inst: TreeInstance = { id: p.id, kind: k.tree!, x: p.x, y: p.y, trunk, canopy, bounds, fruit: [], fadeTarget: 1 };
+    const inst: TreeInstance = { id: p.id, kind: k.tree!, x: p.x, y: p.y, trunk, canopy, veil, fade: 0, bounds, fruit: [] };
     const type = FRUIT_OF[t.kind];
     if (type && t.fruit.length) {
       const slots = t.kind === 'forbidden' || t.kind === 'life' ? t.fruit : t.fruit.slice(0, Math.min(4, t.fruit.length));
@@ -118,7 +125,7 @@ export class WorldObjects {
         const sx = p.x - t.anchorX + (p.flip ? t.width - fx : fx);
         const sy = p.y - t.anchorY + fy;
         const s = this.scene.add.image(sx, sy, type).setOrigin(0.5, 0.15).setDepth(p.y + 0.2);
-        inst.fruit.push({ sprite: s, tree: inst, type, picked: false });
+        inst.fruit.push({ sprite: s, tree: inst, type, picked: false, veil: veilTex.at(fy) });
       }
     }
     this.trees.push(inst);
@@ -285,20 +292,20 @@ export class WorldObjects {
     body.enable = !open;
   }
 
-  /** Fade a whole tree (trunk, canopy and fruit) while it hides the active
-   * character, so no edge appears between a faded and an opaque part. */
+  /** While a tree hides the active character its leaves turn see-through,
+   * fading in gradually above the trunk (the maintainer disliked a visible
+   * cut); the trunk stays opaque. */
   updateCanopies(px: number, py: number, view: Phaser.Geom.Rectangle): void {
     for (const t of this.trees) {
       if (!Phaser.Geom.Rectangle.Overlaps(view, t.bounds)) continue;
       const behind = py < t.y - 4 && Phaser.Geom.Rectangle.Contains(t.bounds, px, py - 40);
-      const target = behind ? 0.5 : 1;
-      const a = t.canopy.alpha;
-      if (Math.abs(a - target) > 0.01) {
-        const na = a + (target - a) * 0.18;
-        t.canopy.setAlpha(na);
-        t.trunk.setAlpha(na);
-        for (const f of t.fruit) f.sprite.setAlpha(na);
-      }
+      const target = behind ? 1 : 0;
+      if (Math.abs(t.fade - target) < 0.01) continue;
+      t.fade += (target - t.fade) * 0.18;
+      if (Math.abs(t.fade - target) < 0.01) t.fade = target;
+      t.canopy.setAlpha(1 - t.fade);
+      t.veil.setVisible(t.fade > 0).setAlpha(t.fade);
+      for (const f of t.fruit) if (!f.picked) f.sprite.setAlpha(1 - t.fade + t.fade * f.veil);
     }
   }
 
@@ -321,4 +328,49 @@ export class WorldObjects {
 
 function distToPolylineSeg(px: number, py: number, ax: number, ay: number, bx: number, by: number): number {
   return distToPolyline(px, py, [[ax, ay], [bx, by]]);
+}
+
+/** How see-through the leaves get, and over how many pixels above the
+ * lowest leaves they reach it. */
+const VEIL_ALPHA = 0.4;
+const VEIL_RAMP = 40;
+const veilBottoms = new Map<string, number>();
+
+/**
+ * A copy of a tree's canopy whose opacity falls from 1 at its lowest leaves
+ * to VEIL_ALPHA over VEIL_RAMP pixels, made once per tree kind. `at(row)`
+ * gives that opacity for a row of the image (fruit fades with its leaves).
+ */
+function canopyVeil(scene: Phaser.Scene, kind: string): { key: string; at: (row: number) => number } {
+  const key = `tree:${kind}:veil`;
+  const src = scene.textures.get(`tree:${kind}:canopy`).getSourceImage() as HTMLImageElement;
+  const w = src.width;
+  const h = src.height;
+  let bottom = h - 1;
+  if (!scene.textures.exists(key)) {
+    const canvas = scene.textures.createCanvas(key, w, h)!;
+    const ctx = canvas.getContext();
+    ctx.drawImage(src, 0, 0);
+    const alpha = ctx.getImageData(0, 0, w, h).data;
+    bottom = lowestRow(alpha, w, h);
+    ctx.globalCompositeOperation = 'destination-in';
+    const g = ctx.createLinearGradient(0, bottom - VEIL_RAMP, 0, bottom);
+    g.addColorStop(0, `rgba(0, 0, 0, ${VEIL_ALPHA})`);
+    g.addColorStop(1, 'rgba(0, 0, 0, 1)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+    canvas.refresh();
+    veilBottoms.set(key, bottom);
+  } else {
+    bottom = veilBottoms.get(key) ?? bottom;
+  }
+  const at = (row: number) => VEIL_ALPHA + (1 - VEIL_ALPHA) * Phaser.Math.Clamp((row - (bottom - VEIL_RAMP)) / VEIL_RAMP, 0, 1);
+  return { key, at };
+}
+
+function lowestRow(rgba: Uint8ClampedArray, w: number, h: number): number {
+  for (let y = h - 1; y >= 0; y--) {
+    for (let x = 0; x < w; x++) if (rgba[(y * w + x) * 4 + 3] > 0) return y;
+  }
+  return h - 1;
 }

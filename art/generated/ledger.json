@@ -1993,5 +1993,110 @@
    "total_tokens": 490
   },
   "at": "20261023-185039"
+ },
+ {
+  "job": "v3-adam-views",
+  "file": "art/generated/v3-adam-views/20261023-192935-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0549,
+  "usage": {
+   "input_tokens": 1828,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 292
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 3200
+  },
+  "at": "20261023-192935"
+ },
+ {
+  "job": "v3-eve-views",
+  "file": "art/generated/v3-eve-views/20261023-192958-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0549,
+  "usage": {
+   "input_tokens": 1829,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 293
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 3201
+  },
+  "at": "20261023-192958"
+ },
+ {
+  "job": "v3-adam-fig-views",
+  "file": "art/generated/v3-adam-fig-views/20261023-193024-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0549,
+  "usage": {
+   "input_tokens": 1836,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 300
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 3208
+  },
+  "at": "20261023-193024"
+ },
+ {
+  "job": "v3-eve-fig-views",
+  "file": "art/generated/v3-eve-fig-views/20261023-193051-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.055,
+  "usage": {
+   "input_tokens": 1837,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 301
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 3209
+  },
+  "at": "20261023-193051"
+ },
+ {
+  "job": "v3-eve-portrait",
+  "file": "art/generated/v3-eve-portrait/20261023-193114-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0672,
+  "usage": {
+   "input_tokens": 3358,
+   "input_tokens_details": {
+    "image_tokens": 3072,
+    "text_tokens": 286
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 4730
+  },
+  "at": "20261023-193114"
  }
 ]

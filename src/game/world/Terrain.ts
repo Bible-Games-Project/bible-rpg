@@ -80,7 +80,7 @@ export class Terrain {
   private build(): void {
     const t = MANIFEST.tiles;
     const map = this.scene.make.tilemap({ tileWidth: TILE, tileHeight: TILE, width: this.cols, height: this.rows });
-    const tileset = map.addTilesetImage('tiles', 'tiles', TILE, TILE, 0, 0)!;
+    const tileset = map.addTilesetImage('tiles', extrudedTiles(this.scene), TILE, TILE, 1, 2)!;
     const ground = map.createBlankLayer('ground', tileset)!;
     const path = map.createBlankLayer('path', tileset)!;
     const dry = map.createBlankLayer('dry', tileset)!;
@@ -158,4 +158,35 @@ export class Terrain {
       }
     }
   }
+}
+
+/**
+ * The tile sheet with each tile's edge pixels repeated one pixel outward
+ * (margin 1, spacing 2). When the camera zooms below 1 the ground is drawn
+ * with linear filtering, which would otherwise blend in the neighbouring
+ * tile of the sheet and show thin lines between tiles.
+ */
+function extrudedTiles(scene: Phaser.Scene): string {
+  const key = 'tiles-extruded';
+  if (scene.textures.exists(key)) return key;
+  const src = scene.textures.get('tiles').getSourceImage() as HTMLImageElement | HTMLCanvasElement;
+  const cols = Math.floor(src.width / TILE);
+  const rows = Math.floor(src.height / TILE);
+  const step = TILE + 2;
+  const canvas = scene.textures.createCanvas(key, cols * step, rows * step)!;
+  const ctx = canvas.getContext();
+  ctx.imageSmoothingEnabled = false;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const sx = c * TILE;
+      const sy = r * TILE;
+      const dx = c * step + 1;
+      const dy = r * step + 1;
+      // the tile stretched by one pixel on every side, then the tile itself on top
+      ctx.drawImage(src, sx, sy, TILE, TILE, dx - 1, dy - 1, TILE + 2, TILE + 2);
+      ctx.drawImage(src, sx, sy, TILE, TILE, dx, dy, TILE, TILE);
+    }
+  }
+  canvas.refresh();
+  return key;
 }

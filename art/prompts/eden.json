@@ -811,6 +811,57 @@
       ],
       "prompt": "Animation strip of this exact white dove (the bird in the reference image), seen from the side and facing right, seven frames in one row, evenly spaced with clear space between them, same pixel scale as the reference: frame 1 standing still; frames 2 and 3 walking steps with the head bobbing forward; frames 4 to 7 flying with the wings fully up, half down, fully down, half up. The dove is identical in every frame (same colors and proportions).",
       "style": "style2"
+    },
+    {
+      "id": "v3-adam-views",
+      "title": "Adam, leaf trousers and sweater (front / back / side)",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-adam-tunic-views"
+      ],
+      "prompt": "Character sheet of exactly the same young man as in the reference (Adam): identical face, curly dark-brown hair, warm tan skin, body proportions and art style. He now wears simple clothes made of small fresh green leaves woven together: long trousers of leaves and a long-sleeved sweater of leaves. Three full-body views side by side with clear space between them, all at exactly the same size and height: front view, back view, and side view facing right. Standing straight and relaxed, barefoot, legs slightly apart, arms hanging naturally at the sides a little away from the body (in the side view the near arm hangs straight down along the body)."
+    },
+    {
+      "id": "v3-eve-views",
+      "title": "Eve, leaf trousers and sweater (front / back / side)",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-eve-tunic-views"
+      ],
+      "prompt": "Character sheet of exactly the same young woman as in the reference (Eve): identical face, long wavy brown hair, warm tan skin, body proportions and art style. She now wears simple clothes made of small fresh green leaves woven together: long trousers of leaves and a long-sleeved sweater of leaves. Three full-body views side by side with clear space between them, all at exactly the same size and height: front view, back view, and side view facing right. Standing straight and relaxed, barefoot, legs slightly apart, arms hanging naturally at the sides a little away from the body (in the side view the near arm hangs straight down along the body)."
+    },
+    {
+      "id": "v3-adam-fig-views",
+      "title": "Adam, fig-leaf trousers and sweater (front / back / side)",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v3-adam-views"
+      ],
+      "prompt": "Character sheet of exactly the same young man as in the reference (Adam), same face, hair, skin, proportions, pose and art style. Same clothes shape (long trousers and a long-sleeved sweater), but now sewn together from large broad fig leaves: big lobed fig leaves in a deeper green, overlapping, with simple visible stitching. Three full-body views side by side with clear space between them, all at exactly the same size and height: front view, back view, and side view facing right. Standing straight and relaxed, barefoot, legs slightly apart, arms hanging naturally at the sides a little away from the body (in the side view the near arm hangs straight down along the body)."
+    },
+    {
+      "id": "v3-eve-fig-views",
+      "title": "Eve, fig-leaf trousers and sweater (front / back / side)",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v3-eve-views"
+      ],
+      "prompt": "Character sheet of exactly the same young woman as in the reference (Eve), same face, hair, skin, proportions, pose and art style. Same clothes shape (long trousers and a long-sleeved sweater), but now sewn together from large broad fig leaves: big lobed fig leaves in a deeper green, overlapping, with simple visible stitching. Three full-body views side by side with clear space between them, all at exactly the same size and height: front view, back view, and side view facing right. Standing straight and relaxed, barefoot, legs slightly apart, arms hanging naturally at the sides a little away from the body (in the side view the near arm hangs straight down along the body)."
+    },
+    {
+      "id": "v3-eve-portrait",
+      "title": "Eve, dialogue portrait in the style of Adam's",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/prompts/refs/v2-adam-portrait.png",
+        "@v3-eve-views"
+      ],
+      "prompt": "Dialogue portrait of Eve (the young woman of the second reference: same face, long wavy brown hair, warm tan skin, wearing her sweater of small green leaves), head and shoulders, facing the viewer, calm and gentle expression, mouth closed, eyes open. Drawn in EXACTLY the art style of the first reference portrait (Adam): the same pixel size, the same realistic adult facial proportions, the same eye size and shape, the same painterly shading and warm light, the same framing and head size. Not a cartoon: no oversized, anime or animated-film eyes; natural small nose and lips; a real young woman."
     }
   ],
   "style2": "STYLE RULES: Soft, modern pixel art exactly in the style of the reference images: small soft pixel blocks, gentle painterly shading with light from the upper left, bright warm natural colours (fresh yellow-greens, warm skin, soft browns), smooth flat areas with little texture noise, and NO dark outlines: shapes are separated only by colour and light. The references show the style and scale only: draw new subjects, do not copy or edit the references. BACKGROUND: one flat solid magenta colour (#FF00FF) everywhere around the subjects, with no shadow, ground, grass, scenery, glow or texture on it. Leave clear magenta space between separate subjects. No text, letters, numbers, labels, borders or frames."

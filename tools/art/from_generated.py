@@ -35,8 +35,9 @@ def has_output(job: str) -> bool:
 
 
 def J(job: str) -> str:
-    """The job to use: its second-style version ("v2-...") once generated."""
-    return f'v2-{job}' if has_output(f'v2-{job}') else job
+    """The job to use: its newest restyled version ("v3-...", then "v2-...")
+    once generated, else the job itself."""
+    return next((f'{v}-{job}' for v in ('v3', 'v2') if has_output(f'{v}-{job}')), job)
 
 
 def cutout(job: str) -> np.ndarray:
@@ -221,13 +222,6 @@ def decontaminate(s: np.ndarray) -> np.ndarray:
     return out
 
 
-def trim_bottom(f: np.ndarray) -> np.ndarray:
-    """Drop the empty rows under a frame that shares a canvas with others,
-    keeping its columns (so frames stay aligned) and its feet on the baseline:
-    the canvas bottom is the standing feet row."""
-    return f[:-1]
-
-
 def trim(s: np.ndarray) -> np.ndarray:
     ys, xs = np.nonzero(s[:, :, 3])
     if not len(ys):
@@ -300,15 +294,11 @@ def breathe(s: np.ndarray) -> np.ndarray:
     return out
 
 
-# the maintainer's own sprite: Adam facing right
-ADAM_SIDE = 'art/reference/v2/adam-sprite.png'
-
-
 def view_sheet(char: str, outfit: str) -> str | None:
     """The clean three-view sheet (front, back, side) of a character."""
-    v2 = f'v2-{char}-views' if outfit in ('leaves', 'robe') else f'v2-{char}-{outfit}-views'
-    if has_output(v2):
-        return v2
+    job = J(f'{char}-views' if outfit in ('leaves', 'robe') else f'{char}-{outfit}-views')
+    if job.startswith(('v2-', 'v3-')):
+        return job
     return {('adam', 'leaves'): 'adam-sprite', ('eve', 'leaves'): 'eve-sprite', ('god', 'robe'): 'god-sprite'}.get((char, outfit))
 
 
@@ -317,10 +307,7 @@ def standing(char: str, outfit: str, d: str) -> np.ndarray:
     (its back views are right, unlike some walk strips), else the first frame
     of the walk strip."""
     sheet = view_sheet(char, outfit)
-    if (char, outfit, d) == ('adam', 'leaves', 'right') and has_output('v2-adam-views'):
-        img = cutout(ADAM_SIDE)
-        box = bbox(clean_mask(img[:, :, 3]))
-    elif sheet and (d in ('down', 'up') or sheet.startswith('v2-')):
+    if sheet and (d in ('down', 'up') or sheet.startswith(('v2-', 'v3-'))):
         img = cutout(sheet)
         box = split_strip(img, 3)[DIRS.index(d)]
     else:
@@ -367,36 +354,112 @@ def legs_of(s: np.ndarray) -> tuple[int, int]:
     return top, int(round(float(np.median(gaps))))
 
 
-def step(stand: np.ndarray, top: int, split: int, lift_l: int, lift_r: int, bob: int) -> np.ndarray:
+# rows of empty room above and below the standing frame, for raised bodies
+# and for feet reaching toward the viewer
+ROOM = 3
+
+
+def step(stand: np.ndarray, top: int, split: int, lift_l: int, lift_r: int, bob: int, keep: np.ndarray | None = None) -> np.ndarray:
     """A walking frame made from the standing frame: each leg raised by its
-    lift, the body above the legs moved by bob (down positive). A copy of the
-    hips under the body fills the gap when the body rises."""
+    lift (negative: lowered, reaching toward the viewer), the body above the
+    legs moved by bob (down positive). `keep` marks pixels below the hips
+    that move with the body (hands). A copy of the hips under the body fills
+    the gap when the body rises."""
     h, w = stand.shape[:2]
-    out = np.zeros((h + 2, w, 4), np.uint8)
+    out = np.zeros((h + 2 * ROOM, w, 4), np.uint8)
+    keep = np.zeros((h, w), bool) if keep is None else keep
+    legs = np.where(keep[:, :, None], 0, stand).astype(np.uint8)
     overlap = 3
     for x0, x1, lift in ((0, split, lift_l), (split, w, lift_r)):
-        part = stand[top - overlap:, x0:x1]
-        y = 1 + top - overlap - lift
+        part = legs[top - overlap:, x0:x1]
+        y = ROOM + top - overlap - lift
         region = out[y:y + part.shape[0], x0:x1]
-        m = part[:, :, 3:4] > 0
-        out[y:y + part.shape[0], x0:x1] = np.where(m, part, region)
-    body = stand[:top]
-    y = 1 + bob
-    region = out[y:y + top]
-    out[y:y + top] = np.where(body[:, :, 3:4] > 0, body, region)
+        out[y:y + part.shape[0], x0:x1] = np.where(part[:, :, 3:4] > 0, part, region)
+    body = np.zeros_like(stand)
+    body[:top] = stand[:top]
+    body[keep] = stand[keep]
+    y = ROOM + bob
+    out[y:y + h] = np.where(body[:, :, 3:4] > 0, body, out[y:y + h])
     return out
 
 
-# (left lift, right lift, body bob) for an eight-frame step cycle seen from the front or back
-STEP_CYCLE = [(0, 0, 1), (2, 0, 0), (4, 0, -1), (2, 0, 0), (0, 0, 1), (0, 2, 0), (0, 4, -1), (0, 2, 0)]
+def arm_bands(s: np.ndarray) -> list[tuple[int, int, int, int]]:
+    """Forearms of a front or back view as (x0, x1, y0, y1): the columns
+    outside the gap between arm and body (where the arms hang free), from
+    elbow height down to the hand. Long sleeves of a robe show no gap: no
+    arms then."""
+    h, w = s.shape[:2]
+    a = s[:, :, 3] > 0
+    lefts, rights = [], []
+    for y in range(int(0.3 * h), int(0.62 * h)):
+        r = row_runs(a[y])
+        if len(r) >= 2:
+            if r[0][1] < 0.35 * w:
+                lefts.append(r[0][1])
+            if r[-1][0] > 0.65 * w:
+                rights.append(r[-1][0])
+    out = []
+    y0 = int(0.42 * h)
+    if len(lefts) >= 2:
+        x1 = int(np.median(lefts))
+        rows = [y for y in range(y0, int(0.68 * h)) if a[y, :max(1, x1 - 1)].any()]
+        if rows:
+            out.append((0, x1, y0, max(rows) + 1))
+    if len(rights) >= 2:
+        x0 = int(np.median(rights))
+        rows = [y for y in range(y0, int(0.68 * h)) if a[y, min(w - 1, x0 + 1):].any()]
+        if rows:
+            out.append((x0, w, y0, max(rows) + 1))
+    return out
 
 
-def front_back_frames(char: str, outfit: str, d: str) -> list[np.ndarray]:
+def stretch_arm(s: np.ndarray, band: tuple[int, int, int, int], e: int) -> np.ndarray:
+    """The forearm in `band` drawn e pixels longer (swinging toward the
+    viewer) or shorter (swinging away)."""
+    if e == 0:
+        return s
+    x0, x1, y0, y1 = band
+    out = s.copy()
+    part = s[y0:y1, x0:x1].copy()
+    out[y0:y1, x0:x1] = 0
+    n = y1 - y0
+    m = max(1, n + e)
+    new = np.stack([part[min(n - 1, int(r * n / m))] for r in range(m)])
+    m = min(m, out.shape[0] - y0)
+    out[y0:y0 + m, x0:x1] = np.where(new[:m, :, 3:4] > 0, new[:m], out[y0:y0 + m, x0:x1])
+    return out
+
+
+# eight-frame walk seen from the front or back. Legs: pixels each foot is
+# raised (negative: lowered, the leg reaching toward the viewer); body bob
+# (down positive); arms: pixels the left hand moves down (swinging toward
+# the viewer) or up, the right hand the opposite. Each arm swings against
+# the leg on its side.
+WALK_LEGS_L = (-2, -1, 0, 1, 3, 6, 8, 4)
+WALK_LEGS_R = (3, 6, 8, 4, -2, -1, 0, 1)
+WALK_BOB = (1, 1, -1, 0, 1, 1, -1, 0)
+WALK_ARM_L = (-3, -2, 0, 2, 3, 2, 0, -2)
+
+
+def front_back_frames(char: str, outfit: str, d: str) -> tuple[list[np.ndarray], int]:
+    """Idle and walking frames for a front or back view on one canvas, and
+    the canvas row of the standing feet."""
     stand = standing(char, outfit, d)
+    h, w = stand.shape[:2]
     top, split = legs_of(stand)
-    pad = lambda f: np.vstack([np.zeros((1, f.shape[1], 4), np.uint8), f, np.zeros((1, f.shape[1], 4), np.uint8)])  # noqa: E731
-    still = pad(stand)
-    return [still, pad(breathe(stand))] + [step(stand, top, split, *c) for c in STEP_CYCLE]
+    bands = arm_bands(stand)
+    pad = lambda f: np.pad(f, ((ROOM, ROOM), (0, 0), (0, 0)))  # noqa: E731
+    frames = [pad(stand), pad(breathe(stand))]
+    for i in range(len(WALK_BOB)):
+        body = stand
+        keep = np.zeros((h, w), bool)
+        for b in bands:
+            e = WALK_ARM_L[i] if b[0] == 0 else -WALK_ARM_L[i]
+            body = stretch_arm(body, b, e)
+            keep[b[2]:min(h, b[3] + max(0, e)), b[0]:b[1]] = True
+        keep &= body[:, :, 3] > 0
+        frames.append(step(body, top, split, WALK_LEGS_L[i], WALK_LEGS_R[i], WALK_BOB[i], keep))
+    return frames, h - 1 + ROOM
 
 
 def rotate_part(part: np.ndarray, angle: float, pivot: tuple[float, float], k: int = 4) -> np.ndarray:
@@ -408,15 +471,69 @@ def rotate_part(part: np.ndarray, angle: float, pivot: tuple[float, float], k: i
     return np.asarray(big)[k // 2::k, k // 2::k].copy()
 
 
-# near-leg angle (degrees, forward positive) for an eight-frame side step cycle
+# near-leg angle (degrees, forward positive) for an eight-frame side step
+# cycle; the arms swing against the legs by ARM_SWING of that angle
 SIDE_CYCLE = (16, 8, 0, -8, -16, -8, 0, 8)
+ARM_SWING = 0.55
+
+# The near arm of a side view (x0, x1, y0, y1 in the standing frame) where
+# it cannot be told from the body by colour: bare arms over a tunic of much
+# the same colour. Measured on the current v2 tunic sheets; measure again if
+# those are regenerated.
+SIDE_ARMS = {('adam', 'tunic'): (4, 11, 24, 60), ('eve', 'tunic'): (8, 13, 27, 61)}
 
 
-def side_frames(stand: np.ndarray) -> list[np.ndarray] | None:
-    """Idle and walking frames for a side view, all made from one standing
-    frame: both legs swing from the hip (the far one a little darker) under
-    the unchanged body, and the lowest foot stays on the ground. None when
-    no legs show (long robes)."""
+def side_arm_band(stand: np.ndarray, char: str, outfit: str) -> tuple[int, int, int, int] | None:
+    """The near arm of a side view, from the shoulder to the hand. Sleeves
+    are the colour of the clothes, so the hand finds it: the largest patch of
+    non-green (skin) at hand height, with the arm straight above it."""
+    if (char, outfit) in SIDE_ARMS:
+        return SIDE_ARMS[(char, outfit)]
+    h, w = stand.shape[:2]
+    y0, y1 = int(0.45 * h), int(0.66 * h)
+    skin = np.zeros((h, w), bool)
+    for y in range(y0, y1):
+        for x in range(w):
+            c = stand[y, x]
+            if c[3]:
+                hh, ss, vv = hsv(c[:3])
+                skin[y, x] = not 0.15 < hh < 0.45 and vv > 0.45
+    groups = [g for g in blobs(skin) if len(g) >= 6]
+    if not groups:
+        return None
+    g = max(groups, key=len)
+    ys = [p[0] for p in g]
+    xs = [p[1] for p in g]
+    return (min(xs), max(xs) + 1, int(0.24 * h), max(ys) + 1)
+
+
+def split_arm(stand: np.ndarray, band: tuple[int, int, int, int]) -> tuple[np.ndarray, np.ndarray]:
+    """(arm, body): the arm's pixels on their own, and the body with the
+    place of the arm filled from the clothes beside it (chest side first)."""
+    x0, x1, y0, y1 = band
+    h, w = stand.shape[:2]
+    arm = np.zeros_like(stand)
+    arm[y0:y1, x0:x1] = stand[y0:y1, x0:x1]
+    body = stand.copy()
+    bw = x1 - x0
+    for y in range(y0, y1):
+        for x in range(x0, x1):
+            if not stand[y, x, 3]:
+                continue
+            body[y, x] = 0
+            for sx in (x + bw, x - bw, x1, x0 - 1):
+                if 0 <= sx < w and not x0 <= sx < x1 and stand[y, sx, 3]:
+                    body[y, x] = stand[y, sx]
+                    break
+    return arm, body
+
+
+def side_frames(stand: np.ndarray, char: str = '', outfit: str = '') -> tuple[list[np.ndarray], int] | None:
+    """Idle and walking frames for a side view on one canvas, all made from
+    one standing frame, and the canvas row of the standing feet: both legs
+    swing from the hip and the arms from the shoulder, against the legs (the
+    far limbs a little darker, behind the body); the lowest foot stays on
+    the ground. None when no legs show (long robes)."""
     h, w = stand.shape[:2]
     a = stand[:, :, 3] > 0
     widths = a.sum(axis=1)
@@ -429,33 +546,45 @@ def side_frames(stand: np.ndarray) -> list[np.ndarray] | None:
     leg_mask = np.zeros_like(a)
     for y, x in legs:
         leg_mask[y, x] = True
+    band = side_arm_band(stand, char, outfit)
+    if band:
+        leg_mask[band[2]:band[3], band[0]:band[1]] = False
     cols = np.nonzero(leg_mask[top])[0]
     pivot = ((cols.min() + cols.max() + 1) / 2, top - round(0.1 * h))
     leg = np.where(leg_mask[:, :, None], stand, 0).astype(np.uint8)
     for y in range(pivot[1], top):  # hidden under the clothes: keeps the hip joined
         leg[y] = np.where(leg_mask[top][:, None], stand[top], 0)
     body = np.where(leg_mask[:, :, None], 0, stand).astype(np.uint8)
+    arm = np.zeros_like(stand)
+    if band:
+        arm, body = split_arm(body, band)
     pad = 14
-    grow = lambda f: np.pad(f, ((1, 1), (pad, pad), (0, 0)))  # noqa: E731
-    leg, body = grow(leg), grow(body)
-    far = leg.copy()
-    far[:, :, :3] = (far[:, :, :3] * 0.8).astype(np.uint8)
-    centre = (pivot[0] + pad, pivot[1] + 1)
-    ground = h
+    grow = lambda f: np.pad(f, ((ROOM, ROOM), (pad, pad), (0, 0)))  # noqa: E731
+    leg, body, arm = grow(leg), grow(body), grow(arm)
+    dark = lambda f: np.concatenate([(f[:, :, :3] * 0.8).astype(np.uint8), f[:, :, 3:]], axis=2)  # noqa: E731
+    far_leg, far_arm = dark(leg), dark(arm)
+    hip = (pivot[0] + pad, pivot[1] + ROOM)
+    shoulder = ((band[0] + band[1]) / 2 + pad, band[2] + 2 + ROOM) if band else hip
+    ground = h - 1 + ROOM
     frames = [grow(stand), grow(breathe(stand))]
     for angle in SIDE_CYCLE:
+        swing = -angle * ARM_SWING
         out = np.zeros_like(body)
-        for layer in (rotate_part(far, -angle, centre), rotate_part(leg, angle, centre), body):
+        layers = (rotate_part(far_arm, -swing, shoulder), rotate_part(far_leg, -angle, hip), rotate_part(leg, angle, hip),
+                  body, rotate_part(arm, swing, shoulder))
+        for layer in layers:
             out = np.where(layer[:, :, 3:4] > 0, layer, out)
         low = int(np.nonzero(out[:, :, 3].any(axis=1))[0].max())
         frames.append(np.roll(out, ground - low, axis=0))
     used = np.nonzero(np.any([f[:, :, 3].any(axis=0) for f in frames], axis=0))[0]
-    return [f[:, used.min():used.max() + 1] for f in frames]
+    return [f[:, used.min():used.max() + 1] for f in frames], ground
 
 
-def walk_frames(char: str, outfit: str, d: str) -> list[np.ndarray]:
-    if has_output(f'v2-{char}-views'):
-        frames = side_frames(standing(char, outfit, d))
+def walk_frames(char: str, outfit: str, d: str) -> list[np.ndarray] | tuple[list[np.ndarray], int]:
+    """Side frames: made from the standing frame (with the canvas row of the
+    feet), or for a long robe the generated strides (each frame on its own)."""
+    if (view_sheet(char, outfit) or '').startswith(('v2-', 'v3-')):
+        frames = side_frames(standing(char, outfit, d), char, outfit)
         if frames:
             return frames
     img = cutout(f'walk-{char}-{outfit}-{d}')
@@ -476,8 +605,6 @@ def walk_frames(char: str, outfit: str, d: str) -> list[np.ndarray]:
     a = max(strides, key=lambda f: legs_diff(f, stand))
     rest = [f for f in strides if f is not a]
     b = max(rest, key=lambda f: legs_diff(f, a))
-    if (char, outfit) == ('adam', 'leaves') and has_output('v2-adam-views'):
-        stand = standing(char, outfit, d)
     return [stand, breathe(stand), a, stand, b, stand]
 
 
@@ -486,22 +613,26 @@ def build_characters(m: dict, save, strip, sheet_entry) -> np.ndarray:
     adam_front = None
     for char, outfit in SETS:
         sets = {d: front_back_frames(char, outfit, d) if d in ('down', 'up') else walk_frames(char, outfit, d) for d in DIRS}
-        w = max(f.shape[1] for fr in sets.values() for f in fr) + 6
+        # frames on a shared canvas keep two rows under the standing feet
+        shared = {d: fr for d, fr in sets.items() if isinstance(fr, tuple)}
+        single = {d: fr for d, fr in sets.items() if not isinstance(fr, tuple)}
+        frames = [f for fr, _ in shared.values() for f in fr] + [f for fr in single.values() for f in fr]
+        w = max(f.shape[1] for f in frames) + 6
         w += w % 2
-        h = max(f.shape[0] for fr in sets.values() for f in fr) + 4
+        h = max([base + 3 for _, base in shared.values()] + [f.shape[0] + 2 for fr in single.values() for f in fr]) + 1
         for d, fr in sets.items():
-            if len(fr) == 10:
-                # the frames share one canvas already: keep their alignment
-                c = torso_center(trim_bottom(fr[0]))
-                cells = [place(trim_bottom(f), w, h, w // 2, h - 3, c) for f in fr]
-                extra = {'idle': [0, 1], 'walk': list(range(2, len(fr))), 'walkFps': 12}
+            if d in shared:
+                fs, base = fr
+                c = torso_center(fs[0][:base + 1])
+                cells = [place(f[:base + 3], w, h, w // 2, h - 1, c) for f in fs]
+                extra = {'idle': [0, 1], 'walk': list(range(2, len(fs))), 'walkFps': 12}
             else:
                 cells = [place(f, w, h, w // 2, h - 3, torso_center(f)) for f in fr]
                 extra = {'idle': [0, 1], 'walk': [2, 3, 4, 5]}
             file = save(strip(cells), f'sprites/char-{char}-{outfit}-{d}.png')
             chars.setdefault(char, {}).setdefault(outfit, {})[d] = sheet_entry(file, cells, (w // 2, h - 3), **extra)
         if (char, outfit) == ('adam', 'leaves'):
-            adam_front = sets['down'][0][1:-1]
+            adam_front = sets['down'][0][0][ROOM:-ROOM]
         print(f'  {char}/{outfit}: {w}x{h}')
     return adam_front
 
@@ -725,11 +856,14 @@ def canopy_split(s: np.ndarray) -> int:
 
 
 def split_tree(s: np.ndarray) -> tuple[np.ndarray, np.ndarray, int, int, list[int]]:
-    """Canopy above the lowest leafy row, trunk below; base point; collider."""
+    """Canopy above the lowest leafy row, trunk below; base point; collider.
+    The canopy keeps two rows of the trunk under it: drawn scaled down with
+    smooth filtering, two images that only touched would show a thin line
+    of ground between them."""
     h, w = s.shape[:2]
     split = canopy_split(s)
     canopy = s.copy()
-    canopy[split:] = 0
+    canopy[split + 2:] = 0
     trunk = s.copy()
     trunk[:split] = 0
     # base: bottom of the trunk; the collider spans the trunk a little above the roots
@@ -849,9 +983,20 @@ def find_eyes(p: np.ndarray) -> list[tuple[int, int, int, int]]:
     return [best[True][1], best[False][1]]
 
 
-def eye_spans(p: np.ndarray, box: tuple[int, int, int, int]) -> dict[int, tuple[int, int]]:
+def human_eye(c) -> bool:
+    """Pupil, iris or white of a human eye."""
+    return lum(c) < 100 or (lum(c) > 185 and hsv(c)[1] < 0.35)
+
+
+def snake_eye(c) -> bool:
+    """The serpent's golden iris, slit pupil or highlight."""
+    h, sat, v = hsv(c)
+    return lum(c) < 90 or (0.08 < h < 0.16 and sat > 0.6 and v > 0.55) or (lum(c) > 200 and sat < 0.35)
+
+
+def eye_spans(p: np.ndarray, box: tuple[int, int, int, int], is_eye=human_eye) -> dict[int, tuple[int, int]]:
     """Row -> (first, last + 1) column of the eye itself inside its box: the
-    dark and white pixels joined to the pupil, so hair or brows that reach
+    eye-coloured pixels joined to the pupil, so hair or brows that reach
     into the box stay untouched."""
     y0, x0, y1, x1 = box
     h, w = y1 - y0, x1 - x0
@@ -859,7 +1004,7 @@ def eye_spans(p: np.ndarray, box: tuple[int, int, int, int]) -> dict[int, tuple[
     for y in range(h):
         for x in range(w):
             c = p[y0 + y, x0 + x]
-            cand[y, x] = bool(c[3]) and (lum(c[:3]) < 100 or (lum(c[:3]) > 185 and hsv(c[:3])[1] < 0.35))
+            cand[y, x] = bool(c[3]) and is_eye(c[:3])
     groups = sorted(blobs(cand), key=len, reverse=True)
     if not groups:
         return {}
@@ -871,7 +1016,7 @@ def eye_spans(p: np.ndarray, box: tuple[int, int, int, int]) -> dict[int, tuple[
     return spans
 
 
-def eye_patches(p: np.ndarray, boxes: list[tuple[int, int, int, int]]) -> list[tuple[np.ndarray, int, int]]:
+def eye_patches(p: np.ndarray, boxes: list[tuple[int, int, int, int]], is_eye=human_eye) -> list[tuple[np.ndarray, int, int]]:
     """Half-closed and closed eyes: the eyelid (the skin just above the
     lashes) comes down over the eye, row by row, and the lash line moves
     down with it. Only the eye's own pixels change."""
@@ -881,7 +1026,7 @@ def eye_patches(p: np.ndarray, boxes: list[tuple[int, int, int, int]]) -> list[t
     py1 = max(b[2] for b in boxes)
     px0 = min(b[1] for b in boxes)
     px1 = max(b[3] for b in boxes)
-    eyes = [eye_spans(p, b) for b in boxes]
+    eyes = [eye_spans(p, b, is_eye) for b in boxes]
     if not all(eyes):
         return []
 
@@ -916,29 +1061,34 @@ def eye_patches(p: np.ndarray, boxes: list[tuple[int, int, int, int]]) -> list[t
 
 def mouth_patches(p: np.ndarray, eye_y: float) -> list[tuple[np.ndarray, int, int]]:
     """Mouth half open and open: a dark gap below the line of the lips. The
-    lip line is the widest dark run across the face under the nose (nostril
-    shadows are dark too, but short)."""
+    lip line is the longest run of pixels darker than the skin of its row,
+    near the middle of the face under the nose (nostril shadows are dark
+    too, but short). Hair is darker still: it breaks a run and is left out
+    of the skin it is compared with."""
     fy, fx = p.shape[0] / 66, p.shape[1] / 64
     cx = p.shape[1] // 2
+    span = range(cx - round(8 * fx), cx + round(8 * fx) + 1)
     best = None
     for y in range(int(eye_y + 8 * fy), min(p.shape[0] - 3, int(eye_y + 13 * fy) + 1)):
-        span = range(cx - round(8 * fx), cx + round(8 * fx) + 1)
-        vals = [lum(p[y, x, :3]) for x in span if p[y, x, 3]]
-        if len(vals) < 6:
+        skin = [lum(p[y, x, :3]) for x in span if p[y, x, 3] and lum(p[y, x, :3]) >= 65]
+        if len(skin) < 6:
             continue
-        ref = float(np.median(vals))
-        run = longest = 0
-        start = end = cx
-        for x in span:
-            if p[y, x, 3] and lum(p[y, x, :3]) < ref - 18:
-                run += 1
-                if run > longest:
-                    longest, end = run, x + 1
-                    start = end - run
-            else:
-                run = 0
-        if longest >= max(4, round(4 * fx)) and (best is None or longest > best[0]):
-            best = (longest, y, start, end)
+        ref = float(np.percentile(skin, 75))  # the lips can fill half the row
+        start = None
+        for x in list(span) + [None]:
+            v = lum(p[y, x, :3]) if x is not None and p[y, x, 3] else 0
+            dark = x is not None and 65 <= v < ref - 18
+            if dark and start is None:
+                start = x
+            elif not dark and start is not None:
+                a, b = start, x if x is not None else span[-1] + 1
+                start = None
+                centre = (a + b) / 2
+                if b - a < max(4, round(3 * fx)) or abs(centre - cx) > 6 * fx:
+                    continue
+                key = (b - a, -abs(centre - cx))
+                if best is None or key > best[0]:
+                    best = (key, y, a, b)
     if best is None:
         return []
     _, by, x0, x1 = best
@@ -952,6 +1102,35 @@ def mouth_patches(p: np.ndarray, eye_y: float) -> list[tuple[np.ndarray, int, in
     return frames
 
 
+# The serpent's portrait, measured on the current v2 image (94 x 87); measure
+# again if it is regenerated. (y0, x0, y1, x1)
+SERPENT_EYE = (16, 33, 24, 46)
+SERPENT_TONGUE = (36, 0, 48, 16)
+
+
+def serpent_parts(p: np.ndarray) -> tuple[np.ndarray, list, list]:
+    """(base, tongue frames, eye frames): the serpent speaks by flicking its
+    forked tongue, so the base portrait has none and the two "mouth" frames
+    draw it half and fully out, from its root at the mouth."""
+    y0, x0, y1, x1 = SERPENT_TONGUE
+    region = p[y0:y1, x0:x1]
+    pts = [(y, x) for y, x in zip(*np.nonzero(region[:, :, 3]))]
+    base = p.copy()
+    base[y0:y1, x0:x1, 3] = 0
+    mouth = []
+    if pts:
+        root = min(pts, key=lambda q: (q[0], -q[1]))
+        dist = {q: np.hypot(q[0] - root[0], q[1] - root[1]) for q in pts}
+        far = max(dist.values()) or 1
+        for share in (0.5, 1.0):
+            patch = np.zeros_like(region)
+            for q in pts:
+                if dist[q] <= far * share + 0.01:
+                    patch[q] = region[q]
+            mouth.append((patch, x0, y0))
+    return base, mouth, eye_patches(base, [SERPENT_EYE], snake_eye)
+
+
 def build_portraits(m, save) -> None:
     out = m.setdefault('portraits', {})
     todo: list[tuple[str, np.ndarray]] = []
@@ -962,14 +1141,17 @@ def build_portraits(m, save) -> None:
         todo.append((name, portrait(job, pw, ph)))
     for name, p in todo:
         ph, pw = p.shape[:2]
+        if name == 'serpent':
+            p, mouth, eyes = serpent_parts(p)
+        else:
+            boxes = find_eyes(p)
+            eye_y = np.mean([(b[0] + b[2]) / 2 for b in boxes]) if boxes else 25
+            mouth, eyes = mouth_patches(p, eye_y), eye_patches(p, boxes)
         entry = {'file': save(p, f'portraits/{name}.png'), 'width': pw, 'height': ph, 'mouth': [], 'eyes': []}
-        if name != 'serpent':
-            eyes = find_eyes(p)
-            eye_y = np.mean([(b[0] + b[2]) / 2 for b in eyes]) if eyes else 25
-            for kind, frames in (('mouth', mouth_patches(p, eye_y)), ('eyes', eye_patches(p, eyes))):
-                for i, (img, x, y) in enumerate(frames):
-                    f = save(img, f'portraits/{name}-{kind}-{i}.png')
-                    entry[kind].append({'file': f, 'x': int(x), 'y': int(y), 'w': int(img.shape[1]), 'h': int(img.shape[0])})
+        for kind, frames in (('mouth', mouth), ('eyes', eyes)):
+            for i, (img, x, y) in enumerate(frames):
+                f = save(img, f'portraits/{name}-{kind}-{i}.png')
+                entry[kind].append({'file': f, 'x': int(x), 'y': int(y), 'w': int(img.shape[1]), 'h': int(img.shape[0])})
         out[name] = entry
         print(f'  portrait {name}: eyes {len(entry["eyes"])}, mouth {len(entry["mouth"])}')
 

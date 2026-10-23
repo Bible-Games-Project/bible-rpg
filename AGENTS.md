@@ -99,14 +99,21 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   background). Never downscale or "simplify" them: they rejected an early
   half-resolution pass as "removing pixels".
 - Style v2 (current): the maintainer sent `art/reference/v2/` and asked that
-  everything follow it: `adam-sprite.png` (Adam facing right: used as is, and
-  the model for every other character and animal), `adam-talk.webp` (Adam's
-  dialogue portrait: used as is on its own grid, 87×94 art px, and the model
-  for every other portrait), `style-scene.webp` (colours: a smooth, quiet
-  yellow-green meadow, sandy paths, turquoise water, contrasty round trees)
-  and `cover.webp` (the menu background). The v2 jobs in `art/prompts/eden.json`
-  use `style2` and these references; `from_generated.py` prefers a `v2-` job's
-  output whenever one exists (`J()`), so the v1 jobs stay only as a fallback.
+  everything follow it: `adam-talk.webp` (Adam's dialogue portrait: used as
+  is on its own grid, 87×94 art px, and the model for every other portrait),
+  `style-scene.webp` (colours: a smooth, quiet yellow-green meadow, sandy
+  paths, turquoise water, contrasty round trees), `cover.webp` (the menu
+  background) and `adam-sprite.png` (Adam facing right: the model for the
+  characters; no longer drawn in game, the maintainer found it pale next to
+  the others). The jobs in `art/prompts/eden.json` use `style2` and these
+  references; `from_generated.py` takes a job's newest version (`v3-`, then
+  `v2-`, then the original: `J()`).
+- Characters (v3, maintainer's choice): Adam and Eve look like their dressed
+  (tunic) versions. Start outfit `leaves`: trousers and a long-sleeved
+  sweater of small fresh leaves; `fig` (mission 7): the same clothes sewn
+  from large fig leaves; `tunic` (coats of skins, mission 9): kept as
+  generated in v2 ("me encanta"). Eve's portrait follows Adam's portrait
+  style (the maintainer found the first one too "Disney").
 - The maintainer wants no marked outlines on sprites ("se ve más pro"). `bun
   run art` rebuilds `public/assets/**` and `src/data/generated/assets.json`:
   the procedural generators in `tools/art/` run first, then
@@ -116,23 +123,38 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
 - `from_generated.py` resamples each generated subject onto a regular grid at
   a fixed game size (Adam 100 px tall: 116 × `ART_CREATURE_SCALE` 0.86; trees
   × `ART_TREE_SCALE` 1.1), splits trees into trunk/canopy at the lowest leafy
-  row, paints out red/purple fruit and records those spots as pickable fruit
+  row (the canopy keeps 2 trunk rows, so no seam shows when scaled down),
+  paints out red/purple fruit and records those spots as pickable fruit
   slots, and makes blink/talk patches for portraits (the eyelid colour comes
   down over the eye's own pixels only; the mouth opens under the lip line).
-  Walks are all built from one clean standing frame per direction, so the
-  drawing never changes between frames: front/back legs are split at the gap
-  and lifted in turn with a body bob; side legs swing from the hip (far leg
-  darker); 8 frames at 12 fps. Generated strips flickered (different drawings
-  per frame) and one "back" view had a front torso. God's long robe shows no
-  legs, so his side walk uses the generated strides. Animals use generated
-  7-frame strips (stand + 6).
+  The serpent blinks and talks by flicking its tongue (`SERPENT_EYE`,
+  `SERPENT_TONGUE`: boxes measured on its current portrait).
+- Walks are all built from one clean standing frame per direction, so the
+  drawing never changes between frames (8 frames at 12 fps). The maintainer
+  asked for clearly visible steps and soft arm swings. Front/back: legs split
+  at the gap, the forward foot reaching 2 px toward the viewer and the other
+  lifted up to 8 px, body bob, forearms (outside the arm–body gap) stretched
+  ±3 px against the legs. Side: legs swing from the hip, arms from the
+  shoulder (`ARM_SWING` of the leg angle), far limbs darker behind the body.
+  A side arm is found by its hand (non-green pixels at hand height); bare
+  arms over a tunic of the same colour use `SIDE_ARMS` boxes measured on
+  the current tunic sheets (measure again if they are regenerated). God's
+  long robe shows no legs, so his side walk uses the generated strides.
+  Generated walk strips flickered (a different drawing per frame).
+  Animals use generated 7-frame strips (stand + 6).
 - Ground (`ART_GRASS=scene`, the default): grass colours are sampled from the
   meadow of `style-scene.webp` (nudged `ART_GRASS_HUE` 8° greener and
   `ART_GRASS_SAT` ×0.88 so a whole map is not mustard) and drawn smooth: base
   colour, a few soft patches, tiny tufts and light specks. The maintainer
   found textured grass too busy ("no tan cargado").
-- Trees fade as a whole (trunk, canopy, fruit) when they hide the player; the
-  maintainer disliked the visible cut when only the canopy faded.
+- Camera: about 1000 world px of height on screen (the maintainer wanted the
+  world seen from farther away). Below zoom 1 every texture switches to
+  linear filtering (nearest-neighbour at 0.7 drops pixels unevenly); the
+  tile sheet is extruded at runtime so tiles do not bleed into each other.
+- Trees: when one hides the active character its leaves turn see-through
+  with a soft gradient from the lowest leaves up (a canvas copy of the
+  canopy per tree kind); the trunk stays opaque. The maintainer disliked
+  both a hard cut and a fully faded tree.
 - New art comes from the OpenAI Image API (maintainer's decision), with a
   hard total budget of 5 USD: `tools/art/gen_images.py` (jobs and prompts in
   `art/prompts/eden.json`, every call logged in `art/generated/ledger.json`,
@@ -152,8 +174,8 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   carry their reference. Invented activities are introduced with "Gameplay:"
   and the HUD labels them "Gameplay activity · inspired by …".
 - God appears as a luminous human figure and is never an enemy; the hiding
-  challenge (mission 8) only sends the player back, and the canonical
-  conversation always happens.
+  challenge (mission 8, 20 seconds: the maintainer found a minute too long)
+  only sends the player back, and the canonical conversation always happens.
 
 ### Code conventions
 

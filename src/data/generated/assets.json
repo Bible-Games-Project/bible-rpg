@@ -7,16 +7,16 @@
    "mouth": [
     {
      "file": "assets/portraits/adam-mouth-0.png",
-     "x": 41,
+     "x": 42,
      "y": 49,
-     "w": 12,
+     "w": 10,
      "h": 2
     },
     {
      "file": "assets/portraits/adam-mouth-1.png",
-     "x": 41,
+     "x": 42,
      "y": 49,
-     "w": 12,
+     "w": 10,
      "h": 3
     }
    ],
@@ -44,33 +44,33 @@
    "mouth": [
     {
      "file": "assets/portraits/eve-mouth-0.png",
-     "x": 35,
-     "y": 47,
-     "w": 6,
+     "x": 42,
+     "y": 42,
+     "w": 10,
      "h": 2
     },
     {
      "file": "assets/portraits/eve-mouth-1.png",
-     "x": 35,
-     "y": 47,
-     "w": 6,
+     "x": 42,
+     "y": 42,
+     "w": 10,
      "h": 3
     }
    ],
    "eyes": [
     {
      "file": "assets/portraits/eve-eyes-0.png",
-     "x": 31,
-     "y": 29,
-     "w": 32,
-     "h": 7
+     "x": 32,
+     "y": 28,
+     "w": 27,
+     "h": 5
     },
     {
      "file": "assets/portraits/eve-eyes-1.png",
-     "x": 31,
-     "y": 29,
-     "w": 32,
-     "h": 7
+     "x": 32,
+     "y": 28,
+     "w": 27,
+     "h": 5
     }
    ]
   },
@@ -81,16 +81,16 @@
    "mouth": [
     {
      "file": "assets/portraits/god-mouth-0.png",
-     "x": 40,
-     "y": 40,
-     "w": 11,
+     "x": 38,
+     "y": 41,
+     "w": 14,
      "h": 2
     },
     {
      "file": "assets/portraits/god-mouth-1.png",
-     "x": 40,
-     "y": 40,
-     "w": 11,
+     "x": 38,
+     "y": 41,
+     "w": 14,
      "h": 3
     }
    ],
@@ -115,8 +115,38 @@
    "file": "assets/portraits/serpent.png",
    "width": 94,
    "height": 87,
-   "mouth": [],
-   "eyes": []
+   "mouth": [
+    {
+     "file": "assets/portraits/serpent-mouth-0.png",
+     "x": 0,
+     "y": 36,
+     "w": 16,
+     "h": 12
+    },
+    {
+     "file": "assets/portraits/serpent-mouth-1.png",
+     "x": 0,
+     "y": 36,
+     "w": 16,
+     "h": 12
+    }
+   ],
+   "eyes": [
+    {
+     "file": "assets/portraits/serpent-eyes-0.png",
+     "x": 33,
+     "y": 16,
+     "w": 13,
+     "h": 8
+    },
+    {
+     "file": "assets/portraits/serpent-eyes-1.png",
+     "x": 33,
+     "y": 16,
+     "w": 13,
+     "h": 8
+    }
+   ]
   }
  },
  "characters": {
@@ -124,10 +154,10 @@
    "leaves": {
     "down": {
      "file": "assets/sprites/char-adam-leaves-down.png",
-     "frameWidth": 42,
+     "frameWidth": 38,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 21,
+     "anchorX": 19,
      "anchorY": 103,
      "idle": [
       0,
@@ -147,10 +177,10 @@
     },
     "up": {
      "file": "assets/sprites/char-adam-leaves-up.png",
-     "frameWidth": 42,
+     "frameWidth": 38,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 21,
+     "anchorX": 19,
      "anchorY": 103,
      "idle": [
       0,
@@ -170,10 +200,10 @@
     },
     "right": {
      "file": "assets/sprites/char-adam-leaves-right.png",
-     "frameWidth": 42,
+     "frameWidth": 38,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 21,
+     "anchorX": 19,
      "anchorY": 103,
      "idle": [
       0,
@@ -195,10 +225,10 @@
    "fig": {
     "down": {
      "file": "assets/sprites/char-adam-fig-down.png",
-     "frameWidth": 44,
+     "frameWidth": 38,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 22,
+     "anchorX": 19,
      "anchorY": 103,
      "idle": [
       0,
@@ -218,10 +248,10 @@
     },
     "up": {
      "file": "assets/sprites/char-adam-fig-up.png",
-     "frameWidth": 44,
+     "frameWidth": 38,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 22,
+     "anchorX": 19,
      "anchorY": 103,
      "idle": [
       0,
@@ -241,10 +271,10 @@
     },
     "right": {
      "file": "assets/sprites/char-adam-fig-right.png",
-     "frameWidth": 44,
+     "frameWidth": 38,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 22,
+     "anchorX": 19,
      "anchorY": 103,
      "idle": [
       0,
@@ -339,10 +369,10 @@
    "leaves": {
     "down": {
      "file": "assets/sprites/char-eve-leaves-down.png",
-     "frameWidth": 42,
+     "frameWidth": 36,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 21,
+     "anchorX": 18,
      "anchorY": 99,
      "idle": [
       0,
@@ -362,10 +392,10 @@
     },
     "up": {
      "file": "assets/sprites/char-eve-leaves-up.png",
-     "frameWidth": 42,
+     "frameWidth": 36,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 21,
+     "anchorX": 18,
      "anchorY": 99,
      "idle": [
       0,
@@ -385,10 +415,10 @@
     },
     "right": {
      "file": "assets/sprites/char-eve-leaves-right.png",
-     "frameWidth": 42,
+     "frameWidth": 36,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 21,
+     "anchorX": 18,
      "anchorY": 99,
      "idle": [
       0,
@@ -410,10 +440,10 @@
    "fig": {
     "down": {
      "file": "assets/sprites/char-eve-fig-down.png",
-     "frameWidth": 44,
+     "frameWidth": 36,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 22,
+     "anchorX": 18,
      "anchorY": 99,
      "idle": [
       0,
@@ -433,10 +463,10 @@
     },
     "up": {
      "file": "assets/sprites/char-eve-fig-up.png",
-     "frameWidth": 44,
+     "frameWidth": 36,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 22,
+     "anchorX": 18,
      "anchorY": 99,
      "idle": [
       0,
@@ -456,10 +486,10 @@
     },
     "right": {
      "file": "assets/sprites/char-eve-fig-right.png",
-     "frameWidth": 44,
+     "frameWidth": 36,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 22,
+     "anchorX": 18,
      "anchorY": 99,
      "idle": [
       0,
@@ -623,10 +653,10 @@
   "adam-sleeping": {
    "file": "assets/sprites/adam-sleeping.png",
    "frameWidth": 100,
-   "frameHeight": 26,
+   "frameHeight": 30,
    "frames": 1,
    "anchorX": 50,
-   "anchorY": 25
+   "anchorY": 29
   },
   "animal-sheep": {
    "file": "assets/sprites/animal-sheep.png",

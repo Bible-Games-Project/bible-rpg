@@ -32,10 +32,11 @@ export const DEFAULT_PORTRAIT_CONFIG: PortraitConfig = {
   mouthFrame: 95,
 };
 
-/** Per-portrait overrides. The serpent has no eyelids (it never blinks). */
+/** Per-portrait overrides. The serpent blinks slowly and "talks" by
+ * flicking its tongue (its mouth frames). */
 export const PORTRAIT_CONFIG: Record<string, Partial<PortraitConfig>> = {
   god: { blinkInterval: [2600, 6200], mouthFrame: 120 },
-  serpent: { blinkInterval: [1e9, 1e9], mouthFrame: 140 },
+  serpent: { blinkInterval: [3000, 7000], blinkDuration: 220, doubleBlinkChance: 0, mouthFrame: 110 },
 };
 
 const images = new Map<string, HTMLImageElement>();
