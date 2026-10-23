@@ -12,6 +12,7 @@ import { ui } from './bridge';
 import { MANIFEST } from './manifest';
 import { Actor, DEPTH_GROUND, DEPTH_OVERLAY, type Facing } from './world/Actor';
 import { Animals } from './world/Animals';
+import { Atmosphere } from './world/Atmosphere';
 import { Terrain } from './world/Terrain';
 import { WorldObjects, type TreeInstance } from './world/WorldObjects';
 import type { InteractSpec, ObjectiveTarget, TimeOfDay, WorldApi } from './WorldApi';
@@ -39,7 +40,8 @@ const ITEM_ICONS: Record<string, string> = {
 };
 
 const TINTS: Record<TimeOfDay, { color: number; alpha: number }> = {
-  day: { color: 0xffffff, alpha: 0 },
+  // a faint warm cast in daylight: every sprite and the ground share one light
+  day: { color: 0xffeed2, alpha: 0.35 },
   afternoon: { color: 0xf3d8a8, alpha: 0.22 },
   evening: { color: 0x9a7ab8, alpha: 0.42 },
   dusk: { color: 0xd7866a, alpha: 0.36 },
@@ -68,6 +70,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private objectiveTarget: ObjectiveTarget = null;
   private marker!: Phaser.GameObjects.Sprite;
   private tint!: Phaser.GameObjects.Rectangle;
+  private atmosphere!: Atmosphere;
   private smoothArt = false;
   private glow!: Phaser.GameObjects.Image;
   private rays!: Phaser.GameObjects.Image;
@@ -122,8 +125,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       this.physics.add.collider(b.actor.feet, this.objects.colliders);
     }
     // tint overlay for the time of day
-    this.tint = this.add.rectangle(0, 0, 10, 10, 0xffffff, 0).setOrigin(0).setScrollFactor(0).setDepth(DEPTH_OVERLAY - 100);
+    this.tint = this.add.rectangle(0, 0, 10, 10, TINTS.day.color, TINTS.day.alpha).setOrigin(0).setScrollFactor(0).setDepth(DEPTH_OVERLAY - 100);
     this.tint.setBlendMode(Phaser.BlendModes.MULTIPLY);
+    this.atmosphere = new Atmosphere(this, settings.get().reduceMotion);
     // camera
     const cam = this.cameras.main;
     cam.setBounds(0, 0, WORLD_W, WORLD_H);
@@ -191,6 +195,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.cameras.main.setZoom(z);
     this.tint.setSize(w / z + 64, h / z + 64);
     this.tint.setPosition(w / 2 - w / z / 2 - 32, h / 2 - h / z / 2 - 32);
+    this.atmosphere.resize(w, h, z);
   }
 
   // ------------------------------------------------------------------ party
@@ -418,6 +423,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   setTime(time: TimeOfDay): void {
     const tt = TINTS[time];
     this.tweens.add({ targets: this.tint, fillAlpha: tt.alpha, duration: 1200 });
+    this.atmosphere.setTime(time);
     this.tint.fillColor = tt.color;
     audio.setAmbience(time === 'evening' ? 'evening' : time === 'dusk' ? 'outside' : 'garden');
     for (const f of this.fireflies) f.destroy();
@@ -750,7 +756,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
         this.stepTimer -= dt;
         if (this.stepTimer <= 0) {
           audio.play('step', { pitch: this.terrain.pathDistance(p.x, p.y) < 0 ? 0.7 : 1.15, volume: 0.6 });
-          this.stepTimer = 0.32;
+          this.stepTimer = 0.27; // two steps per walk cycle (8 frames at 15 fps)
         }
       }
     } else if (!p.scripted) {
@@ -760,6 +766,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     for (const a of [this.adam, this.eve, this.god, this.serpent]) if (!a.scripted) a.refresh();
     this.animals.update(time, dt);
     const cam = this.cameras.main;
+    this.atmosphere.update(delta, cam);
     this.objects.updateCanopies(p.x, p.y, cam.worldView);
     this.updateGod(time);
     this.updateInteractPrompt();

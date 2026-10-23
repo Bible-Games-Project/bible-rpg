@@ -6,6 +6,10 @@ export type Facing = 'down' | 'up' | 'left' | 'right';
 export const DEPTH_GROUND = -100000;
 export const DEPTH_SHADOW = -50000;
 export const DEPTH_OVERLAY = 1000000;
+/** Speed (px/s) at which a character's walk animation plays at its own frame
+ * rate: the player's walking speed. Slower or faster walks play it slower or
+ * faster, so the feet keep pace with the ground. */
+export const WALK_PACE = 170;
 
 export interface ActorOptions {
   id: string;
@@ -35,6 +39,8 @@ export class Actor {
   shadow: Phaser.GameObjects.Image | null = null;
   facing: Facing;
   moving = false;
+  /** current walking speed (px/s) */
+  private pace = 0;
   charId?: string;
   outfit?: string;
   sheet?: string;
@@ -69,6 +75,8 @@ export class Actor {
     if (o.shadow !== null) {
       this.shadow = scene.add.image(o.x, o.y, o.shadow ?? 'shadow-small').setDepth(DEPTH_SHADOW);
       this.shadow.setAlpha(0.9);
+      // people get the same soft, wide shadow as the trees around them
+      if (o.charId) this.shadow.setScale(1.4, 1.3).setAlpha(1);
     }
     this.refresh(true);
   }
@@ -108,6 +116,7 @@ export class Actor {
   move(vx: number, vy: number): void {
     this.body.setVelocity(vx, vy);
     this.moving = Math.abs(vx) + Math.abs(vy) > 1;
+    this.pace = Math.hypot(vx, vy);
     if (this.moving) this.faceVector(vx, vy);
   }
 
@@ -140,6 +149,7 @@ export class Actor {
       this.body.setVelocity(0, 0);
       this.faceVector(x - this.x, y - this.y);
       this.moving = true;
+      this.pace = speed;
       this.scene.tweens.add({
         targets: this.feet,
         x,
@@ -247,6 +257,7 @@ export class Actor {
       this.sprite.play(anim, true);
       this.lastAnim = anim;
     }
+    if (this.charId) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / WALK_PACE, 0.55, 1.3) : 1;
   }
 
   destroy(): void {

@@ -13,8 +13,8 @@ export interface CharacterDef {
 }
 
 export const CHARACTERS: Record<string, CharacterDef> = {
-  adam: { nameKey: 'characters.adam', portrait: 'adam', sprite: 'adam', outfit: 'leaves', voice: 150, speed: 210 },
-  eve: { nameKey: 'characters.eve', portrait: 'eve', sprite: 'eve', outfit: 'leaves', voice: 240, speed: 210 },
+  adam: { nameKey: 'characters.adam', portrait: 'adam', sprite: 'adam', outfit: 'leaves', voice: 150, speed: 170 },
+  eve: { nameKey: 'characters.eve', portrait: 'eve', sprite: 'eve', outfit: 'leaves', voice: 240, speed: 170 },
   god: { nameKey: 'characters.god', portrait: 'god', sprite: 'god', outfit: 'robe', voice: 110, speed: 110 },
   serpent: { nameKey: 'characters.serpent', portrait: 'serpent', voice: 320, speed: 90 },
   narrator: { nameKey: 'characters.narrator', portrait: null, voice: 180, speed: 0 },

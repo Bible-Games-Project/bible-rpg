@@ -154,10 +154,10 @@
    "leaves": {
     "down": {
      "file": "assets/sprites/char-adam-leaves-down.png",
-     "frameWidth": 38,
+     "frameWidth": 46,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 19,
+     "anchorX": 23,
      "anchorY": 103,
      "idle": [
       0,
@@ -173,14 +173,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "up": {
      "file": "assets/sprites/char-adam-leaves-up.png",
-     "frameWidth": 38,
+     "frameWidth": 46,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 19,
+     "anchorX": 23,
      "anchorY": 103,
      "idle": [
       0,
@@ -196,14 +196,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "right": {
      "file": "assets/sprites/char-adam-leaves-right.png",
-     "frameWidth": 38,
+     "frameWidth": 46,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 19,
+     "anchorX": 23,
      "anchorY": 103,
      "idle": [
       0,
@@ -219,16 +219,16 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     }
    },
    "fig": {
     "down": {
      "file": "assets/sprites/char-adam-fig-down.png",
-     "frameWidth": 38,
+     "frameWidth": 40,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 19,
+     "anchorX": 20,
      "anchorY": 103,
      "idle": [
       0,
@@ -244,14 +244,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "up": {
      "file": "assets/sprites/char-adam-fig-up.png",
-     "frameWidth": 38,
+     "frameWidth": 40,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 19,
+     "anchorX": 20,
      "anchorY": 103,
      "idle": [
       0,
@@ -267,14 +267,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "right": {
      "file": "assets/sprites/char-adam-fig-right.png",
-     "frameWidth": 38,
+     "frameWidth": 40,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 19,
+     "anchorX": 20,
      "anchorY": 103,
      "idle": [
       0,
@@ -290,16 +290,16 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     }
    },
    "tunic": {
     "down": {
      "file": "assets/sprites/char-adam-tunic-down.png",
-     "frameWidth": 40,
+     "frameWidth": 42,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 20,
+     "anchorX": 21,
      "anchorY": 103,
      "idle": [
       0,
@@ -315,14 +315,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "up": {
      "file": "assets/sprites/char-adam-tunic-up.png",
-     "frameWidth": 40,
+     "frameWidth": 42,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 20,
+     "anchorX": 21,
      "anchorY": 103,
      "idle": [
       0,
@@ -338,14 +338,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "right": {
      "file": "assets/sprites/char-adam-tunic-right.png",
-     "frameWidth": 40,
+     "frameWidth": 42,
      "frameHeight": 106,
      "frames": 10,
-     "anchorX": 20,
+     "anchorX": 21,
      "anchorY": 103,
      "idle": [
       0,
@@ -361,7 +361,7 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     }
    }
   },
@@ -369,10 +369,10 @@
    "leaves": {
     "down": {
      "file": "assets/sprites/char-eve-leaves-down.png",
-     "frameWidth": 36,
+     "frameWidth": 46,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 18,
+     "anchorX": 23,
      "anchorY": 99,
      "idle": [
       0,
@@ -388,14 +388,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "up": {
      "file": "assets/sprites/char-eve-leaves-up.png",
-     "frameWidth": 36,
+     "frameWidth": 46,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 18,
+     "anchorX": 23,
      "anchorY": 99,
      "idle": [
       0,
@@ -411,14 +411,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "right": {
      "file": "assets/sprites/char-eve-leaves-right.png",
-     "frameWidth": 36,
+     "frameWidth": 46,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 18,
+     "anchorX": 23,
      "anchorY": 99,
      "idle": [
       0,
@@ -434,16 +434,16 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     }
    },
    "fig": {
     "down": {
      "file": "assets/sprites/char-eve-fig-down.png",
-     "frameWidth": 36,
+     "frameWidth": 38,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 18,
+     "anchorX": 19,
      "anchorY": 99,
      "idle": [
       0,
@@ -459,14 +459,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "up": {
      "file": "assets/sprites/char-eve-fig-up.png",
-     "frameWidth": 36,
+     "frameWidth": 38,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 18,
+     "anchorX": 19,
      "anchorY": 99,
      "idle": [
       0,
@@ -482,14 +482,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "right": {
      "file": "assets/sprites/char-eve-fig-right.png",
-     "frameWidth": 36,
+     "frameWidth": 38,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 18,
+     "anchorX": 19,
      "anchorY": 99,
      "idle": [
       0,
@@ -505,16 +505,16 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     }
    },
    "tunic": {
     "down": {
      "file": "assets/sprites/char-eve-tunic-down.png",
-     "frameWidth": 40,
+     "frameWidth": 44,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 20,
+     "anchorX": 22,
      "anchorY": 99,
      "idle": [
       0,
@@ -530,14 +530,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "up": {
      "file": "assets/sprites/char-eve-tunic-up.png",
-     "frameWidth": 40,
+     "frameWidth": 44,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 20,
+     "anchorX": 22,
      "anchorY": 99,
      "idle": [
       0,
@@ -553,14 +553,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "right": {
      "file": "assets/sprites/char-eve-tunic-right.png",
-     "frameWidth": 40,
+     "frameWidth": 44,
      "frameHeight": 102,
      "frames": 10,
-     "anchorX": 20,
+     "anchorX": 22,
      "anchorY": 99,
      "idle": [
       0,
@@ -576,7 +576,7 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     }
    }
   },
@@ -584,10 +584,10 @@
    "robe": {
     "down": {
      "file": "assets/sprites/char-god-robe-down.png",
-     "frameWidth": 48,
+     "frameWidth": 44,
      "frameHeight": 109,
      "frames": 10,
-     "anchorX": 24,
+     "anchorX": 22,
      "anchorY": 106,
      "idle": [
       0,
@@ -603,14 +603,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "up": {
      "file": "assets/sprites/char-god-robe-up.png",
-     "frameWidth": 48,
+     "frameWidth": 44,
      "frameHeight": 109,
      "frames": 10,
-     "anchorX": 24,
+     "anchorX": 22,
      "anchorY": 106,
      "idle": [
       0,
@@ -626,14 +626,14 @@
       8,
       9
      ],
-     "walkFps": 12
+     "walkFps": 15
     },
     "right": {
      "file": "assets/sprites/char-god-robe-right.png",
-     "frameWidth": 48,
+     "frameWidth": 44,
      "frameHeight": 109,
-     "frames": 6,
-     "anchorX": 24,
+     "frames": 10,
+     "anchorX": 22,
      "anchorY": 106,
      "idle": [
       0,
@@ -643,8 +643,13 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 15
     }
    }
   }
@@ -653,10 +658,10 @@
   "adam-sleeping": {
    "file": "assets/sprites/adam-sleeping.png",
    "frameWidth": 100,
-   "frameHeight": 30,
+   "frameHeight": 26,
    "frames": 1,
    "anchorX": 50,
-   "anchorY": 29
+   "anchorY": 25
   },
   "animal-sheep": {
    "file": "assets/sprites/animal-sheep.png",

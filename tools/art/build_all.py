@@ -34,10 +34,14 @@ def save(img: np.ndarray, rel: str) -> str:
 
 
 def strip(frames: list[np.ndarray]) -> np.ndarray:
+    """Frames side by side. The first and last column of each frame are left
+    empty: the game draws scaled down with smooth filtering, which samples a
+    little past a frame's edge, and a neighbour's pixels there would show as
+    a thin line."""
     h, w = frames[0].shape[:2]
     out = np.zeros((h, w * len(frames), 4), np.uint8)
     for i, f in enumerate(frames):
-        out[:, i * w:(i + 1) * w] = f
+        out[:, i * w + 1:(i + 1) * w - 1] = f[:, 1:w - 1]
     return out
 
 

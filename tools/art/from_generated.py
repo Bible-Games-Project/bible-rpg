@@ -294,8 +294,23 @@ def breathe(s: np.ndarray) -> np.ndarray:
     return out
 
 
+# The maintainer's casting of the generated sheets: at the start Adam and
+# Eve wear little (a leaf skirt; a leaf top and skirt), when they dress
+# themselves (mission 7) they wear trousers and a sweater of leaves, and the
+# coats of skins (mission 9) are the tunics.
+VIEW_SHEETS = {
+    ('adam', 'leaves'): 'v2-adam-fig-views', ('eve', 'leaves'): 'v2-eve-fig-views',
+    ('adam', 'fig'): 'v3-adam-views', ('eve', 'fig'): 'v3-eve-views',
+    ('adam', 'tunic'): 'v2-adam-tunic-views', ('eve', 'tunic'): 'v2-eve-tunic-views',
+    ('god', 'robe'): 'v2-god-views',
+}
+
+
 def view_sheet(char: str, outfit: str) -> str | None:
     """The clean three-view sheet (front, back, side) of a character."""
+    job = VIEW_SHEETS.get((char, outfit))
+    if job and has_output(job):
+        return job
     job = J(f'{char}-views' if outfit in ('leaves', 'robe') else f'{char}-{outfit}-views')
     if job.startswith(('v2-', 'v3-')):
         return job
@@ -439,6 +454,9 @@ WALK_LEGS_L = (-2, -1, 0, 1, 3, 6, 8, 4)
 WALK_LEGS_R = (3, 6, 8, 4, -2, -1, 0, 1)
 WALK_BOB = (1, 1, -1, 0, 1, 1, -1, 0)
 WALK_ARM_L = (-3, -2, 0, 2, 3, 2, 0, -2)
+# frames per second of the eight-frame walks, at the player's speed (the game
+# scales it with the actual speed)
+WALK_FPS = 15
 
 
 def front_back_frames(char: str, outfit: str, d: str) -> tuple[list[np.ndarray], int]:
@@ -473,14 +491,17 @@ def rotate_part(part: np.ndarray, angle: float, pivot: tuple[float, float], k: i
 
 # near-leg angle (degrees, forward positive) for an eight-frame side step
 # cycle; the arms swing against the legs by ARM_SWING of that angle
-SIDE_CYCLE = (16, 8, 0, -8, -16, -8, 0, 8)
-ARM_SWING = 0.55
+SIDE_CYCLE = (18, 9, 0, -9, -18, -9, 0, 9)
+ARM_SWING = 0.45
 
 # The near arm of a side view (x0, x1, y0, y1 in the standing frame) where
-# it cannot be told from the body by colour: bare arms over a tunic of much
-# the same colour. Measured on the current v2 tunic sheets; measure again if
-# those are regenerated.
-SIDE_ARMS = {('adam', 'tunic'): (4, 11, 24, 60), ('eve', 'tunic'): (8, 13, 27, 61)}
+# it cannot be told from the body by colour: bare arms over bare skin or
+# over a tunic of much the same colour. Measured on the current sheets of
+# VIEW_SHEETS; measure again if those are regenerated.
+SIDE_ARMS = {
+    ('adam', 'leaves'): (4, 10, 24, 60), ('eve', 'leaves'): (10, 15, 25, 59),
+    ('adam', 'tunic'): (4, 11, 24, 60), ('eve', 'tunic'): (8, 13, 27, 61),
+}
 
 
 def side_arm_band(stand: np.ndarray, char: str, outfit: str) -> tuple[int, int, int, int] | None:
@@ -509,7 +530,9 @@ def side_arm_band(stand: np.ndarray, char: str, outfit: str) -> tuple[int, int, 
 
 def split_arm(stand: np.ndarray, band: tuple[int, int, int, int]) -> tuple[np.ndarray, np.ndarray]:
     """(arm, body): the arm's pixels on their own, and the body with the
-    place of the arm filled from the clothes beside it (chest side first)."""
+    place of the arm filled by mirroring what lies beside it in the same row
+    (chest side first), so the texture runs on without a seam when the arm
+    swings away."""
     x0, x1, y0, y1 = band
     h, w = stand.shape[:2]
     arm = np.zeros_like(stand)
@@ -521,7 +544,7 @@ def split_arm(stand: np.ndarray, band: tuple[int, int, int, int]) -> tuple[np.nd
             if not stand[y, x, 3]:
                 continue
             body[y, x] = 0
-            for sx in (x + bw, x - bw, x1, x0 - 1):
+            for sx in (2 * x1 - 1 - x, 2 * x0 - 1 - x, x1, x0 - 1):
                 if 0 <= sx < w and not x0 <= sx < x1 and stand[y, sx, 3]:
                     body[y, x] = stand[y, sx]
                     break
@@ -580,13 +603,52 @@ def side_frames(stand: np.ndarray, char: str = '', outfit: str = '') -> tuple[li
     return [f[:, used.min():used.max() + 1] for f in frames], ground
 
 
+def robe_side_frames(stand: np.ndarray) -> tuple[list[np.ndarray], int]:
+    """Side walk for a robe down to the feet: the feet take short steps
+    under the hem (the far foot darker), the lower robe sways with them and
+    the body bobs. All from the standing frame."""
+    h, w = stand.shape[:2]
+    feet_top = int(0.93 * h)
+    sway_top = int(0.6 * h)
+    pad = 6
+    grow = lambda f: np.pad(f, ((ROOM, ROOM), (pad, pad), (0, 0)))  # noqa: E731
+    feet = np.zeros_like(stand)
+    feet[feet_top:] = stand[feet_top:]
+    body = stand.copy()
+    body[feet_top:] = 0
+    # the robe reaches over the top of the feet
+    body[feet_top:feet_top + 2] = np.where(stand[feet_top:feet_top + 2, :, 3:4] > 0, stand[feet_top:feet_top + 2], 0)
+    near, body = grow(feet), grow(body)
+    far = near.copy()
+    far[:, :, :3] = (far[:, :, :3] * 0.8).astype(np.uint8)
+    frames = [grow(stand), grow(breathe(stand))]
+    n = len(SIDE_CYCLE)
+    for i in range(n):
+        phase = 2 * np.pi * i / n
+        step_x = int(round(3 * np.cos(phase)))
+        lift = 1 if abs(np.sin(phase)) > 0.9 else 0
+        out = np.zeros_like(body)
+        for layer, dx, dy in ((far, -step_x, -lift), (near, step_x, -lift)):
+            moved = np.roll(np.roll(layer, dx, axis=1), dy, axis=0)
+            out = np.where(moved[:, :, 3:4] > 0, moved, out)
+        swayed = body.copy()
+        for y in range(sway_top, feet_top + 2):
+            t = (y - sway_top) / (feet_top + 2 - sway_top)
+            swayed[y + ROOM] = np.roll(body[y + ROOM], int(round(2 * np.cos(phase) * t)), axis=0)
+        bob = -1 if lift else 0
+        swayed = np.roll(swayed, bob, axis=0)
+        out = np.where(swayed[:, :, 3:4] > 0, swayed, out)
+        frames.append(out)
+    return frames, h - 1 + ROOM
+
+
 def walk_frames(char: str, outfit: str, d: str) -> list[np.ndarray] | tuple[list[np.ndarray], int]:
-    """Side frames: made from the standing frame (with the canvas row of the
-    feet), or for a long robe the generated strides (each frame on its own)."""
+    """Side frames on one canvas, with the canvas row of the feet: legs and
+    arms swinging, or for a long robe short steps under the hem. Without a
+    clean side view: the generated strides (each frame on its own)."""
     if (view_sheet(char, outfit) or '').startswith(('v2-', 'v3-')):
-        frames = side_frames(standing(char, outfit, d), char, outfit)
-        if frames:
-            return frames
+        stand = standing(char, outfit, d)
+        return side_frames(stand, char, outfit) or robe_side_frames(stand)
     img = cutout(f'walk-{char}-{outfit}-{d}')
     img[:, :, 3] = np.where(clean_mask(img[:, :, 3]), img[:, :, 3], 0)
     boxes = split_strip(img, 5)
@@ -625,7 +687,7 @@ def build_characters(m: dict, save, strip, sheet_entry) -> np.ndarray:
                 fs, base = fr
                 c = torso_center(fs[0][:base + 1])
                 cells = [place(f[:base + 3], w, h, w // 2, h - 1, c) for f in fs]
-                extra = {'idle': [0, 1], 'walk': list(range(2, len(fs))), 'walkFps': 12}
+                extra = {'idle': [0, 1], 'walk': list(range(2, len(fs))), 'walkFps': WALK_FPS}
             else:
                 cells = [place(f, w, h, w // 2, h - 3, torso_center(f)) for f in fr]
                 extra = {'idle': [0, 1], 'walk': [2, 3, 4, 5]}

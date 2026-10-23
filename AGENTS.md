@@ -108,12 +108,14 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   the others). The jobs in `art/prompts/eden.json` use `style2` and these
   references; `from_generated.py` takes a job's newest version (`v3-`, then
   `v2-`, then the original: `J()`).
-- Characters (v3, maintainer's choice): Adam and Eve look like their dressed
-  (tunic) versions. Start outfit `leaves`: trousers and a long-sleeved
-  sweater of small fresh leaves; `fig` (mission 7): the same clothes sewn
-  from large fig leaves; `tunic` (coats of skins, mission 9): kept as
-  generated in v2 ("me encanta"). Eve's portrait follows Adam's portrait
-  style (the maintainer found the first one too "Disney").
+- Characters (maintainer's casting, `VIEW_SHEETS` in `from_generated.py`):
+  start outfit `leaves` = the v2 "fig" sheets (Adam: leaf skirt; Eve: leaf
+  top and skirt); `fig` (mission 7, when they dress themselves) = the v3
+  sheets (trousers and long-sleeved sweater of small leaves, the look the
+  maintainer liked "pero es la segunda fase"); `tunic` (coats of skins,
+  mission 9) = the v2 tunics ("me encanta"). Faces and bodies follow the
+  tunic versions. The v3 big-fig-leaf sheets are paid for but unused. Eve's
+  portrait follows Adam's portrait style (the first was too "Disney").
 - The maintainer wants no marked outlines on sprites ("se ve más pro"). `bun
   run art` rebuilds `public/assets/**` and `src/data/generated/assets.json`:
   the procedural generators in `tools/art/` run first, then
@@ -138,9 +140,15 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   shoulder (`ARM_SWING` of the leg angle), far limbs darker behind the body.
   A side arm is found by its hand (non-green pixels at hand height); bare
   arms over a tunic of the same colour use `SIDE_ARMS` boxes measured on
-  the current tunic sheets (measure again if they are regenerated). God's
-  long robe shows no legs, so his side walk uses the generated strides.
-  Generated walk strips flickered (a different drawing per frame).
+  the current sheets (measure again if they are regenerated); the place the
+  arm leaves is filled by mirroring the texture beside it. God's robe shows
+  no legs: his side walk is short steps of the feet under the hem with the
+  lower robe swaying (the generated strides looked "horrible"). Generated
+  walk strips flickered (a different drawing per frame).
+- Walk timing: the eight-frame walks play at `WALK_FPS` 15 at the player's
+  speed (`WALK_PACE` 170 px/s in `Actor.ts`, `speed` in
+  `src/data/characters.ts`); any other speed scales the animation with it,
+  so feet and ground keep pace (the maintainer saw them not matching).
   Animals use generated 7-frame strips (stand + 6).
 - Ground (`ART_GRASS=scene`, the default): grass colours are sampled from the
   meadow of `style-scene.webp` (nudged `ART_GRASS_HUE` 8° greener and
@@ -151,6 +159,14 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   world seen from farther away). Below zoom 1 every texture switches to
   linear filtering (nearest-neighbour at 0.7 drops pixels unevenly); the
   tile sheet is extruded at runtime so tiles do not bleed into each other.
+- Light (`src/game/world/Atmosphere.ts`), so everything feels like one
+  world (the maintainer felt objects did not belong together): cloud
+  shadows drifting over everything, warm sunbeams from the upper left (the
+  side the art is lit from) with a little parallax, a warm daylight cast
+  (the day tint) and a soft vignette; all fade with the time of day. Its
+  textures are drawn at startup. Sprite strips keep each frame's first and
+  last column empty (`build_all.strip`), or smooth scaling shows a line of
+  the neighbouring frame.
 - Trees: when one hides the active character its leaves turn see-through
   with a soft gradient from the lowest leaves up (a canvas copy of the
   canopy per tree kind); the trunk stays opaque. The maintainer disliked
