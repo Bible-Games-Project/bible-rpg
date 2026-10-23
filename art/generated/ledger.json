@@ -1216,5 +1216,782 @@
    "total_tokens": 901
   },
   "at": "20261023-102256"
+ },
+ {
+  "job": "v2-adam-views",
+  "file": "art/generated/v2-adam-views/20261023-184210-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0667,
+  "usage": {
+   "input_tokens": 3298,
+   "input_tokens_details": {
+    "image_tokens": 3026,
+    "text_tokens": 272
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 4670
+  },
+  "at": "20261023-184210"
+ },
+ {
+  "job": "v2-eve-views",
+  "file": "art/generated/v2-eve-views/20261023-184235-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0669,
+  "usage": {
+   "input_tokens": 3336,
+   "input_tokens_details": {
+    "image_tokens": 3026,
+    "text_tokens": 310
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 4708
+  },
+  "at": "20261023-184235"
+ },
+ {
+  "job": "v2-god-views",
+  "file": "art/generated/v2-god-views/20261023-184301-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.067,
+  "usage": {
+   "input_tokens": 3349,
+   "input_tokens_details": {
+    "image_tokens": 3026,
+    "text_tokens": 323
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 4721
+  },
+  "at": "20261023-184301"
+ },
+ {
+  "job": "v2-serpent",
+  "file": "art/generated/v2-serpent/20261023-184312-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.03,
+  "usage": {
+   "input_tokens": 3249,
+   "input_tokens_details": {
+    "image_tokens": 3016,
+    "text_tokens": 233
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 3407
+  },
+  "at": "20261023-184312"
+ },
+ {
+  "job": "v2-animals",
+  "file": "art/generated/v2-animals/20261023-184323-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0303,
+  "usage": {
+   "input_tokens": 3304,
+   "input_tokens_details": {
+    "image_tokens": 3026,
+    "text_tokens": 278
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 3462
+  },
+  "at": "20261023-184323"
+ },
+ {
+  "job": "v2-trees-garden",
+  "file": "art/generated/v2-trees-garden/20261023-184335-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0181,
+  "usage": {
+   "input_tokens": 1764,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 256
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1922
+  },
+  "at": "20261023-184335"
+ },
+ {
+  "job": "v2-trees-land",
+  "file": "art/generated/v2-trees-land/20261023-184345-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0181,
+  "usage": {
+   "input_tokens": 1761,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 253
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1919
+  },
+  "at": "20261023-184345"
+ },
+ {
+  "job": "v2-trees-sacred",
+  "file": "art/generated/v2-trees-sacred/20261023-184358-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0181,
+  "usage": {
+   "input_tokens": 1774,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 266
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1932
+  },
+  "at": "20261023-184358"
+ },
+ {
+  "job": "v2-trees-small",
+  "file": "art/generated/v2-trees-small/20261023-184411-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.018,
+  "usage": {
+   "input_tokens": 1755,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 247
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1913
+  },
+  "at": "20261023-184411"
+ },
+ {
+  "job": "v2-bushes",
+  "file": "art/generated/v2-bushes/20261023-184420-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.018,
+  "usage": {
+   "input_tokens": 1746,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 238
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1904
+  },
+  "at": "20261023-184420"
+ },
+ {
+  "job": "v2-props-nature",
+  "file": "art/generated/v2-props-nature/20261023-184430-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0183,
+  "usage": {
+   "input_tokens": 1805,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 297
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1963
+  },
+  "at": "20261023-184430"
+ },
+ {
+  "job": "v2-props-items",
+  "file": "art/generated/v2-props-items/20261023-184444-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0182,
+  "usage": {
+   "input_tokens": 1788,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 280
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1946
+  },
+  "at": "20261023-184444"
+ },
+ {
+  "job": "v2-props-farm",
+  "file": "art/generated/v2-props-farm/20261023-184456-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0184,
+  "usage": {
+   "input_tokens": 1829,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 321
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1987
+  },
+  "at": "20261023-184456"
+ },
+ {
+  "job": "v2-terrain",
+  "file": "art/generated/v2-terrain/20261023-184504-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0182,
+  "usage": {
+   "input_tokens": 1788,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 280
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1946
+  },
+  "at": "20261023-184504"
+ },
+ {
+  "job": "v2-adam-fig-views",
+  "file": "art/generated/v2-adam-fig-views/20261023-184516-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0305,
+  "usage": {
+   "input_tokens": 3329,
+   "input_tokens_details": {
+    "image_tokens": 3044,
+    "text_tokens": 285
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 3487
+  },
+  "at": "20261023-184516"
+ },
+ {
+  "job": "v2-adam-tunic-views",
+  "file": "art/generated/v2-adam-tunic-views/20261023-184527-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0306,
+  "usage": {
+   "input_tokens": 3338,
+   "input_tokens_details": {
+    "image_tokens": 3044,
+    "text_tokens": 294
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 3496
+  },
+  "at": "20261023-184527"
+ },
+ {
+  "job": "v2-eve-fig-views",
+  "file": "art/generated/v2-eve-fig-views/20261023-184540-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0306,
+  "usage": {
+   "input_tokens": 3339,
+   "input_tokens_details": {
+    "image_tokens": 3044,
+    "text_tokens": 295
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 3497
+  },
+  "at": "20261023-184540"
+ },
+ {
+  "job": "v2-eve-tunic-views",
+  "file": "art/generated/v2-eve-tunic-views/20261023-184553-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0306,
+  "usage": {
+   "input_tokens": 3338,
+   "input_tokens_details": {
+    "image_tokens": 3044,
+    "text_tokens": 294
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 3496
+  },
+  "at": "20261023-184553"
+ },
+ {
+  "job": "v2-walk-adam-leaves-right",
+  "file": "art/generated/v2-walk-adam-leaves-right/20261023-184604-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0306,
+  "usage": {
+   "input_tokens": 3332,
+   "input_tokens_details": {
+    "image_tokens": 3054,
+    "text_tokens": 278
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 3490
+  },
+  "at": "20261023-184604"
+ },
+ {
+  "job": "v2-walk-adam-fig-right",
+  "file": "art/generated/v2-walk-adam-fig-right/20261023-184615-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0184,
+  "usage": {
+   "input_tokens": 1814,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 278
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1972
+  },
+  "at": "20261023-184615"
+ },
+ {
+  "job": "v2-walk-adam-tunic-right",
+  "file": "art/generated/v2-walk-adam-tunic-right/20261023-184629-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0184,
+  "usage": {
+   "input_tokens": 1814,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 278
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1972
+  },
+  "at": "20261023-184629"
+ },
+ {
+  "job": "v2-walk-eve-leaves-right",
+  "file": "art/generated/v2-walk-eve-leaves-right/20261023-184639-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0184,
+  "usage": {
+   "input_tokens": 1814,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 278
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1972
+  },
+  "at": "20261023-184639"
+ },
+ {
+  "job": "v2-walk-eve-fig-right",
+  "file": "art/generated/v2-walk-eve-fig-right/20261023-184651-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0184,
+  "usage": {
+   "input_tokens": 1814,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 278
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1972
+  },
+  "at": "20261023-184651"
+ },
+ {
+  "job": "v2-walk-eve-tunic-right",
+  "file": "art/generated/v2-walk-eve-tunic-right/20261023-184704-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0184,
+  "usage": {
+   "input_tokens": 1814,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 278
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1972
+  },
+  "at": "20261023-184704"
+ },
+ {
+  "job": "v2-walk-god-robe-right",
+  "file": "art/generated/v2-walk-god-robe-right/20261023-184715-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0184,
+  "usage": {
+   "input_tokens": 1820,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 284
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 1978
+  },
+  "at": "20261023-184715"
+ },
+ {
+  "job": "v2-cherub",
+  "file": "art/generated/v2-cherub/20261023-184727-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0303,
+  "usage": {
+   "input_tokens": 3294,
+   "input_tokens_details": {
+    "image_tokens": 3044,
+    "text_tokens": 250
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 3452
+  },
+  "at": "20261023-184727"
+ },
+ {
+  "job": "v2-eve-portrait",
+  "file": "art/generated/v2-eve-portrait/20261023-184752-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0669,
+  "usage": {
+   "input_tokens": 3311,
+   "input_tokens_details": {
+    "image_tokens": 3072,
+    "text_tokens": 239
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 4683
+  },
+  "at": "20261023-184752"
+ },
+ {
+  "job": "v2-god-portrait",
+  "file": "art/generated/v2-god-portrait/20261023-184814-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.067,
+  "usage": {
+   "input_tokens": 3316,
+   "input_tokens_details": {
+    "image_tokens": 3072,
+    "text_tokens": 244
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 4688
+  },
+  "at": "20261023-184814"
+ },
+ {
+  "job": "v2-serpent-portrait",
+  "file": "art/generated/v2-serpent-portrait/20261023-184836-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0667,
+  "usage": {
+   "input_tokens": 3273,
+   "input_tokens_details": {
+    "image_tokens": 3072,
+    "text_tokens": 201
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 4645
+  },
+  "at": "20261023-184836"
+ },
+ {
+  "job": "v2-walk-animal-horse",
+  "file": "art/generated/v2-walk-animal-horse/20261023-184927-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0083,
+  "usage": {
+   "input_tokens": 851,
+   "input_tokens_details": {
+    "image_tokens": 576,
+    "text_tokens": 275
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 927
+  },
+  "at": "20261023-184927"
+ },
+ {
+  "job": "v2-walk-animal-camel",
+  "file": "art/generated/v2-walk-animal-camel/20261023-184938-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0077,
+  "usage": {
+   "input_tokens": 781,
+   "input_tokens_details": {
+    "image_tokens": 506,
+    "text_tokens": 275
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 857
+  },
+  "at": "20261023-184938"
+ },
+ {
+  "job": "v2-walk-animal-lion",
+  "file": "art/generated/v2-walk-animal-lion/20261023-184946-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0073,
+  "usage": {
+   "input_tokens": 731,
+   "input_tokens_details": {
+    "image_tokens": 456,
+    "text_tokens": 275
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 807
+  },
+  "at": "20261023-184946"
+ },
+ {
+  "job": "v2-walk-animal-deer",
+  "file": "art/generated/v2-walk-animal-deer/20261023-184955-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0069,
+  "usage": {
+   "input_tokens": 683,
+   "input_tokens_details": {
+    "image_tokens": 408,
+    "text_tokens": 275
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 759
+  },
+  "at": "20261023-184955"
+ },
+ {
+  "job": "v2-walk-animal-sheep",
+  "file": "art/generated/v2-walk-animal-sheep/20261023-185005-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.006,
+  "usage": {
+   "input_tokens": 563,
+   "input_tokens_details": {
+    "image_tokens": 288,
+    "text_tokens": 275
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 639
+  },
+  "at": "20261023-185005"
+ },
+ {
+  "job": "v2-walk-animal-goat",
+  "file": "art/generated/v2-walk-animal-goat/20261023-185014-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.006,
+  "usage": {
+   "input_tokens": 563,
+   "input_tokens_details": {
+    "image_tokens": 288,
+    "text_tokens": 275
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 639
+  },
+  "at": "20261023-185014"
+ },
+ {
+  "job": "v2-walk-animal-rabbit",
+  "file": "art/generated/v2-walk-animal-rabbit/20261023-185027-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0049,
+  "usage": {
+   "input_tokens": 420,
+   "input_tokens_details": {
+    "image_tokens": 168,
+    "text_tokens": 252
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 496
+  },
+  "at": "20261023-185027"
+ },
+ {
+  "job": "v2-fly-animal-dove",
+  "file": "art/generated/v2-fly-animal-dove/20261023-185039-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0048,
+  "usage": {
+   "input_tokens": 414,
+   "input_tokens_details": {
+    "image_tokens": 156,
+    "text_tokens": 258
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 490
+  },
+  "at": "20261023-185039"
  }
 ]

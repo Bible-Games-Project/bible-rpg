@@ -257,6 +257,30 @@ body {
   image-rendering: pixelated;
 }
 
+/* tall screens: the cover keeps its logo whole at the top, over a blurred copy */
+.menu-bg-fill {
+  display: none;
+}
+
+@media (max-aspect-ratio: 3/4) {
+  .menu-bg-fill {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(14px) brightness(0.55);
+    transform: scale(1.1);
+  }
+  .main-menu .menu-bg {
+    height: min(100%, 134vw);
+    object-position: 50% 0;
+    -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent);
+    mask-image: linear-gradient(to bottom, #000 82%, transparent);
+  }
+}
+
 .menu-shade {
   position: absolute;
   inset: 0;
@@ -895,9 +919,12 @@ select:focus-visible {
 }
 
 .dialogue .portrait-frame canvas {
+  --pw: 64;
+  --ph: 66;
+  --pscale: 3;
   display: block;
-  width: calc(64px * 3 * var(--ui-scale));
-  height: calc(66px * 3 * var(--ui-scale));
+  width: calc(var(--pw) * var(--pscale) * 1px * var(--ui-scale));
+  height: calc(var(--ph) * var(--pscale) * 1px * var(--ui-scale));
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   background: linear-gradient(#26324a, #182032);
@@ -909,8 +936,8 @@ select:focus-visible {
 
 @media (max-height: 640px), (max-width: 560px) {
   .dialogue .portrait-frame canvas {
-    width: calc(64px * 2 * var(--ui-scale));
-    height: calc(66px * 2 * var(--ui-scale));
+    width: calc(var(--pw) * var(--pscale) * 0.67px * var(--ui-scale));
+    height: calc(var(--ph) * var(--pscale) * 0.67px * var(--ui-scale));
   }
 }
 

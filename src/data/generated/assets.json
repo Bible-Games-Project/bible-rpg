@@ -2,94 +2,94 @@
  "portraits": {
   "adam": {
    "file": "assets/portraits/adam.png",
-   "width": 64,
-   "height": 66,
+   "width": 94,
+   "height": 87,
    "mouth": [
     {
      "file": "assets/portraits/adam-mouth-0.png",
-     "x": 28,
-     "y": 36,
-     "w": 7,
-     "h": 1
+     "x": 41,
+     "y": 49,
+     "w": 12,
+     "h": 2
     },
     {
      "file": "assets/portraits/adam-mouth-1.png",
-     "x": 27,
-     "y": 36,
-     "w": 9,
+     "x": 41,
+     "y": 49,
+     "w": 12,
      "h": 3
     }
    ],
    "eyes": [
     {
      "file": "assets/portraits/adam-eyes-0.png",
-     "x": 22,
-     "y": 24,
-     "w": 20,
-     "h": 2
+     "x": 30,
+     "y": 33,
+     "w": 34,
+     "h": 6
     },
     {
      "file": "assets/portraits/adam-eyes-1.png",
-     "x": 22,
-     "y": 24,
-     "w": 20,
-     "h": 3
+     "x": 30,
+     "y": 33,
+     "w": 34,
+     "h": 6
     }
    ]
   },
   "eve": {
    "file": "assets/portraits/eve.png",
-   "width": 64,
-   "height": 66,
+   "width": 94,
+   "height": 87,
    "mouth": [
     {
      "file": "assets/portraits/eve-mouth-0.png",
-     "x": 27,
-     "y": 34,
-     "w": 10,
+     "x": 35,
+     "y": 47,
+     "w": 6,
      "h": 2
     },
     {
      "file": "assets/portraits/eve-mouth-1.png",
-     "x": 27,
-     "y": 34,
-     "w": 10,
+     "x": 35,
+     "y": 47,
+     "w": 6,
      "h": 3
     }
    ],
    "eyes": [
     {
      "file": "assets/portraits/eve-eyes-0.png",
-     "x": 22,
-     "y": 23,
-     "w": 20,
-     "h": 4
+     "x": 31,
+     "y": 29,
+     "w": 32,
+     "h": 7
     },
     {
      "file": "assets/portraits/eve-eyes-1.png",
-     "x": 22,
-     "y": 23,
-     "w": 20,
-     "h": 4
+     "x": 31,
+     "y": 29,
+     "w": 32,
+     "h": 7
     }
    ]
   },
   "god": {
    "file": "assets/portraits/god.png",
-   "width": 64,
-   "height": 66,
+   "width": 94,
+   "height": 87,
    "mouth": [
     {
      "file": "assets/portraits/god-mouth-0.png",
-     "x": 26,
-     "y": 36,
+     "x": 40,
+     "y": 40,
      "w": 11,
      "h": 2
     },
     {
      "file": "assets/portraits/god-mouth-1.png",
-     "x": 26,
-     "y": 36,
+     "x": 40,
+     "y": 40,
      "w": 11,
      "h": 3
     }
@@ -97,24 +97,24 @@
    "eyes": [
     {
      "file": "assets/portraits/god-eyes-0.png",
-     "x": 22,
-     "y": 23,
-     "w": 20,
-     "h": 4
+     "x": 35,
+     "y": 25,
+     "w": 21,
+     "h": 5
     },
     {
      "file": "assets/portraits/god-eyes-1.png",
-     "x": 22,
-     "y": 23,
-     "w": 20,
-     "h": 4
+     "x": 35,
+     "y": 25,
+     "w": 21,
+     "h": 5
     }
    ]
   },
   "serpent": {
    "file": "assets/portraits/serpent.png",
-   "width": 64,
-   "height": 66,
+   "width": 94,
+   "height": 87,
    "mouth": [],
    "eyes": []
   }
@@ -124,11 +124,11 @@
    "leaves": {
     "down": {
      "file": "assets/sprites/char-adam-leaves-down.png",
-     "frameWidth": 56,
-     "frameHeight": 122,
+     "frameWidth": 42,
+     "frameHeight": 106,
      "frames": 10,
-     "anchorX": 28,
-     "anchorY": 119,
+     "anchorX": 21,
+     "anchorY": 103,
      "idle": [
       0,
       1
@@ -147,11 +147,11 @@
     },
     "up": {
      "file": "assets/sprites/char-adam-leaves-up.png",
-     "frameWidth": 56,
-     "frameHeight": 122,
+     "frameWidth": 42,
+     "frameHeight": 106,
      "frames": 10,
-     "anchorX": 28,
-     "anchorY": 119,
+     "anchorX": 21,
+     "anchorY": 103,
      "idle": [
       0,
       1
@@ -170,11 +170,11 @@
     },
     "right": {
      "file": "assets/sprites/char-adam-leaves-right.png",
-     "frameWidth": 56,
-     "frameHeight": 122,
-     "frames": 6,
-     "anchorX": 28,
-     "anchorY": 119,
+     "frameWidth": 42,
+     "frameHeight": 106,
+     "frames": 10,
+     "anchorX": 21,
+     "anchorY": 103,
      "idle": [
       0,
       1
@@ -183,18 +183,23 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     }
    },
    "fig": {
     "down": {
      "file": "assets/sprites/char-adam-fig-down.png",
-     "frameWidth": 56,
-     "frameHeight": 122,
+     "frameWidth": 44,
+     "frameHeight": 106,
      "frames": 10,
-     "anchorX": 28,
-     "anchorY": 119,
+     "anchorX": 22,
+     "anchorY": 103,
      "idle": [
       0,
       1
@@ -213,11 +218,11 @@
     },
     "up": {
      "file": "assets/sprites/char-adam-fig-up.png",
-     "frameWidth": 56,
-     "frameHeight": 122,
+     "frameWidth": 44,
+     "frameHeight": 106,
      "frames": 10,
-     "anchorX": 28,
-     "anchorY": 119,
+     "anchorX": 22,
+     "anchorY": 103,
      "idle": [
       0,
       1
@@ -236,11 +241,11 @@
     },
     "right": {
      "file": "assets/sprites/char-adam-fig-right.png",
-     "frameWidth": 56,
-     "frameHeight": 122,
-     "frames": 6,
-     "anchorX": 28,
-     "anchorY": 119,
+     "frameWidth": 44,
+     "frameHeight": 106,
+     "frames": 10,
+     "anchorX": 22,
+     "anchorY": 103,
      "idle": [
       0,
       1
@@ -249,18 +254,23 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     }
    },
    "tunic": {
     "down": {
      "file": "assets/sprites/char-adam-tunic-down.png",
-     "frameWidth": 60,
-     "frameHeight": 122,
+     "frameWidth": 40,
+     "frameHeight": 106,
      "frames": 10,
-     "anchorX": 30,
-     "anchorY": 119,
+     "anchorX": 20,
+     "anchorY": 103,
      "idle": [
       0,
       1
@@ -279,11 +289,11 @@
     },
     "up": {
      "file": "assets/sprites/char-adam-tunic-up.png",
-     "frameWidth": 60,
-     "frameHeight": 122,
+     "frameWidth": 40,
+     "frameHeight": 106,
      "frames": 10,
-     "anchorX": 30,
-     "anchorY": 119,
+     "anchorX": 20,
+     "anchorY": 103,
      "idle": [
       0,
       1
@@ -302,11 +312,11 @@
     },
     "right": {
      "file": "assets/sprites/char-adam-tunic-right.png",
-     "frameWidth": 60,
-     "frameHeight": 122,
-     "frames": 6,
-     "anchorX": 30,
-     "anchorY": 119,
+     "frameWidth": 40,
+     "frameHeight": 106,
+     "frames": 10,
+     "anchorX": 20,
+     "anchorY": 103,
      "idle": [
       0,
       1
@@ -315,8 +325,13 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     }
    }
   },
@@ -324,11 +339,11 @@
    "leaves": {
     "down": {
      "file": "assets/sprites/char-eve-leaves-down.png",
-     "frameWidth": 50,
-     "frameHeight": 118,
+     "frameWidth": 42,
+     "frameHeight": 102,
      "frames": 10,
-     "anchorX": 25,
-     "anchorY": 115,
+     "anchorX": 21,
+     "anchorY": 99,
      "idle": [
       0,
       1
@@ -347,11 +362,11 @@
     },
     "up": {
      "file": "assets/sprites/char-eve-leaves-up.png",
-     "frameWidth": 50,
-     "frameHeight": 118,
+     "frameWidth": 42,
+     "frameHeight": 102,
      "frames": 10,
-     "anchorX": 25,
-     "anchorY": 115,
+     "anchorX": 21,
+     "anchorY": 99,
      "idle": [
       0,
       1
@@ -370,11 +385,11 @@
     },
     "right": {
      "file": "assets/sprites/char-eve-leaves-right.png",
-     "frameWidth": 50,
-     "frameHeight": 118,
-     "frames": 6,
-     "anchorX": 25,
-     "anchorY": 115,
+     "frameWidth": 42,
+     "frameHeight": 102,
+     "frames": 10,
+     "anchorX": 21,
+     "anchorY": 99,
      "idle": [
       0,
       1
@@ -383,18 +398,23 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     }
    },
    "fig": {
     "down": {
      "file": "assets/sprites/char-eve-fig-down.png",
-     "frameWidth": 54,
-     "frameHeight": 118,
+     "frameWidth": 44,
+     "frameHeight": 102,
      "frames": 10,
-     "anchorX": 27,
-     "anchorY": 115,
+     "anchorX": 22,
+     "anchorY": 99,
      "idle": [
       0,
       1
@@ -413,11 +433,11 @@
     },
     "up": {
      "file": "assets/sprites/char-eve-fig-up.png",
-     "frameWidth": 54,
-     "frameHeight": 118,
+     "frameWidth": 44,
+     "frameHeight": 102,
      "frames": 10,
-     "anchorX": 27,
-     "anchorY": 115,
+     "anchorX": 22,
+     "anchorY": 99,
      "idle": [
       0,
       1
@@ -436,11 +456,11 @@
     },
     "right": {
      "file": "assets/sprites/char-eve-fig-right.png",
-     "frameWidth": 54,
-     "frameHeight": 118,
-     "frames": 6,
-     "anchorX": 27,
-     "anchorY": 115,
+     "frameWidth": 44,
+     "frameHeight": 102,
+     "frames": 10,
+     "anchorX": 22,
+     "anchorY": 99,
      "idle": [
       0,
       1
@@ -449,18 +469,23 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     }
    },
    "tunic": {
     "down": {
      "file": "assets/sprites/char-eve-tunic-down.png",
-     "frameWidth": 58,
-     "frameHeight": 118,
+     "frameWidth": 40,
+     "frameHeight": 102,
      "frames": 10,
-     "anchorX": 29,
-     "anchorY": 115,
+     "anchorX": 20,
+     "anchorY": 99,
      "idle": [
       0,
       1
@@ -479,11 +504,11 @@
     },
     "up": {
      "file": "assets/sprites/char-eve-tunic-up.png",
-     "frameWidth": 58,
-     "frameHeight": 118,
+     "frameWidth": 40,
+     "frameHeight": 102,
      "frames": 10,
-     "anchorX": 29,
-     "anchorY": 115,
+     "anchorX": 20,
+     "anchorY": 99,
      "idle": [
       0,
       1
@@ -502,11 +527,11 @@
     },
     "right": {
      "file": "assets/sprites/char-eve-tunic-right.png",
-     "frameWidth": 58,
-     "frameHeight": 118,
-     "frames": 6,
-     "anchorX": 29,
-     "anchorY": 115,
+     "frameWidth": 40,
+     "frameHeight": 102,
+     "frames": 10,
+     "anchorX": 20,
+     "anchorY": 99,
      "idle": [
       0,
       1
@@ -515,8 +540,13 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     }
    }
   },
@@ -524,11 +554,11 @@
    "robe": {
     "down": {
      "file": "assets/sprites/char-god-robe-down.png",
-     "frameWidth": 62,
-     "frameHeight": 126,
+     "frameWidth": 48,
+     "frameHeight": 109,
      "frames": 10,
-     "anchorX": 31,
-     "anchorY": 123,
+     "anchorX": 24,
+     "anchorY": 106,
      "idle": [
       0,
       1
@@ -547,11 +577,11 @@
     },
     "up": {
      "file": "assets/sprites/char-god-robe-up.png",
-     "frameWidth": 62,
-     "frameHeight": 126,
+     "frameWidth": 48,
+     "frameHeight": 109,
      "frames": 10,
-     "anchorX": 31,
-     "anchorY": 123,
+     "anchorX": 24,
+     "anchorY": 106,
      "idle": [
       0,
       1
@@ -570,11 +600,11 @@
     },
     "right": {
      "file": "assets/sprites/char-god-robe-right.png",
-     "frameWidth": 62,
-     "frameHeight": 126,
+     "frameWidth": 48,
+     "frameHeight": 109,
      "frames": 6,
-     "anchorX": 31,
-     "anchorY": 123,
+     "anchorX": 24,
+     "anchorY": 106,
      "idle": [
       0,
       1
@@ -592,19 +622,19 @@
  "sprites": {
   "adam-sleeping": {
    "file": "assets/sprites/adam-sleeping.png",
-   "frameWidth": 116,
-   "frameHeight": 41,
+   "frameWidth": 100,
+   "frameHeight": 26,
    "frames": 1,
-   "anchorX": 58,
-   "anchorY": 40
+   "anchorX": 50,
+   "anchorY": 25
   },
   "animal-sheep": {
    "file": "assets/sprites/animal-sheep.png",
-   "frameWidth": 76,
-   "frameHeight": 60,
+   "frameWidth": 58,
+   "frameHeight": 52,
    "frames": 7,
-   "anchorX": 38,
-   "anchorY": 58,
+   "anchorX": 29,
+   "anchorY": 50,
    "idle": [
     0
    ],
@@ -620,11 +650,11 @@
   },
   "animal-goat": {
    "file": "assets/sprites/animal-goat.png",
-   "frameWidth": 78,
-   "frameHeight": 66,
+   "frameWidth": 66,
+   "frameHeight": 57,
    "frames": 7,
-   "anchorX": 39,
-   "anchorY": 64,
+   "anchorX": 33,
+   "anchorY": 55,
    "idle": [
     0
    ],
@@ -640,10 +670,10 @@
   },
   "animal-rabbit": {
    "file": "assets/sprites/animal-rabbit.png",
-   "frameWidth": 44,
+   "frameWidth": 36,
    "frameHeight": 35,
    "frames": 7,
-   "anchorX": 22,
+   "anchorX": 18,
    "anchorY": 33,
    "idle": [
     0
@@ -660,11 +690,11 @@
   },
   "animal-deer": {
    "file": "assets/sprites/animal-deer.png",
-   "frameWidth": 80,
-   "frameHeight": 106,
+   "frameWidth": 68,
+   "frameHeight": 92,
    "frames": 7,
-   "anchorX": 40,
-   "anchorY": 104,
+   "anchorX": 34,
+   "anchorY": 90,
    "idle": [
     0
    ],
@@ -680,11 +710,11 @@
   },
   "animal-lion": {
    "file": "assets/sprites/animal-lion.png",
-   "frameWidth": 88,
-   "frameHeight": 76,
+   "frameWidth": 96,
+   "frameHeight": 66,
    "frames": 7,
-   "anchorX": 44,
-   "anchorY": 74,
+   "anchorX": 48,
+   "anchorY": 64,
    "idle": [
     0
    ],
@@ -700,11 +730,11 @@
   },
   "animal-dove": {
    "file": "assets/sprites/animal-dove.png",
-   "frameWidth": 30,
-   "frameHeight": 38,
+   "frameWidth": 28,
+   "frameHeight": 33,
    "frames": 7,
-   "anchorX": 15,
-   "anchorY": 36,
+   "anchorX": 14,
+   "anchorY": 31,
    "idle": [
     0
    ],
@@ -724,11 +754,11 @@
   },
   "animal-horse": {
    "file": "assets/sprites/animal-horse.png",
-   "frameWidth": 122,
-   "frameHeight": 118,
+   "frameWidth": 114,
+   "frameHeight": 102,
    "frames": 7,
-   "anchorX": 61,
-   "anchorY": 116,
+   "anchorX": 57,
+   "anchorY": 100,
    "idle": [
     0
    ],
@@ -744,11 +774,11 @@
   },
   "animal-camel": {
    "file": "assets/sprites/animal-camel.png",
-   "frameWidth": 156,
-   "frameHeight": 133,
+   "frameWidth": 140,
+   "frameHeight": 116,
    "frames": 7,
-   "anchorX": 78,
-   "anchorY": 131,
+   "anchorX": 70,
+   "anchorY": 114,
    "idle": [
     0
    ],
@@ -764,43 +794,43 @@
   },
   "serpent-tree": {
    "file": "assets/sprites/serpent-tree.png",
-   "frameWidth": 92,
-   "frameHeight": 70,
+   "frameWidth": 79,
+   "frameHeight": 50,
    "frames": 2,
-   "anchorX": 46,
-   "anchorY": 68
+   "anchorX": 39,
+   "anchorY": 48
   },
   "serpent-ground": {
    "file": "assets/sprites/serpent-ground.png",
-   "frameWidth": 106,
-   "frameHeight": 17,
+   "frameWidth": 90,
+   "frameHeight": 13,
    "frames": 2,
-   "anchorX": 53,
-   "anchorY": 15
+   "anchorX": 45,
+   "anchorY": 11
   },
   "cherub": {
    "file": "assets/sprites/cherub.png",
-   "frameWidth": 220,
-   "frameHeight": 178,
+   "frameWidth": 122,
+   "frameHeight": 153,
    "frames": 2,
-   "anchorX": 110,
-   "anchorY": 176
+   "anchorX": 61,
+   "anchorY": 151
   },
   "flaming-sword": {
    "file": "assets/sprites/flaming-sword.png",
-   "frameWidth": 88,
-   "frameHeight": 88,
+   "frameWidth": 75,
+   "frameHeight": 75,
    "frames": 16,
-   "anchorX": 44,
-   "anchorY": 44
+   "anchorX": 37,
+   "anchorY": 37
   },
   "grass-tuft-0": {
    "file": "assets/props/grass-tuft-0.png",
-   "frameWidth": 16,
-   "frameHeight": 15,
+   "frameWidth": 19,
+   "frameHeight": 16,
    "frames": 1,
-   "anchorX": 8,
-   "anchorY": 14
+   "anchorX": 9,
+   "anchorY": 15
   },
   "grass-tuft-1": {
    "file": "assets/props/grass-tuft-1.png",
@@ -812,95 +842,95 @@
   },
   "grass-tuft-2": {
    "file": "assets/props/grass-tuft-2.png",
-   "frameWidth": 16,
+   "frameWidth": 11,
    "frameHeight": 10,
    "frames": 1,
-   "anchorX": 8,
+   "anchorX": 5,
    "anchorY": 9
   },
   "flowers-white": {
    "file": "assets/props/flowers-white.png",
-   "frameWidth": 20,
+   "frameWidth": 14,
    "frameHeight": 16,
    "frames": 1,
-   "anchorX": 10,
+   "anchorX": 7,
    "anchorY": 15
   },
   "flowers-yellow": {
    "file": "assets/props/flowers-yellow.png",
-   "frameWidth": 20,
+   "frameWidth": 16,
    "frameHeight": 16,
    "frames": 1,
-   "anchorX": 10,
+   "anchorX": 8,
    "anchorY": 15
   },
   "flowers-red": {
    "file": "assets/props/flowers-red.png",
-   "frameWidth": 20,
+   "frameWidth": 16,
    "frameHeight": 16,
    "frames": 1,
-   "anchorX": 10,
+   "anchorX": 8,
    "anchorY": 15
   },
   "flowers-blue": {
    "file": "assets/props/flowers-blue.png",
-   "frameWidth": 20,
+   "frameWidth": 16,
    "frameHeight": 16,
    "frames": 1,
-   "anchorX": 10,
+   "anchorX": 8,
    "anchorY": 15
   },
   "flowers-pink": {
    "file": "assets/props/flowers-pink.png",
-   "frameWidth": 22,
+   "frameWidth": 17,
    "frameHeight": 15,
    "frames": 1,
-   "anchorX": 11,
+   "anchorX": 8,
    "anchorY": 14
   },
   "flowers-purple": {
    "file": "assets/props/flowers-purple.png",
-   "frameWidth": 23,
+   "frameWidth": 28,
    "frameHeight": 16,
    "frames": 1,
-   "anchorX": 11,
+   "anchorX": 14,
    "anchorY": 15
   },
   "fern-a": {
    "file": "assets/props/fern-a.png",
-   "frameWidth": 43,
+   "frameWidth": 45,
    "frameHeight": 32,
    "frames": 1,
-   "anchorX": 21,
+   "anchorX": 22,
    "anchorY": 31
   },
   "fern-b": {
    "file": "assets/props/fern-b.png",
-   "frameWidth": 50,
+   "frameWidth": 57,
    "frameHeight": 40,
    "frames": 1,
-   "anchorX": 25,
+   "anchorX": 28,
    "anchorY": 39
   },
   "reeds": {
    "file": "assets/props/reeds.png",
-   "frameWidth": 38,
+   "frameWidth": 41,
    "frameHeight": 44,
    "frames": 1,
-   "anchorX": 19,
+   "anchorX": 20,
    "anchorY": 43
   },
   "lily-pad": {
    "file": "assets/props/lily-pad.png",
-   "frameWidth": 19,
+   "frameWidth": 20,
    "frameHeight": 14,
    "frames": 1,
-   "anchorX": 9,
+   "anchorX": 10,
    "anchorY": 7
   },
   "mushrooms": {
    "file": "assets/props/mushrooms.png",
-   "frameWidth": 13,
+   "frameWidth": 12,
    "frameHeight": 13,
    "frames": 1,
    "anchorX": 6,
@@ -908,27 +938,27 @@
   },
   "grain-plant": {
    "file": "assets/props/grain-plant.png",
-   "frameWidth": 28,
+   "frameWidth": 33,
    "frameHeight": 40,
    "frames": 1,
-   "anchorX": 14,
+   "anchorX": 16,
    "anchorY": 39
   },
   "thistle": {
    "file": "assets/props/thistle.png",
-   "frameWidth": 37,
+   "frameWidth": 32,
    "frameHeight": 32,
    "frames": 1,
-   "anchorX": 18,
+   "anchorX": 16,
    "anchorY": 31
   },
   "thorns": {
    "file": "assets/props/thorns.png",
-   "frameWidth": 28,
-   "frameHeight": 22,
+   "frameWidth": 29,
+   "frameHeight": 21,
    "frames": 1,
    "anchorX": 14,
-   "anchorY": 21
+   "anchorY": 20
   },
   "rock-small": {
    "file": "assets/props/rock-small.png",
@@ -940,95 +970,95 @@
   },
   "rock-medium": {
    "file": "assets/props/rock-medium.png",
-   "frameWidth": 35,
+   "frameWidth": 37,
    "frameHeight": 28,
    "frames": 1,
-   "anchorX": 17,
+   "anchorX": 18,
    "anchorY": 27
   },
   "rock-large": {
    "file": "assets/props/rock-large.png",
-   "frameWidth": 55,
+   "frameWidth": 59,
    "frameHeight": 46,
    "frames": 1,
-   "anchorX": 27,
+   "anchorX": 29,
    "anchorY": 45
   },
   "rock-mossy": {
    "file": "assets/props/rock-mossy.png",
-   "frameWidth": 46,
+   "frameWidth": 52,
    "frameHeight": 36,
    "frames": 1,
-   "anchorX": 23,
+   "anchorX": 26,
    "anchorY": 35
   },
   "stepping-stone": {
    "file": "assets/props/stepping-stone.png",
-   "frameWidth": 17,
+   "frameWidth": 18,
    "frameHeight": 14,
    "frames": 1,
-   "anchorX": 8,
+   "anchorX": 9,
    "anchorY": 7
   },
   "log": {
    "file": "assets/props/log.png",
-   "frameWidth": 45,
+   "frameWidth": 54,
    "frameHeight": 30,
    "frames": 1,
-   "anchorX": 22,
+   "anchorX": 27,
    "anchorY": 29
   },
   "flat-stone": {
    "file": "assets/props/flat-stone.png",
-   "frameWidth": 34,
+   "frameWidth": 37,
    "frameHeight": 20,
    "frames": 1,
-   "anchorX": 17,
+   "anchorX": 18,
    "anchorY": 19
   },
   "soil-marked": {
    "file": "assets/props/soil-marked.png",
+   "frameWidth": 33,
+   "frameHeight": 30,
+   "frames": 1,
+   "anchorX": 16,
+   "anchorY": 15
+  },
+  "soil-tilled": {
+   "file": "assets/props/soil-tilled.png",
    "frameWidth": 34,
    "frameHeight": 30,
    "frames": 1,
    "anchorX": 17,
    "anchorY": 15
   },
-  "soil-tilled": {
-   "file": "assets/props/soil-tilled.png",
-   "frameWidth": 36,
-   "frameHeight": 30,
-   "frames": 1,
-   "anchorX": 18,
-   "anchorY": 15
-  },
   "soil-seeded": {
    "file": "assets/props/soil-seeded.png",
-   "frameWidth": 36,
+   "frameWidth": 34,
    "frameHeight": 30,
    "frames": 1,
-   "anchorX": 18,
+   "anchorX": 17,
    "anchorY": 15
   },
   "soil-watered": {
    "file": "assets/props/soil-watered.png",
-   "frameWidth": 36,
+   "frameWidth": 34,
    "frameHeight": 30,
    "frames": 1,
-   "anchorX": 18,
+   "anchorX": 17,
    "anchorY": 15
   },
   "plant-sprout": {
    "file": "assets/props/plant-sprout.png",
-   "frameWidth": 10,
+   "frameWidth": 13,
    "frameHeight": 12,
    "frames": 1,
-   "anchorX": 5,
+   "anchorX": 6,
    "anchorY": 11
   },
   "plant-young": {
    "file": "assets/props/plant-young.png",
-   "frameWidth": 23,
+   "frameWidth": 22,
    "frameHeight": 22,
    "frames": 1,
    "anchorX": 11,
@@ -1036,7 +1066,7 @@
   },
   "plant-grown": {
    "file": "assets/props/plant-grown.png",
-   "frameWidth": 30,
+   "frameWidth": 31,
    "frameHeight": 32,
    "frames": 1,
    "anchorX": 15,
@@ -1044,39 +1074,39 @@
   },
   "digging-stick": {
    "file": "assets/props/digging-stick.png",
-   "frameWidth": 20,
+   "frameWidth": 19,
    "frameHeight": 12,
    "frames": 1,
-   "anchorX": 10,
+   "anchorX": 9,
    "anchorY": 11
   },
   "gourd": {
    "file": "assets/props/gourd.png",
-   "frameWidth": 22,
+   "frameWidth": 20,
    "frameHeight": 22,
    "frames": 1,
-   "anchorX": 11,
+   "anchorX": 10,
    "anchorY": 21
   },
   "gourd-full": {
    "file": "assets/props/gourd-full.png",
-   "frameWidth": 22,
+   "frameWidth": 20,
    "frameHeight": 22,
    "frames": 1,
-   "anchorX": 11,
+   "anchorX": 10,
    "anchorY": 21
   },
   "basket": {
    "file": "assets/props/basket.png",
-   "frameWidth": 26,
+   "frameWidth": 29,
    "frameHeight": 22,
    "frames": 1,
-   "anchorX": 13,
+   "anchorX": 14,
    "anchorY": 21
   },
   "basket-full": {
    "file": "assets/props/basket-full.png",
-   "frameWidth": 27,
+   "frameWidth": 26,
    "frameHeight": 24,
    "frames": 1,
    "anchorX": 13,
@@ -1092,15 +1122,15 @@
   },
   "fruit-pomegranate": {
    "file": "assets/props/fruit-pomegranate.png",
-   "frameWidth": 12,
+   "frameWidth": 11,
    "frameHeight": 13,
    "frames": 1,
-   "anchorX": 6,
+   "anchorX": 5,
    "anchorY": 1
   },
   "fruit-dates": {
    "file": "assets/props/fruit-dates.png",
-   "frameWidth": 12,
+   "frameWidth": 13,
    "frameHeight": 14,
    "frames": 1,
    "anchorX": 6,
@@ -1132,18 +1162,18 @@
   },
   "fig-leaf": {
    "file": "assets/props/fig-leaf.png",
-   "frameWidth": 23,
+   "frameWidth": 20,
    "frameHeight": 20,
    "frames": 1,
-   "anchorX": 11,
+   "anchorX": 10,
    "anchorY": 19
   },
   "seeds": {
    "file": "assets/props/seeds.png",
-   "frameWidth": 16,
+   "frameWidth": 14,
    "frameHeight": 16,
    "frames": 1,
-   "anchorX": 8,
+   "anchorX": 7,
    "anchorY": 15
   },
   "water-drop": {
@@ -1287,14 +1317,14 @@
   "oak-large-a": {
    "trunk": "assets/trees/oak-large-a-trunk.png",
    "canopy": "assets/trees/oak-large-a-canopy.png",
-   "width": 131,
-   "height": 250,
-   "anchorX": 62,
-   "anchorY": 246,
+   "width": 243,
+   "height": 275,
+   "anchorX": 120,
+   "anchorY": 271,
    "collider": [
-    47,
-    234,
-    30,
+    96,
+    259,
+    48,
     14
    ],
    "fruit": [],
@@ -1303,14 +1333,14 @@
   "oak-large-b": {
    "trunk": "assets/trees/oak-large-b-trunk.png",
    "canopy": "assets/trees/oak-large-b-canopy.png",
-   "width": 131,
-   "height": 250,
-   "anchorX": 62,
-   "anchorY": 246,
+   "width": 243,
+   "height": 275,
+   "anchorX": 120,
+   "anchorY": 271,
    "collider": [
-    47,
-    234,
-    30,
+    96,
+    259,
+    48,
     14
    ],
    "fruit": [],
@@ -1319,14 +1349,14 @@
   "oak-medium-a": {
    "trunk": "assets/trees/oak-medium-a-trunk.png",
    "canopy": "assets/trees/oak-medium-a-canopy.png",
-   "width": 131,
-   "height": 204,
-   "anchorX": 66,
-   "anchorY": 200,
+   "width": 199,
+   "height": 224,
+   "anchorX": 102,
+   "anchorY": 220,
    "collider": [
-    55,
-    188,
-    22,
+    83,
+    208,
+    39,
     14
    ],
    "fruit": [],
@@ -1335,14 +1365,14 @@
   "oak-medium-b": {
    "trunk": "assets/trees/oak-medium-b-trunk.png",
    "canopy": "assets/trees/oak-medium-b-canopy.png",
-   "width": 131,
-   "height": 204,
-   "anchorX": 66,
-   "anchorY": 200,
+   "width": 199,
+   "height": 224,
+   "anchorX": 102,
+   "anchorY": 220,
    "collider": [
-    55,
-    188,
-    22,
+    83,
+    208,
+    39,
     14
    ],
    "fruit": [],
@@ -1351,14 +1381,14 @@
   "oak-small-a": {
    "trunk": "assets/trees/oak-small-a-trunk.png",
    "canopy": "assets/trees/oak-small-a-canopy.png",
-   "width": 92,
-   "height": 156,
-   "anchorX": 46,
-   "anchorY": 152,
+   "width": 144,
+   "height": 172,
+   "anchorX": 73,
+   "anchorY": 168,
    "collider": [
-    38,
-    140,
-    16,
+    60,
+    156,
+    27,
     14
    ],
    "fruit": [],
@@ -1367,14 +1397,14 @@
   "oak-small-b": {
    "trunk": "assets/trees/oak-small-b-trunk.png",
    "canopy": "assets/trees/oak-small-b-canopy.png",
-   "width": 92,
-   "height": 156,
-   "anchorX": 46,
-   "anchorY": 152,
+   "width": 144,
+   "height": 172,
+   "anchorX": 73,
+   "anchorY": 168,
    "collider": [
-    38,
-    140,
-    16,
+    60,
+    156,
+    27,
     14
    ],
    "fruit": [],
@@ -1383,14 +1413,14 @@
   "blossom": {
    "trunk": "assets/trees/blossom-trunk.png",
    "canopy": "assets/trees/blossom-canopy.png",
-   "width": 118,
-   "height": 190,
-   "anchorX": 58,
-   "anchorY": 186,
+   "width": 194,
+   "height": 209,
+   "anchorX": 96,
+   "anchorY": 205,
    "collider": [
-    47,
-    174,
-    22,
+    81,
+    193,
+    31,
     14
    ],
    "fruit": [],
@@ -1399,14 +1429,14 @@
   "cypress-a": {
    "trunk": "assets/trees/cypress-a-trunk.png",
    "canopy": "assets/trees/cypress-a-canopy.png",
-   "width": 72,
-   "height": 244,
-   "anchorX": 36,
-   "anchorY": 240,
+   "width": 81,
+   "height": 268,
+   "anchorX": 41,
+   "anchorY": 264,
    "collider": [
-    26,
-    228,
-    20,
+    29,
+    252,
+    24,
     14
    ],
    "fruit": [],
@@ -1415,14 +1445,14 @@
   "cypress-b": {
    "trunk": "assets/trees/cypress-b-trunk.png",
    "canopy": "assets/trees/cypress-b-canopy.png",
-   "width": 72,
-   "height": 244,
-   "anchorX": 36,
-   "anchorY": 240,
+   "width": 81,
+   "height": 268,
+   "anchorX": 41,
+   "anchorY": 264,
    "collider": [
-    26,
-    228,
-    20,
+    29,
+    252,
+    24,
     14
    ],
    "fruit": [],
@@ -1431,52 +1461,64 @@
   "fig-a": {
    "trunk": "assets/trees/fig-a-trunk.png",
    "canopy": "assets/trees/fig-a-canopy.png",
-   "width": 101,
-   "height": 196,
-   "anchorX": 50,
-   "anchorY": 192,
+   "width": 159,
+   "height": 216,
+   "anchorX": 78,
+   "anchorY": 212,
    "collider": [
-    42,
-    180,
-    17,
+    66,
+    200,
+    25,
     14
    ],
    "fruit": [
     [
-     39,
-     113
+     60,
+     138
     ],
     [
-     46,
-     26
+     33,
+     160
     ],
     [
-     53,
-     60
+     40,
+     133
     ],
     [
-     72,
-     53
+     118,
+     70
     ],
     [
-     75,
-     83
+     44,
+     145
     ],
     [
-     72,
-     108
+     50,
+     71
     ],
     [
-     19,
-     96
+     44,
+     157
     ],
     [
-     28,
-     72
+     146,
+     137
     ],
     [
-     11,
-     116
+     33,
+     69
+    ],
+    [
+     112,
+     88
+    ],
+    [
+     80,
+     109
+    ],
+    [
+     26,
+     106
     ]
    ],
    "kind": "fig"
@@ -1484,52 +1526,64 @@
   "fig-b": {
    "trunk": "assets/trees/fig-b-trunk.png",
    "canopy": "assets/trees/fig-b-canopy.png",
-   "width": 101,
-   "height": 196,
-   "anchorX": 50,
-   "anchorY": 192,
+   "width": 159,
+   "height": 216,
+   "anchorX": 78,
+   "anchorY": 212,
    "collider": [
-    42,
-    180,
-    17,
+    66,
+    200,
+    25,
     14
    ],
    "fruit": [
     [
-     39,
-     113
+     60,
+     138
     ],
     [
-     46,
-     26
+     33,
+     160
     ],
     [
-     53,
-     60
+     40,
+     133
     ],
     [
-     72,
-     53
+     118,
+     70
     ],
     [
-     75,
-     83
+     44,
+     145
     ],
     [
-     72,
-     108
+     50,
+     71
     ],
     [
-     19,
-     96
+     44,
+     157
     ],
     [
-     28,
-     72
+     146,
+     137
     ],
     [
-     11,
-     116
+     33,
+     69
+    ],
+    [
+     112,
+     88
+    ],
+    [
+     80,
+     109
+    ],
+    [
+     26,
+     106
     ]
    ],
    "kind": "fig"
@@ -1537,60 +1591,64 @@
   "pomegranate-a": {
    "trunk": "assets/trees/pomegranate-a-trunk.png",
    "canopy": "assets/trees/pomegranate-a-canopy.png",
-   "width": 96,
-   "height": 184,
-   "anchorX": 46,
-   "anchorY": 180,
+   "width": 170,
+   "height": 202,
+   "anchorX": 83,
+   "anchorY": 198,
    "collider": [
-    38,
-    168,
-    16,
+    69,
+    186,
+    29,
     14
    ],
    "fruit": [
     [
-     20,
-     106
+     111,
+     111
     ],
     [
-     72,
-     85
+     1,
+     98
     ],
     [
-     54,
-     19
+     41,
+     140
     ],
     [
-     69,
-     47
+     92,
+     35
     ],
     [
-     25,
-     39
+     59,
+     117
     ],
     [
-     17,
-     69
+     70,
+     12
     ],
     [
-     35,
-     81
+     33,
+     104
     ],
     [
-     62,
-     106
+     106,
+     33
     ],
     [
-     54,
-     79
+     47,
+     45
     ],
     [
-     80,
-     60
+     142,
+     77
     ],
     [
-     76,
-     94
+     44,
+     77
+    ],
+    [
+     136,
+     115
     ]
    ],
    "kind": "pomegranate"
@@ -1598,60 +1656,64 @@
   "pomegranate-b": {
    "trunk": "assets/trees/pomegranate-b-trunk.png",
    "canopy": "assets/trees/pomegranate-b-canopy.png",
-   "width": 96,
-   "height": 184,
-   "anchorX": 46,
-   "anchorY": 180,
+   "width": 170,
+   "height": 202,
+   "anchorX": 83,
+   "anchorY": 198,
    "collider": [
-    38,
-    168,
-    16,
+    69,
+    186,
+    29,
     14
    ],
    "fruit": [
     [
-     20,
-     106
+     111,
+     111
     ],
     [
-     72,
-     85
+     1,
+     98
     ],
     [
-     54,
-     19
+     41,
+     140
     ],
     [
-     69,
-     47
+     92,
+     35
     ],
     [
-     25,
-     39
+     59,
+     117
     ],
     [
-     17,
-     69
+     70,
+     12
     ],
     [
-     35,
-     81
+     33,
+     104
     ],
     [
-     62,
-     106
+     106,
+     33
     ],
     [
-     54,
-     79
+     47,
+     45
     ],
     [
-     80,
-     60
+     142,
+     77
     ],
     [
-     76,
-     94
+     44,
+     77
+    ],
+    [
+     136,
+     115
     ]
    ],
    "kind": "pomegranate"
@@ -1659,14 +1721,14 @@
   "olive-a": {
    "trunk": "assets/trees/olive-a-trunk.png",
    "canopy": "assets/trees/olive-a-canopy.png",
-   "width": 152,
-   "height": 196,
-   "anchorX": 71,
-   "anchorY": 192,
+   "width": 179,
+   "height": 216,
+   "anchorX": 93,
+   "anchorY": 212,
    "collider": [
-    49,
-    180,
-    45,
+    75,
+    200,
+    37,
     14
    ],
    "fruit": [],
@@ -1675,14 +1737,14 @@
   "olive-b": {
    "trunk": "assets/trees/olive-b-trunk.png",
    "canopy": "assets/trees/olive-b-canopy.png",
-   "width": 152,
-   "height": 196,
-   "anchorX": 71,
-   "anchorY": 192,
+   "width": 179,
+   "height": 216,
+   "anchorX": 93,
+   "anchorY": 212,
    "collider": [
-    49,
-    180,
-    45,
+    75,
+    200,
+    37,
     14
    ],
    "fruit": [],
@@ -1691,14 +1753,14 @@
   "palm-a": {
    "trunk": "assets/trees/palm-a-trunk.png",
    "canopy": "assets/trees/palm-a-canopy.png",
-   "width": 161,
-   "height": 262,
-   "anchorX": 81,
-   "anchorY": 258,
+   "width": 216,
+   "height": 288,
+   "anchorX": 110,
+   "anchorY": 284,
    "collider": [
-    68,
-    246,
-    27,
+    93,
+    272,
+    34,
     14
    ],
    "fruit": [],
@@ -1707,14 +1769,14 @@
   "palm-b": {
    "trunk": "assets/trees/palm-b-trunk.png",
    "canopy": "assets/trees/palm-b-canopy.png",
-   "width": 161,
-   "height": 262,
-   "anchorX": 81,
-   "anchorY": 258,
+   "width": 216,
+   "height": 288,
+   "anchorX": 110,
+   "anchorY": 284,
    "collider": [
-    68,
-    246,
-    27,
+    93,
+    272,
+    34,
     14
    ],
    "fruit": [],
@@ -1723,104 +1785,104 @@
   "forbidden-tree": {
    "trunk": "assets/trees/forbidden-tree-trunk.png",
    "canopy": "assets/trees/forbidden-tree-canopy.png",
-   "width": 242,
-   "height": 290,
-   "anchorX": 121,
-   "anchorY": 286,
+   "width": 281,
+   "height": 319,
+   "anchorX": 138,
+   "anchorY": 315,
    "collider": [
-    97,
-    274,
+    114,
+    303,
     48,
     14
    ],
    "fruit": [
     [
-     214,
-     115
+     106,
+     164
     ],
     [
-     55,
-     168
+     53,
+     182
     ],
     [
-     102,
-     135
+     210,
+     180
     ],
     [
-     179,
-     181
+     141,
+     133
     ],
     [
-     111,
-     34
+     226,
+     155
     ],
     [
-     24,
-     146
+     63,
+     106
     ],
     [
-     170,
-     59
+     222,
+     191
     ],
     [
-     89,
-     183
+     113,
+     40
     ],
     [
-     37,
+     123,
      109
     ],
     [
-     169,
-     140
+     139,
+     51
     ],
     [
-     197,
-     86
+     46,
+     159
     ],
     [
-     142,
-     41
+     29,
+     180
     ],
     [
-     138,
-     120
+     38,
+     222
     ],
     [
-     77,
-     47
+     76,
+     67
     ],
     [
-     74,
-     127
+     257,
+     172
     ],
     [
-     70,
-     202
+     183,
+     160
+    ],
+    [
+     133,
+     20
+    ],
+    [
+     118,
+     176
     ],
     [
      209,
-     166
+     229
     ],
     [
-     194,
-     143
+     43,
+     212
     ],
     [
-     47,
-     72
+     222,
+     105
     ],
     [
-     154,
-     96
-    ],
-    [
-     88,
-     79
-    ],
-    [
-     204,
-     197
+     48,
+     182
     ]
    ],
    "kind": "forbidden"
@@ -1828,13 +1890,13 @@
   "tree-of-life": {
    "trunk": "assets/trees/tree-of-life-trunk.png",
    "canopy": "assets/trees/tree-of-life-canopy.png",
-   "width": 242,
-   "height": 300,
-   "anchorX": 129,
-   "anchorY": 296,
+   "width": 295,
+   "height": 330,
+   "anchorX": 143,
+   "anchorY": 326,
    "collider": [
-    105,
-    284,
+    119,
+    314,
     48,
     14
    ],
@@ -1844,14 +1906,14 @@
   "bush-round": {
    "trunk": "assets/trees/bush-round-trunk.png",
    "canopy": "assets/trees/bush-round-canopy.png",
-   "width": 71,
-   "height": 64,
-   "anchorX": 35,
-   "anchorY": 60,
+   "width": 74,
+   "height": 70,
+   "anchorX": 40,
+   "anchorY": 66,
    "collider": [
-    20,
-    48,
-    30,
+    25,
+    54,
+    31,
     14
    ],
    "fruit": [],
@@ -1860,14 +1922,14 @@
   "bush-dark": {
    "trunk": "assets/trees/bush-dark-trunk.png",
    "canopy": "assets/trees/bush-dark-canopy.png",
-   "width": 76,
-   "height": 70,
-   "anchorX": 39,
-   "anchorY": 66,
+   "width": 82,
+   "height": 77,
+   "anchorX": 43,
+   "anchorY": 73,
    "collider": [
-    30,
-    54,
-    18,
+    24,
+    61,
+    38,
     14
    ],
    "fruit": [],
@@ -1876,14 +1938,14 @@
   "bush-flower": {
    "trunk": "assets/trees/bush-flower-trunk.png",
    "canopy": "assets/trees/bush-flower-canopy.png",
-   "width": 70,
-   "height": 64,
-   "anchorX": 34,
-   "anchorY": 60,
+   "width": 76,
+   "height": 70,
+   "anchorX": 39,
+   "anchorY": 66,
    "collider": [
     15,
+    54,
     48,
-    38,
     14
    ],
    "fruit": [],
@@ -1892,14 +1954,14 @@
   "bush-berry": {
    "trunk": "assets/trees/bush-berry-trunk.png",
    "canopy": "assets/trees/bush-berry-canopy.png",
-   "width": 72,
-   "height": 64,
-   "anchorX": 36,
-   "anchorY": 60,
+   "width": 68,
+   "height": 70,
+   "anchorX": 35,
+   "anchorY": 66,
    "collider": [
-    19,
-    48,
-    34,
+    15,
+    54,
+    40,
     14
    ],
    "fruit": [],
@@ -1908,14 +1970,14 @@
   "grapevine": {
    "trunk": "assets/trees/grapevine-trunk.png",
    "canopy": "assets/trees/grapevine-canopy.png",
-   "width": 118,
-   "height": 118,
-   "anchorX": 56,
-   "anchorY": 114,
+   "width": 81,
+   "height": 130,
+   "anchorX": 42,
+   "anchorY": 126,
    "collider": [
-    43,
-    102,
-    26,
+    31,
+    114,
+    23,
     14
    ],
    "fruit": [],

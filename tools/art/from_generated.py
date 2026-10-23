@@ -29,8 +29,21 @@ from ingest import is_magenta, remove_magenta  # noqa: E402
 # ---------------------------------------------------------------- utilities
 
 
+def has_output(job: str) -> bool:
+    folder = os.path.join(ROOT, 'art', 'generated', job)
+    return os.path.isdir(folder) and any(f.endswith('.png') for f in os.listdir(folder))
+
+
+def J(job: str) -> str:
+    """The job to use: its second-style version ("v2-...") once generated."""
+    return f'v2-{job}' if has_output(f'v2-{job}') else job
+
+
 def cutout(job: str) -> np.ndarray:
-    img = load_rgba(os.path.join(ROOT, output_of(load_jobs(), job)))
+    """A generated image (v2 style when available) or a repository image
+    path, with its flat background removed."""
+    path = job if os.path.exists(os.path.join(ROOT, job)) else output_of(load_jobs(), J(job))
+    img = load_rgba(os.path.join(ROOT, path))
     return remove_magenta(img) if is_magenta(img) else remove_background(img)
 
 
@@ -167,15 +180,44 @@ def resample(img: np.ndarray, box: tuple[int, int, int, int], period: float) -> 
     return trim(decontaminate(out))
 
 
+MAGENTA = np.array([255.0, 0.0, 255.0])
+
+
+def excess(c) -> float:
+    """How much more red and blue than green a colour has."""
+    return (float(c[0]) + float(c[2])) / 2 - float(c[1])
+
+
 def decontaminate(s: np.ndarray) -> np.ndarray:
-    """Drop bright magenta-tinted pixels left from the background on edges."""
+    """Clean the magenta background out of the outer two pixel rings: bright
+    magenta is dropped, and a pixel that is a blend of a nearby colour with
+    magenta takes that colour back. Real pink or red (blossom, fruit) is not
+    such a blend, so it stays."""
     out = s.copy()
     a = s[:, :, 3] > 0
-    edge = a & ~(np.roll(a, 1, 0) & np.roll(a, -1, 0) & np.roll(a, 1, 1) & np.roll(a, -1, 1))
-    for y, x in zip(*np.nonzero(edge)):
-        h, sat, v = hsv(s[y, x, :3])
-        if 0.8 < h < 0.97 and sat > 0.3 and v > 0.6:
+    ring = lambda m: m & np.roll(m, 1, 0) & np.roll(m, -1, 0) & np.roll(m, 1, 1) & np.roll(m, -1, 1)  # noqa: E731
+    inner = ring(a)
+    edge = a & ~inner
+    near = a & ~ring(inner)
+    hgt, wid = a.shape
+    for y, x in zip(*np.nonzero(near)):
+        c = s[y, x, :3].astype(float)
+        h, sat, v = hsv(c)
+        if edge[y, x] and 0.8 < h < 0.97 and sat > 0.3 and v > 0.6:
             out[y, x] = 0
+            continue
+        e = excess(c)
+        if e < -20:
+            continue
+        nb = [s[yy, xx, :3] for yy in range(max(0, y - 2), min(hgt, y + 3)) for xx in range(max(0, x - 2), min(wid, x + 3))
+              if a[yy, xx] and excess(s[yy, xx, :3]) < e - 25]
+        if len(nb) < 3:
+            continue
+        f = np.median(np.array(nb, float), axis=0)
+        d = f - MAGENTA
+        alpha = float(np.dot(c - MAGENTA, d) / max(1.0, float(np.dot(d, d))))
+        if 0.15 < alpha < 0.97 and np.linalg.norm(c - (MAGENTA + alpha * d)) < 32:
+            out[y, x, :3] = f.round().astype(np.uint8)
     return out
 
 
@@ -239,7 +281,8 @@ def tint(s: np.ndarray, factor: float, hue_shift: float = 0.0) -> np.ndarray:
 # --------------------------------------------------------------- characters
 
 # size of people, animals and creatures relative to the world (1 = Adam 116 px)
-CREATURE_SCALE = float(os.environ.get('ART_CREATURE_SCALE', '1'))
+CREATURE_SCALE = float(os.environ.get('ART_CREATURE_SCALE', '0.86'))
+TREE_SCALE = float(os.environ.get('ART_TREE_SCALE', '1.1'))
 TARGET_H = {k: round(v * CREATURE_SCALE) for k, v in {'adam': 116, 'eve': 112, 'god': 120}.items()}
 SETS = [('adam', 'leaves'), ('adam', 'fig'), ('adam', 'tunic'), ('eve', 'leaves'), ('eve', 'fig'), ('eve', 'tunic'), ('god', 'robe')]
 DIRS = ('down', 'up', 'right')
@@ -257,18 +300,29 @@ def breathe(s: np.ndarray) -> np.ndarray:
     return out
 
 
-# the clean three-view sheets (front, back, side) for the first outfits
-VIEW_SHEETS = {('adam', 'leaves'): 'adam-sprite', ('eve', 'leaves'): 'eve-sprite', ('god', 'robe'): 'god-sprite'}
+# the maintainer's own sprite: Adam facing right
+ADAM_SIDE = 'art/reference/v2/adam-sprite.png'
+
+
+def view_sheet(char: str, outfit: str) -> str | None:
+    """The clean three-view sheet (front, back, side) of a character."""
+    v2 = f'v2-{char}-views' if outfit in ('leaves', 'robe') else f'v2-{char}-{outfit}-views'
+    if has_output(v2):
+        return v2
+    return {('adam', 'leaves'): 'adam-sprite', ('eve', 'leaves'): 'eve-sprite', ('god', 'robe'): 'god-sprite'}.get((char, outfit))
 
 
 def standing(char: str, outfit: str, d: str) -> np.ndarray:
     """One clean standing frame: from the three-view sheet when there is one
     (its back views are right, unlike some walk strips), else the first frame
     of the walk strip."""
-    sheet = VIEW_SHEETS.get((char, outfit))
-    if sheet and d in ('down', 'up'):
+    sheet = view_sheet(char, outfit)
+    if (char, outfit, d) == ('adam', 'leaves', 'right') and has_output('v2-adam-views'):
+        img = cutout(ADAM_SIDE)
+        box = bbox(clean_mask(img[:, :, 3]))
+    elif sheet and (d in ('down', 'up') or sheet.startswith('v2-')):
         img = cutout(sheet)
-        box = split_strip(img, 3)[0 if d == 'down' else 1]
+        box = split_strip(img, 3)[DIRS.index(d)]
     else:
         img = cutout(f'walk-{char}-{outfit}-{d}')
         box = split_strip(img, 5)[0]
@@ -345,8 +399,67 @@ def front_back_frames(char: str, outfit: str, d: str) -> list[np.ndarray]:
     return [still, pad(breathe(stand))] + [step(stand, top, split, *c) for c in STEP_CYCLE]
 
 
+def rotate_part(part: np.ndarray, angle: float, pivot: tuple[float, float], k: int = 4) -> np.ndarray:
+    """Rotate an RGBA layer around pivot (x, y) keeping clean pixels: rotate
+    a k-times enlarged copy, then take the centre of each k x k block."""
+    h, w = part.shape[:2]
+    big = Image.fromarray(part).resize((w * k, h * k), Image.NEAREST)
+    big = big.rotate(angle, resample=Image.NEAREST, center=(pivot[0] * k, pivot[1] * k))
+    return np.asarray(big)[k // 2::k, k // 2::k].copy()
+
+
+# near-leg angle (degrees, forward positive) for an eight-frame side step cycle
+SIDE_CYCLE = (16, 8, 0, -8, -16, -8, 0, 8)
+
+
+def side_frames(stand: np.ndarray) -> list[np.ndarray] | None:
+    """Idle and walking frames for a side view, all made from one standing
+    frame: both legs swing from the hip (the far one a little darker) under
+    the unchanged body, and the lowest foot stays on the ground. None when
+    no legs show (long robes)."""
+    h, w = stand.shape[:2]
+    a = stand[:, :, 3] > 0
+    widths = a.sum(axis=1)
+    top = next((y for y in range(int(h * 0.6), h) if widths[y] <= 0.45 * widths.max()), None)
+    if top is None or h - top < 0.15 * h:
+        return None
+    lower = np.zeros_like(a)
+    lower[top:] = a[top:]
+    legs = max(blobs(lower), key=len)  # hands hanging below the hem stay with the body
+    leg_mask = np.zeros_like(a)
+    for y, x in legs:
+        leg_mask[y, x] = True
+    cols = np.nonzero(leg_mask[top])[0]
+    pivot = ((cols.min() + cols.max() + 1) / 2, top - round(0.1 * h))
+    leg = np.where(leg_mask[:, :, None], stand, 0).astype(np.uint8)
+    for y in range(pivot[1], top):  # hidden under the clothes: keeps the hip joined
+        leg[y] = np.where(leg_mask[top][:, None], stand[top], 0)
+    body = np.where(leg_mask[:, :, None], 0, stand).astype(np.uint8)
+    pad = 14
+    grow = lambda f: np.pad(f, ((1, 1), (pad, pad), (0, 0)))  # noqa: E731
+    leg, body = grow(leg), grow(body)
+    far = leg.copy()
+    far[:, :, :3] = (far[:, :, :3] * 0.8).astype(np.uint8)
+    centre = (pivot[0] + pad, pivot[1] + 1)
+    ground = h
+    frames = [grow(stand), grow(breathe(stand))]
+    for angle in SIDE_CYCLE:
+        out = np.zeros_like(body)
+        for layer in (rotate_part(far, -angle, centre), rotate_part(leg, angle, centre), body):
+            out = np.where(layer[:, :, 3:4] > 0, layer, out)
+        low = int(np.nonzero(out[:, :, 3].any(axis=1))[0].max())
+        frames.append(np.roll(out, ground - low, axis=0))
+    used = np.nonzero(np.any([f[:, :, 3].any(axis=0) for f in frames], axis=0))[0]
+    return [f[:, used.min():used.max() + 1] for f in frames]
+
+
 def walk_frames(char: str, outfit: str, d: str) -> list[np.ndarray]:
+    if has_output(f'v2-{char}-views'):
+        frames = side_frames(standing(char, outfit, d))
+        if frames:
+            return frames
     img = cutout(f'walk-{char}-{outfit}-{d}')
+    img[:, :, 3] = np.where(clean_mask(img[:, :, 3]), img[:, :, 3], 0)
     boxes = split_strip(img, 5)
     period = (boxes[0][2] - boxes[0][0]) / TARGET_H[char]
     frames = [resample(img, b, period) for b in boxes]
@@ -363,6 +476,8 @@ def walk_frames(char: str, outfit: str, d: str) -> list[np.ndarray]:
     a = max(strides, key=lambda f: legs_diff(f, stand))
     rest = [f for f in strides if f is not a]
     b = max(rest, key=lambda f: legs_diff(f, a))
+    if (char, outfit) == ('adam', 'leaves') and has_output('v2-adam-views'):
+        stand = standing(char, outfit, d)
     return [stand, breathe(stand), a, stand, b, stand]
 
 
@@ -375,9 +490,9 @@ def build_characters(m: dict, save, strip, sheet_entry) -> np.ndarray:
         w += w % 2
         h = max(f.shape[0] for fr in sets.values() for f in fr) + 4
         for d, fr in sets.items():
-            if d in ('down', 'up'):
+            if len(fr) == 10:
                 # the frames share one canvas already: keep their alignment
-                c = torso_center(fr[0][1:-1])
+                c = torso_center(trim_bottom(fr[0]))
                 cells = [place(trim_bottom(f), w, h, w // 2, h - 3, c) for f in fr]
                 extra = {'idle': [0, 1], 'walk': list(range(2, len(fr))), 'walkFps': 12}
             else:
@@ -430,6 +545,9 @@ JUMPS = {'rabbit', 'dove'}  # frames keep their height above the ground
 
 
 def build_animals(m, save, strip, sheet_entry) -> None:
+    if has_output('v2-animals') and not has_output(f'v2-{ANIMATION_JOBS["horse"]}'):
+        build_still_animals(m, save, strip, sheet_entry)
+        return
     for row in ANIMALS:
         for name, height in row:
             img = cutout(ANIMATION_JOBS[name])
@@ -454,6 +572,22 @@ def build_animals(m, save, strip, sheet_entry) -> None:
             file = save(strip(cells), f'sprites/{key}.png')
             m['sprites'][key] = sheet_entry(file, cells, (w // 2, h - 2), **extra)
             print(f'  animal {name}: {w}x{h}, {len(cells)} frames')
+
+
+def animal_boxes() -> tuple[np.ndarray, dict[str, tuple[int, int, int, int]]]:
+    img = cutout('animals')
+    rows = rows_of_subjects(img, [len(r) for r in ANIMALS])
+    return img, {name: box for want, got in zip(ANIMALS, rows) for (name, _), box in zip(want, got)}
+
+
+def build_still_animals(m, save, strip, sheet_entry) -> None:
+    """Animals from the sheet with a small step bob, until their walk strips exist."""
+    img, boxes = animal_boxes()
+    for row in ANIMALS:
+        for name, height in row:
+            s = fit(img, boxes[name], round(height * CREATURE_SCALE))
+            sprite_sheet(m, save, strip, sheet_entry, f'animal-{name}', [s, bob(s)], idle=[0], walk=[0, 1])
+            print(f'  animal {name} (still): {s.shape[1]}x{s.shape[0]}')
 
 
 def rotations(s: np.ndarray, n: int) -> list[np.ndarray]:
@@ -625,7 +759,7 @@ def build_trees(m, save, strip, sheet_entry) -> None:
             boxes = sorted(boxes, key=lambda b: (b[2] - b[0]) * (b[3] - b[1]), reverse=True)[:len(specs)]
             boxes.sort(key=lambda b: b[1])
         for (key, height, fruit_kind), box in zip(specs, boxes):
-            s = fit(img, box, height)
+            s = fit(img, box, round(height * TREE_SCALE))
             slots: list[list[int]] = []
             if fruit_kind:
                 s, slots = take_fruit(s, fruit_kind)
@@ -647,19 +781,26 @@ def build_trees(m, save, strip, sheet_entry) -> None:
 # ---------------------------------------------------------------- portraits
 
 PORTRAITS = {'eve': 'eve-portrait', 'god': 'god-portrait', 'serpent': 'serpent-portrait'}
-PW, PH = 64, 66
+ADAM_TALK = 'art/reference/v2/adam-talk.webp'
 
 
-def portrait(job: str) -> np.ndarray:
+def adam_portrait() -> np.ndarray:
+    """The maintainer's portrait, every drawn pixel kept (its own grid)."""
+    import extract
+    s, _ = extract.extract(os.path.join(ROOT, ADAM_TALK), 10.6)
+    return s
+
+
+def portrait(job: str, pw: int, ph: int) -> np.ndarray:
     img = cutout(job)
     mask = clean_mask(img[:, :, 3])
     box = bbox(mask)
-    s = fit(img, box, PH)
-    if s.shape[1] > PW:
-        x0 = (s.shape[1] - PW) // 2
-        s = s[:, x0:x0 + PW]
-    out = np.zeros((PH, PW, 4), np.uint8)
-    out[PH - s.shape[0]:, (PW - s.shape[1]) // 2:(PW - s.shape[1]) // 2 + s.shape[1]] = s
+    s = fit(img, box, ph)
+    if s.shape[1] > pw:
+        x0 = (s.shape[1] - pw) // 2
+        s = s[:, x0:x0 + pw]
+    out = np.zeros((ph, pw, 4), np.uint8)
+    out[ph - s.shape[0]:, (pw - s.shape[1]) // 2:(pw - s.shape[1]) // 2 + s.shape[1]] = s
     return out
 
 
@@ -668,76 +809,139 @@ def lum(c) -> float:
 
 
 def find_eyes(p: np.ndarray) -> list[tuple[int, int, int, int]]:
-    """Boxes (y0, x0, y1, x1) of the two eyes: the dark pupil and lash blobs
-    on each side of the face, widened to the white of the eye."""
-    oy, ox = 16, 14
-    face = p[oy:36, ox:50]
-    dark = np.zeros(face.shape[:2], bool)
+    """Boxes (y0, x0, y1, x1) of the two eyes: a dark pupil with the white of
+    the eye beside it, on each side of the face. Eyebrows are dark (or white)
+    but never both. Positions are proportions of a 64 x 66 portrait."""
+    fy, fx = p.shape[0] / 66, p.shape[1] / 64
+    oy, ox = round(16 * fy), round(14 * fx)
+    face = p[oy:round(36 * fy), ox:round(50 * fx)]
+    h, w = face.shape[:2]
+    dark = np.zeros((h, w), bool)
+    white = np.zeros((h, w), bool)
     for y, x in zip(*np.nonzero(face[:, :, 3])):
-        dark[y, x] = lum(face[y, x, :3]) < 70
-    groups = [g for g in blobs(dark) if 2 <= len(g) <= 30]
-    mid = face.shape[1] / 2
-    boxes = []
-    for side in (lambda g: np.mean([q[1] for q in g]) < mid, lambda g: np.mean([q[1] for q in g]) >= mid):
-        gs = [g for g in groups if side(g)]
-        if not gs:
-            return []
-        g = max(gs, key=lambda g: (len(g), -abs(np.mean([q[0] for q in g]) - 8)))
-        ys = [q[0] + oy for q in g]
-        xs = [q[1] + ox for q in g]
-        y0, y1, x0, x1 = min(ys), max(ys) + 1, min(xs) - 1, max(xs) + 2
-        # include the white of the eye next to the pupil
-        while x0 > 0 and lum(p[(y0 + y1) // 2, x0 - 1, :3]) > 185:
-            x0 -= 1
-        while x1 < p.shape[1] and lum(p[(y0 + y1) // 2, x1, :3]) > 185:
-            x1 += 1
-        boxes.append((y0, x0, min(y1 + 1, y0 + 4), x1))
-    return boxes
+        c = face[y, x, :3]
+        dark[y, x] = lum(c) < 100
+        white[y, x] = lum(c) > 185 and hsv(c)[1] < 0.3
+    mid = w / 2
+    best: dict[bool, tuple[float, tuple[int, int, int, int]]] = {}
+    for g in blobs(dark):
+        if not 2 <= len(g) <= 70 * fx * fy:
+            continue
+        ys = [q[0] for q in g]
+        xs = [q[1] for q in g]
+        y0, y1, x0, x1 = min(ys), max(ys) + 1, min(xs), max(xs) + 1
+        near = white[max(0, y0 - 1):y1 + 1, max(0, x0 - 3):x1 + 3]
+        if not near.any():
+            continue
+        # the eye opening is where the white is: brows joined to the lashes stay out
+        wy, wx = np.nonzero(near)
+        top = max(0, y0 - 1) + wy.min()
+        bottom = max(0, y0 - 1) + wy.max() + 1
+        left = max(0, x0 - 3)
+        cols = np.nonzero((dark | white)[top:bottom, left:x1 + 3].any(axis=0))[0]
+        ex0, ex1 = left + cols.min(), left + cols.max() + 1
+        side = np.mean(xs) < mid
+        score = near.sum() + len(g)
+        if side not in best or score > best[side][0]:
+            best[side] = (score, (top + oy - 1, ex0 + ox, bottom + oy + 1, ex1 + ox))
+    if len(best) < 2:
+        return []
+    return [best[True][1], best[False][1]]
+
+
+def eye_spans(p: np.ndarray, box: tuple[int, int, int, int]) -> dict[int, tuple[int, int]]:
+    """Row -> (first, last + 1) column of the eye itself inside its box: the
+    dark and white pixels joined to the pupil, so hair or brows that reach
+    into the box stay untouched."""
+    y0, x0, y1, x1 = box
+    h, w = y1 - y0, x1 - x0
+    cand = np.zeros((h, w), bool)
+    for y in range(h):
+        for x in range(w):
+            c = p[y0 + y, x0 + x]
+            cand[y, x] = bool(c[3]) and (lum(c[:3]) < 100 or (lum(c[:3]) > 185 and hsv(c[:3])[1] < 0.35))
+    groups = sorted(blobs(cand), key=len, reverse=True)
+    if not groups:
+        return {}
+    eye = groups[0]
+    spans: dict[int, tuple[int, int]] = {}
+    for y, x in eye:
+        a, b = spans.get(y0 + y, (x0 + x, x0 + x + 1))
+        spans[y0 + y] = (min(a, x0 + x), max(b, x0 + x + 1))
+    return spans
 
 
 def eye_patches(p: np.ndarray, boxes: list[tuple[int, int, int, int]]) -> list[tuple[np.ndarray, int, int]]:
-    """Half-closed and closed eyes: skin from the cheek painted over the
-    eye from the top, with a dark lash line where the lids meet."""
+    """Half-closed and closed eyes: the eyelid (the skin just above the
+    lashes) comes down over the eye, row by row, and the lash line moves
+    down with it. Only the eye's own pixels change."""
     if not boxes:
         return []
     py0 = min(b[0] for b in boxes)
     py1 = max(b[2] for b in boxes)
     px0 = min(b[1] for b in boxes)
     px1 = max(b[3] for b in boxes)
-    cheek = [p[y, x, :3] for (y0, x0, y1, x1) in boxes for y in range(y1, y1 + 2) for x in range(x0, x1)
-             if p[y, x, 3] and 100 < lum(p[y, x, :3]) < 235 and hsv(p[y, x, :3])[1] > 0.15]
-    skin = np.median(np.array(cheek), axis=0).astype(np.uint8) if cheek else np.array([210, 150, 110], np.uint8)
-    lash = min((p[y, x, :3] for (y0, x0, y1, x1) in boxes for y in range(y0, y1) for x in range(x0, x1) if p[y, x, 3]), key=lum)
+    eyes = [eye_spans(p, b) for b in boxes]
+    if not all(eyes):
+        return []
+
+    def skin_near(y: int, a: int, b: int) -> np.ndarray:
+        for yy in (y, y - 1, y + 1):
+            cs = [p[yy, x, :3] for x in range(a, b) if p[yy, x, 3] and lum(p[yy, x, :3]) >= 100 and hsv(p[yy, x, :3])[1] > 0.12]
+            if len(cs) >= max(2, (b - a) // 2):
+                return np.median(np.array(cs), axis=0).astype(np.uint8)
+        return np.array([210, 150, 110], np.uint8)
+
     frames = []
     for fraction in (0.5, 1.0):
         r = p[py0:py1, px0:px1].copy()
-        for (y0, x0, y1, x1) in boxes:
-            n = max(1, int(round((y1 - y0) * fraction)))
-            for y in range(y0, min(y1, y0 + n)):
-                r[y - py0, x0 - px0:x1 - px0, :3] = skin
-            line = min(y0 + n, y1 - 1)
-            r[line - py0, x0 + 1 - px0:x1 - 1 - px0, :3] = lash
+        for spans in eyes:
+            rows = sorted(spans)
+            top, bottom = rows[0], rows[-1]
+            a = min(s[0] for s in spans.values())
+            b = max(s[1] for s in spans.values())
+            lid = skin_near(top - 1, a, b)
+            lash = np.median(np.array([p[top, x, :3] for x in range(*spans[top])]), axis=0).astype(np.uint8)
+            n = len(rows) if fraction == 1.0 else max(1, int(round(len(rows) * fraction)))
+            for y in rows[:n]:
+                s0, s1 = spans[y]
+                r[y - py0, s0 - px0:s1 - px0, :3] = lid
+            line = rows[min(n, len(rows) - 1)] if fraction < 1.0 else bottom
+            s0, s1 = spans[line]
+            s0, s1 = max(s0, a + 1), min(s1, b - 1)
+            r[line - py0, s0 - px0:s1 - px0, :3] = lash
         frames.append((r, px0, py0))
     return frames
 
 
 def mouth_patches(p: np.ndarray, eye_y: float) -> list[tuple[np.ndarray, int, int]]:
-    """Mouth half open and open: a dark gap below the line of the lips,
-    which is the darkest row across the middle of the face under the nose."""
+    """Mouth half open and open: a dark gap below the line of the lips. The
+    lip line is the widest dark run across the face under the nose (nostril
+    shadows are dark too, but short)."""
+    fy, fx = p.shape[0] / 66, p.shape[1] / 64
     cx = p.shape[1] // 2
-    best, by = None, -1
-    for y in range(int(eye_y + 6), min(p.shape[0] - 3, int(eye_y + 11) + 1)):
-        vals = [lum(p[y, x, :3]) for x in range(cx - 4, cx + 5) if p[y, x, 3]]
-        if len(vals) >= 6 and (best is None or np.mean(vals) < best):
-            best, by = float(np.mean(vals)), y
-    if by < 0:
+    best = None
+    for y in range(int(eye_y + 8 * fy), min(p.shape[0] - 3, int(eye_y + 13 * fy) + 1)):
+        span = range(cx - round(8 * fx), cx + round(8 * fx) + 1)
+        vals = [lum(p[y, x, :3]) for x in span if p[y, x, 3]]
+        if len(vals) < 6:
+            continue
+        ref = float(np.median(vals))
+        run = longest = 0
+        start = end = cx
+        for x in span:
+            if p[y, x, 3] and lum(p[y, x, :3]) < ref - 18:
+                run += 1
+                if run > longest:
+                    longest, end = run, x + 1
+                    start = end - run
+            else:
+                run = 0
+        if longest >= max(4, round(4 * fx)) and (best is None or longest > best[0]):
+            best = (longest, y, start, end)
+    if best is None:
         return []
-    xs = [x for x in range(cx - 6, cx + 6) if p[by, x, 3] and lum(p[by, x, :3]) < best + 30]
-    if len(xs) < 4:
-        return []
-    x0, x1 = min(xs), max(xs) + 1
-    if x1 - x0 < 4:
-        return []
+    _, by, x0, x1 = best
     inner = np.array([60, 28, 28], np.uint8)
     frames = []
     for n in (1, 2):
@@ -750,9 +954,15 @@ def mouth_patches(p: np.ndarray, eye_y: float) -> list[tuple[np.ndarray, int, in
 
 def build_portraits(m, save) -> None:
     out = m.setdefault('portraits', {})
+    todo: list[tuple[str, np.ndarray]] = []
+    if has_output('v2-eve-portrait'):
+        todo.append(('adam', adam_portrait()))
+    ph, pw = todo[0][1].shape[:2] if todo else (66, 64)
     for name, job in PORTRAITS.items():
-        p = portrait(job)
-        entry = {'file': save(p, f'portraits/{name}.png'), 'width': PW, 'height': PH, 'mouth': [], 'eyes': []}
+        todo.append((name, portrait(job, pw, ph)))
+    for name, p in todo:
+        ph, pw = p.shape[:2]
+        entry = {'file': save(p, f'portraits/{name}.png'), 'width': pw, 'height': ph, 'mouth': [], 'eyes': []}
         if name != 'serpent':
             eyes = find_eyes(p)
             eye_y = np.mean([(b[0] + b[2]) / 2 for b in eyes]) if eyes else 25
@@ -857,7 +1067,7 @@ def shade(c: np.ndarray, k: float) -> tuple[int, int, int, int]:
     return (int(min(255, c[0] * k)), int(min(255, c[1] * k)), int(min(255, c[2] * k)), 255)
 
 
-GRASS_STYLE = os.environ.get('ART_GRASS', 'texture')  # texture | soft | calm
+GRASS_STYLE = os.environ.get('ART_GRASS', 'scene')  # scene | calm | soft | texture
 
 
 def lum_sorted(tiles: list[np.ndarray]) -> np.ndarray:
@@ -912,10 +1122,68 @@ def calm_grass(source: list[np.ndarray], seed: int) -> np.ndarray:
     return t
 
 
+# the maintainer's reference scene: its open meadow sets the grass colours
+STYLE_SCENE = 'art/reference/v2/style-scene.webp'
+MEADOW_AREA = (0.25, 0.3, 0.75, 0.75)  # x0, y0, x1, y1 as fractions of the image
+GRASS_HUE = float(os.environ.get('ART_GRASS_HUE', '8'))  # degrees toward green
+GRASS_SAT = float(os.environ.get('ART_GRASS_SAT', '0.88'))
+
+
+def scene_shades() -> list[np.ndarray]:
+    """Grass colours of the reference meadow, dark to light: its sunlit
+    yellow-green pixels only (no sand, shadows or flowers), by brightness."""
+    a = np.asarray(Image.open(os.path.join(ROOT, STYLE_SCENE)).convert('RGB'))
+    h, w = a.shape[:2]
+    x0, y0, x1, y1 = MEADOW_AREA
+    px = a[int(y0 * h):int(y1 * h):3, int(x0 * w):int(x1 * w):3].reshape(-1, 3)
+    keep = [c for c in px if 50 / 360 < hsv(c)[0] < 90 / 360 and hsv(c)[1] > 0.5 and hsv(c)[2] > 0.45]
+    g = np.array(keep, float)
+    g = g[np.argsort(g @ np.array([0.3, 0.59, 0.11]))]
+    shades = [g[int(len(g) * q)] for q in (0.1, 0.25, 0.5, 0.9)]
+    shades.append(shades[3] * 0.7 + np.array([255, 250, 150]) * 0.3)
+    # a touch greener and calmer than the sunlit picture, for a whole map
+    out = []
+    for c in shades:
+        h, s, v = colorsys.rgb_to_hsv(*(c / 255))
+        r, g_, b = colorsys.hsv_to_rgb((h + GRASS_HUE / 360) % 1, s * GRASS_SAT, v)
+        out.append(np.array([r * 255, g_ * 255, b * 255]).round().astype(np.uint8))
+    return out
+
+
+def scene_grass(shades: list[np.ndarray], seed: int) -> np.ndarray:
+    """Smooth grass like the reference meadow: one base colour with a few
+    soft, slightly darker patches, small darker tufts and light specks.
+    Everything wraps around the tile edges, so tiles join without seams."""
+    rng = np.random.default_rng(seed)
+    t = np.zeros((32, 32, 4), np.uint8)
+    t[:, :, 3] = 255
+    t[:, :, :3] = shades[2]
+    yy, xx = np.mgrid[0:32, 0:32]
+    for _ in range(3):
+        cx, cy = rng.random() * 32, rng.random() * 32
+        rx, ry = 2.5 + rng.random() * 3, 1.5 + rng.random() * 2
+        dx = (xx - cx + 16) % 32 - 16
+        dy = (yy - cy + 16) % 32 - 16
+        inside = (dx / rx) ** 2 + (dy / ry) ** 2 < 1 + 0.35 * rng.random((32, 32))
+        t[inside, :3] = shades[1]
+    tufts = [[(0, 0), (1, 1), (0, 2)], [(1, 0), (0, 1), (1, 1)], [(0, 1), (1, 0), (1, 2)]]
+    for _ in range(3):
+        x, y = int(rng.integers(0, 32)), int(rng.integers(0, 32))
+        for dy, dx in tufts[int(rng.integers(0, len(tufts)))]:
+            t[(y + dy) % 32, (x + dx) % 32, :3] = shades[0]
+    for _ in range(4):
+        x, y = int(rng.integers(0, 32)), int(rng.integers(0, 32))
+        t[y, x, :3] = shades[4]
+    return t
+
+
 def grass_sets(sw: dict) -> tuple[list[np.ndarray], list[np.ndarray]]:
     """Plain grass tiles and grass with tiny flowers. The flowered ones are
     the same tiles with flowers added, so they never show as squares."""
-    if GRASS_STYLE == 'soft':
+    if GRASS_STYLE == 'scene':
+        shades = scene_shades()
+        grass = [scene_grass(shades, i) for i in range(6)]
+    elif GRASS_STYLE == 'soft':
         grass = [soften(t) for t in sw['grass']]
     elif GRASS_STYLE == 'calm':
         grass = [calm_grass(sw['grass'], i) for i in range(6)]
@@ -932,9 +1200,11 @@ def build_terrain(m, save, strip, sheet_entry) -> None:
     import terrain
     from style import P
     sw = swatches()
-    # the generated dirt is a saturated orange: calm it to a soft earth
-    for k in ('path', 'dry'):
-        sw[k] = [desaturate(t, 0.62, 0.86) for t in sw[k]]
+    # the first generated dirt was a saturated orange: calm it to a soft
+    # earth; the v2 sand already has the reference scene's colour
+    if J('terrain') == 'terrain':
+        for k in ('path', 'dry'):
+            sw[k] = [desaturate(t, 0.62, 0.86) for t in sw[k]]
     med = {k: np.median(np.concatenate([t.reshape(-1, 4) for t in v])[:, :3], axis=0) for k, v in sw.items()}
     grass, meadow = grass_sets(sw)
 
@@ -944,6 +1214,13 @@ def build_terrain(m, save, strip, sheet_entry) -> None:
 
     terrain.grass_tile = grass_tile
     terrain.dirt_tile = lambda seed: sw['path'][seed % len(sw['path'])]
+    if GRASS_STYLE == 'scene':
+        # dry earth as smooth as the grass: the generated cracks were busy
+        h, s, v = colorsys.rgb_to_hsv(*(med['dry'] / 255))
+        dry = np.array(colorsys.hsv_to_rgb(h, s * 0.75, v * 0.95)) * 255
+        tones = [np.array(shade(dry, k)[:3], np.uint8) for k in (0.84, 0.93, 1.0, 1.05)]
+        tones.append((tones[3] * 0.75 + np.array([255, 240, 200]) * 0.25).astype(np.uint8))
+        sw['dry'] = [scene_grass(tones, 20 + i) for i in range(4)]
     terrain.dry_tile = lambda seed: sw['dry'][seed % len(sw['dry'])]
     terrain.water_tile = lambda frame: np.roll(np.roll(sw['water'][0], frame * 2, 1), frame, 0)
     P['earth'][3] = shade(med['path'], 0.72)

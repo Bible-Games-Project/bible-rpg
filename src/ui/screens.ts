@@ -20,6 +20,7 @@ export function mainMenuScreen(a: MenuActions): HTMLElement {
   const el = h(
     'div',
     { class: 'screen main-menu' },
+    h('img', { class: 'menu-bg-fill', src: `${BASE}assets/ui/menu-background.webp`, alt: '', 'aria-hidden': 'true', draggable: 'false' }),
     h('img', { class: 'menu-bg', src: `${BASE}assets/ui/menu-background.webp`, alt: t('app.title'), draggable: 'false' }),
     h('div', { class: 'menu-shade' }),
     h(

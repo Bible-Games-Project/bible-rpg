@@ -86,6 +86,10 @@ export class PortraitAnimator {
     if (this.asset) {
       this.canvas.width = this.asset.width;
       this.canvas.height = this.asset.height;
+      // shown at a whole-number zoom of about 200 px tall, so pixels stay square
+      this.canvas.style.setProperty('--pw', String(this.asset.width));
+      this.canvas.style.setProperty('--ph', String(this.asset.height));
+      this.canvas.style.setProperty('--pscale', String(Math.max(1, Math.round(196 / this.asset.height))));
     }
     this.eyeState = 0;
     this.blinkQueue = [];

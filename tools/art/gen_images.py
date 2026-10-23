@@ -94,7 +94,9 @@ def real_cost(usage: dict | None) -> float | None:
 
 
 def full_prompt(spec: dict, job: dict) -> str:
-    return f"{job['prompt']}\n\n{spec['style']}"
+    """The job's prompt plus its style rules (spec['style'] unless the job
+    names another style key)."""
+    return f"{job['prompt']}\n\n{spec[job.get('style', 'style')]}"
 
 
 def multipart(fields: dict, files: list[tuple[str, str]]) -> tuple[bytes, str]:

@@ -97,24 +97,40 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
 
 - The maintainer supplied `art/reference/` (Adam sprite, Adam portrait, menu
   background). Never downscale or "simplify" them: they rejected an early
-  half-resolution pass as "removing pixels". All art is drawn at the native
-  density of those references (Adam is 31×116 art px, 1 art px = 1 world px).
-- The maintainer wants no marked outlines on sprites ("se ve más pro") and
-  approved the OpenAI-generated look. `bun run art` rebuilds
-  `public/assets/**` and `src/data/generated/assets.json`: the procedural
-  generators in `tools/art/` run first, then `from_generated.py` replaces
-  what the generated art covers (characters, animals, trees, props, portraits,
-  ground textures). Edit those scripts, not the PNGs.
+  half-resolution pass as "removing pixels".
+- Style v2 (current): the maintainer sent `art/reference/v2/` and asked that
+  everything follow it: `adam-sprite.png` (Adam facing right: used as is, and
+  the model for every other character and animal), `adam-talk.webp` (Adam's
+  dialogue portrait: used as is on its own grid, 87×94 art px, and the model
+  for every other portrait), `style-scene.webp` (colours: a smooth, quiet
+  yellow-green meadow, sandy paths, turquoise water, contrasty round trees)
+  and `cover.webp` (the menu background). The v2 jobs in `art/prompts/eden.json`
+  use `style2` and these references; `from_generated.py` prefers a `v2-` job's
+  output whenever one exists (`J()`), so the v1 jobs stay only as a fallback.
+- The maintainer wants no marked outlines on sprites ("se ve más pro"). `bun
+  run art` rebuilds `public/assets/**` and `src/data/generated/assets.json`:
+  the procedural generators in `tools/art/` run first, then
+  `from_generated.py` replaces what the generated art covers (characters,
+  animals, trees, props, portraits, ground textures). Edit those scripts, not
+  the PNGs.
 - `from_generated.py` resamples each generated subject onto a regular grid at
-  a fixed game size (Adam 116 px tall; targets are in its tables), splits trees
-  into trunk/canopy at the lowest leafy row, paints out red/purple fruit and
-  records those spots as pickable fruit slots, and makes blink/talk patches
-  for portraits. Side walks use the generated strides. Front and back walks
-  are built from one clean standing frame (legs split at the gap and lifted
-  in turn, body bobbing; 8 frames at 12 fps): generated front/back strips
-  flicker between frames, and one "back" view had a front torso.
-  Animals use generated 7-frame strips (stand + 6). Options while iterating:
-  `ART_GRASS=texture|soft|calm`, `ART_CREATURE_SCALE` (1 = Adam 116 px).
+  a fixed game size (Adam 100 px tall: 116 × `ART_CREATURE_SCALE` 0.86; trees
+  × `ART_TREE_SCALE` 1.1), splits trees into trunk/canopy at the lowest leafy
+  row, paints out red/purple fruit and records those spots as pickable fruit
+  slots, and makes blink/talk patches for portraits (the eyelid colour comes
+  down over the eye's own pixels only; the mouth opens under the lip line).
+  Walks are all built from one clean standing frame per direction, so the
+  drawing never changes between frames: front/back legs are split at the gap
+  and lifted in turn with a body bob; side legs swing from the hip (far leg
+  darker); 8 frames at 12 fps. Generated strips flickered (different drawings
+  per frame) and one "back" view had a front torso. God's long robe shows no
+  legs, so his side walk uses the generated strides. Animals use generated
+  7-frame strips (stand + 6).
+- Ground (`ART_GRASS=scene`, the default): grass colours are sampled from the
+  meadow of `style-scene.webp` (nudged `ART_GRASS_HUE` 8° greener and
+  `ART_GRASS_SAT` ×0.88 so a whole map is not mustard) and drawn smooth: base
+  colour, a few soft patches, tiny tufts and light specks. The maintainer
+  found textured grass too busy ("no tan cargado").
 - Trees fade as a whole (trunk, canopy, fruit) when they hide the player; the
   maintainer disliked the visible cut when only the canopy faded.
 - New art comes from the OpenAI Image API (maintainer's decision), with a

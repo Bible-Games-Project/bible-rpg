@@ -427,6 +427,391 @@
         "art/prompts/refs/animal-dove.png"
       ],
       "prompt": "Animation strip of this exact white dove (the bird in the reference image), seen from the side and facing right, seven frames in one row, evenly spaced with clear space between them, same pixel scale as the reference: frame 1 standing still; frames 2 and 3 walking steps with the head bobbing forward; frames 4 to 7 flying with the wings fully up, half down, fully down, half up. The dove is identical in every frame (same colors and proportions)."
+    },
+    {
+      "id": "v2-adam-views",
+      "title": "Adam: front, back, side",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/prompts/refs/v2-adam-side.png",
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "Game character sprite of Adam, the young man in the first reference image, with exactly the same face, curly dark-brown hair, slim young build, skin tone, leaf skirt and proportions. Draw him three times in one row, full body, standing still with arms relaxed, all at the same height and as large as the image allows with a small margin: 1) facing the viewer (front view), 2) seen from behind (back view: the back of the head and the back of the body), 3) facing right in side profile."
+    },
+    {
+      "id": "v2-eve-views",
+      "title": "Eve: front, back, side",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/prompts/refs/v2-adam-side.png",
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "Game character sprite of Eve, the first woman, a young woman drawn in exactly the same style, pixel size and proportions as Adam in the first reference image (like the woman in the second reference image): long wavy brown hair down to her waist, warm skin, a kind face, a simple knee-length dress of overlapping green leaves, barefoot. She is slightly shorter than Adam. Draw her three times in one row, full body, standing still with arms relaxed, all at the same height and as large as the image allows with a small margin: 1) facing the viewer (front view), 2) seen from behind (back view: the back of the head and the back of the body), 3) facing right in side profile."
+    },
+    {
+      "id": "v2-god-views",
+      "title": "The LORD God: front, back, side",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/prompts/refs/v2-adam-side.png",
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "Game character sprite of the LORD God for a family Bible game, like the elderly man in the white robe in the second reference image and in the same pixel style as Adam in the first reference: a kind, dignified elderly man with long white hair and a long white beard, a long white robe with a golden sash and a golden stole over the shoulders, bare feet. No staff, no glow, no halo. A little taller than Adam. Draw him three times in one row, full body, standing still with arms relaxed, all at the same height and as large as the image allows with a small margin: 1) facing the viewer (front view), 2) seen from behind (back view: the back of the head and the back of the body), 3) facing right in side profile."
+    },
+    {
+      "id": "v2-adam-fig-views",
+      "title": "adam fig: front, back, side",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-adam-views",
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "The same character as in the first reference image (same face, hair, body and proportions, same three views and layout), now wearing a simple apron sewn from broad lobed fig leaves stitched together (Genesis 3:7) instead of the leaf skirt. Draw him three times in one row, full body, standing still with arms relaxed, all at the same height and as large as the image allows with a small margin: 1) facing the viewer (front view), 2) seen from behind (back view: the back of the head and the back of the body), 3) facing right in side profile."
+    },
+    {
+      "id": "v2-adam-tunic-views",
+      "title": "adam tunic: front, back, side",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-adam-views",
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "The same character as in the first reference image (same face, hair, body and proportions, same three views and layout), now wearing a simple knee-length tunic of animal skins (Genesis 3:21), soft tan and brown leather with rough edges and short sleeves, instead of the leaf skirt. Draw him three times in one row, full body, standing still with arms relaxed, all at the same height and as large as the image allows with a small margin: 1) facing the viewer (front view), 2) seen from behind (back view: the back of the head and the back of the body), 3) facing right in side profile."
+    },
+    {
+      "id": "v2-eve-fig-views",
+      "title": "eve fig: front, back, side",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-eve-views",
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "The same character as in the first reference image (same face, hair, body and proportions, same three views and layout), now wearing coverings sewn from broad lobed fig leaves stitched together (Genesis 3:7): a fig-leaf top and a fig-leaf skirt, instead of the leaf dress. Draw her three times in one row, full body, standing still with arms relaxed, all at the same height and as large as the image allows with a small margin: 1) facing the viewer (front view), 2) seen from behind (back view: the back of the head and the back of the body), 3) facing right in side profile."
+    },
+    {
+      "id": "v2-eve-tunic-views",
+      "title": "eve tunic: front, back, side",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-eve-views",
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "The same character as in the first reference image (same face, hair, body and proportions, same three views and layout), now wearing a simple knee-length tunic of animal skins (Genesis 3:21), soft tan and brown leather with rough edges and short sleeves, instead of the leaf dress. Draw her three times in one row, full body, standing still with arms relaxed, all at the same height and as large as the image allows with a small margin: 1) facing the viewer (front view), 2) seen from behind (back view: the back of the head and the back of the body), 3) facing right in side profile."
+    },
+    {
+      "id": "v2-walk-adam-leaves-right",
+      "title": "adam leaves side walk",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/prompts/refs/v2-adam-side.png",
+        "@v2-adam-views"
+      ],
+      "prompt": "Walk-cycle animation strip of Adam (the young man in the reference), walking to the right in side profile. Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colours); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "v2-walk-adam-fig-right",
+      "title": "adam fig side walk",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-adam-fig-views"
+      ],
+      "prompt": "Walk-cycle animation strip of Adam (the young man in the reference), walking to the right in side profile. Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colours); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "v2-walk-adam-tunic-right",
+      "title": "adam tunic side walk",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-adam-tunic-views"
+      ],
+      "prompt": "Walk-cycle animation strip of Adam (the young man in the reference), walking to the right in side profile. Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colours); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "v2-walk-eve-leaves-right",
+      "title": "eve leaves side walk",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-eve-views"
+      ],
+      "prompt": "Walk-cycle animation strip of Eve (the young woman in the reference), walking to the right in side profile. Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colours); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "v2-walk-eve-fig-right",
+      "title": "eve fig side walk",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-eve-fig-views"
+      ],
+      "prompt": "Walk-cycle animation strip of Eve (the young woman in the reference), walking to the right in side profile. Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colours); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "v2-walk-eve-tunic-right",
+      "title": "eve tunic side walk",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-eve-tunic-views"
+      ],
+      "prompt": "Walk-cycle animation strip of Eve (the young woman in the reference), walking to the right in side profile. Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colours); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "v2-walk-god-robe-right",
+      "title": "god robe side walk",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-god-views"
+      ],
+      "prompt": "Walk-cycle animation strip of the LORD God (the elderly man in the white robe in the reference), walking to the right in side profile. Five full-body frames in one row, evenly spaced, at exactly the same size and pixel scale as the character in the reference: frame 1 standing still; frames 2 to 5 a smooth walking cycle (one leg forward, passing pose, other leg forward, passing pose) with the arms swinging naturally. The character is identical in every frame (same face, hair, body, clothing and colours); only the legs and arms move. All feet stand on the same horizontal baseline."
+    },
+    {
+      "id": "v2-eve-portrait",
+      "title": "Eve portrait",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/prompts/refs/v2-adam-portrait.png",
+        "@v2-eve-views"
+      ],
+      "prompt": "Dialogue portrait of Eve (the young woman in the second reference image), matching the reference portrait of Adam exactly in framing, size, pixel size (the same blocky pixels), palette and soft shading: head and shoulders, facing the viewer, centred, at the same distance from the camera. Long wavy brown hair over her shoulders, a gentle bright expression, the top of her green leaf dress visible."
+    },
+    {
+      "id": "v2-god-portrait",
+      "title": "God portrait",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/prompts/refs/v2-adam-portrait.png",
+        "@v2-god-views"
+      ],
+      "prompt": "Dialogue portrait of the LORD God (the elderly man in the second reference image), matching the reference portrait of Adam exactly in framing, size, pixel size (the same blocky pixels), palette and soft shading: head and shoulders, facing the viewer, centred, at the same distance from the camera. Long white hair and beard, kind and wise eyes, white robe with a golden stole, peaceful and never frightening, no halo."
+    },
+    {
+      "id": "v2-serpent",
+      "title": "The serpent: on a branch and on the ground",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/reference/v2/cover.webp",
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "The serpent of Genesis 3 like the serpent in the first reference image, as game sprites in the style of the second reference: attractive and cunning, not monstrous. 1) Coiled around a short horizontal tree branch (only the branch), head raised, looking left. 2) Separately, crawling on the ground, side view facing right, long and low."
+    },
+    {
+      "id": "v2-serpent-portrait",
+      "title": "Serpent portrait",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/prompts/refs/v2-adam-portrait.png",
+        "@v2-serpent"
+      ],
+      "prompt": "Dialogue portrait of the serpent in the second reference image, framed like the portrait of Adam in the first reference (same pixel size and soft shading): its head and upper coils filling the frame, cunning but not monstrous."
+    },
+    {
+      "id": "v2-cherub",
+      "title": "Cherub and flaming sword",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-adam-views",
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "Pixel art game sprites for Genesis 3:24 in the same style as the reference character: 1) a cherub, a majestic angelic guardian standing in front view, noble calm face, white and golden garments, two large feathered wings spread wide, about 1.4 times as tall as Adam; 2) separately, to its right, a flaming sword floating upright, point down, its blade wrapped in bright orange and yellow flames."
+    },
+    {
+      "id": "v2-animals",
+      "title": "Eight animals, side view",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/reference/v2/style-scene.webp",
+        "art/prompts/refs/v2-adam-side.png"
+      ],
+      "prompt": "Eight animals of the Garden of Eden as game sprites in exactly the style of the animals in the first reference image, all seen from the side, facing right, standing calmly, in two rows of four with clear space between them: top row horse (brown), camel (one hump, sandy), lion (golden with a full mane), deer (red-brown stag with antlers); bottom row sheep (white wool), goat (brown and white, small horns), hare (brown, long ears), dove (white, standing). Same pixel size for all and realistic sizes relative to each other."
+    },
+    {
+      "id": "v2-trees-garden",
+      "title": "Oak, fig, pomegranate",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "Three separate trees in exactly the style of the trees in the reference scene (rich greens with soft yellow-green highlights and deep teal-green shadows, soft rounded leaf clusters, warm brown trunks), for a top-down three-quarter view RPG, trunk and roots visible at the bottom, side by side in one row: 1) a large broad oak, 2) a fig tree with big lobed leaves and small purple figs, 3) a pomegranate tree with red pomegranates."
+    },
+    {
+      "id": "v2-trees-land",
+      "title": "Olive, date palm, cypress",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "Three separate trees in exactly the style of the trees in the reference scene (rich greens with soft yellow-green highlights and deep teal-green shadows, soft rounded leaf clusters, warm brown trunks), for a top-down three-quarter view RPG, trunk and roots visible at the bottom, side by side in one row: 1) a gnarled olive tree with silver-green leaves, 2) a date palm with clusters of dates, 3) a tall slender cypress."
+    },
+    {
+      "id": "v2-trees-sacred",
+      "title": "Tree of life, tree of knowledge",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "Two majestic trees in exactly the style of the trees in the reference scene (rich greens with soft yellow-green highlights and deep teal-green shadows, soft rounded leaf clusters, warm brown trunks), for a top-down three-quarter view RPG, trunk and roots visible at the bottom, side by side: 1) the tree of life: wide, ancient and serene, lush leaves with golden light and small glowing golden fruit; 2) the tree of the knowledge of good and evil: beautiful and inviting, deep green leaves and shiny red fruit."
+    },
+    {
+      "id": "v2-trees-small",
+      "title": "Medium oak, small oak, almond blossom",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "Three separate trees in exactly the style of the trees in the reference scene (rich greens with soft yellow-green highlights and deep teal-green shadows, soft rounded leaf clusters, warm brown trunks), for a top-down three-quarter view RPG, trunk and roots visible at the bottom, side by side in one row: 1) a medium oak, 2) a small young oak, 3) an almond tree covered in white and pink blossom."
+    },
+    {
+      "id": "v2-bushes",
+      "title": "Bushes and grapevine",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "Five separate plants in exactly the style of the bushes in the reference scene, in one row with space between them: 1) a round green bush, 2) a dense dark-green bush, 3) a bush with small white and pink flowers, 4) a bush with small red berries, 5) a grapevine climbing a short wooden post with bunches of purple grapes."
+    },
+    {
+      "id": "v2-props-nature",
+      "title": "Rocks, log, ferns, flowers, reeds",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "A sheet of small nature props in exactly the style of the reference scene, in a loose grid with clear space between every item, in four rows: row 1: a large grey boulder, a medium rock, a small pebble, a mossy rock, a fallen log; row 2: two different ferns, white wildflowers, yellow wildflowers, blue wildflowers; row 3: pink wildflowers, red wildflowers, purple wildflowers, three small grass tufts of different sizes; row 4: a clump of river reeds, a floating lily pad with a flower, a small cluster of mushrooms, a flat sitting stone, a wild grain plant."
+    },
+    {
+      "id": "v2-props-items",
+      "title": "Basket, gourd, stick, fruit, fig leaf",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "A sheet of small item sprites in exactly the style of the reference scene, each item separate with clear space around it, in three rows: row 1: an empty woven reed basket, the same basket full of fruit, a dry gourd for carrying water, the same gourd wet and full; row 2: a straight wooden digging stick lying on the ground, a small pouch of seeds, one broad fig leaf, a single fig; row 3: a single pomegranate, a cluster of dates, a bunch of purple grapes, a single shiny red fruit, a single glowing golden fruit."
+    },
+    {
+      "id": "v2-props-farm",
+      "title": "Garden plot, plants, thorns, stepping stone",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "A sheet of small farming and plant sprites in exactly the style of the reference scene, top-down three-quarter view, in two rows of five with clear space between every item. Top row: 1) a small square patch of grass with its corners marked by four little stones, 2) a square patch of freshly tilled brown soil with furrows, 3) the same patch with seeds in small holes, 4) the same patch darker and wet after watering, 5) a tiny green sprout. Bottom row: 6) a young leafy vegetable plant, 7) a fully grown leafy plant with small yellow flowers, 8) a low tangled thorny bramble, 9) a spiky purple thistle, 10) a flat round stepping stone seen from above."
+    },
+    {
+      "id": "v2-terrain",
+      "title": "Ground swatches",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/reference/v2/style-scene.webp"
+      ],
+      "prompt": "Five large square swatches of top-down ground textures side by side with magenta gaps between them, in exactly the colours of the reference scene: 1) the bright fresh grass of the reference (flat yellow-green with very subtle lighter and darker patches, almost no texture), 2) the same grass with a few tiny flowers, 3) the light sandy dirt of the bare patches in the reference, 4) the clear turquoise water of the pond, 5) dry cracked earth. Each swatch is flat, evenly lit, with no objects and no border, about 280 pixels square."
+    },
+    {
+      "id": "v2-walk-animal-horse",
+      "title": "horse walk cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/v2-animal-horse.png"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact horse (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline.",
+      "style": "style2"
+    },
+    {
+      "id": "v2-walk-animal-camel",
+      "title": "camel walk cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/v2-animal-camel.png"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact camel (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline.",
+      "style": "style2"
+    },
+    {
+      "id": "v2-walk-animal-lion",
+      "title": "lion walk cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/v2-animal-lion.png"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact lion (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline.",
+      "style": "style2"
+    },
+    {
+      "id": "v2-walk-animal-deer",
+      "title": "deer walk cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/v2-animal-deer.png"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact deer (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline.",
+      "style": "style2"
+    },
+    {
+      "id": "v2-walk-animal-sheep",
+      "title": "sheep walk cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/v2-animal-sheep.png"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact sheep (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline.",
+      "style": "style2"
+    },
+    {
+      "id": "v2-walk-animal-goat",
+      "title": "goat walk cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/v2-animal-goat.png"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact goat (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline.",
+      "style": "style2"
+    },
+    {
+      "id": "v2-walk-animal-rabbit",
+      "title": "hare hop cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/v2-animal-rabbit.png"
+      ],
+      "prompt": "Hopping animation strip of this exact hare (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 sitting still; frames 2 to 7 one smooth hop (crouch, push off, stretched in the air, landing, gather). The hare is identical in every frame (same colors and proportions).",
+      "style": "style2"
+    },
+    {
+      "id": "v2-fly-animal-dove",
+      "title": "dove flight and walk",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/v2-animal-dove.png"
+      ],
+      "prompt": "Animation strip of this exact white dove (the bird in the reference image), seen from the side and facing right, seven frames in one row, evenly spaced with clear space between them, same pixel scale as the reference: frame 1 standing still; frames 2 and 3 walking steps with the head bobbing forward; frames 4 to 7 flying with the wings fully up, half down, fully down, half up. The dove is identical in every frame (same colors and proportions).",
+      "style": "style2"
     }
-  ]
+  ],
+  "style2": "STYLE RULES: Soft, modern pixel art exactly in the style of the reference images: small soft pixel blocks, gentle painterly shading with light from the upper left, bright warm natural colours (fresh yellow-greens, warm skin, soft browns), smooth flat areas with little texture noise, and NO dark outlines: shapes are separated only by colour and light. The references show the style and scale only: draw new subjects, do not copy or edit the references. BACKGROUND: one flat solid magenta colour (#FF00FF) everywhere around the subjects, with no shadow, ground, grass, scenery, glow or texture on it. Leave clear magenta space between separate subjects. No text, letters, numbers, labels, borders or frames."
 }
