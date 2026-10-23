@@ -109,8 +109,14 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   a fixed game size (Adam 116 px tall; targets are in its tables), splits trees
   into trunk/canopy at the lowest leafy row, paints out red/purple fruit and
   records those spots as pickable fruit slots, and makes blink/talk patches
-  for portraits. Walk strips are 5 frames (stand + 4); it uses stand, two
-  opposite strides and stand again as the 4-frame walk.
+  for portraits. Side walks use the generated strides. Front and back walks
+  are built from one clean standing frame (legs split at the gap and lifted
+  in turn, body bobbing; 8 frames at 12 fps): generated front/back strips
+  flicker between frames, and one "back" view had a front torso.
+  Animals use generated 7-frame strips (stand + 6). Options while iterating:
+  `ART_GRASS=texture|soft|calm`, `ART_CREATURE_SCALE` (1 = Adam 116 px).
+- Trees fade as a whole (trunk, canopy, fruit) when they hide the player; the
+  maintainer disliked the visible cut when only the canopy faded.
 - New art comes from the OpenAI Image API (maintainer's decision), with a
   hard total budget of 5 USD: `tools/art/gen_images.py` (jobs and prompts in
   `art/prompts/eden.json`, every call logged in `art/generated/ledger.json`,

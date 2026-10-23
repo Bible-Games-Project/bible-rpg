@@ -1048,5 +1048,173 @@
    "total_tokens": 2096
   },
   "at": "20261022-192719"
+ },
+ {
+  "job": "walk-animal-horse",
+  "file": "art/generated/walk-animal-horse/20261023-102146-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0109,
+  "usage": {
+   "input_tokens": 1206,
+   "input_tokens_details": {
+    "image_tokens": 870,
+    "text_tokens": 336
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 1282
+  },
+  "at": "20261023-102146"
+ },
+ {
+  "job": "walk-animal-camel",
+  "file": "art/generated/walk-animal-camel/20261023-102157-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0107,
+  "usage": {
+   "input_tokens": 1176,
+   "input_tokens_details": {
+    "image_tokens": 840,
+    "text_tokens": 336
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 1252
+  },
+  "at": "20261023-102157"
+ },
+ {
+  "job": "walk-animal-lion",
+  "file": "art/generated/walk-animal-lion/20261023-102207-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0094,
+  "usage": {
+   "input_tokens": 1011,
+   "input_tokens_details": {
+    "image_tokens": 675,
+    "text_tokens": 336
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 1087
+  },
+  "at": "20261023-102207"
+ },
+ {
+  "job": "walk-animal-deer",
+  "file": "art/generated/walk-animal-deer/20261023-102218-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0092,
+  "usage": {
+   "input_tokens": 996,
+   "input_tokens_details": {
+    "image_tokens": 660,
+    "text_tokens": 336
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 1072
+  },
+  "at": "20261023-102218"
+ },
+ {
+  "job": "walk-animal-sheep",
+  "file": "art/generated/walk-animal-sheep/20261023-102228-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0078,
+  "usage": {
+   "input_tokens": 816,
+   "input_tokens_details": {
+    "image_tokens": 480,
+    "text_tokens": 336
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 892
+  },
+  "at": "20261023-102228"
+ },
+ {
+  "job": "walk-animal-goat",
+  "file": "art/generated/walk-animal-goat/20261023-102236-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.008,
+  "usage": {
+   "input_tokens": 842,
+   "input_tokens_details": {
+    "image_tokens": 506,
+    "text_tokens": 336
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 918
+  },
+  "at": "20261023-102236"
+ },
+ {
+  "job": "walk-animal-rabbit",
+  "file": "art/generated/walk-animal-rabbit/20261023-102247-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.006,
+  "usage": {
+   "input_tokens": 579,
+   "input_tokens_details": {
+    "image_tokens": 266,
+    "text_tokens": 313
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 655
+  },
+  "at": "20261023-102247"
+ },
+ {
+  "job": "fly-animal-dove",
+  "file": "art/generated/fly-animal-dove/20261023-102256-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0079,
+  "usage": {
+   "input_tokens": 825,
+   "input_tokens_details": {
+    "image_tokens": 506,
+    "text_tokens": 319
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 901
+  },
+  "at": "20261023-102256"
  }
 ]

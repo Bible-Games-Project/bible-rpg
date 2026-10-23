@@ -179,6 +179,13 @@ def decontaminate(s: np.ndarray) -> np.ndarray:
     return out
 
 
+def trim_bottom(f: np.ndarray) -> np.ndarray:
+    """Drop the empty rows under a frame that shares a canvas with others,
+    keeping its columns (so frames stay aligned) and its feet on the baseline:
+    the canvas bottom is the standing feet row."""
+    return f[:-1]
+
+
 def trim(s: np.ndarray) -> np.ndarray:
     ys, xs = np.nonzero(s[:, :, 3])
     if not len(ys):
@@ -231,7 +238,9 @@ def tint(s: np.ndarray, factor: float, hue_shift: float = 0.0) -> np.ndarray:
 
 # --------------------------------------------------------------- characters
 
-TARGET_H = {'adam': 116, 'eve': 112, 'god': 120}
+# size of people, animals and creatures relative to the world (1 = Adam 116 px)
+CREATURE_SCALE = float(os.environ.get('ART_CREATURE_SCALE', '1'))
+TARGET_H = {k: round(v * CREATURE_SCALE) for k, v in {'adam': 116, 'eve': 112, 'god': 120}.items()}
 SETS = [('adam', 'leaves'), ('adam', 'fig'), ('adam', 'tunic'), ('eve', 'leaves'), ('eve', 'fig'), ('eve', 'tunic'), ('god', 'robe')]
 DIRS = ('down', 'up', 'right')
 
@@ -246,6 +255,94 @@ def breathe(s: np.ndarray) -> np.ndarray:
     out[1:cut + 1] = np.where(top[:, :, 3:4] > 0, top, out[1:cut + 1])
     out[cut + 1:] = s[cut + 1:]
     return out
+
+
+# the clean three-view sheets (front, back, side) for the first outfits
+VIEW_SHEETS = {('adam', 'leaves'): 'adam-sprite', ('eve', 'leaves'): 'eve-sprite', ('god', 'robe'): 'god-sprite'}
+
+
+def standing(char: str, outfit: str, d: str) -> np.ndarray:
+    """One clean standing frame: from the three-view sheet when there is one
+    (its back views are right, unlike some walk strips), else the first frame
+    of the walk strip."""
+    sheet = VIEW_SHEETS.get((char, outfit))
+    if sheet and d in ('down', 'up'):
+        img = cutout(sheet)
+        box = split_strip(img, 3)[0 if d == 'down' else 1]
+    else:
+        img = cutout(f'walk-{char}-{outfit}-{d}')
+        box = split_strip(img, 5)[0]
+    return resample(img, box, (box[2] - box[0]) / TARGET_H[char])
+
+
+def row_runs(row: np.ndarray) -> list[tuple[int, int]]:
+    out, start = [], None
+    for x, v in enumerate(row):
+        if v and start is None:
+            start = x
+        elif not v and start is not None:
+            out.append((start, x))
+            start = None
+    if start is not None:
+        out.append((start, len(row)))
+    return out
+
+
+def legs_of(s: np.ndarray) -> tuple[int, int]:
+    """(first row of the legs, column between them) for a front or back view.
+    Long robes show no gap: then only the feet step."""
+    a = s[:, :, 3] > 0
+    h, w = a.shape
+    bottom = int(np.nonzero(a.any(axis=1))[0].max())
+    top, miss = None, 0
+    gaps = []
+    for y in range(bottom - 1, int(h * 0.5), -1):
+        r = row_runs(a[y])
+        if len(r) >= 2:
+            top, miss = y, 0
+            mid = w / 2
+            pairs = [(r[i][1], r[i + 1][0]) for i in range(len(r) - 1)]
+            g = min(pairs, key=lambda p: abs((p[0] + p[1]) / 2 - mid))
+            gaps.append((g[0] + g[1]) / 2)
+        else:
+            miss += 1
+            if miss > 2:
+                break
+    if top is None or bottom - top < 6:
+        return bottom - 6, int(round(torso_center(s)))
+    return top, int(round(float(np.median(gaps))))
+
+
+def step(stand: np.ndarray, top: int, split: int, lift_l: int, lift_r: int, bob: int) -> np.ndarray:
+    """A walking frame made from the standing frame: each leg raised by its
+    lift, the body above the legs moved by bob (down positive). A copy of the
+    hips under the body fills the gap when the body rises."""
+    h, w = stand.shape[:2]
+    out = np.zeros((h + 2, w, 4), np.uint8)
+    overlap = 3
+    for x0, x1, lift in ((0, split, lift_l), (split, w, lift_r)):
+        part = stand[top - overlap:, x0:x1]
+        y = 1 + top - overlap - lift
+        region = out[y:y + part.shape[0], x0:x1]
+        m = part[:, :, 3:4] > 0
+        out[y:y + part.shape[0], x0:x1] = np.where(m, part, region)
+    body = stand[:top]
+    y = 1 + bob
+    region = out[y:y + top]
+    out[y:y + top] = np.where(body[:, :, 3:4] > 0, body, region)
+    return out
+
+
+# (left lift, right lift, body bob) for an eight-frame step cycle seen from the front or back
+STEP_CYCLE = [(0, 0, 1), (2, 0, 0), (4, 0, -1), (2, 0, 0), (0, 0, 1), (0, 2, 0), (0, 4, -1), (0, 2, 0)]
+
+
+def front_back_frames(char: str, outfit: str, d: str) -> list[np.ndarray]:
+    stand = standing(char, outfit, d)
+    top, split = legs_of(stand)
+    pad = lambda f: np.vstack([np.zeros((1, f.shape[1], 4), np.uint8), f, np.zeros((1, f.shape[1], 4), np.uint8)])  # noqa: E731
+    still = pad(stand)
+    return [still, pad(breathe(stand))] + [step(stand, top, split, *c) for c in STEP_CYCLE]
 
 
 def walk_frames(char: str, outfit: str, d: str) -> list[np.ndarray]:
@@ -273,16 +370,23 @@ def build_characters(m: dict, save, strip, sheet_entry) -> np.ndarray:
     chars = m.setdefault('characters', {})
     adam_front = None
     for char, outfit in SETS:
-        sets = {d: walk_frames(char, outfit, d) for d in DIRS}
+        sets = {d: front_back_frames(char, outfit, d) if d in ('down', 'up') else walk_frames(char, outfit, d) for d in DIRS}
         w = max(f.shape[1] for fr in sets.values() for f in fr) + 6
         w += w % 2
         h = max(f.shape[0] for fr in sets.values() for f in fr) + 4
         for d, fr in sets.items():
-            cells = [place(f, w, h, w // 2, h - 3, torso_center(f)) for f in fr]
+            if d in ('down', 'up'):
+                # the frames share one canvas already: keep their alignment
+                c = torso_center(fr[0][1:-1])
+                cells = [place(trim_bottom(f), w, h, w // 2, h - 3, c) for f in fr]
+                extra = {'idle': [0, 1], 'walk': list(range(2, len(fr))), 'walkFps': 12}
+            else:
+                cells = [place(f, w, h, w // 2, h - 3, torso_center(f)) for f in fr]
+                extra = {'idle': [0, 1], 'walk': [2, 3, 4, 5]}
             file = save(strip(cells), f'sprites/char-{char}-{outfit}-{d}.png')
-            chars.setdefault(char, {}).setdefault(outfit, {})[d] = sheet_entry(file, cells, (w // 2, h - 3), idle=[0, 1], walk=[2, 3, 4, 5])
+            chars.setdefault(char, {}).setdefault(outfit, {})[d] = sheet_entry(file, cells, (w // 2, h - 3), **extra)
         if (char, outfit) == ('adam', 'leaves'):
-            adam_front = sets['down'][0]
+            adam_front = sets['down'][0][1:-1]
         print(f'  {char}/{outfit}: {w}x{h}')
     return adam_front
 
@@ -318,14 +422,38 @@ ANIMALS = [  # order in the "animals" sheet, target height in world pixels
 ]
 
 
+# animation strips: frame 1 standing, then six frames of walking (the hare
+# hops; the dove walks two frames and flies four)
+ANIMATION_JOBS = {name: f'walk-animal-{name}' for name in ('horse', 'camel', 'lion', 'deer', 'sheep', 'goat', 'rabbit')}
+ANIMATION_JOBS['dove'] = 'fly-animal-dove'
+JUMPS = {'rabbit', 'dove'}  # frames keep their height above the ground
+
+
 def build_animals(m, save, strip, sheet_entry) -> None:
-    img = cutout('animals')
-    rows = rows_of_subjects(img, [len(r) for r in ANIMALS])
-    for want, got in zip(ANIMALS, rows):
-        for (name, height), box in zip(want, got):
-            s = fit(img, box, height)
-            sprite_sheet(m, save, strip, sheet_entry, f'animal-{name}', [s, bob(s)], idle=[0], walk=[0, 1])
-            print(f'  animal {name}: {s.shape[1]}x{s.shape[0]}')
+    for row in ANIMALS:
+        for name, height in row:
+            img = cutout(ANIMATION_JOBS[name])
+            boxes = split_strip(img, 7)
+            period = (boxes[0][2] - boxes[0][0]) / (height * CREATURE_SCALE)
+            base = boxes[0][2]
+            frames = []
+            for b in boxes:
+                f = resample(img, b, period)
+                up = max(0, int(round((base - b[2]) / period))) if name in JUMPS else 0
+                frames.append((f, up))
+            w = max(f.shape[1] for f, _ in frames) + 4
+            w += w % 2
+            h = max(f.shape[0] + up for f, up in frames) + 2
+            center = (lambda f: f.shape[1] / 2) if name == 'dove' else torso_center
+            cells = [place(f, w, h, w // 2, h - 2 - up, center(f)) for f, up in frames]
+            if name == 'dove':
+                extra = {'idle': [0], 'walk': [1, 0, 2, 0], 'walkFps': 6, 'fly': [3, 4, 5, 6]}
+            else:
+                extra = {'idle': [0], 'walk': [1, 2, 3, 4, 5, 6], 'walkFps': 8 if name != 'rabbit' else 11}
+            key = f'animal-{name}'
+            file = save(strip(cells), f'sprites/{key}.png')
+            m['sprites'][key] = sheet_entry(file, cells, (w // 2, h - 2), **extra)
+            print(f'  animal {name}: {w}x{h}, {len(cells)} frames')
 
 
 def rotations(s: np.ndarray, n: int) -> list[np.ndarray]:
@@ -340,9 +468,9 @@ def build_cherub_and_sword(m, save, strip, sheet_entry) -> None:
     line = max(rows_of_subjects(img), key=len)
     boxes = sorted(line, key=lambda b: (b[3] - b[1]) * (b[2] - b[0]), reverse=True)
     cherub_box, sword_box = boxes[0], boxes[1]
-    c = fit(img, cherub_box, 176)
+    c = fit(img, cherub_box, round(176 * CREATURE_SCALE))
     sprite_sheet(m, save, strip, sheet_entry, 'cherub', [c, bob(c, 1.0)])
-    sword = fit(img, sword_box, 84)
+    sword = fit(img, sword_box, round(84 * CREATURE_SCALE))
     frames = rotations(sword, 16)
     size = frames[0].shape[0]
     file = save(strip(frames), 'sprites/flaming-sword.png')
@@ -355,8 +483,8 @@ def build_serpent(m, save, strip, sheet_entry) -> None:
     subjects = [b for row in rows_of_subjects(img) for b in row]
     subjects.sort(key=lambda b: (b[3] - b[1]) / max(1, b[2] - b[0]))
     tree_box, ground_box = subjects[0], subjects[-1]
-    t = resample(img, tree_box, (tree_box[3] - tree_box[1]) / 90)
-    g = resample(img, ground_box, (ground_box[3] - ground_box[1]) / 104)
+    t = resample(img, tree_box, (tree_box[3] - tree_box[1]) / (90 * CREATURE_SCALE))
+    g = resample(img, ground_box, (ground_box[3] - ground_box[1]) / (104 * CREATURE_SCALE))
     sprite_sheet(m, save, strip, sheet_entry, 'serpent-tree', [t, t])
     sprite_sheet(m, save, strip, sheet_entry, 'serpent-ground', [g, bob(g, 1.0)])
     print(f'  serpent {t.shape[1]}x{t.shape[0]}, {g.shape[1]}x{g.shape[0]}')
@@ -729,6 +857,75 @@ def shade(c: np.ndarray, k: float) -> tuple[int, int, int, int]:
     return (int(min(255, c[0] * k)), int(min(255, c[1] * k)), int(min(255, c[2] * k)), 255)
 
 
+GRASS_STYLE = os.environ.get('ART_GRASS', 'texture')  # texture | soft | calm
+
+
+def lum_sorted(tiles: list[np.ndarray]) -> np.ndarray:
+    px = np.concatenate([t.reshape(-1, 4)[:, :3] for t in tiles]).astype(float)
+    return px[np.argsort(px @ np.array([0.3, 0.59, 0.11]))]
+
+
+def soften(t: np.ndarray, k: float = 0.45) -> np.ndarray:
+    """The same texture with less contrast: pixels pulled toward the median."""
+    med = np.median(t.reshape(-1, 4)[:, :3], axis=0)
+    out = t.copy()
+    out[:, :, :3] = np.clip(med + (t[:, :, :3].astype(float) - med) * k, 0, 255).astype(np.uint8)
+    return out
+
+
+def flower_colors(meadow: list[np.ndarray]) -> list[np.ndarray]:
+    return [c for f in meadow for c in f.reshape(-1, 4)[:, :3] if hsv(c)[1] > 0.35 and not 0.15 < hsv(c)[0] < 0.45]
+
+
+def sprinkle(t: np.ndarray, colors: list[np.ndarray], seed: int, n: int = 3) -> np.ndarray:
+    """Tiny flowers (two pixels and a shadow) on a grass tile."""
+    out = t.copy()
+    rng = np.random.default_rng(seed)
+    dark = lum_sorted([t])[int(32 * 32 * 0.1)].astype(np.uint8)
+    for _ in range(n if colors else 0):
+        x, y = int(rng.integers(1, 30)), int(rng.integers(1, 30))
+        c = colors[int(rng.integers(0, len(colors)))]
+        out[y, x, :3] = c
+        out[y, x + 1, :3] = c
+        out[y + 1, x, :3] = dark
+    return out
+
+
+def calm_grass(source: list[np.ndarray], seed: int) -> np.ndarray:
+    """Quiet grass in the generated colours: one base shade with scattered
+    lighter and darker pixels and a few short blades. Nothing reaches across
+    the tile, so tiles join without seams."""
+    px = lum_sorted(source)
+    shades = [px[int(len(px) * q)].astype(np.uint8) for q in (0.12, 0.32, 0.5, 0.68, 0.88)]
+    rng = np.random.default_rng(seed)
+    t = np.zeros((32, 32, 4), np.uint8)
+    t[:, :, 3] = 255
+    t[:, :, :3] = shades[2]
+    r = rng.random((32, 32))
+    t[r < 0.1, :3] = shades[1]
+    t[r > 0.92, :3] = shades[3]
+    for _ in range(12):
+        x, y = int(rng.integers(0, 32)), int(rng.integers(0, 32))
+        dark = rng.random() < 0.55
+        t[y, x, :3] = shades[0] if dark else shades[4]
+        t[(y + 1) % 32, x, :3] = shades[1] if dark else shades[3]
+    return t
+
+
+def grass_sets(sw: dict) -> tuple[list[np.ndarray], list[np.ndarray]]:
+    """Plain grass tiles and grass with tiny flowers. The flowered ones are
+    the same tiles with flowers added, so they never show as squares."""
+    if GRASS_STYLE == 'soft':
+        grass = [soften(t) for t in sw['grass']]
+    elif GRASS_STYLE == 'calm':
+        grass = [calm_grass(sw['grass'], i) for i in range(6)]
+    else:
+        grass = list(sw['grass'])
+    colors = flower_colors(sw['meadow'])
+    meadow = [sprinkle(grass[i % len(grass)], colors, 40 + i) for i in range(4)]
+    return grass, meadow
+
+
 def build_terrain(m, save, strip, sheet_entry) -> None:
     """Rebuild the ground tiles with the generated textures; the procedural
     builder still draws the shapes where grass meets paths and water."""
@@ -739,8 +936,7 @@ def build_terrain(m, save, strip, sheet_entry) -> None:
     for k in ('path', 'dry'):
         sw[k] = [desaturate(t, 0.62, 0.86) for t in sw[k]]
     med = {k: np.median(np.concatenate([t.reshape(-1, 4) for t in v])[:, :3], axis=0) for k, v in sw.items()}
-    grass = sw['grass']
-    meadow = sw['meadow']
+    grass, meadow = grass_sets(sw)
 
     def grass_tile(seed: int, base: int = 6, density: int = 7, flowers: int = 0, ramp: str = 'grass') -> np.ndarray:
         src = meadow if flowers >= 6 else grass

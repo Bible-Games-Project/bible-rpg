@@ -355,6 +355,78 @@
         "@trees-garden"
       ],
       "prompt": "A sheet of small farming and plant sprites for a top-down three-quarter view pixel art RPG, in exactly the style of the reference, in two rows of five with clear space between every item. Top row: 1) a small square patch of grass with its corners marked by four little stones, 2) a square patch of freshly tilled dark-brown soil with furrows, 3) the same tilled patch with seeds in small holes, 4) the same patch darker and wet after watering, 5) a tiny green sprout. Bottom row: 6) a young leafy vegetable plant, 7) a fully grown leafy plant with small yellow flowers, 8) a low tangled thorny bramble, 9) a spiky purple thistle, 10) a flat round stepping stone seen from above. Same pixel scale as the reference (4x4 blocks)."
+    },
+    {
+      "id": "walk-animal-horse",
+      "title": "horse walk cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/animal-horse.png"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact horse (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-animal-camel",
+      "title": "camel walk cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/animal-camel.png"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact camel (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-animal-lion",
+      "title": "lion walk cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/animal-lion.png"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact lion (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-animal-deer",
+      "title": "deer walk cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/animal-deer.png"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact deer (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-animal-sheep",
+      "title": "sheep walk cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/animal-sheep.png"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact sheep (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-animal-goat",
+      "title": "goat walk cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/animal-goat.png"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact goat (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline."
+    },
+    {
+      "id": "walk-animal-rabbit",
+      "title": "hare hop cycle",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/animal-rabbit.png"
+      ],
+      "prompt": "Hopping animation strip of this exact hare (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 sitting still; frames 2 to 7 one smooth hop (crouch, push off, stretched in the air, landing, gather). The hare is identical in every frame (same colors and proportions)."
+    },
+    {
+      "id": "fly-animal-dove",
+      "title": "dove flight and walk",
+      "size": "2304x768",
+      "references": [
+        "art/prompts/refs/animal-dove.png"
+      ],
+      "prompt": "Animation strip of this exact white dove (the bird in the reference image), seen from the side and facing right, seven frames in one row, evenly spaced with clear space between them, same pixel scale as the reference: frame 1 standing still; frames 2 and 3 walking steps with the head bobbing forward; frames 4 to 7 flying with the wings fully up, half down, fully down, half up. The dove is identical in every frame (same colors and proportions)."
     }
   ]
 }

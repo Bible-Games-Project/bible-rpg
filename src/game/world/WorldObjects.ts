@@ -285,16 +285,18 @@ export class WorldObjects {
     body.enable = !open;
   }
 
-  /** Fade canopies that hide the active character (keeps trunks opaque). */
+  /** Fade a whole tree (trunk, canopy and fruit) while it hides the active
+   * character, so no edge appears between a faded and an opaque part. */
   updateCanopies(px: number, py: number, view: Phaser.Geom.Rectangle): void {
     for (const t of this.trees) {
       if (!Phaser.Geom.Rectangle.Overlaps(view, t.bounds)) continue;
       const behind = py < t.y - 4 && Phaser.Geom.Rectangle.Contains(t.bounds, px, py - 40);
-      const target = behind ? 0.55 : 1;
+      const target = behind ? 0.5 : 1;
       const a = t.canopy.alpha;
       if (Math.abs(a - target) > 0.01) {
         const na = a + (target - a) * 0.18;
         t.canopy.setAlpha(na);
+        t.trunk.setAlpha(na);
         for (const f of t.fruit) f.sprite.setAlpha(na);
       }
     }

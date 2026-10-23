@@ -125,10 +125,10 @@
     "down": {
      "file": "assets/sprites/char-adam-leaves-down.png",
      "frameWidth": 56,
-     "frameHeight": 120,
-     "frames": 6,
+     "frameHeight": 122,
+     "frames": 10,
      "anchorX": 28,
-     "anchorY": 117,
+     "anchorY": 119,
      "idle": [
       0,
       1
@@ -137,16 +137,21 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "up": {
      "file": "assets/sprites/char-adam-leaves-up.png",
      "frameWidth": 56,
-     "frameHeight": 120,
-     "frames": 6,
+     "frameHeight": 122,
+     "frames": 10,
      "anchorX": 28,
-     "anchorY": 117,
+     "anchorY": 119,
      "idle": [
       0,
       1
@@ -155,16 +160,21 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "right": {
      "file": "assets/sprites/char-adam-leaves-right.png",
      "frameWidth": 56,
-     "frameHeight": 120,
+     "frameHeight": 122,
      "frames": 6,
      "anchorX": 28,
-     "anchorY": 117,
+     "anchorY": 119,
      "idle": [
       0,
       1
@@ -181,10 +191,10 @@
     "down": {
      "file": "assets/sprites/char-adam-fig-down.png",
      "frameWidth": 56,
-     "frameHeight": 121,
-     "frames": 6,
+     "frameHeight": 122,
+     "frames": 10,
      "anchorX": 28,
-     "anchorY": 118,
+     "anchorY": 119,
      "idle": [
       0,
       1
@@ -193,16 +203,21 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "up": {
      "file": "assets/sprites/char-adam-fig-up.png",
      "frameWidth": 56,
-     "frameHeight": 121,
-     "frames": 6,
+     "frameHeight": 122,
+     "frames": 10,
      "anchorX": 28,
-     "anchorY": 118,
+     "anchorY": 119,
      "idle": [
       0,
       1
@@ -211,16 +226,21 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "right": {
      "file": "assets/sprites/char-adam-fig-right.png",
      "frameWidth": 56,
-     "frameHeight": 121,
+     "frameHeight": 122,
      "frames": 6,
      "anchorX": 28,
-     "anchorY": 118,
+     "anchorY": 119,
      "idle": [
       0,
       1
@@ -237,10 +257,10 @@
     "down": {
      "file": "assets/sprites/char-adam-tunic-down.png",
      "frameWidth": 60,
-     "frameHeight": 121,
-     "frames": 6,
+     "frameHeight": 122,
+     "frames": 10,
      "anchorX": 30,
-     "anchorY": 118,
+     "anchorY": 119,
      "idle": [
       0,
       1
@@ -249,16 +269,21 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "up": {
      "file": "assets/sprites/char-adam-tunic-up.png",
      "frameWidth": 60,
-     "frameHeight": 121,
-     "frames": 6,
+     "frameHeight": 122,
+     "frames": 10,
      "anchorX": 30,
-     "anchorY": 118,
+     "anchorY": 119,
      "idle": [
       0,
       1
@@ -267,16 +292,21 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "right": {
      "file": "assets/sprites/char-adam-tunic-right.png",
      "frameWidth": 60,
-     "frameHeight": 121,
+     "frameHeight": 122,
      "frames": 6,
      "anchorX": 30,
-     "anchorY": 118,
+     "anchorY": 119,
      "idle": [
       0,
       1
@@ -295,10 +325,10 @@
     "down": {
      "file": "assets/sprites/char-eve-leaves-down.png",
      "frameWidth": 50,
-     "frameHeight": 117,
-     "frames": 6,
+     "frameHeight": 118,
+     "frames": 10,
      "anchorX": 25,
-     "anchorY": 114,
+     "anchorY": 115,
      "idle": [
       0,
       1
@@ -307,16 +337,21 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "up": {
      "file": "assets/sprites/char-eve-leaves-up.png",
      "frameWidth": 50,
-     "frameHeight": 117,
-     "frames": 6,
+     "frameHeight": 118,
+     "frames": 10,
      "anchorX": 25,
-     "anchorY": 114,
+     "anchorY": 115,
      "idle": [
       0,
       1
@@ -325,16 +360,21 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "right": {
      "file": "assets/sprites/char-eve-leaves-right.png",
      "frameWidth": 50,
-     "frameHeight": 117,
+     "frameHeight": 118,
      "frames": 6,
      "anchorX": 25,
-     "anchorY": 114,
+     "anchorY": 115,
      "idle": [
       0,
       1
@@ -351,10 +391,10 @@
     "down": {
      "file": "assets/sprites/char-eve-fig-down.png",
      "frameWidth": 54,
-     "frameHeight": 116,
-     "frames": 6,
+     "frameHeight": 118,
+     "frames": 10,
      "anchorX": 27,
-     "anchorY": 113,
+     "anchorY": 115,
      "idle": [
       0,
       1
@@ -363,16 +403,21 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "up": {
      "file": "assets/sprites/char-eve-fig-up.png",
      "frameWidth": 54,
-     "frameHeight": 116,
-     "frames": 6,
+     "frameHeight": 118,
+     "frames": 10,
      "anchorX": 27,
-     "anchorY": 113,
+     "anchorY": 115,
      "idle": [
       0,
       1
@@ -381,16 +426,21 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "right": {
      "file": "assets/sprites/char-eve-fig-right.png",
      "frameWidth": 54,
-     "frameHeight": 116,
+     "frameHeight": 118,
      "frames": 6,
      "anchorX": 27,
-     "anchorY": 113,
+     "anchorY": 115,
      "idle": [
       0,
       1
@@ -407,10 +457,10 @@
     "down": {
      "file": "assets/sprites/char-eve-tunic-down.png",
      "frameWidth": 58,
-     "frameHeight": 117,
-     "frames": 6,
+     "frameHeight": 118,
+     "frames": 10,
      "anchorX": 29,
-     "anchorY": 114,
+     "anchorY": 115,
      "idle": [
       0,
       1
@@ -419,16 +469,21 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "up": {
      "file": "assets/sprites/char-eve-tunic-up.png",
      "frameWidth": 58,
-     "frameHeight": 117,
-     "frames": 6,
+     "frameHeight": 118,
+     "frames": 10,
      "anchorX": 29,
-     "anchorY": 114,
+     "anchorY": 115,
      "idle": [
       0,
       1
@@ -437,16 +492,21 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "right": {
      "file": "assets/sprites/char-eve-tunic-right.png",
      "frameWidth": 58,
-     "frameHeight": 117,
+     "frameHeight": 118,
      "frames": 6,
      "anchorX": 29,
-     "anchorY": 114,
+     "anchorY": 115,
      "idle": [
       0,
       1
@@ -466,7 +526,7 @@
      "file": "assets/sprites/char-god-robe-down.png",
      "frameWidth": 62,
      "frameHeight": 126,
-     "frames": 6,
+     "frames": 10,
      "anchorX": 31,
      "anchorY": 123,
      "idle": [
@@ -477,14 +537,19 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "up": {
      "file": "assets/sprites/char-god-robe-up.png",
      "frameWidth": 62,
      "frameHeight": 126,
-     "frames": 6,
+     "frames": 10,
      "anchorX": 31,
      "anchorY": 123,
      "idle": [
@@ -495,8 +560,13 @@
       2,
       3,
       4,
-      5
-     ]
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "walkFps": 12
     },
     "right": {
      "file": "assets/sprites/char-god-robe-right.png",
@@ -523,130 +593,174 @@
   "adam-sleeping": {
    "file": "assets/sprites/adam-sleeping.png",
    "frameWidth": 116,
-   "frameHeight": 40,
+   "frameHeight": 41,
    "frames": 1,
    "anchorX": 58,
-   "anchorY": 39
+   "anchorY": 40
   },
   "animal-sheep": {
    "file": "assets/sprites/animal-sheep.png",
-   "frameWidth": 74,
+   "frameWidth": 76,
    "frameHeight": 60,
-   "frames": 2,
-   "anchorX": 37,
+   "frames": 7,
+   "anchorX": 38,
    "anchorY": 58,
    "idle": [
     0
    ],
    "walk": [
-    0,
-    1
-   ]
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "walkFps": 8
   },
   "animal-goat": {
    "file": "assets/sprites/animal-goat.png",
-   "frameWidth": 71,
+   "frameWidth": 78,
    "frameHeight": 66,
-   "frames": 2,
-   "anchorX": 35,
+   "frames": 7,
+   "anchorX": 39,
    "anchorY": 64,
    "idle": [
     0
    ],
    "walk": [
-    0,
-    1
-   ]
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "walkFps": 8
   },
   "animal-rabbit": {
    "file": "assets/sprites/animal-rabbit.png",
-   "frameWidth": 24,
-   "frameHeight": 34,
-   "frames": 2,
-   "anchorX": 12,
-   "anchorY": 32,
+   "frameWidth": 44,
+   "frameHeight": 35,
+   "frames": 7,
+   "anchorX": 22,
+   "anchorY": 33,
    "idle": [
     0
    ],
    "walk": [
-    0,
-    1
-   ]
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "walkFps": 11
   },
   "animal-deer": {
    "file": "assets/sprites/animal-deer.png",
-   "frameWidth": 72,
+   "frameWidth": 80,
    "frameHeight": 106,
-   "frames": 2,
-   "anchorX": 36,
+   "frames": 7,
+   "anchorX": 40,
    "anchorY": 104,
    "idle": [
     0
    ],
    "walk": [
-    0,
-    1
-   ]
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "walkFps": 8
   },
   "animal-lion": {
    "file": "assets/sprites/animal-lion.png",
-   "frameWidth": 85,
+   "frameWidth": 88,
    "frameHeight": 76,
-   "frames": 2,
-   "anchorX": 42,
+   "frames": 7,
+   "anchorX": 44,
    "anchorY": 74,
    "idle": [
     0
    ],
    "walk": [
-    0,
-    1
-   ]
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "walkFps": 8
   },
   "animal-dove": {
    "file": "assets/sprites/animal-dove.png",
-   "frameWidth": 25,
-   "frameHeight": 24,
-   "frames": 2,
-   "anchorX": 12,
-   "anchorY": 22,
+   "frameWidth": 30,
+   "frameHeight": 38,
+   "frames": 7,
+   "anchorX": 15,
+   "anchorY": 36,
    "idle": [
     0
    ],
    "walk": [
+    1,
     0,
-    1
+    2,
+    0
+   ],
+   "walkFps": 6,
+   "fly": [
+    3,
+    4,
+    5,
+    6
    ]
   },
   "animal-horse": {
    "file": "assets/sprites/animal-horse.png",
-   "frameWidth": 114,
+   "frameWidth": 122,
    "frameHeight": 118,
-   "frames": 2,
-   "anchorX": 57,
+   "frames": 7,
+   "anchorX": 61,
    "anchorY": 116,
    "idle": [
     0
    ],
    "walk": [
-    0,
-    1
-   ]
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "walkFps": 8
   },
   "animal-camel": {
    "file": "assets/sprites/animal-camel.png",
-   "frameWidth": 144,
-   "frameHeight": 134,
-   "frames": 2,
-   "anchorX": 72,
-   "anchorY": 132,
+   "frameWidth": 156,
+   "frameHeight": 133,
+   "frames": 7,
+   "anchorX": 78,
+   "anchorY": 131,
    "idle": [
     0
    ],
    "walk": [
-    0,
-    1
-   ]
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "walkFps": 8
   },
   "serpent-tree": {
    "file": "assets/sprites/serpent-tree.png",

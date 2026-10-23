@@ -11,6 +11,8 @@ export interface SheetAsset {
   anchorY: number;
   idle?: number[];
   walk?: number[];
+  /** walk animation speed in frames per second (default 8) */
+  walkFps?: number;
   fly?: number[];
 }
 

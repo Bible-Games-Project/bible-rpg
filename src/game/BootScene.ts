@@ -41,7 +41,7 @@ export class BootScene extends Phaser.Scene {
           const key = charKey(id, outfit, dir as Direction);
           this.anims.create({ key: `${key}:idle`, frames: this.anims.generateFrameNumbers(key, { frames: a.idle ?? [0] }), frameRate: 1.4, repeat: -1 });
           if (a.walk && a.walk.length) {
-            this.anims.create({ key: `${key}:walk`, frames: this.anims.generateFrameNumbers(key, { frames: a.walk }), frameRate: 8, repeat: -1 });
+            this.anims.create({ key: `${key}:walk`, frames: this.anims.generateFrameNumbers(key, { frames: a.walk }), frameRate: a.walkFps ?? 8, repeat: -1 });
           }
         }
       }
@@ -49,7 +49,7 @@ export class BootScene extends Phaser.Scene {
     for (const [key, a] of Object.entries(m.sprites)) {
       if (a.frames <= 1) continue;
       if (a.idle) this.anims.create({ key: `${key}:idle`, frames: this.anims.generateFrameNumbers(key, { frames: a.idle }), frameRate: 1.2, repeat: -1 });
-      if (a.walk) this.anims.create({ key: `${key}:walk`, frames: this.anims.generateFrameNumbers(key, { frames: a.walk }), frameRate: 7, repeat: -1 });
+      if (a.walk) this.anims.create({ key: `${key}:walk`, frames: this.anims.generateFrameNumbers(key, { frames: a.walk }), frameRate: a.walkFps ?? 7, repeat: -1 });
       if (a.fly) this.anims.create({ key: `${key}:fly`, frames: this.anims.generateFrameNumbers(key, { frames: a.fly }), frameRate: 8, repeat: -1 });
       if (!a.idle && !a.walk) {
         const rate = key === 'flaming-sword' ? 10 : key.startsWith('serpent') ? 5 : key === 'cherub' ? 1.2 : 9;
