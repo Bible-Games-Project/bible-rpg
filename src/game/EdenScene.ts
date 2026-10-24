@@ -9,10 +9,13 @@ import { GOD_PATROL, PLOT_PATCHES, POINTS, TILE, WORLD_H, WORLD_W, ZONES, type P
 import type { Line } from '../ui/DialogueBox';
 import { openNamingPuzzle } from '../ui/NamingPuzzle';
 import { ui } from './bridge';
-import { MANIFEST } from './manifest';
+import { ART_RESOLUTION, pixelRatio } from './display';
+import { MANIFEST, sized, textureScale } from './manifest';
 import { Actor, DEPTH_GROUND, DEPTH_OVERLAY, type Facing } from './world/Actor';
 import { Animals } from './world/Animals';
 import { Atmosphere } from './world/Atmosphere';
+import { addShadow } from './world/shadows';
+import { GodLight } from './world/GodLight';
 import { Terrain } from './world/Terrain';
 import { WorldObjects, type TreeInstance } from './world/WorldObjects';
 import type { InteractSpec, ObjectiveTarget, TimeOfDay, WorldApi } from './WorldApi';
@@ -26,7 +29,7 @@ export interface EdenStartData {
 /** World pixels of height on screen, and the narrowest view (portrait phones). */
 const VIEW_HEIGHT = 1000;
 const VIEW_MIN_WIDTH = 640;
-/** Never smaller than this, so characters stay readable on small screens. */
+/** Never smaller than this (CSS px per world px), so characters stay readable on small screens. */
 const MIN_ZOOM = 0.5;
 
 const ITEM_ICONS: Record<string, string> = {
@@ -71,9 +74,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private marker!: Phaser.GameObjects.Sprite;
   private tint!: Phaser.GameObjects.Rectangle;
   private atmosphere!: Atmosphere;
-  private smoothArt = false;
-  private glow!: Phaser.GameObjects.Image;
-  private rays!: Phaser.GameObjects.Image;
+  private tintTween: Phaser.Tweens.Tween | null = null;
+  private holy!: GodLight;
   private godLit = false;
   private inventory: Record<string, number> = {};
   private flags: Record<string, FlagValue> = {};
@@ -103,13 +105,12 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.eve.setVisible(false);
     this.god.setVisible(false);
     this.serpent.setVisible(false);
-    this.glow = this.add.image(0, 0, 'god-glow').setBlendMode(Phaser.BlendModes.ADD).setVisible(false);
-    this.rays = this.add.image(0, 0, 'god-rays').setBlendMode(Phaser.BlendModes.ADD).setVisible(false);
-    this.marker = this.add.sprite(0, 0, 'marker').setOrigin(0.5, 1).setDepth(DEPTH_OVERLAY - 20).setVisible(false);
+    this.holy = new GodLight(this, settings.get().reduceMotion);
+    this.marker = sized(this.add.sprite(0, 0, 'marker').setOrigin(0.5, 1).setDepth(DEPTH_OVERLAY - 20).setVisible(false));
     this.marker.play('marker:loop');
     for (const [x, y] of PLOT_PATCHES) {
-      const soil = this.add.image(x, y, 'soil-marked').setDepth(DEPTH_GROUND + 5);
-      const plant = this.add.image(x, y + 8, 'plant-sprout').setOrigin(0.5, 1).setDepth(y + 8).setVisible(false);
+      const soil = sized(this.add.image(x, y, 'soil-marked').setDepth(DEPTH_GROUND + 5));
+      const plant = sized(this.add.image(x, y + 8, 'plant-sprout').setOrigin(0.5, 1).setDepth(y + 8).setVisible(false));
       this.plots.push({ soil, plant });
     }
     // colliders
@@ -177,25 +178,34 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   }
 
   /**
-   * About 1000 world px of height on screen (the maintainer wanted the world
-   * seen from farther away). Below 1 the art is scaled down smoothly (linear
-   * filtering); from 1 up the zoom is a whole number, so pixels stay square.
+   * About VIEW_HEIGHT world px of height on screen (the maintainer wanted the
+   * world seen from farther away). Where the screen allows, the zoom puts
+   * each art pixel of the sprites on a whole number of screen pixels, drawn
+   * sharp; otherwise the art is scaled smoothly (linear filtering).
    */
   private applyZoom(): void {
     const w = this.scale.width;
     const h = this.scale.height;
-    const fit = Math.min(h / VIEW_HEIGHT, w / VIEW_MIN_WIDTH);
-    const z = fit >= 1 ? Math.max(1, Math.round(fit)) : Math.max(MIN_ZOOM, fit);
-    const smooth = z < 1;
-    if (smooth !== this.smoothArt) {
-      this.smoothArt = smooth;
-      const mode = smooth ? Phaser.Textures.FilterMode.LINEAR : Phaser.Textures.FilterMode.NEAREST;
-      for (const key of this.textures.getTextureKeys()) this.textures.get(key).setFilter(mode);
-    }
+    const dpr = pixelRatio();
+    const wanted = Math.min(h / VIEW_HEIGHT, w / VIEW_MIN_WIDTH); // device px per world px
+    const perArt = wanted / ART_RESOLUTION;
+    const z = perArt >= 0.8 ? ART_RESOLUTION * Math.max(1, Math.round(perArt)) : Math.max(wanted, MIN_ZOOM * dpr);
+    this.applyFilters(z);
     this.cameras.main.setZoom(z);
     this.tint.setSize(w / z + 64, h / z + 64);
     this.tint.setPosition(w / 2 - w / z / 2 - 32, h / 2 - h / z / 2 - 32);
     this.atmosphere.resize(w, h, z);
+  }
+
+  /** Sharp pixels for textures drawn at a whole number of screen pixels per
+   * pixel; smooth scaling for the rest, the ground and the light effects. */
+  private applyFilters(zoom: number): void {
+    for (const key of this.textures.getTextureKeys()) {
+      const perPixel = zoom * textureScale(key);
+      const smooth = key.startsWith('fx-') || key === 'tiles-extruded';
+      const crisp = !smooth && perPixel >= 0.98 && Math.abs(perPixel - Math.round(perPixel)) < 0.02;
+      this.textures.get(key).setFilter(crisp ? Phaser.Textures.FilterMode.NEAREST : Phaser.Textures.FilterMode.LINEAR);
+    }
   }
 
   // ------------------------------------------------------------------ party
@@ -249,8 +259,16 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       speaker: l.s,
       text: interpolate(l.t, params),
       ref: l.ref,
+      portrait: this.portraitFor(l.s),
     }));
     return this.lines(lines);
+  }
+
+  /** Adam's and Eve's portraits follow what they are wearing ("eve-fig"). */
+  private portraitFor(speaker: string): string | undefined {
+    const actor = speaker === 'adam' ? this.adam : speaker === 'eve' ? this.eve : null;
+    const key = actor?.outfit && actor.outfit !== 'leaves' ? `${speaker}-${actor.outfit}` : null;
+    return key && MANIFEST.portraits[key] ? key : undefined;
   }
 
   scripture(id: string): Promise<void> {
@@ -400,15 +418,22 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     });
   }
 
+  /** Follow the active character, gliding there from where the camera is
+   * (Phaser's startFollow jumps straight to the target, which showed as a
+   * jolt at the end of missions). */
   cameraFollow(): void {
     const cam = this.cameras.main;
+    const { scrollX, scrollY } = cam;
     cam.startFollow(this.player().sprite, true, 0.12, 0.12, 0, 40);
+    cam.setScroll(scrollX, scrollY);
   }
 
+  /** Jump to the active character (only while the screen is faded out). */
   cameraSnap(): void {
     const p = this.player();
-    this.cameras.main.centerOn(p.x, p.y - 40);
-    this.cameraFollow();
+    const cam = this.cameras.main;
+    cam.startFollow(p.sprite, true, 0.12, 0.12, 0, 40);
+    cam.centerOn(p.x, p.y - 40);
   }
 
   fade(to: number, ms = 700, color = '#000'): Promise<void> {
@@ -421,8 +446,24 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   }
 
   setTime(time: TimeOfDay): void {
+    // the light changes colour gradually (it used to switch colour at once)
     const tt = TINTS[time];
-    this.tweens.add({ targets: this.tint, fillAlpha: tt.alpha, duration: 1200 });
+    const from = Phaser.Display.Color.ValueToColor(this.tint.fillColor);
+    const to = Phaser.Display.Color.ValueToColor(tt.color);
+    const alpha = this.tint.fillAlpha;
+    this.tintTween?.stop();
+    this.tintTween = this.tweens.addCounter({
+      from: 0,
+      to: 100,
+      duration: 2200,
+      ease: 'Sine.easeInOut',
+      onUpdate: (tw) => {
+        const k = tw.getValue() ?? 100;
+        const c = Phaser.Display.Color.Interpolate.ColorWithColor(from, to, 100, k);
+        this.tint.fillColor = Phaser.Display.Color.GetColor(c.r, c.g, c.b);
+        this.tint.fillAlpha = alpha + ((tt.alpha - alpha) * k) / 100;
+      },
+    });
     this.atmosphere.setTime(time);
     this.tint.fillColor = tt.color;
     audio.setAmbience(time === 'evening' ? 'evening' : time === 'dusk' ? 'outside' : 'garden');
@@ -478,8 +519,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
 
   godLight(on: boolean): void {
     this.godLit = on;
-    this.glow.setVisible(on);
-    this.rays.setVisible(on && !settings.get().reduceMotion);
+    this.holy.set(on);
   }
 
   // ------------------------------------------------------ inventory & flags
@@ -536,11 +576,32 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   }
 
   hideProp(id: string): void {
-    this.objects.prop(id)?.image.setVisible(false);
+    const p = this.objects.prop(id);
+    p?.image.setVisible(false);
+    p?.shadow?.setVisible(false);
   }
 
   showProp(id: string): void {
-    this.objects.prop(id)?.image.setVisible(true);
+    const p = this.objects.prop(id);
+    p?.image.setVisible(true);
+    p?.shadow?.setVisible(true);
+  }
+
+  waterNear(at: Pt): Pt {
+    let best: Pt = at;
+    let bestD = Infinity;
+    for (let dy = -200; dy <= 200; dy += 8) {
+      for (let dx = -200; dx <= 200; dx += 8) {
+        const x = at[0] + dx;
+        const y = at[1] + dy;
+        const d = dx * dx + dy * dy;
+        if (d < bestD && this.terrain.riverDistance(x, y) < -14) {
+          best = [x, y];
+          bestD = d;
+        }
+      }
+    }
+    return best;
   }
 
   fruitOf(treeIds: string[]): { tree: string; index: number; at: Pt; type: string }[] {
@@ -584,10 +645,12 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       return;
     }
     const a = MANIFEST.sprites['adam-sleeping'];
-    this.sleepImage = this.add
-      .image(this.adam.x, this.adam.y, 'adam-sleeping')
-      .setOrigin(a.anchorX / a.frameWidth, (a.anchorY + 1) / a.frameHeight)
-      .setDepth(this.adam.y);
+    this.sleepImage = sized(
+      this.add
+        .image(this.adam.x, this.adam.y, 'adam-sleeping')
+        .setOrigin(a.anchorX / a.frameWidth, (a.anchorY + 1) / a.frameHeight)
+        .setDepth(this.adam.y),
+    );
     this.adam.setVisible(false);
   }
 
@@ -625,7 +688,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       if (this.terrain.isWaterAt(x, y)) continue;
       const key = r.frac() < 0.5 ? 'thistle' : 'thorns';
       const a = MANIFEST.sprites[key];
-      const s = this.add.image(x, y, key).setOrigin(a.anchorX / a.frameWidth, 1).setDepth(y).setAlpha(0);
+      const s = sized(this.add.image(x, y, key).setOrigin(a.anchorX / a.frameWidth, 1).setDepth(y).setAlpha(0));
       this.tweens.add({ targets: s, alpha: 1, duration: 900, delay: r.frac() * 800 });
       this.thornSprites.push(s);
     }
@@ -635,22 +698,27 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.objects.openExit(open);
   }
 
+  /** The cherubim at the east of the garden (Genesis 3:24), facing east with
+   * the flaming sword in hand; the blade flickers. */
   cherubim(on: boolean): void {
-    for (const s of this.cherubSprites) s.destroy();
+    for (const o of this.cherubSprites) o.destroy();
     this.cherubSprites = [];
     if (!on) return;
+    const a = MANIFEST.sprites.cherub;
+    const k = a.scale ?? 1;
     for (const p of [POINTS.cherubN, POINTS.cherubS]) {
-      const a = MANIFEST.sprites.cherub;
-      const s = this.add.sprite(p[0], p[1], 'cherub').setOrigin(a.anchorX / a.frameWidth, (a.anchorY + 1) / a.frameHeight).setDepth(p[1]);
-      s.play('cherub:loop');
-      const g = this.add.image(p[0], p[1], 'god-glow').setBlendMode(Phaser.BlendModes.ADD).setOrigin(0.5, 0.82).setDepth(p[1] - 1).setAlpha(0.6);
-      this.cherubSprites.push(s, g as unknown as Phaser.GameObjects.Sprite);
+      const c = sized(this.add.sprite(p[0], p[1], 'cherub').setOrigin(a.anchorX / a.frameWidth, (a.anchorY + 1) / a.frameHeight).setDepth(p[1]));
+      c.play('cherub:loop');
+      const shadow = addShadow(this, p[0], p[1], 'cherub');
+      const [fx, fy] = a.flame ?? [a.anchorX, a.frameHeight / 3];
+      const fire = this.add.image(p[0] + (fx - a.anchorX) * k, p[1] + (fy - a.anchorY - 1) * k, 'god-glow');
+      fire.setBlendMode(Phaser.BlendModes.ADD).setTint(0xff9a50).setScale(0.35, 0.5).setDepth(p[1] + 1).setAlpha(0.55);
+      if (!settings.get().reduceMotion) {
+        this.tweens.add({ targets: fire, alpha: 0.85, scaleX: 0.42, duration: 180, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: Math.random() * 200 });
+      }
+      this.cherubSprites.push(c, fire as unknown as Phaser.GameObjects.Sprite);
+      if (shadow) this.cherubSprites.push(shadow as unknown as Phaser.GameObjects.Sprite);
     }
-    const sw = this.add.sprite(POINTS.sword[0], POINTS.sword[1] - 60, 'flaming-sword').setDepth(POINTS.sword[1] + 1);
-    sw.play('flaming-sword:loop');
-    this.tweens.add({ targets: sw, y: sw.y - 6, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    const fg = this.add.image(sw.x, sw.y + 40, 'god-glow').setBlendMode(Phaser.BlendModes.ADD).setTint(0xff9a50).setScale(0.6).setDepth(POINTS.sword[1]).setAlpha(0.7);
-    this.cherubSprites.push(sw, fg as unknown as Phaser.GameObjects.Sprite);
   }
 
   // -------------------------------------------------------------- stealth
@@ -660,32 +728,44 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
    * cool of the day. Being seen sends the player back to the start of the
    * challenge; after three tries the story continues anyway.
    */
+  /**
+   * Hiding from the LORD God (Genesis 3:8). He walks his round of the grove,
+   * but comes toward anyone he sees or hears moving in the open, goes to
+   * where he last noticed them and looks around there before returning to
+   * his round. Being seen for a moment only sends the player back.
+   */
   stealth(seconds: number): Promise<void> {
     return new Promise((resolve) => {
       const hud = ui().hud;
       const god = this.god;
       let remaining = seconds;
       let failures = 0;
-      let patrolIndex = 0;
       let done = false;
       const sight = this.add.image(god.x, god.y, 'shadow-large').setTint(0xfff2c0).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.35).setDepth(DEPTH_GROUND + 20).setScale(4, 3.2);
       const startPos: Pt = POINTS.groveStart;
-      const patrol = async () => {
-        while (!done) {
-          const next = GOD_PATROL[patrolIndex % GOD_PATROL.length];
-          patrolIndex++;
-          await god.walkTo(next[0], next[1], 62);
-          if (!done) await this.wait(500);
-        }
+      let mode: 'round' | 'search' | 'look' = 'round';
+      let round = 0;
+      let target: Pt = GOD_PATROL[0];
+      let lookFor = 0;
+      const nearestStop = (): number => {
+        let best = 0;
+        GOD_PATROL.forEach((q, i) => {
+          if (Math.hypot(q[0] - god.x, q[1] - god.y) < Math.hypot(GOD_PATROL[best][0] - god.x, GOD_PATROL[best][1] - god.y)) best = i;
+        });
+        return best;
       };
-      void patrol();
+      god.scripted = false;
       let grace = 1.5;
       let exposedFor = 0;
       const tick = this.time.addEvent({
         delay: 100,
         loop: true,
         callback: () => {
-          if (done || ui().dialogue.open) return;
+          if (done) return;
+          if (ui().dialogue.open) {
+            god.stop();
+            return;
+          }
           remaining -= 0.1;
           grace -= 0.1;
           sight.setPosition(god.x, god.y);
@@ -694,6 +774,38 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
           const covered = this.objects.isCovered(p.x, p.y);
           const blocked = this.objects.sightBlocked(god.x, god.y - 20, p.x, p.y - 10);
           const exposed = d < 190 && !covered && !blocked;
+          const heard = d < 330 && p.moving && !covered;
+          if ((exposed || heard) && grace <= 0) {
+            mode = 'search';
+            target = [p.x, p.y];
+          }
+          // walking: his round, or toward where he last noticed someone
+          if (mode === 'look') {
+            god.stop();
+            lookFor -= 0.1;
+            if (Math.random() < 0.08) god.face((['left', 'right', 'up', 'down'] as const)[Math.floor(Math.random() * 4)]);
+            if (lookFor <= 0) {
+              mode = 'round';
+              round = nearestStop();
+              target = GOD_PATROL[round];
+            }
+          } else {
+            const dx = target[0] - god.x;
+            const dy = target[1] - god.y;
+            const left = Math.hypot(dx, dy);
+            if (left < 12) {
+              if (mode === 'search') {
+                mode = 'look';
+                lookFor = 1.8;
+              } else {
+                round = (round + 1) % GOD_PATROL.length;
+                target = GOD_PATROL[round];
+              }
+            } else {
+              const speed = mode === 'search' ? 95 : 62;
+              god.move((dx / left) * speed, (dy / left) * speed);
+            }
+          }
           hud.setTimer(remaining, seconds, exposed ? t('stealth.exposed') : t('stealth.hidden'));
           exposedFor = exposed ? exposedFor + 0.1 : 0;
           if (exposedFor >= 0.6 && grace <= 0) {
@@ -705,6 +817,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
             }
             audio.play('detected');
             this.cutscene(true);
+            god.stop();
+            mode = 'round';
             void (async () => {
               await this.fade(1, 400);
               hud.toast(t('stealth.seen'), false, 3600);
@@ -724,8 +838,6 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
         tick.remove();
         sight.destroy();
         hud.setTimer(null);
-        this.tweens.killTweensOf(god.feet);
-        god.scripted = false;
         god.stop();
         resolve();
       };
@@ -767,7 +879,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.animals.update(time, dt);
     const cam = this.cameras.main;
     this.atmosphere.update(delta, cam);
-    this.objects.updateCanopies(p.x, p.y, cam.worldView);
+    this.objects.updateCanopies(p.x, p.y, cam.worldView, delta);
     this.updateGod(time);
     this.updateInteractPrompt();
     this.updateObjectiveIndicator(time);
@@ -818,10 +930,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private updateGod(time: number): void {
     const g = this.god;
     if (!this.godLit || !g.visible) return;
-    const pulse = settings.get().reduceMotion ? 0.85 : 0.75 + Math.sin(time / 600) * 0.12;
-    this.glow.setPosition(g.x, g.y + 6).setOrigin(0.5, 0.82).setDepth(g.y - 1).setAlpha(pulse);
-    this.rays.setPosition(g.x, g.y - 50).setDepth(g.y - 2).setAlpha(pulse * 0.8);
-    if (!settings.get().reduceMotion) this.rays.setRotation(time / 9000);
+    this.holy.update(time, g.x, g.y, g.sprite.displayHeight);
   }
 
   private updateInteractPrompt(): void {
@@ -883,7 +992,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     }
     const cam = this.cameras.main;
     const view = cam.worldView;
-    const margin = 30 / cam.zoom;
+    const dpr = pixelRatio();
+    const margin = (30 * dpr) / cam.zoom;
     const onScreen = best[0] > view.x + margin && best[0] < view.right - margin && best[1] > view.y + margin && best[1] < view.bottom - margin;
     if (onScreen) {
       hud.setArrow(null);
@@ -894,12 +1004,13 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     }
     this.marker.setVisible(false);
     // arrow at the screen edge, pointing from the screen centre to the target
-    const sw = this.scale.width;
-    const sh = this.scale.height;
+    // in CSS pixels, like the HUD
+    const sw = this.scale.width / dpr;
+    const sh = this.scale.height / dpr;
     const cx = sw / 2;
     const cy = sh / 2;
-    const tx = (best[0] - view.x) * cam.zoom;
-    const ty = (best[1] - view.y) * cam.zoom;
+    const tx = ((best[0] - view.x) * cam.zoom) / dpr;
+    const ty = ((best[1] - view.y) * cam.zoom) / dpr;
     const ang = Math.atan2(ty - cy, tx - cx);
     const padX = 38;
     const padTop = 120;

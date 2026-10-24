@@ -11,6 +11,7 @@ export interface Line {
   text: string;
   ref?: string;               // Bible reference shown with the line
   scripture?: boolean;        // a verbatim quotation (gold card)
+  portrait?: string;          // portrait to show instead of the speaker's usual one
 }
 
 /**
@@ -88,7 +89,7 @@ export class DialogueBox {
     this.root.classList.toggle('scripture', !!line.scripture);
     this.frame.hidden = narrator || !!line.scripture;
     this.portrait.reduceMotion = settings.get().reduceMotion;
-    if (!narrator) this.portrait.setPortrait(ch.portrait);
+    if (!narrator) this.portrait.setPortrait(line.portrait ?? ch.portrait);
     this.frame.classList.toggle('divine', line.speaker === 'god');
     this.nameEl.textContent = line.scripture ? '' : t(ch.nameKey);
     this.refEl.textContent = line.ref ? (line.scripture ? `${line.ref} (KJV)` : line.ref) : '';

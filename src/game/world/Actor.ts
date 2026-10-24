@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
-import { MANIFEST, charKey, type Direction } from '../manifest';
+import { CHARACTERS } from '../../data/characters';
+import { MANIFEST, charKey, sized, textureScale, type Direction } from '../manifest';
+import { addShadow, fitShadow } from './shadows';
 
 export type Facing = 'down' | 'up' | 'left' | 'right';
 
@@ -73,10 +75,8 @@ export class Actor {
     this.sprite = scene.add.sprite(o.x, o.y, key);
     this.applyAnchor();
     if (o.shadow !== null) {
-      this.shadow = scene.add.image(o.x, o.y, o.shadow ?? 'shadow-small').setDepth(DEPTH_SHADOW);
-      this.shadow.setAlpha(0.9);
-      // people get the same soft, wide shadow as the trees around them
-      if (o.charId) this.shadow.setScale(1.4, 1.3).setAlpha(1);
+      // the sprite's own cast shadow when it has one, else a soft round one
+      this.shadow = addShadow(scene, o.x, o.y, key) ?? scene.add.image(o.x, o.y, o.shadow ?? 'shadow-small').setDepth(DEPTH_SHADOW).setAlpha(0.9);
     }
     this.refresh(true);
   }
@@ -190,7 +190,8 @@ export class Actor {
     this.heldSprite?.destroy();
     this.heldSprite = null;
     if (!key) return;
-    this.heldSprite = this.scene.add.image(this.x, this.topY() + 30, key).setOrigin(0.5, 1).setDepth(this.y + 1);
+    this.heldSprite = sized(this.scene.add.image(this.x, this.y - 36, key).setOrigin(0.5, 1).setDepth(this.y + 1));
+    this.refresh();
   }
 
   topY(): number {
@@ -226,7 +227,7 @@ export class Actor {
       ay = (a.anchorY + 1) / a.frameHeight;
     }
     this.anchorY = ay;
-    this.sprite.setOrigin(ax, ay);
+    this.sprite.setOrigin(ax, ay).setScale(textureScale(tex));
   }
 
   /** Sync sprite with the feet and pick the right animation. */
@@ -237,11 +238,16 @@ export class Actor {
     this.sprite.setDepth(y + this.depthBias);
     this.shadow?.setPosition(x, y);
     this.emoteSprite?.setPosition(x, this.topY() - 6);
-    if (this.heldSprite) this.heldSprite.setPosition(x + (this.facing === 'left' ? -10 : this.facing === 'right' ? 10 : 0), y - 52).setDepth(y + 1);
+    if (this.heldSprite) {
+      // in the hand, at hand height; seen from behind, the body hides it
+      const dx = { left: -7, right: 7, down: -12, up: 12 }[this.facing];
+      this.heldSprite.setPosition(x + dx, y - 36).setDepth(this.facing === 'up' ? y - 1 : y + 1);
+    }
     const tex = this.textureFor(this.facing);
     if (this.sprite.texture.key !== tex) {
       this.sprite.setTexture(tex);
       this.applyAnchor();
+      if (this.shadow) fitShadow(this.shadow, tex);
       force = true;
     }
     this.sprite.setFlipX(this.facing === 'left');
@@ -257,7 +263,8 @@ export class Actor {
       this.sprite.play(anim, true);
       this.lastAnim = anim;
     }
-    if (this.charId) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / WALK_PACE, 0.55, 1.3) : 1;
+    // each character's walk matches its own usual speed (God walks slower, with shorter steps)
+    if (this.charId) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / (CHARACTERS[this.charId]?.speed || WALK_PACE), 0.55, 1.3) : 1;
   }
 
   destroy(): void {

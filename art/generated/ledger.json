@@ -2098,5 +2098,173 @@
    "total_tokens": 4730
   },
   "at": "20261023-193114"
+ },
+ {
+  "job": "v3-eve-portrait-leaves",
+  "file": "art/generated/v3-eve-portrait-leaves/20261024-060632-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0669,
+  "usage": {
+   "input_tokens": 3310,
+   "input_tokens_details": {
+    "image_tokens": 3072,
+    "text_tokens": 238
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 4682
+  },
+  "at": "20261024-060632"
+ },
+ {
+  "job": "v3-eve-portrait-tunic",
+  "file": "art/generated/v3-eve-portrait-tunic/20261024-060653-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0669,
+  "usage": {
+   "input_tokens": 3305,
+   "input_tokens_details": {
+    "image_tokens": 3072,
+    "text_tokens": 233
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 4677
+  },
+  "at": "20261024-060653"
+ },
+ {
+  "job": "v3-adam-portrait-fig",
+  "file": "art/generated/v3-adam-portrait-fig/20261024-060718-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0669,
+  "usage": {
+   "input_tokens": 3312,
+   "input_tokens_details": {
+    "image_tokens": 3072,
+    "text_tokens": 240
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 4684
+  },
+  "at": "20261024-060718"
+ },
+ {
+  "job": "v3-adam-portrait-tunic",
+  "file": "art/generated/v3-adam-portrait-tunic/20261024-060740-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0669,
+  "usage": {
+   "input_tokens": 3304,
+   "input_tokens_details": {
+    "image_tokens": 3072,
+    "text_tokens": 232
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 4676
+  },
+  "at": "20261024-060740"
+ },
+ {
+  "job": "v3-animal-sheep",
+  "file": "art/generated/v3-animal-sheep/20261024-060801-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0578,
+  "usage": {
+   "input_tokens": 2182,
+   "input_tokens_details": {
+    "image_tokens": 1926,
+    "text_tokens": 256
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 3554
+  },
+  "at": "20261024-060801"
+ },
+ {
+  "job": "v3-cherub",
+  "file": "art/generated/v3-cherub/20261024-060825-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0669,
+  "usage": {
+   "input_tokens": 3309,
+   "input_tokens_details": {
+    "image_tokens": 3054,
+    "text_tokens": 255
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 4681
+  },
+  "at": "20261024-060825"
+ },
+ {
+  "job": "v3-serpent-ground",
+  "file": "art/generated/v3-serpent-ground/20261024-060844-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0546,
+  "usage": {
+   "input_tokens": 1761,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 225
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 3133
+  },
+  "at": "20261024-060844"
+ },
+ {
+  "job": "v3-walk-animal-sheep",
+  "file": "art/generated/v3-walk-animal-sheep/20261024-060853-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0159,
+  "usage": {
+   "input_tokens": 1811,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 275
+   },
+   "output_tokens": 76,
+   "output_tokens_details": {
+    "image_tokens": 76,
+    "text_tokens": 0
+   },
+   "total_tokens": 1887
+  },
+  "at": "20261024-060853"
  }
 ]

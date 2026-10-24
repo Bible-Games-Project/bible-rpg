@@ -177,7 +177,10 @@ export function stageEden(w: WorldApi, n: number, o: StageOptions): void {
     w.serpent.setPosition(POINTS.serpentGround[0], POINTS.serpentGround[1]);
     w.serpent.face('left');
   }
-  w.cameraSnap();
+  // people only move while the screen is faded out (a resumed save): jump
+  // there; between missions the camera glides back to the player
+  if (o.place) w.cameraSnap();
+  else w.cameraFollow();
 }
 
 /** Things the player can look at in any mission. */
@@ -249,13 +252,12 @@ const m01: MissionDef = {
       prompt: () => t('prompt.fill'),
       onUse: () => {
         w.sfx('splash');
-        w.fx('splash', POINTS.riverFill);
+        w.fx('splash', w.waterNear(POINTS.riverFill));
         w.take('gourd');
         w.give('water');
       },
     });
     await w.say('m01_fill');
-    await w.scripture('gen2_10');
 
     await plotTask(w, 'water', 'water', 'watered', 'splash', 'watered', (i) => w.fx('splash', [PLOT_PATCHES[i][0], PLOT_PATCHES[i][1] + 6]));
     w.take('water');
@@ -298,7 +300,6 @@ const m02: MissionDef = {
 
     w.objective(step('m02', 'meet'), w.god);
     await useOnce(w, { id: 'god', at: () => godAt(w), radius: 90, prompt: talkPrompt });
-    await w.say('m02_follow');
 
     w.objective(step('m02', 'follow'), w.god);
     await Promise.all([w.walk(w.god, GOD_TO_MIDST, 95), w.waitZone('midst')]);
@@ -308,7 +309,6 @@ const m02: MissionDef = {
     w.face(w.god, w.player());
     w.face(w.player(), w.god);
     await w.say('m02_command');
-    await w.scripture('gen2_16');
     w.cutscene(false);
 
     const seen = new Set<string>();
@@ -424,7 +424,6 @@ const m03: MissionDef = {
     });
 
     await w.wait(600);
-    await w.say('m03_done');
     await w.scripture('gen2_20');
     for (const id of ids) w.animalStay(id, false);
   },
@@ -448,7 +447,6 @@ const m04: MissionDef = {
     w.face(w.adam, 'down');
     w.sleeping(true);
     await w.fade(0.85, 1400);
-    await w.scripture('gen2_21');
     w.sfx('holy');
     await w.scripture('gen2_22');
     // the LORD God brings the woman to the man
@@ -466,7 +464,6 @@ const m04: MissionDef = {
     w.adam.emote('heart');
     await w.wait(700);
     await w.say('m04_wake');
-    await w.scripture('gen2_24');
     w.fx('holy', [w.god.x, w.god.y]);
     w.sfx('holy');
     await w.wait(600);
@@ -560,7 +557,6 @@ const m06: MissionDef = {
   reference: 'Genesis 3:1–6',
   async run(w) {
     w.music('peaceful');
-    await w.say('m06_intro');
     w.objective(step('m06', 'go'), POINTS.eveSerpent);
     await w.waitZone('forbidden');
 
@@ -572,7 +568,6 @@ const m06: MissionDef = {
     w.face(w.adam, w.eve);
     await w.cameraTo([POINTS.serpentBranch[0], POINTS.serpentBranch[1] + 60], 900);
     w.eve.emote('question');
-    await w.scripture('gen3_1');
     await w.say('m06_serpent');
 
     // Genesis 3:6 — told, not played
@@ -595,7 +590,7 @@ const m06: MissionDef = {
     w.music('sorrow');
     await w.fade(1, 900);
     await w.wait(500);
-    w.cameraFollow();
+    w.cameraSnap();
     await w.fade(0, 900);
     w.cutscene(false);
   },
@@ -636,7 +631,6 @@ const m07: MissionDef = {
               w.sfx('rustle');
               w.give('figLeaf');
               w.toast(E('toasts.leaf', { n: w.count('figLeaf'), total: LEAF_GOAL }));
-              if (w.count('figLeaf') === 1) await w.say('m07_leaf');
               update();
               if (w.count('figLeaf') >= LEAF_GOAL) resolve();
             },
@@ -672,7 +666,6 @@ const m08: MissionDef = {
   async run(w) {
     w.setTime('evening');
     w.music('tension');
-    await w.say('m08_intro');
     await w.scripture('gen3_8');
     w.objective(step('m08', 'grove'), [ZONES.grove.x, ZONES.grove.y - 200]);
     await w.until(() => near(w.player(), [ZONES.grove.x, ZONES.grove.y], ZONES.grove.r - 120));
@@ -727,7 +720,6 @@ const m09: MissionDef = {
     w.thorns(true);
     w.sfx('grow');
     await w.wait(1200);
-    await w.scripture('gen3_20');
     await w.scripture('gen3_21');
     await w.fade(1, 800);
     w.setOutfit('tunic');
@@ -762,7 +754,6 @@ const m10: MissionDef = {
 
     w.openExit(true);
     w.follow(true);
-    await w.say('m10_leave');
     w.objective(step('m10', 'leave'), POINTS.exit);
     await w.until(() => w.player().x > BOUNDS.right + 40);
 
@@ -779,7 +770,6 @@ const m10: MissionDef = {
     await w.scripture('gen3_24');
     await w.wait(800);
     await w.fade(1, 1500);
-    await w.say('ending');
   },
 };
 

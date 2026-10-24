@@ -22,18 +22,19 @@ export class Animals {
       const sheet = `animal-${def.species}`;
       const a = MANIFEST.sprites[sheet];
       if (!a) continue;
-      const big = a.frameWidth > 80;
+      const width = a.frameWidth * (a.scale ?? 1); // world pixels
+      const big = width > 80;
       const actor = new Actor(scene, {
         id: def.id,
         x: def.home[0],
         y: def.home[1],
         sheet,
-        body: { w: Math.round(a.frameWidth * 0.5), h: big ? 12 : 8 },
+        body: { w: Math.round(width * 0.5), h: big ? 12 : 8 },
         solid: def.solid,
         shadow: big ? 'shadow-medium' : 'shadow-small',
         facing: Math.random() < 0.5 ? 'left' : 'right',
       });
-      if (actor.shadow && a.frameWidth > 120) actor.shadow.setScale(1.6, 1.2);
+      if (actor.shadow && !a.shadow && width > 120) actor.shadow.setScale(1.6, 1.2);
       this.brains.push({ def, actor, target: null, until: scene.time.now + Math.random() * 3000, flying: 0, frozen: false });
     }
   }

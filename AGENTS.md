@@ -122,15 +122,38 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   `from_generated.py` replaces what the generated art covers (characters,
   animals, trees, props, portraits, ground textures). Edit those scripts, not
   the PNGs.
+- Resolution: sprites are built at `ART` 1.44 art px per world px (Adam is
+  100 world px but 144 art px; `ART_RESOLUTION`), and the manifest records
+  `scale` (world px per art px) on every such sheet, tree and prop; the game
+  draws them with `sized()` / `textureScale()`. The canvas renders at the
+  screen's real resolution (`display.ts`, device pixel ratio capped at 2)
+  and the camera zoom puts each art pixel on a whole number of screen pixels
+  when it can (sharp, nearest filtering), else scales smoothly. The
+  maintainer saw sprites turn blurry and "mal hechos" when the camera first
+  zoomed out: drawn 1 art px per world px they were shrunk on screen.
 - `from_generated.py` resamples each generated subject onto a regular grid at
-  a fixed game size (Adam 100 px tall: 116 × `ART_CREATURE_SCALE` 0.86; trees
-  × `ART_TREE_SCALE` 1.1), splits trees into trunk/canopy at the lowest leafy
+  a fixed game size (Adam 100 world px tall: 116 × `ART_CREATURE_SCALE`
+  0.86; trees × `ART_TREE_SCALE` 1.1), times `ART`, splits trees into trunk/canopy at the lowest leafy
   row (the canopy keeps 2 trunk rows, so no seam shows when scaled down),
   paints out red/purple fruit and records those spots as pickable fruit
   slots, and makes blink/talk patches for portraits (the eyelid colour comes
   down over the eye's own pixels only; the mouth opens under the lip line).
   The serpent blinks and talks by flicking its tongue (`SERPENT_EYE`,
-  `SERPENT_TONGUE`: boxes measured on its current portrait).
+  `SERPENT_TONGUE`: boxes measured on its current portrait). Adam and Eve
+  have a portrait per outfit (`adam-fig`, `eve-tunic`, …; the dialogue picks
+  it from what they wear: the maintainer saw Eve's portrait in a leaf
+  sweater while she still wore a leaf top). Mouth openings use the lips'
+  own colour darkened (black looked pasted on, worst in God's beard).
+- Shadows: every sprite, tree and standing prop casts its own silhouette,
+  laid on the ground toward the lower right (sun at the upper left) and
+  blurred (`cast_shadow`, `SHADOW_X/Y`); actors switch shadow with their
+  direction. The maintainer found round shadows that ignore the object's
+  shape wrong.
+- The cherub faces east with the flaming sword in hand (`flame` marks the
+  blade for a flickering glow); the floating sword is gone. The crawling
+  serpent is a top-down S with a wave running along it (`slither`). The
+  objective marker is violet, the complement of the meadow's yellow-green
+  (the gold one was hard to see).
 - Walks are all built from one clean standing frame per direction, so the
   drawing never changes between frames (8 frames at 12 fps). The maintainer
   asked for clearly visible steps and soft arm swings. Front/back: legs split
@@ -159,6 +182,9 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   world seen from farther away). Below zoom 1 every texture switches to
   linear filtering (nearest-neighbour at 0.7 drops pixels unevenly); the
   tile sheet is extruded at runtime so tiles do not bleed into each other.
+- God's light (`GodLight.ts`): a soft column of light from the upper left,
+  a halo, a pool of light on the ground and rising motes. The maintainer
+  found the rotating sunburst "cutre".
 - Light (`src/game/world/Atmosphere.ts`), so everything feels like one
   world (the maintainer felt objects did not belong together): cloud
   shadows drifting over everything, warm sunbeams from the upper left (the
@@ -169,8 +195,11 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   the neighbouring frame.
 - Trees: when one hides the active character its leaves turn see-through
   with a soft gradient from the lowest leaves up (a canvas copy of the
-  canopy per tree kind); the trunk stays opaque. The maintainer disliked
-  both a hard cut and a fully faded tree.
+  canopy per tree kind, under the canopy); the canopy fades out over it in
+  `CANOPY_FADE_MS`, so nothing is ever more transparent than its end state
+  (the maintainer saw a bad first moment when both faded at once). The
+  trunk stays opaque. The maintainer disliked both a hard cut and a fully
+  faded tree.
 - New art comes from the OpenAI Image API (maintainer's decision), with a
   hard total budget of 5 USD: `tools/art/gen_images.py` (jobs and prompts in
   `art/prompts/eden.json`, every call logged in `art/generated/ledger.json`,
@@ -189,12 +218,21 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   domain KJV text). Character lines are plain-language paraphrases and always
   carry their reference. Invented activities are introduced with "Gameplay:"
   and the HUD labels them "Gameplay activity · inspired by …".
+- Keep text short (the maintainer: "hay demasiado texto"): one line per
+  explanation, no narrator line that repeats the objective, no scripture
+  card that repeats what a character just said. Cards still quote the KJV
+  word for word; paraphrased lines carry their reference.
 - God appears as a luminous human figure and is never an enemy; the hiding
   challenge (mission 8, 20 seconds: the maintainer found a minute too long)
   only sends the player back, and the canonical conversation always happens.
+  During it God walks his round but goes toward anyone he sees or hears
+  moving in the open and looks around where he last noticed them.
 
 ### Code conventions
 
+- Camera: `cameraFollow()` glides to the player (Phaser's `startFollow`
+  jumps, which showed as a jolt at the end of missions); `cameraSnap()`
+  jumps and is only for moments when the screen is faded out.
 - Missions (`src/game/missions/`) are scripts written only against
   `WorldApi`; `stageEden()` must rebuild the world for any mission so a save
   can resume there. Progress is committed at the end of each mission only.

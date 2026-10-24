@@ -27,7 +27,7 @@
     "inProgress": "Mission {n} of {total}",
     "lockedHint": "Complete “{prev}” to unlock this story.",
     "comingSoonHint": "This story is being prepared and will arrive in a future update.",
-    "ntLocked": "The New Testament path will open after the Old Testament journey. Its stories are shown here so you can see the way ahead.",
+    "ntLocked": "Opens after the Old Testament journey.",
     "confirmNewTitle": "Start again?",
     "confirmNew": "Starting a new game will erase your progress in “{chapter}”. This cannot be undone.",
     "confirmNewYes": "Erase and start again",
@@ -162,7 +162,7 @@
   "complete": {
     "title": "Chapter Complete",
     "chapter": "The Garden of Eden",
-    "body": "Adam and Eve left the garden. Cherubim and a flaming sword now guard the way to the tree of life. But this is not the end of the story.",
+    "body": "Adam and Eve left the garden. Cherubim guard the way to the tree of life. The story continues.",
     "next": "Next on the path: Cain and Abel — coming soon.",
     "toMap": "Return to the story path",
     "toMenu": "Main menu"

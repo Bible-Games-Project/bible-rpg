@@ -14,6 +14,7 @@ import { confirmDialog, openOverlay, wireButtonSounds, type OverlayHandle } from
 import { funScreen, mainMenuScreen, moreGamesScreen, storyMapScreen } from './screens';
 import { openSettings } from './SettingsPanel';
 import { TouchControls } from './TouchControls';
+import { pixelRatio } from '../game/display';
 
 /**
  * The application shell: DOM screens (menu, story path, Fun, More Games),
@@ -52,13 +53,21 @@ export class App {
       backgroundColor: '#151820',
       pixelArt: true,
       roundPixels: true,
-      scale: { mode: Phaser.Scale.RESIZE, width: window.innerWidth, height: window.innerHeight },
+      // drawn at the screen's real resolution and shown at CSS size (see display.ts)
+      scale: { mode: Phaser.Scale.NONE, width: Math.round(window.innerWidth * pixelRatio()), height: Math.round(window.innerHeight * pixelRatio()), zoom: 1 / pixelRatio() },
       physics: { default: 'arcade', arcade: { debug: false } },
       input: { keyboard: false },
       audio: { noAudio: true },
       scene: [BootScene, EdenScene],
     });
     this.assetsReady = new Promise((resolve) => this.game.events.once('assets-ready', () => resolve()));
+    const fit = () => {
+      const r = pixelRatio();
+      this.game.scale.setZoom(1 / r);
+      this.game.scale.resize(Math.round(window.innerWidth * r), Math.round(window.innerHeight * r));
+    };
+    window.addEventListener('resize', fit);
+    window.addEventListener('orientationchange', () => window.setTimeout(fit, 150));
   }
 
   start(): void {

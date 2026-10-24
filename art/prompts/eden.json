@@ -862,6 +862,92 @@
         "@v3-eve-views"
       ],
       "prompt": "Dialogue portrait of Eve (the young woman of the second reference: same face, long wavy brown hair, warm tan skin, wearing her sweater of small green leaves), head and shoulders, facing the viewer, calm and gentle expression, mouth closed, eyes open. Drawn in EXACTLY the art style of the first reference portrait (Adam): the same pixel size, the same realistic adult facial proportions, the same eye size and shape, the same painterly shading and warm light, the same framing and head size. Not a cartoon: no oversized, anime or animated-film eyes; natural small nose and lips; a real young woman."
+    },
+    {
+      "id": "v3-eve-portrait-leaves",
+      "title": "Eve portrait, start outfit (leaf top)",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v3-eve-portrait",
+        "@v2-eve-fig-views"
+      ],
+      "prompt": "The same dialogue portrait of Eve as the first image. Keep EXACTLY the same face, hair, expression, head size, framing, pixel size, colours and soft shading as the first image; change only the clothes visible at the shoulders and chest. She now wears only a simple strapless top made of a few green leaves, as in the second image: bare shoulders and arms, no sweater."
+    },
+    {
+      "id": "v3-eve-portrait-tunic",
+      "title": "Eve portrait, coat of skins",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v3-eve-portrait",
+        "@v2-eve-tunic-views"
+      ],
+      "prompt": "The same dialogue portrait of Eve as the first image. Keep EXACTLY the same face, hair, expression, head size, framing, pixel size, colours and soft shading as the first image; change only the clothes visible at the shoulders and chest. She now wears the simple tunic of soft tan and brown animal skin of the second image, with short ragged sleeves."
+    },
+    {
+      "id": "v3-adam-portrait-fig",
+      "title": "Adam portrait, leaf sweater",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/prompts/refs/v3-adam-portrait.png",
+        "@v3-adam-views"
+      ],
+      "prompt": "The same dialogue portrait of Adam as the first image. Keep EXACTLY the same face, hair, expression, head size, framing, pixel size, colours and soft shading as the first image; change only the clothes visible at the shoulders and chest. He now wears the long-sleeved sweater made of small fresh green leaves woven together of the second image, covering his chest and shoulders up to the neck."
+    },
+    {
+      "id": "v3-adam-portrait-tunic",
+      "title": "Adam portrait, coat of skins",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/prompts/refs/v3-adam-portrait.png",
+        "@v2-adam-tunic-views"
+      ],
+      "prompt": "The same dialogue portrait of Adam as the first image. Keep EXACTLY the same face, hair, expression, head size, framing, pixel size, colours and soft shading as the first image; change only the clothes visible at the shoulders and chest. He now wears the simple tunic of soft tan and brown animal skin of the second image, worn over one shoulder."
+    },
+    {
+      "id": "v3-animal-sheep",
+      "title": "Sheep in the style of the deer",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/prompts/refs/v2-animal-deer.png",
+        "art/prompts/refs/v2-adam-side.png"
+      ],
+      "prompt": "One sheep as a game sprite, seen from the side and facing right, standing calmly, in exactly the style of the deer in the first reference: the same pixel size, the same soft painterly shading with light from the upper left and the same natural, realistic proportions. Thick creamy-white wool with gentle shading, a pale face and dark eyes, thin dark legs and small hooves. Natural and dignified, not cute or cartoonish. About two thirds as tall as the deer."
+    },
+    {
+      "id": "v3-cherub",
+      "title": "Cherub facing right with a flaming sword in hand",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-cherub",
+        "art/prompts/refs/v2-adam-side.png"
+      ],
+      "prompt": "The same cherub as in the first image (noble young face, golden curly hair, white and golden garments, two large feathered wings), now seen from the side facing right, standing guard, holding a sword upright in its front hand: the blade wrapped in bright orange and yellow flames, the hilt in the hand. Calm and majestic, never frightening. Full body, the same pixel size and soft shading as the references. Only this one figure; no floating sword."
+    },
+    {
+      "id": "v3-serpent-ground",
+      "title": "Serpent crawling, seen from above",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v2-serpent"
+      ],
+      "prompt": "The same green and golden serpent as in the reference, now crawling on the ground seen from above at a slight angle (top-down game view), its long body in a smooth gentle S-curve, head at the right end slightly raised, tail at the left. One serpent only, the same pixel size, colours and soft shading."
+    },
+    {
+      "id": "v3-walk-animal-sheep",
+      "title": "sheep walk cycle",
+      "size": "2304x768",
+      "references": [
+        "@v3-animal-sheep"
+      ],
+      "prompt": "Walk-cycle animation strip of this exact sheep (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline.",
+      "style": "style2"
     }
   ],
   "style2": "STYLE RULES: Soft, modern pixel art exactly in the style of the reference images: small soft pixel blocks, gentle painterly shading with light from the upper left, bright warm natural colours (fresh yellow-greens, warm skin, soft browns), smooth flat areas with little texture noise, and NO dark outlines: shapes are separated only by colour and light. The references show the style and scale only: draw new subjects, do not copy or edit the references. BACKGROUND: one flat solid magenta colour (#FF00FF) everywhere around the subjects, with no shadow, ground, grass, scenery, glow or texture on it. Leave clear magenta space between separate subjects. No text, letters, numbers, labels, borders or frames."

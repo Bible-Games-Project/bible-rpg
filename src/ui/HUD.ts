@@ -51,7 +51,11 @@ export class HUD {
     const ns = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(ns, 'svg');
     svg.setAttribute('viewBox', '0 0 34 34');
-    svg.innerHTML = '<polygon points="31,17 9,5 13,17 9,29" fill="#d9ae59" stroke="#0c0e13" stroke-width="2"/><polygon points="27,17 12,9 15,17" fill="#f0cd84"/>';
+    // violet, the complement of the meadow's yellow-green, like the marker in the world
+    svg.innerHTML =
+      '<defs><linearGradient id="arrow-fill" x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stop-color="#d0a6fa"/><stop offset="1" stop-color="#7f42c4"/></linearGradient></defs>' +
+      '<path d="M31 17 L11.5 5.2 Q8.6 3.6 9.6 6.8 L13.2 17 L9.6 27.2 Q8.6 30.4 11.5 28.8 Z" fill="url(#arrow-fill)" stroke="#f4e6ff" stroke-width="1.6" stroke-linejoin="round"/>' +
+      '<path d="M26 16 L13 8.6 L15.4 16 Z" fill="#ead7ff" opacity="0.7"/>';
     this.arrow = h('div', { class: 'objective-arrow', hidden: true });
     this.arrow.append(svg);
     this.timerText = h('div', {});
@@ -105,7 +109,8 @@ export class HUD {
     this.inventory.replaceChildren(
       ...items.map((it) => {
         const a = MANIFEST.sprites[it.icon];
-        const icon = a ? h('img', { class: 'pixel', src: assetUrl(a.file), alt: '', width: a.frameWidth * 2, height: a.frameHeight * 2 }) : null;
+        const k = 2 * (a?.scale ?? 1);
+        const icon = a ? h('img', { class: 'pixel', src: assetUrl(a.file), alt: '', width: Math.round(a.frameWidth * k), height: Math.round(a.frameHeight * k) }) : null;
         return h('div', { class: 'inv-chip panel' }, icon, h('span', {}, it.label), it.count !== undefined ? h('span', { class: 'count' }, `×${it.count}`) : null);
       }),
     );
