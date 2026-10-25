@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { BOUNDS, EXIT_GAP, FORDS, PLACEMENTS, RIVER, WORLD_H, WORLD_W, ZONES, type Placement } from '../../data/eden/map';
+import { BOUNDS, EXIT_GAP, FORDS, PLACEMENTS, WORLD_H, WORLD_W, ZONES, type Placement } from '../../data/eden/map';
 import { OBJECTS, type ObjectKind } from '../../data/eden/objects';
 import { MANIFEST, sized } from '../manifest';
 import { DEPTH_GROUND } from './Actor';
@@ -20,6 +20,9 @@ export interface TreeInstance {
   fade: number;
   bounds: Phaser.Geom.Rectangle;
   fruit: FruitInstance[];
+  shadow?: Phaser.GameObjects.Image;
+  /** wind: how far the leaves lean (radians), how fast, and when */
+  sway: { amp: number; speed: number; phase: number };
 }
 
 export interface FruitInstance {
@@ -29,6 +32,9 @@ export interface FruitInstance {
   picked: boolean;
   /** opacity of the see-through canopy at this fruit's height */
   veil: number;
+  /** where it hangs, from the tree's base (for the wind) */
+  dx: number;
+  dy: number;
 }
 
 export interface PropInstance {
@@ -106,34 +112,44 @@ export class WorldObjects {
     if (!t) return undefined;
     // the manifest measures trees in art pixels; s turns them into world pixels
     const s = t.scale ?? 1;
-    const ox = t.anchorX / t.width;
+    // a flipped tree is drawn mirrored within its frame: its trunk is then
+    // width - anchorX from the left (the shadow was cast from the wrong spot)
+    const flip = !!p.flip;
+    const ax = flip ? t.width - t.anchorX : t.anchorX;
+    const mirror = (x: number) => (flip ? t.anchorX - x : x - t.anchorX) * s;
+    const ox = ax / t.width;
     const oy = (t.anchorY + 1) / t.height;
-    const part = (key: string, depth: number) => this.scene.add.image(p.x, p.y, key).setOrigin(ox, oy).setDepth(depth).setFlipX(!!p.flip).setScale(s);
+    const part = (key: string, depth: number) => this.scene.add.image(p.x, p.y, key).setOrigin(ox, oy).setDepth(depth).setFlipX(flip).setScale(s);
     const trunk = part(`tree:${k.tree}:trunk`, p.y);
     const canopy = part(`tree:${k.tree}:canopy`, p.y + 0.1);
     const veilTex = canopyVeil(this.scene, k.tree!);
     // the see-through copy sits just under the canopy; the canopy fades out over it
     const veil = part(veilTex.key, p.y + 0.09).setVisible(false);
-    if (!addShadow(this.scene, p.x, p.y, `tree:${k.tree}:trunk`)) {
+    let shadow = addShadow(this.scene, p.x, p.y, `tree:${k.tree}:trunk`, flip);
+    if (!shadow) {
       const shadowW = Math.min(t.width * s * 0.62, 190);
-      const sh = this.scene.add.image(p.x, p.y - 2, 'shadow-large').setDepth(DEPTH_GROUND + 10).setAlpha(0.75);
-      sh.setScale(shadowW / 90, Math.max(0.6, shadowW / 180));
+      shadow = this.scene.add.image(p.x, p.y - 2, 'shadow-large').setDepth(DEPTH_GROUND + 10).setAlpha(0.75);
+      shadow.setScale(shadowW / 90, Math.max(0.6, shadowW / 180));
     }
     const [cx, cy, cw, ch] = t.collider;
-    const colX = p.x + (cx + cw / 2 - t.anchorX) * s;
+    const colX = p.x + mirror(cx + cw / 2);
     const colY = p.y + (cy + ch / 2 - t.anchorY) * s;
     const rect = this.scene.add.rectangle(colX, colY, cw * s, ch * s).setVisible(false);
     this.colliders.add(rect);
-    const bounds = new Phaser.Geom.Rectangle(p.x - t.anchorX * s, p.y - t.anchorY * s, t.width * s, t.anchorY * s - 14);
-    const inst: TreeInstance = { id: p.id, kind: k.tree!, x: p.x, y: p.y, trunk, canopy, veil, fade: 0, bounds, fruit: [] };
+    const bounds = new Phaser.Geom.Rectangle(p.x - ax * s, p.y - t.anchorY * s, t.width * s, t.anchorY * s - 14);
+    // bushes lean more than trees; each sways at its own pace
+    const bush = k.tree!.startsWith('bush');
+    const r = rng(Math.round(p.x * 7 + p.y * 13));
+    const sway = { amp: (bush ? 0.02 : 0.009) * (0.7 + 0.6 * r()), speed: (Math.PI * 2) / (3.2 + 2.6 * r()), phase: r() * Math.PI * 2 };
+    const inst: TreeInstance = { id: p.id, kind: k.tree!, x: p.x, y: p.y, trunk, canopy, veil, fade: 0, bounds, fruit: [], shadow, sway };
     const type = FRUIT_OF[t.kind];
     if (type && t.fruit.length) {
       const slots = t.kind === 'forbidden' || t.kind === 'life' ? t.fruit : t.fruit.slice(0, Math.min(4, t.fruit.length));
       for (const [fx, fy] of slots) {
-        const sx = p.x + ((p.flip ? t.width - fx : fx) - t.anchorX) * s;
+        const sx = p.x + mirror(fx);
         const sy = p.y + (fy - t.anchorY) * s;
         const f = sized(this.scene.add.image(sx, sy, type).setOrigin(0.5, 0.15).setDepth(p.y + 0.2));
-        inst.fruit.push({ sprite: f, tree: inst, type, picked: false, veil: veilTex.at(fy) });
+        inst.fruit.push({ sprite: f, tree: inst, type, picked: false, veil: veilTex.at(fy), dx: sx - p.x, dy: sy - p.y });
       }
     }
     this.trees.push(inst);
@@ -149,7 +165,7 @@ export class WorldObjects {
     else if (k.layer === 'water') img.setDepth(DEPTH_GROUND - 500);
     else img.setDepth(p.y);
     const ground = k.layer === 'ground' || k.layer === 'water';
-    const shadow = (ground ? undefined : addShadow(this.scene, p.x, p.y, k.sprite!)) ?? (k.shadow ? this.scene.add.image(p.x, p.y - 1, k.shadow).setDepth(DEPTH_GROUND + 10).setAlpha(0.7) : undefined);
+    const shadow = (ground ? undefined : addShadow(this.scene, p.x, p.y, k.sprite!, !!p.flip)) ?? (k.shadow ? this.scene.add.image(p.x, p.y - 1, k.shadow).setDepth(DEPTH_GROUND + 10).setAlpha(0.7) : undefined);
     if (k.collider) {
       const rect = this.scene.add.rectangle(p.x, p.y - (k.collider.dy ?? k.collider.h / 2), k.collider.w, k.collider.h).setVisible(false);
       this.colliders.add(rect);
@@ -269,13 +285,21 @@ export class WorldObjects {
     flat(['flowers-white', 'flowers-yellow', 'flowers-pink', 'flowers-blue'], 120, ZONES.meadow);
     flat(['flowers-white', 'flowers-yellow', 'flowers-red', 'flowers-pink'], 50, ZONES.midst);
     flat(['mushrooms', 'rock-small'], 70);
-    // reeds along the banks, lily pads on the water
-    for (let i = 0; i < 1400; i++) {
+    // reeds along the banks, lily pads on the water (more of both since the
+    // maintainer found the river plain)
+    for (let i = 0; i < 2400; i++) {
       const x = 1200 + r() * 1700;
       const y = r() * WORLD_H;
       const d = this.terrain.riverDistance(x, y);
-      if (d > -4 && d < 14 && r() < 0.35) this.place({ kind: 'reeds', x, y: y + 6, flip: r() < 0.5 });
-      else if (d < -40 && r() < 0.05 && distToPolyline(x, y, RIVER.points) < RIVER.width) this.place({ kind: 'lily-pad', x, y });
+      if (d > -4 && d < 14 && r() < 0.45) this.place({ kind: 'reeds', x, y: y + 6, flip: r() < 0.5 });
+      else if (d < -26 && r() < 0.3 && !FORDS.some((f) => Math.hypot(x - (f.from[0] + f.to[0]) / 2, y - (f.from[1] + f.to[1]) / 2) < 140)) {
+        // lily pads grow in little groups
+        for (let j = 0, n = 1 + Math.floor(r() * 3); j < n; j++) {
+          const lx = x + (r() - 0.5) * 30;
+          const ly = y + (r() - 0.5) * 18;
+          if (this.terrain.riverDistance(lx, ly) < -16) this.place({ kind: 'lily-pad', x: lx, y: ly, flip: r() < 0.5 });
+        }
+      }
     }
   }
 
@@ -318,6 +342,30 @@ export class WorldObjects {
       t.canopy.setAlpha(1 - k);
       t.veil.setVisible(t.fade > 0);
       for (const f of t.fruit) if (!f.picked) f.sprite.setAlpha(1 - k + k * f.veil);
+    }
+  }
+
+  /**
+   * A light breeze: the leaves of the trees and bushes in view lean a
+   * little from the base and back, each at its own pace, with gusts
+   * rolling across the garden, and their shadows lean along. The trunk
+   * stays still. Very subtle, as the maintainer asked.
+   */
+  updateWind(time: number, view: Phaser.Geom.Rectangle): void {
+    const t = time / 1000;
+    for (const tr of this.trees) {
+      if (!Phaser.Geom.Rectangle.Overlaps(view, tr.bounds)) continue;
+      const gust = 0.55 + 0.45 * Math.sin(t * 0.33 - tr.x * 0.0021 - tr.y * 0.0013);
+      const a = tr.sway.amp * gust * (Math.sin(t * tr.sway.speed + tr.sway.phase) * 0.8 + Math.sin(t * tr.sway.speed * 2.3 + tr.sway.phase * 1.7) * 0.2);
+      tr.canopy.setRotation(a);
+      tr.veil.setRotation(a);
+      // the shadow lies flat toward the lower right: it leans less
+      if (tr.shadow) tr.shadow.setRotation(a * 0.45);
+      const cos = Math.cos(a);
+      const sin = Math.sin(a);
+      for (const f of tr.fruit) {
+        if (!f.picked) f.sprite.setPosition(tr.x + f.dx * cos - f.dy * sin, tr.y + f.dx * sin + f.dy * cos);
+      }
     }
   }
 

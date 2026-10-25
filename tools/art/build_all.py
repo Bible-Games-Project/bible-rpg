@@ -1,7 +1,7 @@
 """Build every game sprite and the asset manifest.
 
     python3 tools/art/build_all.py            # everything
-    python3 tools/art/build_all.py chars      # one group (chars, portraits, creatures, flora, terrain, items, from_generated)
+    python3 tools/art/build_all.py chars      # one group (chars, portraits, creatures, flora, terrain, items, from_generated, ui_markers)
 
 Sources: the supplied references in art/reference (never modified), the
 generators in this folder and, last, the generated art in art/generated
@@ -100,7 +100,7 @@ def build_portraits(m: dict) -> None:
     print('  portraits:', ', '.join(m['portraits']))
 
 
-GROUPS = ['references', 'portraits', 'chars', 'creatures', 'flora', 'terrain', 'items', 'from_generated']
+GROUPS = ['references', 'portraits', 'chars', 'creatures', 'flora', 'terrain', 'items', 'from_generated', 'ui_markers']
 
 
 def main() -> None:
@@ -119,6 +119,8 @@ def main() -> None:
             build_portraits(m)
         elif g == 'chars':
             build_chars(m)
+        elif g == 'ui_markers':
+            __import__(g).main()
         else:
             mod = __import__(g)
             mod.build(m, save, strip, sheet_entry)

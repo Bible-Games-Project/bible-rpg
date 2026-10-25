@@ -19,7 +19,8 @@ export class Terrain {
   private waterLayer!: Phaser.Tilemaps.TilemapLayer;
   private waterTiles: { x: number; y: number; idx: number }[] = [];
   private frame = 0;
-  readonly colliders: Phaser.Physics.Arcade.StaticGroup;
+  /** Invisible layer of the cells that block walking (see buildWaterColliders). */
+  colliders!: Phaser.Tilemaps.TilemapLayer;
 
   constructor(private scene: Phaser.Scene) {
     const n = (this.cols + 1) * (this.rows + 1);
@@ -28,7 +29,6 @@ export class Terrain {
     this.dry = new Uint8Array(n);
     this.ford = new Uint8Array(this.cols * this.rows);
     this.computeCorners();
-    this.colliders = scene.physics.add.staticGroup();
     this.build();
   }
 
@@ -141,22 +141,29 @@ export class Terrain {
     return this.isBlockedTile(Math.floor(x / TILE), Math.floor(y / TILE));
   }
 
+  /**
+   * Water blocks walking along its drawn edge: a hidden tilemap layer of
+   * half-size cells, solid where the cell's centre is in the river (the
+   * stepping-stone fords excepted). Blocking only mostly-water tiles (the
+   * old way) left the half-water tiles of the banks walkable, and pressing
+   * diagonally against the bank slid the player along inside the river.
+   * Tile collision also has no seams between rows to catch on.
+   */
   private buildWaterColliders(): void {
-    for (let ty = 0; ty < this.rows; ty++) {
-      let start = -1;
-      for (let tx = 0; tx <= this.cols; tx++) {
-        const b = tx < this.cols && this.isBlockedTile(tx, ty);
-        if (b && start < 0) start = tx;
-        if (!b && start >= 0) {
-          const x = start * TILE;
-          const w = (tx - start) * TILE;
-          const rect = this.scene.add.rectangle(x + w / 2, ty * TILE + TILE / 2 + 4, w - 8, TILE - 8);
-          rect.setVisible(false);
-          this.colliders.add(rect);
-          start = -1;
-        }
+    const cell = TILE / 2;
+    const cols = this.cols * 2;
+    const rows = this.rows * 2;
+    const map = this.scene.make.tilemap({ tileWidth: cell, tileHeight: cell, width: cols, height: rows });
+    const tileset = map.addTilesetImage('solid', 'tiles', cell, cell)!;
+    const solid = map.createBlankLayer('solid', tileset)!;
+    for (let cy = 0; cy < rows; cy++) {
+      for (let cx = 0; cx < cols; cx++) {
+        if (this.ford[(cy >> 1) * this.cols + (cx >> 1)]) continue;
+        if (this.riverDistance(cx * cell + cell / 2, cy * cell + cell / 2) < 0) solid.putTileAt(0, cx, cy);
       }
     }
+    solid.setCollisionByExclusion([-1]).setVisible(false);
+    this.colliders = solid;
   }
 }
 

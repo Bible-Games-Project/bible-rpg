@@ -16,6 +16,9 @@ export class GodLight {
   private pool: Phaser.GameObjects.Image;
   private motes: { img: Phaser.GameObjects.Image; dx: number; phase: number; speed: number }[] = [];
   private on = false;
+  /** 1 while the column of light shines; it fades once he walks. */
+  private beam = 1;
+  private lastTime = 0;
 
   constructor(scene: Phaser.Scene, private still: boolean) {
     makeTextures(scene);
@@ -30,6 +33,7 @@ export class GodLight {
   }
 
   set(on: boolean): void {
+    if (on && !this.on) this.beam = 1;
     this.on = on;
     for (const o of this.parts()) o.setVisible(on);
     for (const m of this.motes) m.img.setVisible(on && !this.still);
@@ -39,15 +43,20 @@ export class GodLight {
     return [this.pool, this.halo, this.beamWide, this.beamCore];
   }
 
-  /** Follow the figure standing at (x, y) (his feet), `height` tall. */
-  update(time: number, x: number, y: number, height: number): void {
+  /** Follow the figure standing at (x, y) (his feet), `height` tall. The
+   * column of light is there when he appears and fades for good once he
+   * walks (the maintainer's call); the glow and the motes stay. */
+  update(time: number, x: number, y: number, height: number, moving: boolean): void {
+    const dt = Math.min(0.1, (time - this.lastTime) / 1000);
+    this.lastTime = time;
     if (!this.on) return;
+    if (moving) this.beam = Math.max(0, this.beam - dt / 0.8);
     const t = this.still ? 0 : time / 1000;
     const breathe = 0.85 + 0.15 * Math.sin(t * 1.3);
     this.pool.setPosition(x + 6, y + 2).setDepth(DEPTH_GROUND + 30).setScale(1.1, 1).setAlpha(0.55 * breathe);
     this.halo.setPosition(x, y - height * 0.55).setDepth(y - 1).setScale(height / 140).setAlpha(0.7 * breathe);
-    this.beamWide.setPosition(x + 4, y + 4).setDepth(y + 1).setScale(1.3, 1.25).setAlpha(0.22 + 0.06 * Math.sin(t * 0.9));
-    this.beamCore.setPosition(x + 2, y + 2).setDepth(y + 1).setScale(0.55, 1.15).setAlpha(0.2 + 0.08 * Math.sin(t * 1.7 + 1));
+    this.beamWide.setPosition(x + 4, y + 4).setDepth(y + 1).setScale(1.3, 1.25).setAlpha((0.22 + 0.06 * Math.sin(t * 0.9)) * this.beam);
+    this.beamCore.setPosition(x + 2, y + 2).setDepth(y + 1).setScale(0.55, 1.15).setAlpha((0.2 + 0.08 * Math.sin(t * 1.7 + 1)) * this.beam);
     for (const m of this.motes) {
       if (this.still) break;
       const k = (m.phase + t * m.speed) % 1;

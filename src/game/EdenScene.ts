@@ -13,12 +13,15 @@ import { ART_RESOLUTION, pixelRatio } from './display';
 import { MANIFEST, sized, textureScale } from './manifest';
 import { Actor, DEPTH_GROUND, DEPTH_OVERLAY, type Facing } from './world/Actor';
 import { Animals } from './world/Animals';
+import { Ambience } from './world/Ambience';
 import { Atmosphere } from './world/Atmosphere';
 import { addShadow } from './world/shadows';
 import { GodLight } from './world/GodLight';
+import { crackTexture } from './world/GroundCrack';
+import { ObjectiveMarkers } from './world/ObjectiveMarkers';
 import { Terrain } from './world/Terrain';
 import { WorldObjects, type TreeInstance } from './world/WorldObjects';
-import type { InteractSpec, ObjectiveTarget, TimeOfDay, WorldApi } from './WorldApi';
+import type { InteractSpec, ObjectiveOptions, ObjectiveTarget, TimeOfDay, WorldApi } from './WorldApi';
 import { MissionRunner } from './missions/MissionRunner';
 import type { FlagValue } from '../core/save';
 
@@ -71,9 +74,11 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private interactions: InteractSpec[] = [];
   private currentInteract: InteractSpec | null = null;
   private objectiveTarget: ObjectiveTarget = null;
-  private marker!: Phaser.GameObjects.Sprite;
+  private objectiveAll = false;
+  private markers!: ObjectiveMarkers;
   private tint!: Phaser.GameObjects.Rectangle;
   private atmosphere!: Atmosphere;
+  private ambience: Ambience | null = null;
   private tintTween: Phaser.Tweens.Tween | null = null;
   private holy!: GodLight;
   private godLit = false;
@@ -87,6 +92,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private runner!: MissionRunner;
   private stepTimer = 0;
   private followStuck = 0;
+  /** How far beside the leader the other one walks (closer while hiding). */
+  private followGap = 46;
 
   constructor() {
     super('eden');
@@ -106,8 +113,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.god.setVisible(false);
     this.serpent.setVisible(false);
     this.holy = new GodLight(this, settings.get().reduceMotion);
-    this.marker = sized(this.add.sprite(0, 0, 'marker').setOrigin(0.5, 1).setDepth(DEPTH_OVERLAY - 20).setVisible(false));
-    this.marker.play('marker:loop');
+    this.markers = new ObjectiveMarkers(this);
     for (const [x, y] of PLOT_PATCHES) {
       const soil = sized(this.add.image(x, y, 'soil-marked').setDepth(DEPTH_GROUND + 5));
       const plant = sized(this.add.image(x, y + 8, 'plant-sprout').setOrigin(0.5, 1).setDepth(y + 8).setVisible(false));
@@ -129,6 +135,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.tint = this.add.rectangle(0, 0, 10, 10, TINTS.day.color, TINTS.day.alpha).setOrigin(0).setScrollFactor(0).setDepth(DEPTH_OVERLAY - 100);
     this.tint.setBlendMode(Phaser.BlendModes.MULTIPLY);
     this.atmosphere = new Atmosphere(this, settings.get().reduceMotion);
+    if (!settings.get().reduceMotion) this.ambience = new Ambience(this, this.terrain);
     // camera
     const cam = this.cameras.main;
     cam.setBounds(0, 0, WORLD_W, WORLD_H);
@@ -201,7 +208,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
    * pixel; smooth scaling for the rest, the ground and the light effects. */
   private applyFilters(zoom: number): void {
     for (const key of this.textures.getTextureKeys()) {
-      const perPixel = zoom * textureScale(key);
+      // "px-" textures are small pixel shapes drawn in art pixels at runtime
+      const perPixel = zoom * (key.startsWith('px-') ? 1 / ART_RESOLUTION : textureScale(key));
       const smooth = key.startsWith('fx-') || key === 'tiles-extruded';
       const crisp = !smooth && perPixel >= 0.98 && Math.abs(perPixel - Math.round(perPixel)) < 0.02;
       this.textures.get(key).setFilter(crisp ? Phaser.Textures.FilterMode.NEAREST : Phaser.Textures.FilterMode.LINEAR);
@@ -299,9 +307,10 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
 
   // --------------------------------------------------------- objective, HUD
 
-  objective(text: string, target: ObjectiveTarget = null): void {
+  objective(text: string, target: ObjectiveTarget = null, o: ObjectiveOptions = {}): void {
     ui().hud.setObjective(text);
     this.objectiveTarget = target;
+    this.objectiveAll = !!o.markAll;
   }
 
   toast(text: string, big = false): void {
@@ -465,6 +474,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       },
     });
     this.atmosphere.setTime(time);
+    this.ambience?.setSun({ day: 1, afternoon: 0.8, dusk: 0.35, evening: 0 }[time]);
     this.tint.fillColor = tt.color;
     audio.setAmbience(time === 'evening' ? 'evening' : time === 'dusk' ? 'outside' : 'garden');
     for (const f of this.fireflies) f.destroy();
@@ -660,8 +670,15 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       s.setVisible(false);
       return;
     }
+    const appearing = !s.visible;
     s.sheet = pose === 'tree' ? 'serpent-tree' : 'serpent-ground';
     s.setVisible(true);
+    if (appearing) {
+      // fade in rather than pop up
+      this.tweens.killTweensOf(s.sprite);
+      s.sprite.setAlpha(0);
+      this.tweens.add({ targets: s.sprite, alpha: 1, duration: 1400 });
+    }
     s.depthBias = 0;
     if (pose === 'tree') {
       s.setPosition(POINTS.serpentBranch[0], POINTS.serpentBranch[1]);
@@ -699,25 +716,74 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   }
 
   /** The cherubim at the east of the garden (Genesis 3:24), facing east with
-   * the flaming sword in hand; the blade flickers. */
-  cherubim(on: boolean): void {
+   * the flaming sword in hand; the blade flickers. With `drop` they come down
+   * from the sky one after the other, fast and straight, each landing with
+   * thunder, a shake of the screen and a crack left in the ground. */
+  cherubim(on: boolean, drop = false): Promise<void> {
     for (const o of this.cherubSprites) o.destroy();
     this.cherubSprites = [];
-    if (!on) return;
+    if (!on) return Promise.resolve();
     const a = MANIFEST.sprites.cherub;
     const k = a.scale ?? 1;
-    for (const p of [POINTS.cherubN, POINTS.cherubS]) {
+    const still = settings.get().reduceMotion;
+    const crackKey = crackTexture(this);
+    const landings = [POINTS.cherubN, POINTS.cherubS].map((p, i) => {
+      const crack = this.add.image(p[0] - 4, p[1] + 2, crackKey).setDepth(DEPTH_GROUND + 12).setFlipX(i === 1);
       const c = sized(this.add.sprite(p[0], p[1], 'cherub').setOrigin(a.anchorX / a.frameWidth, (a.anchorY + 1) / a.frameHeight).setDepth(p[1]));
       c.play('cherub:loop');
       const shadow = addShadow(this, p[0], p[1], 'cherub');
       const [fx, fy] = a.flame ?? [a.anchorX, a.frameHeight / 3];
-      const fire = this.add.image(p[0] + (fx - a.anchorX) * k, p[1] + (fy - a.anchorY - 1) * k, 'god-glow');
+      const fireDy = (fy - a.anchorY - 1) * k;
+      const fire = this.add.image(p[0] + (fx - a.anchorX) * k, p[1] + fireDy, 'god-glow');
       fire.setBlendMode(Phaser.BlendModes.ADD).setTint(0xff9a50).setScale(0.35, 0.5).setDepth(p[1] + 1).setAlpha(0.55);
-      if (!settings.get().reduceMotion) {
-        this.tweens.add({ targets: fire, alpha: 0.85, scaleX: 0.42, duration: 180, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: Math.random() * 200 });
-      }
-      this.cherubSprites.push(c, fire as unknown as Phaser.GameObjects.Sprite);
+      const flicker = () => {
+        if (!still) this.tweens.add({ targets: fire, alpha: 0.85, scaleX: 0.42, duration: 180, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: Math.random() * 200 });
+      };
+      this.cherubSprites.push(crack as unknown as Phaser.GameObjects.Sprite, c, fire as unknown as Phaser.GameObjects.Sprite);
       if (shadow) this.cherubSprites.push(shadow as unknown as Phaser.GameObjects.Sprite);
+      if (!drop) {
+        flicker();
+        return Promise.resolve();
+      }
+      const fall = 900;
+      const shadowScale = shadow?.scaleX ?? 1;
+      crack.setAlpha(0);
+      c.y -= fall;
+      fire.y = c.y + fireDy;
+      shadow?.setAlpha(0);
+      return new Promise<void>((resolve) => {
+        this.tweens.add({
+          targets: c,
+          y: p[1],
+          duration: still ? 1 : 460,
+          delay: i * 650,
+          ease: 'Quad.easeIn',
+          onUpdate: () => {
+            fire.y = c.y + fireDy;
+            // the shadow gathers under the falling cherub
+            const near = 1 - (p[1] - c.y) / fall;
+            shadow?.setAlpha(near).setScale(shadowScale * (0.4 + 0.6 * near));
+          },
+          onComplete: () => {
+            audio.play('thunder');
+            if (!still) this.cameras.main.shake(320, 0.009);
+            this.tweens.add({ targets: crack, alpha: 1, duration: 140 });
+            this.dust(p[0], p[1]);
+            flicker();
+            resolve();
+          },
+        });
+      });
+    });
+    return Promise.all(landings).then(() => undefined);
+  }
+
+  /** A puff of dust thrown up around (x, y). */
+  private dust(x: number, y: number): void {
+    for (let i = 0; i < 9; i++) {
+      const ang = (i / 9) * Math.PI * 2;
+      const m = this.add.image(x, y - 4, 'fx-mist').setDepth(y + 2).setTint(0xd8c49a).setAlpha(0.7).setScale(0.35);
+      this.tweens.add({ targets: m, x: x + Math.cos(ang) * 70, y: y - 6 + Math.sin(ang) * 26, scale: 0.8, alpha: 0, duration: 900, ease: 'Cubic.easeOut', onComplete: () => m.destroy() });
     }
   }
 
@@ -755,6 +821,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
         return best;
       };
       god.scripted = false;
+      this.followGap = 24;
       let grace = 1.5;
       let exposedFor = 0;
       const tick = this.time.addEvent({
@@ -769,15 +836,22 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
           remaining -= 0.1;
           grace -= 0.1;
           sight.setPosition(god.x, god.y);
-          const p = this.player();
-          const d = Phaser.Math.Distance.Between(p.x, p.y, god.x, god.y);
-          const covered = this.objects.isCovered(p.x, p.y);
-          const blocked = this.objects.sightBlocked(god.x, god.y - 20, p.x, p.y - 10);
-          const exposed = d < 190 && !covered && !blocked;
-          const heard = d < 330 && p.moving && !covered;
-          if ((exposed || heard) && grace <= 0) {
+          // both of them must stay hidden, not only the one being played
+          let exposed = false;
+          let noticed: Actor | null = null;
+          for (const p of [this.player(), this.other()]) {
+            if (!p.visible) continue;
+            const d = Phaser.Math.Distance.Between(p.x, p.y, god.x, god.y);
+            const covered = this.objects.isCovered(p.x, p.y);
+            const blocked = this.objects.sightBlocked(god.x, god.y - 20, p.x, p.y - 10);
+            const seen = d < 190 && !covered && !blocked;
+            const heard = d < 330 && p.moving && !covered;
+            if (seen) exposed = true;
+            if ((seen || heard) && !noticed) noticed = p;
+          }
+          if (noticed && grace <= 0) {
             mode = 'search';
-            target = [p.x, p.y];
+            target = [noticed.x, noticed.y];
           }
           // walking: his round, or toward where he last noticed someone
           if (mode === 'look') {
@@ -835,6 +909,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       });
       const finish = () => {
         done = true;
+        this.followGap = 46;
         tick.remove();
         sight.destroy();
         hud.setTimer(null);
@@ -879,7 +954,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.animals.update(time, dt);
     const cam = this.cameras.main;
     this.atmosphere.update(delta, cam);
+    this.ambience?.update(time, delta, cam.worldView);
     this.objects.updateCanopies(p.x, p.y, cam.worldView, delta);
+    if (!settings.get().reduceMotion) this.objects.updateWind(time, cam.worldView);
     this.updateGod(time);
     this.updateInteractPrompt();
     this.updateObjectiveIndicator(time);
@@ -904,7 +981,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     }
     // walk to a spot beside the leader (never on top of them)
     const side = f.x < leader.x ? -1 : 1;
-    const tx = leader.x + side * 46;
+    const tx = leader.x + side * this.followGap;
     const ty = leader.y + 6;
     const dx = tx - f.x;
     const dy = ty - f.y;
@@ -930,7 +1007,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private updateGod(time: number): void {
     const g = this.god;
     if (!this.godLit || !g.visible) return;
-    this.holy.update(time, g.x, g.y, g.sprite.displayHeight);
+    this.holy.update(time, g.x, g.y, g.sprite.displayHeight, g.moving);
   }
 
   private updateInteractPrompt(): void {
@@ -964,10 +1041,11 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     }
   }
 
-  private objectivePoints(): Pt[] {
+  /** Where the objective is (`at`) and where its arrow points (`mark`). */
+  private objectivePoints(): { at: Pt; mark: Pt }[] {
     const tg = this.objectiveTarget;
     if (!tg) return [];
-    const toPt = (v: Pt | Actor): Pt => (Array.isArray(v) ? v : [v.x, v.y - 60]);
+    const toPt = (v: Pt | Actor) => (Array.isArray(v) ? { at: v, mark: v } : { at: [v.x, v.y] as Pt, mark: [v.x, v.topY() - 4] as Pt });
     if (typeof tg === 'function') return tg().map(toPt);
     return [toPt(tg as Pt | Actor)];
   }
@@ -977,40 +1055,33 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     const hud = ui().hud;
     if (!pts.length || !this.canAct()) {
       hud.setArrow(null);
-      this.marker.setVisible(false);
+      this.markers.hide();
       return;
     }
     const p = this.player();
+    const dist = (q: Pt) => Phaser.Math.Distance.Between(p.x, p.y, q[0], q[1]);
     let best = pts[0];
-    let bd = Infinity;
-    for (const q of pts) {
-      const d = Phaser.Math.Distance.Between(p.x, p.y, q[0], q[1]);
-      if (d < bd) {
-        bd = d;
-        best = q;
-      }
-    }
+    for (const q of pts) if (dist(q.at) < dist(best.at)) best = q;
     const cam = this.cameras.main;
     const view = cam.worldView;
     const dpr = pixelRatio();
     const margin = (30 * dpr) / cam.zoom;
-    const onScreen = best[0] > view.x + margin && best[0] < view.right - margin && best[1] > view.y + margin && best[1] < view.bottom - margin;
-    if (onScreen) {
+    const inView = (q: Pt) => q[0] > view.x + margin && q[0] < view.right - margin && q[1] > view.y + margin && q[1] < view.bottom - margin;
+    // an arrow over each target in view, except the one being reached
+    const marked = (this.objectiveAll ? pts : [best]).filter((q) => inView(q.mark) && dist(q.at) >= 90);
+    this.markers.show(marked.map((q) => q.mark), time, cam.zoom, dpr, settings.get().reduceMotion);
+    if (inView(best.mark)) {
       hud.setArrow(null);
-      const near = bd < 90;
-      this.marker.setVisible(!near);
-      this.marker.setPosition(best[0], best[1] - 18 - Math.sin(time / 250) * 2);
       return;
     }
-    this.marker.setVisible(false);
     // arrow at the screen edge, pointing from the screen centre to the target
     // in CSS pixels, like the HUD
     const sw = this.scale.width / dpr;
     const sh = this.scale.height / dpr;
     const cx = sw / 2;
     const cy = sh / 2;
-    const tx = ((best[0] - view.x) * cam.zoom) / dpr;
-    const ty = ((best[1] - view.y) * cam.zoom) / dpr;
+    const tx = ((best.mark[0] - view.x) * cam.zoom) / dpr;
+    const ty = ((best.mark[1] - view.y) * cam.zoom) / dpr;
     const ang = Math.atan2(ty - cy, tx - cx);
     const padX = 38;
     const padTop = 120;

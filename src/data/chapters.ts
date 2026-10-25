@@ -2,7 +2,9 @@
  * The story path. Every Bible story is a chapter; only chapters with
  * `playable: true` have content. Add the next stories here (in narrative
  * order) without touching the menu code. `pos` is the node position on the
- * story map, in map units (the map is MAP_WIDTH x MAP_HEIGHT and scrolls).
+ * story map: in pixels of the testament's painting (MAP_ART) when it has
+ * one, so each node sits on the painted road next to its scene; otherwise
+ * in map units of a MAP_HEIGHT tall drawn route.
  */
 
 export type Testament = 'ot' | 'nt';
@@ -18,19 +20,23 @@ export interface ChapterDef {
 
 export const MAP_HEIGHT = 520;
 
+/** Paintings used as the story map background, with their size in pixels. */
+export const MAP_ART: Partial<Record<Testament, { file: string; width: number; height: number }>> = {
+  ot: { file: 'assets/ui/story-map.webp', width: 2000, height: 711 },
+};
+
 export const CHAPTERS: ChapterDef[] = [
-  { id: 'eden', testament: 'ot', reference: 'Genesis 2–3', playable: true, pos: { x: 120, y: 330 } },
-  { id: 'cain-abel', testament: 'ot', reference: 'Genesis 4', playable: false, pos: { x: 300, y: 220 } },
-  { id: 'noah', testament: 'ot', reference: 'Genesis 6–9', playable: false, pos: { x: 470, y: 320 } },
-  { id: 'babel', testament: 'ot', reference: 'Genesis 11', playable: false, pos: { x: 640, y: 190 } },
-  { id: 'abram-call', testament: 'ot', reference: 'Genesis 12', playable: false, pos: { x: 810, y: 300 } },
-  { id: 'isaac', testament: 'ot', reference: 'Genesis 22', playable: false, pos: { x: 980, y: 210 } },
-  { id: 'jacob-ladder', testament: 'ot', reference: 'Genesis 28', playable: false, pos: { x: 1150, y: 330 } },
-  { id: 'joseph', testament: 'ot', reference: 'Genesis 37–45', playable: false, pos: { x: 1320, y: 230 } },
-  { id: 'moses-basket', testament: 'ot', reference: 'Exodus 2', playable: false, pos: { x: 1490, y: 340 } },
-  { id: 'burning-bush', testament: 'ot', reference: 'Exodus 3', playable: false, pos: { x: 1660, y: 220 } },
-  { id: 'red-sea', testament: 'ot', reference: 'Exodus 14', playable: false, pos: { x: 1830, y: 320 } },
-  { id: 'commandments', testament: 'ot', reference: 'Exodus 19–20', playable: false, pos: { x: 2000, y: 200 } },
+  // The painting shows the tower of Babel before the flood; the nodes sit
+  // next to their scenes but unlock in the order of Genesis.
+  { id: 'eden', testament: 'ot', reference: 'Genesis 2–3', playable: true, pos: { x: 130, y: 397 } },
+  { id: 'cain-abel', testament: 'ot', reference: 'Genesis 4', playable: false, pos: { x: 370, y: 468 } },
+  { id: 'noah', testament: 'ot', reference: 'Genesis 6–9', playable: false, pos: { x: 920, y: 425 } },
+  { id: 'babel', testament: 'ot', reference: 'Genesis 11', playable: false, pos: { x: 690, y: 385 } },
+  { id: 'abraham', testament: 'ot', reference: 'Genesis 12–17', playable: false, pos: { x: 1220, y: 440 } },
+  { id: 'lot', testament: 'ot', reference: 'Genesis 18–19', playable: false, pos: { x: 1420, y: 478 } },
+  { id: 'isaac', testament: 'ot', reference: 'Genesis 22', playable: false, pos: { x: 1560, y: 512 } },
+  { id: 'jacob', testament: 'ot', reference: 'Genesis 27–33', playable: false, pos: { x: 1720, y: 495 } },
+  { id: 'joseph', testament: 'ot', reference: 'Genesis 37–45', playable: false, pos: { x: 1890, y: 418 } },
   { id: 'nativity', testament: 'nt', reference: 'Luke 2', playable: false, pos: { x: 120, y: 320 } },
   { id: 'baptism', testament: 'nt', reference: 'Matthew 3', playable: false, pos: { x: 300, y: 210 } },
   { id: 'disciples', testament: 'nt', reference: 'Mark 1', playable: false, pos: { x: 480, y: 320 } },

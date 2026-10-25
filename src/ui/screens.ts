@@ -1,6 +1,6 @@
 import { t } from '../core/i18n';
 import { save } from '../core/save';
-import { CHAPTERS, MAP_HEIGHT, chaptersOf, newTestamentOpen, previousChapter, type ChapterDef, type Testament } from '../data/chapters';
+import { CHAPTERS, MAP_ART, MAP_HEIGHT, chaptersOf, newTestamentOpen, previousChapter, type ChapterDef, type Testament } from '../data/chapters';
 import { MORE_GAMES } from '../data/moreGames';
 import { EDEN_MISSION_IDS } from '../data/eden/missionOrder';
 import { h, arrowNav } from './dom';
@@ -69,8 +69,21 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
   let selected: string = initial === 'ot' ? 'eden' : chaptersOf('nt')[0].id;
   const mapInner = h('div', { class: 'story-map-inner' });
   const map = h('div', { class: 'story-map', tabindex: '-1' }, mapInner);
-  // shrink the route to fit short screens (e.g. a phone held sideways)
+  // A painted map fills the frame's height (or width, on very wide screens)
+  // and scrolls sideways; its nodes are placed in percent, so they stay on
+  // the painted road at any size. A drawn route shrinks to fit short
+  // screens (e.g. a phone held sideways).
   const fit = () => {
+    const art = MAP_ART[testament];
+    if (art) {
+      const k = Math.max(map.clientHeight / art.height, map.clientWidth / art.width);
+      mapInner.style.removeProperty('zoom');
+      mapInner.style.width = `${Math.floor(art.width * k)}px`;
+      mapInner.style.height = `${Math.floor(art.height * k)}px`;
+      // nodes never cover too much of a short map (a phone held sideways)
+      mapInner.style.setProperty('--node-max', `${Math.max(28, Math.round(art.height * k * 0.1))}px`);
+      return;
+    }
     const avail = map.clientHeight - 4;
     if (avail > 0) mapInner.style.setProperty('zoom', String(Math.max(0.45, Math.min(1, avail / MAP_HEIGHT))));
   };
@@ -93,13 +106,54 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
     ntTab.setAttribute('aria-selected', String(testament === 'nt'));
     mapInner.replaceChildren();
     const list = chaptersOf(testament);
+    const art = MAP_ART[testament];
+    map.classList.toggle('painted', !!art);
+    if (art) renderPainted(list, art);
+    else renderRoute(list);
+    renderDetail();
+  }
+
+  function renderPainted(list: ChapterDef[], art: { file: string; width: number; height: number }) {
+    mapInner.style.background = '';
+    mapInner.append(h('img', { class: 'map-art', src: `${BASE}${art.file}`, alt: '', draggable: 'false' }));
+    list.forEach((c, i) => {
+      const st = chapterStatus(c);
+      const look = st === 'completed' ? 'done' : st === 'locked' || st === 'soon' ? 'locked' : 'open';
+      // keep the name inside the map at either end
+      const edge = c.pos.x < art.width * 0.12 ? 'at-start' : c.pos.x > art.width * 0.88 ? 'at-end' : '';
+      const node = h(
+        'button',
+        {
+          class: `story-node painted ${look} ${edge}`,
+          style: `left:${(c.pos.x / art.width) * 100}%;top:${(c.pos.y / art.height) * 100}%`,
+          'aria-pressed': String(selected === c.id),
+          'aria-label': `${i + 1}. ${t(`stories.${c.id}.title`)} — ${statusLabel(c, st)}`,
+        },
+        h('img', { class: 'marker', src: `${BASE}assets/ui/map-node-${look}.png`, alt: '', draggable: 'false' }),
+        h('span', { class: 'label' }, t(`stories.${c.id}.title`)),
+      );
+      node.addEventListener('click', () => select(c.id, node));
+      mapInner.append(node);
+    });
+    fit();
+    // bring the chosen story into view
+    const at = list.find((c) => c.id === selected);
+    if (at) requestAnimationFrame(() => (map.scrollLeft = (at.pos.x / art.width) * mapInner.clientWidth - map.clientWidth / 2));
+  }
+
+  function select(id: string, node: Element) {
+    selected = id;
+    renderDetail();
+    for (const n of mapInner.querySelectorAll('.story-node')) n.setAttribute('aria-pressed', String(n === node));
+  }
+
+  function renderRoute(list: ChapterDef[]) {
     const width = Math.max(...list.map((c) => c.pos.x)) + 160;
     mapInner.style.width = `${width}px`;
     mapInner.style.height = `${MAP_HEIGHT}px`;
     // terrain bands so the route reads as a journey across the land
-    mapInner.style.background = testament === 'ot'
-      ? 'linear-gradient(90deg, #2b4a2c 0px, #34502c 260px, #6b5a36 520px, #806a43 900px, #5d5a4b 1300px, #6a5236 1700px, #4d4636 2200px)'
-      : 'linear-gradient(90deg, #44583a 0px, #5a6640 400px, #3d5a63 800px, #50663f 1200px, #5e5b42 1600px)';
+    mapInner.style.background = 'linear-gradient(90deg, #44583a 0px, #5a6640 400px, #3d5a63 800px, #50663f 1200px, #5e5b42 1600px)';
+    fit();
     const ns = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(ns, 'svg');
     svg.setAttribute('class', 'route');
@@ -139,14 +193,9 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
         h('span', { class: 'medallion' }, st === 'locked' || st === 'soon' ? '🔒︎' : String(i + 1)),
         h('span', { class: 'label' }, t(`stories.${c.id}.title`)),
       );
-      node.addEventListener('click', () => {
-        selected = c.id;
-        renderDetail();
-        for (const n of mapInner.querySelectorAll('.story-node')) n.setAttribute('aria-pressed', String(n === node));
-      });
+      node.addEventListener('click', () => select(c.id, node));
       mapInner.append(node);
     });
-    renderDetail();
   }
 
   function statusLabel(c: ChapterDef, st: ReturnType<typeof chapterStatus>): string {

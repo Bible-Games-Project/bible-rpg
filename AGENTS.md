@@ -143,17 +143,33 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   have a portrait per outfit (`adam-fig`, `eve-tunic`, …; the dialogue picks
   it from what they wear: the maintainer saw Eve's portrait in a leaf
   sweater while she still wore a leaf top). Mouth openings use the lips'
-  own colour darkened (black looked pasted on, worst in God's beard).
+  own colour darkened (black looked pasted on, worst in God's beard), and
+  God's sits a little higher (`MOUTH_UP`).
 - Shadows: every sprite, tree and standing prop casts its own silhouette,
   laid on the ground toward the lower right (sun at the upper left) and
-  blurred (`cast_shadow`, `SHADOW_X/Y`); actors switch shadow with their
-  direction. The maintainer found round shadows that ignore the object's
-  shape wrong.
+  blurred (`cast_shadow`, `SHADOW_X/Y`). The maintainer found round shadows
+  that ignore the object's shape wrong, and wanted shadows that move: each
+  shadow file is a strip with one cell per frame of the sprite and then one
+  per frame drawn flipped (`shadow_entry`), since a sprite facing left still
+  has the sun at the upper left; actors show the cell of their current
+  frame. A flipped tree is drawn mirrored within its frame, so its origin is
+  `width - anchorX` (the shadow of flipped trees was off). Something off the
+  ground (a dove flying) has its shadow slide toward the lower right and
+  shrink with height. Trees and bushes sway a little in the breeze from the
+  base, each at its own pace, shadows leaning along (`updateWind`).
 - The cherub faces east with the flaming sword in hand (`flame` marks the
-  blade for a flickering glow); the floating sword is gone. The crawling
-  serpent is a top-down S with a wave running along it (`slither`). The
-  objective marker is violet, the complement of the meadow's yellow-green
-  (the gold one was hard to see).
+  blade for a flickering glow); the floating sword is gone. In mission 10
+  the cherubim drop fast from the sky, each landing with thunder, a screen
+  shake and a crack that stays (`GroundCrack.ts`). The crawling serpent is
+  a top-down S with a gentle wave running along it (`slither`; the
+  maintainer wanted it slower and subtler). The serpent is already in the
+  tree (fading in) when mission 6 starts.
+- Objective arrows: one style near and far, the HUD's violet arrow (the
+  complement of the meadow's yellow-green). In view it hovers over the
+  target pointing down (`ObjectiveMarkers.ts`); off screen it sits at the
+  screen edge. `objective(…, { markAll: true })` puts one over every target
+  (the animals still to name, both fig trees). The maintainer liked the far
+  arrow and not the old bevelled near marker.
 - Walks are all built from one clean standing frame per direction, so the
   drawing never changes between frames (8 frames at 12 fps). The maintainer
   asked for clearly visible steps and soft arm swings. Front/back: legs split
@@ -172,7 +188,12 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   speed (`WALK_PACE` 170 px/s in `Actor.ts`, `speed` in
   `src/data/characters.ts`); any other speed scales the animation with it,
   so feet and ground keep pace (the maintainer saw them not matching).
-  Animals use generated 7-frame strips (stand + 6).
+  Up/down walks of Adam and Eve play at `WALK_FPS_FRONT` 19 (at 15 the
+  feet seemed to slide). Animals use generated 7-frame strips (stand + 6),
+  except the sheep, horse and camel: a calm walk made from the standing
+  frame (`GENTLE`, `gentle_walk`) at 6 fps and slow speeds; the generated
+  strips looked like a run or too jerky. Animal cells are as wide as the
+  farther side from the body's centre (heads and tails were cut).
 - Ground (`ART_GRASS=scene`, the default): grass colours are sampled from the
   meadow of `style-scene.webp` (nudged `ART_GRASS_HUE` 8° greener and
   `ART_GRASS_SAT` ×0.88 so a whole map is not mustard) and drawn smooth: base
@@ -200,6 +221,22 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   (the maintainer saw a bad first moment when both faded at once). The
   trunk stays opaque. The maintainer disliked both a hard cut and a fully
   faded tree.
+- Ambient life (`Ambience.ts`, off with reduced motion), all very subtle:
+  leaves, petals and bits of grass on the breeze with tiny shadows, gnats
+  by the banks, a white cloud passing now and then with its shadow far off
+  toward the lower right (sun, cloud, shadow in line), fish shadows and
+  glints in the river, which also has a darker deep middle and more reeds
+  and lily pads (the maintainer found it plain). Small pixel shapes drawn at
+  runtime use "px-" keys and art-pixel scale so they stay crisp.
+- Story map (Old Testament): the maintainer's painting
+  `art/reference/v2/story-map.webp` (copied to `public/assets/ui/`) with no
+  drawn route; each story's node sits on the painted road next to its
+  scene (`pos` in painting pixels, placed in percent). The painting shows
+  Babel before the flood: Noah's node sits by the ark, Babel's by the tower,
+  and they still unlock in Genesis order. Nodes are pixel discs in the
+  painting's palette (`tools/art/ui_markers.py`).
+- The naming puzzle uses the meadow's green in light and dark steps (the
+  maintainer found its old green foreign to the game).
 - New art comes from the OpenAI Image API (maintainer's decision), with a
   hard total budget of 5 USD: `tools/art/gen_images.py` (jobs and prompts in
   `art/prompts/eden.json`, every call logged in `art/generated/ledger.json`,
@@ -218,15 +255,26 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   domain KJV text). Character lines are plain-language paraphrases and always
   carry their reference. Invented activities are introduced with "Gameplay:"
   and the HUD labels them "Gameplay activity · inspired by …".
-- Keep text short (the maintainer: "hay demasiado texto"): one line per
-  explanation, no narrator line that repeats the objective, no scripture
-  card that repeats what a character just said. Cards still quote the KJV
-  word for word; paraphrased lines carry their reference.
+- Keep text short (the maintainer: "hay demasiado texto", and later: players
+  do not read much): one line per explanation, no narrator line that
+  repeats the objective or what the picture shows, no scripture card that
+  repeats what a character just said, and only the key cards (six in
+  Eden). Cards still quote the KJV word for word; paraphrased lines carry
+  their reference.
+- Gameplay that gives switching a purpose (the maintainer: switching is
+  pointless without different tasks): Adam carries the basket in his arms
+  and Eve picks the fruit; each takes leaves from their own fig tree; the
+  other one's task shows a short "switch" hint. In mission 3 the animals
+  stay where they graze (they no longer come to Adam), each still unnamed
+  one has an arrow, and naming five ends the mission.
 - God appears as a luminous human figure and is never an enemy; the hiding
   challenge (mission 8, 20 seconds: the maintainer found a minute too long)
   only sends the player back, and the canonical conversation always happens.
   During it God walks his round but goes toward anyone he sees or hears
-  moving in the open and looks around where he last noticed them.
+  moving in the open and looks around where he last noticed them. Either of
+  them being seen counts, not only the one being played (the follower keeps
+  closer while hiding). His column of light fades once he walks; the glow
+  and the motes stay.
 
 ### Code conventions
 
@@ -241,3 +289,7 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   of `{ s, t, ref }` read with `tRaw()`. Add a language only when complete.
 - Depth = feet Y. Trees are split into trunk (collider) and canopy (fades when
   the player walks behind it).
+- Water blocks walking through a hidden tilemap layer of half-tile cells,
+  solid where the cell's centre is in the river (fords excepted). Row boxes
+  over mostly-water tiles left the banks' half-water tiles walkable, and
+  walking diagonally slid the player along inside the river.

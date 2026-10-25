@@ -26,7 +26,10 @@ export type Sfx =
   | 'rustle'
   | 'grow'
   | 'flame'
-  | 'detected';
+  | 'detected'
+  | 'bite'
+  | 'leaves'
+  | 'thunder';
 
 export type Mood = 'none' | 'peaceful' | 'wonder' | 'solemn' | 'tension' | 'sorrow';
 export type Ambience = 'none' | 'garden' | 'evening' | 'outside';
@@ -200,6 +203,23 @@ class AudioManager {
         break;
       case 'detected':
         this.tone(330, t, 0.4, 0.05 * v, 'sine', undefined, 247);
+        break;
+      case 'bite':
+        // a crisp bite into a fruit, then a little crunching
+        this.noiseBurst(t, 0.09, 0.22 * v, 'bandpass', 2600, 0.9);
+        this.noiseBurst(t + 0.01, 0.05, 0.12 * v, 'highpass', 5000, 0.6);
+        [0.22, 0.38, 0.52, 0.68].forEach((d, i) => this.noiseBurst(t + d, 0.06, (0.09 - i * 0.015) * v, 'bandpass', 1500 + i * 200, 1.1));
+        break;
+      case 'leaves':
+        // handfuls of leaves being gathered and tied
+        for (let i = 0; i < 7; i++) this.noiseBurst(t + i * 0.16 + Math.random() * 0.05, 0.22, (0.05 + Math.random() * 0.03) * v, 'bandpass', 2600 + Math.random() * 1600, 0.6);
+        break;
+      case 'thunder':
+        // a sharp crack, then a long low rumble
+        this.noiseBurst(t, 0.18, 0.3 * v, 'highpass', 1200, 0.5);
+        this.noiseBurst(t, 2.4, 0.5 * v, 'lowpass', 160, 0.9);
+        this.noiseBurst(t + 0.25, 1.8, 0.3 * v, 'lowpass', 90, 1.2);
+        this.tone(48, t, 1.6, 0.18 * v, 'sine', undefined, 34);
         break;
     }
   }

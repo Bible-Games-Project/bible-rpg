@@ -32,8 +32,8 @@
       "title": "Naming the Animals",
       "desc": "God brought the animals to Adam to see what he would call them.",
       "steps": {
-        "go": "Go to the meadow where the animals are gathered",
-        "name": "Give each animal its name ({n}/{total})"
+        "go": "Go to the LORD God in the meadow",
+        "name": "Name the animals ({n}/{total})"
       }
     },
     "m04": {
@@ -48,8 +48,8 @@
       "title": "Gifts of the Garden",
       "desc": "Every tree pleasant to the sight and good for food.",
       "steps": {
-        "basket": "Pick up the basket near the orchard",
-        "gather": "Gather fruit in the orchard ({n}/{total})",
+        "basket": "Adam: take the basket near the orchard",
+        "gather": "Eve: pick fruit in the orchard ({n}/{total})",
         "share": "Bring the fruit to the clearing in the orchard"
       }
     },
@@ -64,7 +64,7 @@
       "title": "Coverings of Fig Leaves",
       "desc": "Their eyes were opened, and they knew that they were naked.",
       "steps": {
-        "leaves": "Gather fig leaves from the fig trees ({n}/{total})",
+        "leaves": "Each takes leaves from a fig tree ({n}/{total})",
         "sew": "Sew the leaves together at the flat stone"
       }
     },
@@ -93,21 +93,9 @@
     }
   },
   "scripture": {
-    "gen2_8": {
-      "ref": "Genesis 2:8",
-      "text": "And the LORD God planted a garden eastward in Eden; and there he put the man whom he had formed."
-    },
-    "gen2_9": {
-      "ref": "Genesis 2:9",
-      "text": "And out of the ground made the LORD God to grow every tree that is pleasant to the sight, and good for food; the tree of life also in the midst of the garden, and the tree of knowledge of good and evil."
-    },
     "gen2_15": {
       "ref": "Genesis 2:15",
       "text": "And the LORD God took the man, and put him into the garden of Eden to dress it and to keep it."
-    },
-    "gen2_19": {
-      "ref": "Genesis 2:19",
-      "text": "And out of the ground the LORD God formed every beast of the field, and every fowl of the air; and brought them unto Adam to see what he would call them: and whatsoever Adam called every living creature, that was the name thereof."
     },
     "gen2_20": {
       "ref": "Genesis 2:20",
@@ -121,21 +109,9 @@
       "ref": "Genesis 3:6",
       "text": "And when the woman saw that the tree was good for food, and that it was pleasant to the eyes, and a tree to be desired to make one wise, she took of the fruit thereof, and did eat, and gave also unto her husband with her; and he did eat."
     },
-    "gen3_7": {
-      "ref": "Genesis 3:7",
-      "text": "And the eyes of them both were opened, and they knew that they were naked; and they sewed fig leaves together, and made themselves aprons."
-    },
-    "gen3_8": {
-      "ref": "Genesis 3:8",
-      "text": "And they heard the voice of the LORD God walking in the garden in the cool of the day: and Adam and his wife hid themselves from the presence of the LORD God amongst the trees of the garden."
-    },
     "gen3_21": {
       "ref": "Genesis 3:21",
       "text": "Unto Adam also and to his wife did the LORD God make coats of skins, and clothed them."
-    },
-    "gen3_23": {
-      "ref": "Genesis 3:23",
-      "text": "Therefore the LORD God sent him forth from the garden of Eden, to till the ground from whence he was taken."
     },
     "gen3_24": {
       "ref": "Genesis 3:24",
@@ -144,56 +120,33 @@
   },
   "dialogue": {
     "m01_intro": [{ "s": "narrator", "t": "Gameplay: move with {move}; {interact} to pick up, use or talk." }],
-    "m01_stick": [{ "s": "adam", "t": "A good digging stick." }],
-    "m01_till": [{ "s": "adam", "t": "Soft, dark earth." }],
-    "m01_seeds": [{ "s": "adam", "t": "Seeds for the plot." }],
-    "m01_gourd": [{ "s": "adam", "t": "A gourd to carry water." }],
-    "m01_fill": [{ "s": "adam", "t": "Cool, clear water." }],
-    "m01_grow": [{ "s": "narrator", "t": "Gameplay: the seeds sprout and the plot turns green." }],
-    "m02_appear": [{ "s": "narrator", "t": "A gentle light shines by the plot." }],
-    "m02_command": [
-      { "s": "god", "t": "You may freely eat from every tree of the garden.", "ref": "Genesis 2:16" },
-      { "s": "god", "t": "But do not eat from the tree of the knowledge of good and evil. The day you eat from it, you will surely die.", "ref": "Genesis 2:17" }
-    ],
+    "m02_command": [{ "s": "god", "t": "Eat freely from every tree — but not from the tree of the knowledge of good and evil. The day you eat of it, you will surely die.", "ref": "Genesis 2:16–17" }],
     "m02_life": [{ "s": "narrator", "t": "The tree of life." }],
     "m02_forbidden": [{ "s": "narrator", "t": "The tree of the knowledge of good and evil." }],
     "m03_intro": [{ "s": "god", "t": "It is not good for the man to be alone. I will make a helper suitable for him.", "ref": "Genesis 2:18" }],
     "m03_named": [{ "s": "narrator", "t": "Adam called it “{name}”." }],
-    "m04_rest": [{ "s": "narrator", "t": "The oak’s shade is cool and quiet." }],
     "m04_wake": [{ "s": "adam", "t": "This at last is bone of my bones and flesh of my flesh. She shall be called Woman, because she was taken out of Man.", "ref": "Genesis 2:23" }],
     "m04_switch": [{ "s": "narrator", "t": "Gameplay: press {switch} to play as Adam or Eve." }],
-    "m05_intro": [{ "s": "eve", "t": "So many good trees — all but one. Let us gather fruit." }],
-    "m05_basket": [{ "s": "eve", "t": "A basket for the fruit." }],
-    "m05_full": [{ "s": "eve", "t": "The basket is full." }],
-    "m05_share": [
-      { "s": "adam", "t": "Every tree is a gift." },
-      { "s": "eve", "t": "All but the one in the midst of the garden." }
-    ],
+    "m05_intro": [{ "s": "eve", "t": "Let us gather fruit — from every tree but one." }],
+    "m05_share": [{ "s": "adam", "t": "Every tree is a gift — all but the one in the midst." }],
     "m05_forbidden_touch": [{ "s": "eve", "t": "Not this one." }],
     "m06_serpent": [
       { "s": "serpent", "t": "Did God really say, “You shall not eat of any tree of the garden”?", "ref": "Genesis 3:1" },
-      { "s": "eve", "t": "We may eat from the trees — but not from the one in the midst. God said not to touch it, or we will die.", "ref": "Genesis 3:2–3" },
+      { "s": "eve", "t": "We may eat from the trees, but not from the one in the midst, or we will die.", "ref": "Genesis 3:2–3" },
       { "s": "serpent", "t": "You will not surely die. God knows your eyes will be opened, and you will be like God, knowing good and evil.", "ref": "Genesis 3:4–5" }
     ],
-    "m07_intro": [{ "s": "narrator", "t": "Gameplay: gather fig leaves." }],
-    "m08_hide": [{ "s": "narrator", "t": "Gameplay: hide among the trees until time runs out." }],
+    "m08_hide": [{ "s": "narrator", "t": "Gameplay: hide until time runs out." }],
     "m08_call": [{ "s": "god", "t": "Where are you?", "ref": "Genesis 3:9" }],
     "m08_answer": [
       { "s": "adam", "t": "I heard your voice and was afraid, because I was naked; so I hid.", "ref": "Genesis 3:10" },
-      { "s": "god", "t": "Who told you that you were naked? Did you eat from the tree I commanded you not to eat from?", "ref": "Genesis 3:11" },
+      { "s": "god", "t": "Did you eat from the tree I commanded you not to eat from?", "ref": "Genesis 3:11" },
       { "s": "adam", "t": "The woman you gave me — she gave me fruit from the tree, and I ate.", "ref": "Genesis 3:12" },
       { "s": "god", "t": "What is this that you have done?", "ref": "Genesis 3:13" },
       { "s": "eve", "t": "The serpent deceived me, and I ate.", "ref": "Genesis 3:13" }
     ],
-    "m09_serpent": [
-      { "s": "god", "t": "Because you did this, you are cursed. On your belly you will go, and eat dust all your life.", "ref": "Genesis 3:14" },
-      { "s": "god", "t": "I will put enmity between you and the woman. He will bruise your head, and you will bruise his heel.", "ref": "Genesis 3:15" }
-    ],
+    "m09_serpent": [{ "s": "god", "t": "You are cursed; on your belly you will go. He will bruise your head, and you will bruise his heel.", "ref": "Genesis 3:14–15" }],
     "m09_woman": [{ "s": "god", "t": "In pain you will bear children. You will long for your husband, and he will rule over you.", "ref": "Genesis 3:16" }],
-    "m09_adam": [
-      { "s": "god", "t": "Because you ate from the tree, the ground is cursed because of you. It will bring thorns and thistles.", "ref": "Genesis 3:17–18" },
-      { "s": "god", "t": "By the sweat of your face you will eat bread until you return to the ground. Dust you are, and to dust you will return.", "ref": "Genesis 3:19" }
-    ],
+    "m09_adam": [{ "s": "god", "t": "The ground is cursed because of you; it will bring thorns and thistles. Dust you are, and to dust you will return.", "ref": "Genesis 3:17–19" }],
     "m10_intro": [{ "s": "god", "t": "The man now knows good and evil. He must not take from the tree of life and live forever.", "ref": "Genesis 3:22" }]
   },
   "examine": {
@@ -233,7 +186,10 @@
     "needWater": "The gourd is empty.",
     "needBasket": "Find the basket first.",
     "noMoreFruit": "There is no more ripe fruit on this tree.",
-    "basketFull": "The basket is full."
+    "basketFull": "The basket is full.",
+    "adamBasket": "Adam carries the basket. {key} to switch.",
+    "evePicks": "Eve picks the fruit. {key} to switch.",
+    "figOf": "This fig tree is {name}'s. {key} to switch."
   },
   "animals": {
     "sheep": "Sheep",

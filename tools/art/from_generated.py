@@ -471,6 +471,8 @@ WALK_ARM_L = tuple(round(v * ART) for v in (-3, -2, 0, 2, 3, 2, 0, -2))
 # frames per second of the eight-frame walks, at the player's speed (the game
 # scales it with the actual speed)
 WALK_FPS = 15
+# walking toward or away from the camera: quicker steps, or the feet seem to slide
+WALK_FPS_FRONT = 19
 
 
 def front_back_frames(char: str, outfit: str, d: str) -> tuple[list[np.ndarray], int]:
@@ -715,12 +717,12 @@ def build_characters(m: dict, save, strip, sheet_entry) -> np.ndarray:
                 fs, base = fr
                 c = torso_center(fs[0][:base + 1])
                 cells = [place(f[:base + 3], w, h, w // 2, h - 1, c) for f in fs]
-                extra = {'idle': [0, 1], 'walk': list(range(2, len(fs))), 'walkFps': WALK_FPS}
+                extra = {'idle': [0, 1], 'walk': list(range(2, len(fs))), 'walkFps': WALK_FPS_FRONT if char != 'god' else WALK_FPS}
             else:
                 cells = [place(f, w, h, w // 2, h - 3, torso_center(f)) for f in fr]
                 extra = {'idle': [0, 1], 'walk': [2, 3, 4, 5]}
             file = save(strip(cells), f'sprites/char-{char}-{outfit}-{d}.png')
-            extra['shadow'] = shadow_entry(save, cells[0], w // 2, h - 3, f'char-{char}-{outfit}-{d}')
+            extra['shadow'] = shadow_entry(save, cells, w // 2, h - 3, f'char-{char}-{outfit}-{d}')
             chars.setdefault(char, {}).setdefault(outfit, {})[d] = sheet_entry(file, cells, (w // 2, h - 3), **extra)
         if (char, outfit) == ('adam', 'leaves'):
             adam_front = sets['down'][0][0][ROOM:-ROOM]
@@ -782,9 +784,26 @@ def cast_shadow(s: np.ndarray, ax: int, ay: int) -> tuple[np.ndarray, int, int]:
     return out, ax - ox, ay - oy
 
 
-def shadow_entry(save, s: np.ndarray, ax: int, ay: int, name: str) -> dict:
-    img, sx, sy = cast_shadow(s, ax, ay)
-    return {'file': save(img, f'shadows/{name}.png'), 'anchorX': int(sx), 'anchorY': int(sy)}
+def shadow_entry(save, frames: np.ndarray | list[np.ndarray], ax: int, ay: int, name: str) -> dict:
+    """The shadow of each frame of a sheet, then of each frame mirrored: a
+    sprite drawn flipped (facing left) still has the sun at the upper left,
+    so its shadow is not the flipped shadow. All on one strip with the base
+    point at the same place in every cell; the game shows the shadow frame
+    of the sprite's current frame (the maintainer wanted moving shadows)."""
+    cells = frames if isinstance(frames, list) else [frames]
+    w = cells[0].shape[1]
+    # flipped, the base point (ax from the left edge) is w - ax from it
+    shots = [cast_shadow(c, ax, ay) for c in cells] + [cast_shadow(c[:, ::-1].copy(), w - ax, ay) for c in cells]
+    left = max(sx for _, sx, _ in shots)
+    right = max(img.shape[1] - sx for img, sx, _ in shots)
+    up = max(sy for _, _, sy in shots)
+    down = max(img.shape[0] - sy for img, _, sy in shots)
+    cw, ch = left + right, up + down
+    out = np.zeros((ch, cw * len(shots), 4), np.uint8)
+    for i, (img, sx, sy) in enumerate(shots):
+        x, y = i * cw + left - sx, up - sy
+        out[y:y + img.shape[0], x:x + img.shape[1]] = img
+    return {'file': save(out, f'shadows/{name}.png'), 'anchorX': int(left), 'anchorY': int(up), 'frameWidth': int(cw), 'frameHeight': int(ch), 'frames': len(cells)}
 
 
 def sprite_sheet(m, save, strip, sheet_entry, key: str, frames: list[np.ndarray], folder: str = 'sprites', **extra) -> None:
@@ -806,6 +825,58 @@ ANIMALS = [  # order in the "animals" sheet, target height in world pixels
 ANIMATION_JOBS = {name: f'walk-animal-{name}' for name in ('horse', 'camel', 'lion', 'deer', 'sheep', 'goat', 'rabbit')}
 ANIMATION_JOBS['dove'] = 'fly-animal-dove'
 JUMPS = {'rabbit', 'dove'}  # frames keep their height above the ground
+# A calm walk drawn from the standing frame instead of the generated strip
+# (which looked like a run for the sheep and too jerky for the horse and the
+# camel): (leg swing at the hoof in world px, where the legs start).
+GENTLE = {'sheep': (2.0, 0.6), 'horse': (2.5, 0.58), 'camel': (2.5, 0.6)}
+
+
+def unpink(s: np.ndarray) -> np.ndarray:
+    """Pixels still tinted by the magenta background (e.g. on the sheep's
+    legs) take the colour of their untinted neighbours."""
+    rgb = s[:, :, :3].astype(int)
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    pink = (s[:, :, 3] > 0) & (r - g > 30) & (b - g > 12)
+    if not pink.any():
+        return s
+    out = s.copy()
+    ok = (s[:, :, 3] > 0) & ~pink
+    for y, x in zip(*np.nonzero(pink)):
+        y0, y1, x0, x1 = max(0, y - 2), y + 3, max(0, x - 2), x + 3
+        near = ok[y0:y1, x0:x1]
+        if near.any():
+            out[y, x, :3] = rgb[y0:y1, x0:x1][near].mean(axis=0).astype(np.uint8)
+        else:
+            grey = int(rgb[y, x].mean())
+            out[y, x, :3] = (grey, grey - 6, grey - 12)
+    return out
+
+
+def gentle_walk(stand: np.ndarray, swing: float, legs: float, n: int = 6) -> list[np.ndarray]:
+    """Legs swinging a little from the hips, front pair against back pair,
+    and the body one pixel lower while the legs are apart."""
+    h, w = stand.shape[:2]
+    hip = int(h * legs)
+    c = torso_center(stand)
+    amp = px(swing)
+    frames = []
+    for i in range(n):
+        ph = np.sin(2 * np.pi * i / n)
+        sink = int(round(abs(ph)))
+        f = np.zeros((h, w + 2 * amp + 2, 4), np.uint8)
+        ox = amp + 1
+        # the hooves stay on the ground; the body over the legs sinks a little
+        for y in range(hip, h):
+            k = (y - hip + 1) / (h - hip)
+            row = stand[y]
+            for x in np.nonzero(row[:, 3])[0]:
+                dx = int(round(amp * k * ph)) * (1 if x >= c else -1)
+                f[y, ox + x + dx] = row[x]
+        body = f[sink:hip + sink, ox:ox + w]
+        solid = stand[:hip, :, 3] > 0
+        body[solid] = stand[:hip][solid]
+        frames.append(trim(f))
+    return frames
 
 
 def build_animals(m, save, strip, sheet_entry) -> None:
@@ -820,21 +891,28 @@ def build_animals(m, save, strip, sheet_entry) -> None:
             base = boxes[0][2]
             frames = []
             for b in boxes:
-                f = resample(img, b, period)
+                f = unpink(resample(img, b, period))
                 up = max(0, int(round((base - b[2]) / period))) if name in JUMPS else 0
                 frames.append((f, up))
-            w = max(f.shape[1] for f, _ in frames) + 4
-            w += w % 2
-            h = max(f.shape[0] + up for f, up in frames) + 2
+            if name in GENTLE:
+                stand = frames[0][0]
+                frames = [(stand, 0)] + [(f, 0) for f in gentle_walk(stand, *GENTLE[name])]
             center = (lambda f: f.shape[1] / 2) if name == 'dove' else torso_center
+            # wide enough for the farther side from the body's centre (a
+            # neck or a tail): cells as wide as the widest frame cut them
+            half = max(max(center(f), f.shape[1] - center(f)) for f, _ in frames)
+            w = 2 * int(np.ceil(half)) + 4
+            h = max(f.shape[0] + up for f, up in frames) + 2
             cells = [place(f, w, h, w // 2, h - 2 - up, center(f)) for f, up in frames]
             if name == 'dove':
                 extra = {'idle': [0], 'walk': [1, 0, 2, 0], 'walkFps': 6, 'fly': [3, 4, 5, 6]}
+            elif name in GENTLE:
+                extra = {'idle': [0], 'walk': list(range(1, len(cells))), 'walkFps': 6}
             else:
                 extra = {'idle': [0], 'walk': [1, 2, 3, 4, 5, 6], 'walkFps': 8 if name != 'rabbit' else 11}
             key = f'animal-{name}'
             file = save(strip(cells), f'sprites/{key}.png')
-            extra['shadow'] = shadow_entry(save, cells[0], w // 2, h - 2, key)
+            extra['shadow'] = shadow_entry(save, cells, w // 2, h - 2, key)
             m['sprites'][key] = sheet_entry(file, cells, (w // 2, h - 2), **extra)
             print(f'  animal {name}: {w}x{h}, {len(cells)} frames')
 
@@ -878,7 +956,7 @@ def build_cherub(m, save, strip, sheet_entry) -> None:
     fire = [(y, x) for y, x in zip(*np.nonzero(cells[0][:, :, 3])) if x > 0.62 * w and y < 0.55 * h and fire_colour(cells[0][y, x, :3])]
     flame = [int(np.median([p[1] for p in fire])), int(np.median([p[0] for p in fire]))] if fire else [w // 2, h // 3]
     file = save(strip(cells), 'sprites/cherub.png')
-    m['sprites']['cherub'] = sheet_entry(file, cells, (w // 2, h - 2), flame=flame, shadow=shadow_entry(save, cells[0], w // 2, h - 2, 'cherub'))
+    m['sprites']['cherub'] = sheet_entry(file, cells, (w // 2, h - 2), flame=flame, shadow=shadow_entry(save, cells, w // 2, h - 2, 'cherub'))
     m['sprites'].pop('flaming-sword', None)
     print(f'  cherub {c.shape[1]}x{c.shape[0]}, flame at {flame}')
 
@@ -892,7 +970,7 @@ def slither(g: np.ndarray, n: int = 8) -> list[np.ndarray]:
     """A crawling serpent: a wave runs along the body from head to tail,
     stronger toward the tail; the head (right end) stays steady."""
     h, w = g.shape[:2]
-    amp = px(2.5)
+    amp = px(1.6)
     pad = amp + 1
     base = np.pad(g, ((pad, pad), (0, 0), (0, 0)))
     frames = []
@@ -918,7 +996,7 @@ def build_serpent(m, save, strip, sheet_entry) -> None:
         ground_box = bbox(clean_mask(img[:, :, 3]))
     g = resample(img, ground_box, (ground_box[3] - ground_box[1]) / (110 * CREATURE_SCALE * ART))
     frames = slither(g)
-    sprite_sheet(m, save, strip, sheet_entry, 'serpent-ground', frames, idle=[0], walk=list(range(len(frames))), walkFps=10)
+    sprite_sheet(m, save, strip, sheet_entry, 'serpent-ground', frames, idle=[0], walk=list(range(len(frames))), walkFps=6)
     print(f'  serpent {t.shape[1]}x{t.shape[0]}, {g.shape[1]}x{g.shape[0]}')
 
 
@@ -1235,7 +1313,7 @@ def eye_patches(p: np.ndarray, boxes: list[tuple[int, int, int, int]], is_eye=hu
     return frames
 
 
-def mouth_patches(p: np.ndarray, eye_y: float) -> list[tuple[np.ndarray, int, int]]:
+def mouth_patches(p: np.ndarray, eye_y: float, nudge: int = 0) -> list[tuple[np.ndarray, int, int]]:
     """Mouth half open and open: a dark gap below the line of the lips. The
     lip line is the longest run of pixels darker than the skin of its row,
     near the middle of the face under the nose (nostril shadows are dark
@@ -1273,6 +1351,7 @@ def mouth_patches(p: np.ndarray, eye_y: float) -> list[tuple[np.ndarray, int, in
     # in the LORD God's white beard)
     lip = np.median(p[by, x0:x1, :3].astype(float), axis=0)
     inner = np.clip(lip * 0.45 + np.array([18, 4, 4]), 0, 255).astype(np.uint8)
+    by += nudge
     cut = max(1, (x1 - x0) // 6)
     x0, x1 = x0 + cut, x1 - cut
     frames = []
@@ -1314,6 +1393,11 @@ def serpent_parts(p: np.ndarray) -> tuple[np.ndarray, list, list]:
     return base, mouth, eye_patches(base, [SERPENT_EYE], snake_eye)
 
 
+# portrait pixels (of 66 rows) to raise the opening mouth: the LORD God's
+# sat a little low in his beard (the maintainer's call)
+MOUTH_UP = {'god': 1.5}
+
+
 def build_portraits(m, save) -> None:
     out = m.setdefault('portraits', {})
     todo: list[tuple[str, np.ndarray]] = []
@@ -1332,7 +1416,7 @@ def build_portraits(m, save) -> None:
         else:
             boxes = find_eyes(p)
             eye_y = np.mean([(b[0] + b[2]) / 2 for b in boxes]) if boxes else 25
-            mouth, eyes = mouth_patches(p, eye_y), eye_patches(p, boxes)
+            mouth, eyes = mouth_patches(p, eye_y, -round(MOUTH_UP.get(name, 0) * ph / 66)), eye_patches(p, boxes)
         entry = {'file': save(p, f'portraits/{name}.png'), 'width': pw, 'height': ph, 'mouth': [], 'eyes': []}
         for kind, frames in (('mouth', mouth), ('eyes', eyes)):
             for i, (img, x, y) in enumerate(frames):
@@ -1384,54 +1468,6 @@ def build_props(m, save, sheet_entry) -> None:
                 extra = {} if key in CENTERED or key.startswith('fruit-') else {'shadow': shadow_entry(save, sp, *anchor, key)}
                 m['sprites'][key] = sheet_entry(f, [sp], anchor, **extra)
         print(f'  {job}: {sum(len(r) for r in rows)} sprites')
-
-
-# ------------------------------------------------------------------ marker
-
-# violet: the complement of the yellow-green meadow, so the marker stands out
-# (the maintainer found the golden one hard to see)
-MARKER_RAMP = [(86, 38, 140), (128, 66, 196), (168, 108, 232), (208, 166, 250), (244, 230, 255)]
-
-
-def build_marker(m, save, strip, sheet_entry) -> None:
-    """The bobbing arrow over the current objective: a soft, rounded arrow
-    pointing down, lit from the upper left, pulsing gently (6 frames)."""
-    w, h = px(22), px(26)
-    yy, xx = np.mgrid[0:h, 0:w].astype(float)
-    cx = (w - 1) / 2
-    # rounded arrow: a wide bar on top, narrowing to a point at the bottom
-    bar_top, bar_bottom = h * 0.06, h * 0.42
-    half_bar = w * 0.22
-    head_top = h * 0.36
-    tip = h * 0.96
-    in_bar = (yy >= bar_top) & (yy <= bar_bottom) & (np.abs(xx - cx) <= half_bar)
-    t = np.clip((yy - head_top) / (tip - head_top), 0, 1)
-    in_head = (yy >= head_top) & (yy <= tip) & (np.abs(xx - cx) <= (w * 0.48) * (1 - t))
-    shape = in_bar | in_head
-    # round the corners: drop pixels with few neighbours
-    n = sum(np.roll(np.roll(shape, dy, 0), dx, 1) for dy in (-1, 0, 1) for dx in (-1, 0, 1))
-    shape &= n >= 5
-    inside = lambda dy, dx: np.roll(np.roll(shape, dy, 0), dx, 1)  # noqa: E731
-    lit_edge = shape & ~(inside(1, 1) & inside(1, 0) & inside(0, 1))  # upper-left rim
-    dark_edge = shape & ~(inside(-1, -1) & inside(-1, 0) & inside(0, -1))  # lower-right rim
-    body = 1.0 + 1.6 * (1 - yy / h) - 0.6 * (xx - cx) / w  # lighter toward the upper left
-    frames = []
-    for i in range(6):
-        pulse = 0.35 * np.sin(2 * np.pi * i / 6)
-        level = body + pulse
-        level = np.where(lit_edge, level + 1.2, level)
-        level = np.where(dark_edge, level - 1.4, level)
-        idx = np.clip(level, 0, len(MARKER_RAMP) - 1.001)
-        f = np.zeros((h, w, 4), np.uint8)
-        for y, x in zip(*np.nonzero(shape)):
-            a = int(idx[y, x])
-            k = idx[y, x] - a
-            c0, c1 = np.array(MARKER_RAMP[a]), np.array(MARKER_RAMP[min(a + 1, len(MARKER_RAMP) - 1)])
-            f[y, x, :3] = (c0 * (1 - k) + c1 * k).astype(np.uint8)
-            f[y, x, 3] = 255
-        frames.append(f)
-    sprite_sheet(m, save, strip, sheet_entry, 'marker', frames, folder='props')
-    print(f'  marker {w}x{h}')
 
 
 # ------------------------------------------------------------------ terrain
@@ -1671,6 +1707,6 @@ def build(m: dict, save, strip, sheet_entry) -> None:
     build_serpent(m, save, strip, art_entry)
     build_trees(m, save, strip, art_entry)
     build_props(m, save, art_entry)
-    build_marker(m, save, strip, art_entry)
+    m.get('sprites', {}).pop('marker', None)
     build_portraits(m, save)
     build_terrain(m, save, strip, sheet_entry)

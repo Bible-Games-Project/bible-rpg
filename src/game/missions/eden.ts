@@ -24,7 +24,11 @@ const itemName = (k: string) => t(`eden.items.${k}`);
 const FRUIT_ITEM: Record<string, string> = { 'fruit-fig': 'fig', 'fruit-pomegranate': 'pomegranate', 'fruit-dates': 'dates', 'fruit-grapes': 'grapes' };
 const ORCHARD = ['fig1', 'pom1', 'pom2', 'fig2', 'palm1', 'palm2', 'vine1', 'vine2'];
 const FIG_TREES = ['fig3', 'fig4'];
+/** Who gathers leaves from each fig tree in mission 7. */
+const FIG_OWNER: Record<string, 'adam' | 'eve'> = { fig3: 'adam', fig4: 'eve' };
 const FRUIT_GOAL = 8;
+/** Animals to name in mission 3 (of the eight that can be named). */
+const NAME_GOAL = 5;
 const LEAVES_PER_TREE = 3;
 const LEAF_GOAL = FIG_TREES.length * LEAVES_PER_TREE;
 
@@ -127,6 +131,8 @@ async function plotTask(
  * it only sets state, and moves people when `place` is true.
  */
 export function stageEden(w: WorldApi, n: number, o: StageOptions): void {
+  w.adam.hold(null);
+  w.eve.hold(null);
   // the garden plot
   PLOT_PATCHES.forEach((_, i) => w.setPlot(i, n === 1 ? 'marked' : 'grown'));
   for (const id of ['stick', 'gourd']) (n === 1 ? w.showProp(id) : w.hideProp(id));
@@ -137,9 +143,10 @@ export function stageEden(w: WorldApi, n: number, o: StageOptions): void {
   w.setTime(n <= 7 ? 'day' : n === 8 ? 'afternoon' : 'evening');
   w.thorns(n === 10);
   w.openExit(false);
-  w.cherubim(false);
+  void w.cherubim(false);
   w.sleeping(false);
-  w.serpentPose('hidden');
+  // the serpent is already in the tree when mission 6 begins (no pop-in)
+  w.serpentPose(n === 6 ? 'tree' : 'hidden');
   // the people
   const eveCreated = n >= 5;
   w.allowSwitch(eveCreated);
@@ -205,7 +212,6 @@ const m01: MissionDef = {
   reference: 'Genesis 2:15',
   async run(w) {
     w.music('peaceful');
-    await w.scripture('gen2_8');
     await w.say('m01_intro', { move: t('hud.moveKeys'), interact: KEY_LABELS.interact });
     await w.scripture('gen2_15');
 
@@ -214,16 +220,8 @@ const m01: MissionDef = {
 
     w.objective(step('m01', 'stick'), POINTS.stick);
     await pickUp(w, 'stick', POINTS.stick, 'stick');
-    await w.say('m01_stick');
 
-    let first = true;
-    await plotTask(w, 'till', 'till', 'tilled', 'dig', 'tilled', async (i) => {
-      w.fx('leaves', PLOT_PATCHES[i]);
-      if (first) {
-        first = false;
-        await w.say('m01_till');
-      }
-    });
+    await plotTask(w, 'till', 'till', 'tilled', 'dig', 'tilled', (i) => w.fx('leaves', PLOT_PATCHES[i]));
 
     w.objective(step('m01', 'seeds'), POINTS.grain);
     await useOnce(w, {
@@ -237,12 +235,10 @@ const m01: MissionDef = {
         w.toast(E('toasts.got', { item: itemName('seeds') }));
       },
     });
-    await w.say('m01_seeds');
     await plotTask(w, 'plant', 'plant', 'seeded', 'plant', 'planted', () => w.take('seeds'));
 
     w.objective(step('m01', 'gourd'), POINTS.gourd);
     await pickUp(w, 'gourd', POINTS.gourd, 'gourd');
-    await w.say('m01_gourd');
 
     w.objective(step('m01', 'fill'), POINTS.riverFill);
     await useOnce(w, {
@@ -257,7 +253,6 @@ const m01: MissionDef = {
         w.give('water');
       },
     });
-    await w.say('m01_fill');
 
     await plotTask(w, 'water', 'water', 'watered', 'splash', 'watered', (i) => w.fx('splash', [PLOT_PATCHES[i][0], PLOT_PATCHES[i][1] + 6]));
     w.take('water');
@@ -273,7 +268,6 @@ const m01: MissionDef = {
       w.fx('sparkle', PLOT_PATCHES[1]);
       await w.wait(750);
     }
-    await w.say('m01_grow');
     w.cameraFollow();
     w.cutscene(false);
   },
@@ -287,7 +281,6 @@ const m02: MissionDef = {
   reference: 'Genesis 2:16–17',
   async run(w) {
     w.cutscene(true);
-    await w.say('m02_appear');
     w.show(w.god, POINTS.godAppear, 'left');
     w.godLight(true);
     w.fx('holy', POINTS.godAppear);
@@ -367,65 +360,57 @@ const m03: MissionDef = {
     w.face(w.god, w.player());
     w.face(w.player(), w.god);
     await w.say('m03_intro');
-    await w.scripture('gen2_19');
 
-    // the LORD God brings the animals to Adam (Genesis 2:19)
-    const ids = NAMEABLE;
-    const angles = [-150, -110, -70, -30, 10, 50, 90, 130];
-    const [cx, cy] = POINTS.gather;
-    w.cameraTo([cx, cy], 700);
-    await Promise.all(
-      ids.map(async (id, i) => {
-        const a = w.animal(id);
-        if (!a) return;
-        w.animalStay(id, true);
-        const ang = (angles[i % angles.length] * Math.PI) / 180;
-        const to: Pt = [cx + Math.cos(ang) * 180, cy + Math.sin(ang) * 115];
-        await w.wait(i * 250);
-        const dist = Math.hypot(a.x - to[0], a.y - to[1]);
-        await w.walk(a, to, Math.max(70, dist / 3.2));
-        a.face(dist && to[0] > cx ? 'left' : 'right');
-      }),
-    );
-    w.face(w.player(), 'right');
-    w.cameraFollow();
     w.cutscene(false);
 
+    // Gameplay: Adam goes to the animals (they stay where they graze, an
+    // arrow over each); naming five of them ends the mission
     const named = new Set<string>();
+    const unnamed = () => NAMEABLE.filter((id) => !named.has(id));
     const update = () =>
-      w.objective(step('m03', 'name', { n: named.size, total: ids.length }), () =>
-        ids.filter((id) => !named.has(id)).map((id) => w.animal(id)).filter((a): a is Actor => !!a),
+      w.objective(
+        step('m03', 'name', { n: named.size, total: NAME_GOAL }),
+        () => unnamed().map((id) => w.animal(id)).filter((a): a is Actor => !!a),
+        { markAll: true },
       );
     update();
+    const offs: (() => void)[] = [];
     await new Promise<void>((resolve) => {
-      for (const id of ids) {
+      for (const id of NAMEABLE) {
         const a = w.animal(id);
         if (!a) continue;
-        const off = w.interact({
-          id: `name-${id}`,
-          at: () => [a.x, a.y - 16],
-          radius: 80,
-          prompt: () => t('prompt.name'),
-          onUse: async () => {
-            const result = await w.namingPuzzle([id]);
-            if (!result.includes(id)) return;
-            off();
-            named.add(id);
-            const name = E(`animals.${id}`);
-            a.emote('heart');
-            w.sfx('correct');
-            if (named.size === 1) await w.say('m03_named', { name });
-            else w.toast(E('toasts.named', { name }));
-            update();
-            if (named.size === ids.length) resolve();
-          },
-        });
+        offs.push(
+          w.interact({
+            id: `name-${id}`,
+            at: () => [a.x, a.y - 16],
+            radius: 80,
+            prompt: () => t('prompt.name'),
+            enabled: () => !named.has(id) && named.size < NAME_GOAL,
+            onUse: async () => {
+              // it stands still while Adam names it
+              w.animalStay(id, true);
+              a.face(w.player().x < a.x ? 'left' : 'right');
+              const result = await w.namingPuzzle([id]);
+              w.animalStay(id, false);
+              if (!result.includes(id) || named.size >= NAME_GOAL) return;
+              named.add(id);
+              const name = E(`animals.${id}`);
+              a.emote('heart');
+              w.sfx('correct');
+              if (named.size === 1) await w.say('m03_named', { name });
+              else w.toast(E('toasts.named', { name }));
+              update();
+              if (named.size >= NAME_GOAL) resolve();
+            },
+          }),
+        );
       }
     });
+    offs.forEach((off) => off());
+    w.objective(step('m03', 'name', { n: named.size, total: NAME_GOAL }));
 
     await w.wait(600);
     await w.scripture('gen2_20');
-    for (const id of ids) w.animalStay(id, false);
   },
 };
 
@@ -442,7 +427,6 @@ const m04: MissionDef = {
     await useOnce(w, { id: 'rest', at: POINTS.restSpot, radius: 80, prompt: () => t('prompt.rest') });
 
     w.cutscene(true);
-    await w.say('m04_rest');
     await w.walk(w.adam, POINTS.restSpot);
     w.face(w.adam, 'down');
     w.sleeping(true);
@@ -488,9 +472,28 @@ const m05: MissionDef = {
   async run(w) {
     w.music('peaceful');
     await w.say('m05_intro');
+    // Gameplay: Adam carries the basket, Eve picks the fruit
     w.objective(step('m05', 'basket'), POINTS.basket);
-    await pickUp(w, 'basket', POINTS.basket, 'basket');
-    await w.say('m05_basket');
+    await new Promise<void>((resolve) => {
+      const off = w.interact({
+        id: 'basket',
+        at: POINTS.basket,
+        radius: 60,
+        prompt: () => t('prompt.pickUp', { name: itemName('basket') }),
+        onUse: () => {
+          if (w.activeId() !== 'adam') {
+            w.toast(E('toasts.adamBasket', { key: KEY_LABELS.switch }));
+            return;
+          }
+          off();
+          w.hideProp('basket');
+          w.sfx('pickup');
+          w.give('basket');
+          w.adam.hold('basket', 'arms');
+          resolve();
+        },
+      });
+    });
 
     const update = () =>
       w.objective(step('m05', 'gather', { n: w.count('fruit'), total: FRUIT_GOAL }), () => {
@@ -510,6 +513,10 @@ const m05: MissionDef = {
             prompt: () => t('prompt.pick'),
             enabled: () => w.count('fruit') < FRUIT_GOAL && w.fruitOf([id]).length > 0,
             onUse: () => {
+              if (w.activeId() !== 'eve') {
+                w.toast(E('toasts.evePicks', { key: KEY_LABELS.switch }));
+                return;
+              }
               const fruit = w.fruitOf([id]);
               if (!fruit.length) {
                 w.toast(E('toasts.noMoreFruit'));
@@ -518,6 +525,8 @@ const m05: MissionDef = {
               const f = fruit[0];
               w.pickFruit(f.tree, f.index);
               w.give('fruit');
+              // the basket in Adam's arms fills up
+              if (w.count('fruit') === Math.ceil(FRUIT_GOAL / 2)) w.adam.hold('basket-full', 'arms');
               w.sfx('pickup');
               w.toast(E('toasts.fruit', { item: itemName(FRUIT_ITEM[f.type] ?? 'fruit'), n: w.count('fruit'), total: FRUIT_GOAL }));
               update();
@@ -531,7 +540,6 @@ const m05: MissionDef = {
       offs.push(w.interact({ id: 'forbidden-touch', at: [ft[0], ft[1] - 10], radius: 110, prompt: () => t('prompt.examine'), onUse: () => w.say('m05_forbidden_touch') }));
     });
     offs.forEach((off) => off());
-    await w.say('m05_full');
 
     w.objective(step('m05', 'share'), POINTS.shareSpot);
     await w.waitZone('share');
@@ -543,6 +551,7 @@ const m05: MissionDef = {
     await w.say('m05_share');
     w.take('fruit', FRUIT_GOAL);
     w.take('basket');
+    w.adam.hold(null);
     w.adam.emote('heart');
     await w.wait(600);
     w.cutscene(false);
@@ -563,7 +572,6 @@ const m06: MissionDef = {
     w.cutscene(true);
     w.music('tension');
     await Promise.all([w.walk(w.eve, POINTS.eveSerpent), w.walk(w.adam, POINTS.adamSerpent)]);
-    w.serpentPose('tree');
     w.face(w.eve, 'up');
     w.face(w.adam, w.eve);
     await w.cameraTo([POINTS.serpentBranch[0], POINTS.serpentBranch[1] + 60], 900);
@@ -586,9 +594,10 @@ const m06: MissionDef = {
     w.adam.hold('fruit-forbidden');
     await w.wait(900);
     w.adam.hold(null);
-    w.serpentPose('hidden');
+    w.sfx('bite');
     w.music('sorrow');
     await w.fade(1, 900);
+    w.serpentPose('hidden');
     await w.wait(500);
     w.cameraSnap();
     await w.fade(0, 900);
@@ -606,12 +615,14 @@ const m07: MissionDef = {
     w.music('sorrow');
     w.adam.emote('drop');
     w.eve.emote('drop');
-    await w.say('m07_intro');
 
+    // Gameplay: Adam takes leaves from one fig tree, Eve from the other
     const taken: Record<string, number> = {};
     const update = () =>
-      w.objective(step('m07', 'leaves', { n: w.count('figLeaf'), total: LEAF_GOAL }), () =>
-        FIG_TREES.filter((id) => (taken[id] ?? 0) < LEAVES_PER_TREE).map((id) => w.treeAt(id)),
+      w.objective(
+        step('m07', 'leaves', { n: w.count('figLeaf'), total: LEAF_GOAL }),
+        () => FIG_TREES.filter((id) => (taken[id] ?? 0) < LEAVES_PER_TREE).map((id) => w.treeAt(id)),
+        { markAll: true },
       );
     update();
     const offs: (() => void)[] = [];
@@ -626,6 +637,11 @@ const m07: MissionDef = {
             prompt: () => t('prompt.gather'),
             enabled: () => (taken[id] ?? 0) < LEAVES_PER_TREE,
             onUse: async () => {
+              const owner = FIG_OWNER[id];
+              if (w.activeId() !== owner) {
+                w.toast(E('toasts.figOf', { name: t(`characters.${owner}`), key: KEY_LABELS.switch }));
+                return;
+              }
               taken[id] = (taken[id] ?? 0) + 1;
               w.fx('leaves', at);
               w.sfx('rustle');
@@ -646,13 +662,12 @@ const m07: MissionDef = {
     w.cutscene(true);
     const o = other(w);
     await w.walk(o, [stone[0] + (o.x < stone[0] ? -50 : 50), stone[1] + 34]);
+    w.sfx('leaves');
     await w.fade(1, 700);
     w.take('figLeaf', LEAF_GOAL);
     w.setOutfit('fig');
-    w.sfx('rustle');
     await w.wait(700);
     await w.fade(0, 700);
-    await w.scripture('gen3_7');
     w.cutscene(false);
   },
 };
@@ -666,7 +681,6 @@ const m08: MissionDef = {
   async run(w) {
     w.setTime('evening');
     w.music('tension');
-    await w.scripture('gen3_8');
     w.objective(step('m08', 'grove'), [ZONES.grove.x, ZONES.grove.y - 200]);
     await w.until(() => near(w.player(), [ZONES.grove.x, ZONES.grove.y], ZONES.grove.r - 120));
 
@@ -710,7 +724,7 @@ const m09: MissionDef = {
     w.face(w.god, w.serpent);
     await w.cameraTo([POINTS.godGrove[0] + 60, POINTS.godGrove[1] + 40], 700);
     await w.say('m09_serpent');
-    await w.walk(w.serpent, [POINTS.serpentGround[0] + 260, POINTS.serpentGround[1] + 40], 60);
+    await w.walk(w.serpent, [POINTS.serpentGround[0] + 200, POINTS.serpentGround[1] + 30], 30);
     w.serpentPose('hidden');
     w.face(w.god, w.eve);
     await w.say('m09_woman');
@@ -745,7 +759,6 @@ const m10: MissionDef = {
     w.cutscene(true);
     w.face(w.god, 'down');
     await w.say('m10_intro');
-    await w.scripture('gen3_23');
     w.fx('holy', [w.god.x, w.god.y]);
     w.sfx('holy');
     await w.wait(600);
@@ -763,10 +776,11 @@ const m10: MissionDef = {
     await Promise.all([w.walk(p, [POINTS.ending[0] - 40, POINTS.exit[1] - 12], 110), w.walk(o, [POINTS.ending[0] - 90, POINTS.exit[1] + 22], 110)]);
     w.face(p, 'left');
     w.face(o, 'left');
-    w.cherubim(true);
+    await w.cameraTo([POINTS.sword[0] + 60, POINTS.sword[1] - 30], 1100);
+    await w.cherubim(true, true);
     w.sfx('flame');
     w.fx('holy', POINTS.sword);
-    await w.cameraTo([POINTS.sword[0] + 60, POINTS.sword[1] - 30], 1400);
+    await w.wait(500);
     await w.scripture('gen3_24');
     await w.wait(800);
     await w.fade(1, 1500);

@@ -18,6 +18,11 @@ export interface InteractSpec {
 /** Target(s) of the objective indicator. */
 export type ObjectiveTarget = Pt | Actor | (() => (Pt | Actor)[]) | null;
 
+export interface ObjectiveOptions {
+  /** An arrow over every target in view, not only the nearest. */
+  markAll?: boolean;
+}
+
 /**
  * What missions can do with the world. Missions are written against this
  * interface only, so mission logic stays independent from Phaser and the
@@ -37,7 +42,7 @@ export interface WorldApi {
   lines(lines: Line[]): Promise<void>;
 
   // objective and HUD
-  objective(text: string, target?: ObjectiveTarget): void;
+  objective(text: string, target?: ObjectiveTarget, o?: ObjectiveOptions): void;
   toast(text: string, big?: boolean): void;
 
   // interaction
@@ -93,7 +98,8 @@ export interface WorldApi {
   serpentPose(pose: 'hidden' | 'tree' | 'ground'): void;
   thorns(on: boolean): void;
   openExit(open: boolean): void;
-  cherubim(on: boolean): void;
+  /** With `drop`, they come down from the sky; resolves once both have landed. */
+  cherubim(on: boolean, drop?: boolean): Promise<void>;
   stealth(seconds: number): Promise<void>;
   namingPuzzle(animalIds: string[]): Promise<string[]>;
   chapterComplete(): Promise<void>;

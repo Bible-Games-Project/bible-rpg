@@ -39,6 +39,7 @@ export class Actor {
   readonly feet: Phaser.GameObjects.Zone;
   readonly body: Phaser.Physics.Arcade.Body;
   shadow: Phaser.GameObjects.Image | null = null;
+  private castShadow = false;
   facing: Facing;
   moving = false;
   /** current walking speed (px/s) */
@@ -52,6 +53,7 @@ export class Actor {
   private heldSprite: Phaser.GameObjects.Image | null = null;
   private anchorY = 1;
   private lastAnim = '';
+  private grip: 'hand' | 'arms' = 'hand';
   /** offset the sprite vertically (e.g. a dove hopping or flying) */
   lift = 0;
   /** added to the depth (e.g. the serpent drawn on a branch, in front of the canopy) */
@@ -77,6 +79,9 @@ export class Actor {
     if (o.shadow !== null) {
       // the sprite's own cast shadow when it has one, else a soft round one
       this.shadow = addShadow(scene, o.x, o.y, key) ?? scene.add.image(o.x, o.y, o.shadow ?? 'shadow-small').setDepth(DEPTH_SHADOW).setAlpha(0.9);
+      this.castShadow = this.shadow.texture.key.startsWith('shadow:');
+      // the shadow moves with the legs, arms and wings: one cell per frame
+      this.sprite.on(Phaser.Animations.Events.ANIMATION_UPDATE, () => this.syncShadow());
     }
     this.refresh(true);
   }
@@ -185,10 +190,12 @@ export class Actor {
     });
   }
 
-  /** Show an item held above the head (e.g. the fruit in Genesis 3:6). */
-  hold(key: string | null): void {
+  /** Show an item in the hand (e.g. the fruit in Genesis 3:6), or carried
+   * in front with both arms (`arms`, e.g. the basket). */
+  hold(key: string | null, grip: 'hand' | 'arms' = 'hand'): void {
     this.heldSprite?.destroy();
     this.heldSprite = null;
+    this.grip = grip;
     if (!key) return;
     this.heldSprite = sized(this.scene.add.image(this.x, this.y - 36, key).setOrigin(0.5, 1).setDepth(this.y + 1));
     this.refresh();
@@ -236,21 +243,21 @@ export class Actor {
     const y = Math.round(this.feet.y);
     this.sprite.setPosition(x, y - this.lift);
     this.sprite.setDepth(y + this.depthBias);
-    this.shadow?.setPosition(x, y);
     this.emoteSprite?.setPosition(x, this.topY() - 6);
     if (this.heldSprite) {
       // in the hand, at hand height; seen from behind, the body hides it
-      const dx = { left: -7, right: 7, down: -12, up: 12 }[this.facing];
-      this.heldSprite.setPosition(x + dx, y - 36).setDepth(this.facing === 'up' ? y - 1 : y + 1);
+      const arms = this.grip === 'arms';
+      const dx = (arms ? { left: -9, right: 9, down: 0, up: 0 } : { left: -7, right: 7, down: -12, up: 12 })[this.facing];
+      this.heldSprite.setPosition(x + dx, y - (arms ? 22 : 36)).setDepth(this.facing === 'up' ? y - 1 : y + 1);
     }
     const tex = this.textureFor(this.facing);
     if (this.sprite.texture.key !== tex) {
       this.sprite.setTexture(tex);
       this.applyAnchor();
-      if (this.shadow) fitShadow(this.shadow, tex);
       force = true;
     }
     this.sprite.setFlipX(this.facing === 'left');
+    this.syncShadow();
     const anims = this.scene.anims;
     let anim = '';
     if (this.charId) {
@@ -265,6 +272,30 @@ export class Actor {
     }
     // each character's walk matches its own usual speed (God walks slower, with shorter steps)
     if (this.charId) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / (CHARACTERS[this.charId]?.speed || WALK_PACE), 0.55, 1.3) : 1;
+  }
+
+  /** The shadow cell of the sprite's current frame, flipped like it. */
+  private syncShadow(): void {
+    if (!this.shadow) return;
+    if (this.castShadow) fitShadow(this.shadow, this.sprite.texture.key, Number(this.sprite.frame.name) || 0, this.sprite.flipX);
+    this.placeShadow();
+  }
+
+  /**
+   * The shadow under the feet; lifted off the ground (a dove in flight), it
+   * slides away from the sun along the ground (lower right, as the sun is at
+   * the upper left: SHADOW_X, SHADOW_Y in tools/art/from_generated.py) and
+   * grows smaller and fainter.
+   */
+  private placeShadow(): void {
+    if (!this.shadow) return;
+    const x = Math.round(this.feet.x);
+    const y = Math.round(this.feet.y);
+    const up = Math.max(0, this.lift);
+    this.shadow.setPosition(x + up * 0.5, y + up * 0.22);
+    if (!this.castShadow) return;
+    const k = 1 / (1 + up / 60);
+    this.shadow.setScale(textureScale(this.sprite.texture.key) * k).setAlpha(0.35 + 0.65 * k);
   }
 
   destroy(): void {

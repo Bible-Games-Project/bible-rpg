@@ -2,12 +2,17 @@ import raw from '../data/generated/assets.json';
 
 /** Types for src/data/generated/assets.json (written by tools/art/build_all.py). */
 
-/** A shadow cast by a sprite (sun at the upper left), and where the
- * sprite's base point falls in it. */
+/** The shadows cast by a sheet's frames (sun at the upper left): a strip
+ * with one cell per frame, then one per frame drawn flipped; the sprite's
+ * base point falls on (anchorX, anchorY) in every cell. */
 export interface ShadowAsset {
   file: string;
   anchorX: number;
   anchorY: number;
+  frameWidth: number;
+  frameHeight: number;
+  /** frames of the sprite; the strip holds twice as many */
+  frames: number;
 }
 
 export interface SheetAsset {

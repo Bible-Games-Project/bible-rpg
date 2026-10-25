@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { MANIFEST, assetUrl, charKey, shadowKey, type Direction } from './manifest';
+import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type ShadowAsset } from './manifest';
 
 /**
  * Loads every texture listed in the asset manifest and creates the shared
@@ -18,22 +18,26 @@ export class BootScene extends Phaser.Scene {
           if (!a) continue;
           const key = charKey(id, outfit, dir as Direction);
           this.load.spritesheet(key, assetUrl(a.file), { frameWidth: a.frameWidth, frameHeight: a.frameHeight });
-          if (a.shadow) this.load.image(shadowKey(key), assetUrl(a.shadow.file));
+          if (a.shadow) this.loadShadow(key, a.shadow);
         }
       }
     }
     for (const [key, a] of Object.entries(m.sprites)) {
       if (a.frames > 1) this.load.spritesheet(key, assetUrl(a.file), { frameWidth: a.frameWidth, frameHeight: a.frameHeight });
       else this.load.image(key, assetUrl(a.file));
-      if (a.shadow) this.load.image(shadowKey(key), assetUrl(a.shadow.file));
+      if (a.shadow) this.loadShadow(key, a.shadow);
     }
     for (const [key, t] of Object.entries(m.trees)) {
       this.load.image(`tree:${key}:trunk`, assetUrl(t.trunk));
       this.load.image(`tree:${key}:canopy`, assetUrl(t.canopy));
-      if (t.shadow) this.load.image(shadowKey(`tree:${key}:trunk`), assetUrl(t.shadow.file));
+      if (t.shadow) this.loadShadow(`tree:${key}:trunk`, t.shadow);
     }
     this.load.spritesheet('tiles', assetUrl(m.tiles.file), { frameWidth: m.tiles.tileSize, frameHeight: m.tiles.tileSize });
     this.load.on('progress', (p: number) => this.game.events.emit('load-progress', p));
+  }
+
+  private loadShadow(textureKey: string, s: ShadowAsset): void {
+    this.load.spritesheet(shadowKey(textureKey), assetUrl(s.file), { frameWidth: s.frameWidth, frameHeight: s.frameHeight });
   }
 
   create(): void {
@@ -56,7 +60,7 @@ export class BootScene extends Phaser.Scene {
       if (a.walk) this.anims.create({ key: `${key}:walk`, frames: this.anims.generateFrameNumbers(key, { frames: a.walk }), frameRate: a.walkFps ?? 7, repeat: -1 });
       if (a.fly) this.anims.create({ key: `${key}:fly`, frames: this.anims.generateFrameNumbers(key, { frames: a.fly }), frameRate: 8, repeat: -1 });
       if (!a.idle && !a.walk) {
-        const rate = key.startsWith('serpent') ? 5 : key === 'cherub' ? 1.2 : key === 'marker' ? 6 : 9;
+        const rate = key.startsWith('serpent') ? 5 : key === 'cherub' ? 1.2 : 9;
         this.anims.create({ key: `${key}:loop`, frames: this.anims.generateFrameNumbers(key, {}), frameRate: rate, repeat: -1 });
       }
     }
