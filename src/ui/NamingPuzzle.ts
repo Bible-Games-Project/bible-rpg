@@ -47,6 +47,9 @@ export interface PuzzleItem {
  * Opens the puzzle for one or several animals in a row.
  * Resolves with the ids that were named (empty if the player closed it).
  */
+/** Animals whose one hint has been used (for the whole session). */
+const hinted = new Set<string>();
+
 export function openNamingPuzzle(items: PuzzleItem[]): Promise<string[]> {
   return new Promise((resolve) => {
     const named: string[] = [];
@@ -147,7 +150,11 @@ export function openNamingPuzzle(items: PuzzleItem[]): Promise<string[]> {
       };
 
       const hint = () => {
-        if (solved) return;
+        if (solved || hinted.has(item.id)) return;
+        // one hint per animal (the maintainer's rule), even if the puzzle is
+        // closed and opened again
+        hinted.add(item.id);
+        hintBtn.disabled = true;
         // put the next correct letter in the first wrong or empty slot
         for (let k = 0; k < letterIdx.length; k++) {
           const want = target[letterIdx[k]];
@@ -204,11 +211,12 @@ export function openNamingPuzzle(items: PuzzleItem[]): Promise<string[]> {
         }
       };
 
+      const hintBtn = h('button', { class: 'btn small', onclick: hint, disabled: hinted.has(item.id) }, t('puzzle.hint')) as HTMLButtonElement;
       const actions = h(
         'div',
         { class: 'dialog-actions', style: 'justify-content:center;margin-top:0' },
         h('button', { class: 'btn small', onclick: clear }, t('puzzle.clear')),
-        h('button', { class: 'btn small', onclick: hint }, t('puzzle.hint')),
+        hintBtn,
         h('button', { class: 'btn small', 'data-sound': 'back', onclick: finish }, t('puzzle.close')),
       );
       box.replaceChildren(

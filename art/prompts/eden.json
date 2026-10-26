@@ -948,6 +948,17 @@
       ],
       "prompt": "Walk-cycle animation strip of this exact sheep (the animal in the reference image), seen from the side and facing right: seven frames in one row, evenly spaced with clear space between them, at the same size and pixel scale as the reference. Frame 1 standing still; frames 2 to 7 a smooth, natural walking cycle with a correct four-legged gait and a slight bob of the body. The animal is identical in every frame (same colors, markings and proportions); only the legs, head and tail move. All hooves or paws stand on the same horizontal baseline.",
       "style": "style2"
+    },
+    {
+      "id": "v3-animal-bear",
+      "title": "Bear in the style of the deer",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "art/prompts/refs/v2-animal-deer.png",
+        "art/prompts/refs/v2-animal-lion.png"
+      ],
+      "prompt": "One brown bear as a game sprite, seen from the side and facing right, standing calmly on all four legs, in exactly the style of the deer and the lion in the references: the same pixel size, the same soft painterly shading with light from the upper left and the same natural, realistic proportions. Warm brown fur with gentle lighter and darker tones, a rounded shoulder hump, small round ears, a darker muzzle and dark eyes, four sturdy legs clearly separated with a little space between them, short tail. Natural and dignified, not cute or cartoonish. About as tall as the lion."
     }
   ],
   "style2": "STYLE RULES: Soft, modern pixel art exactly in the style of the reference images: small soft pixel blocks, gentle painterly shading with light from the upper left, bright warm natural colours (fresh yellow-greens, warm skin, soft browns), smooth flat areas with little texture noise, and NO dark outlines: shapes are separated only by colour and light. The references show the style and scale only: draw new subjects, do not copy or edit the references. BACKGROUND: one flat solid magenta colour (#FF00FF) everywhere around the subjects, with no shadow, ground, grass, scenery, glow or texture on it. Leave clear magenta space between separate subjects. No text, letters, numbers, labels, borders or frames."

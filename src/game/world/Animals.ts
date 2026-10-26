@@ -11,6 +11,8 @@ interface Brain {
   until: number;
   flying: number;     // seconds left in the air (doves)
   frozen: boolean;    // held in place by a scene (e.g. while being named)
+  stuck: number;      // seconds spent pushing against something
+  last: { x: number; y: number };
 }
 
 /** Animals wander slowly around their home; doves sometimes fly. */
@@ -35,7 +37,7 @@ export class Animals {
         facing: Math.random() < 0.5 ? 'left' : 'right',
       });
       if (actor.shadow && !a.shadow && width > 120) actor.shadow.setScale(1.6, 1.2);
-      this.brains.push({ def, actor, target: null, until: scene.time.now + Math.random() * 3000, flying: 0, frozen: false });
+      this.brains.push({ def, actor, target: null, until: scene.time.now + Math.random() * 3000, flying: 0, frozen: false, stuck: 0, last: { x: def.home[0], y: def.home[1] } });
     }
   }
 
@@ -90,10 +92,24 @@ export class Animals {
           a.stop();
           b.until = time + 2500 + Math.random() * 5000;
         } else {
-          a.move((dx / dist) * speed, (dy / dist) * speed * 0.8);
-          // animals are drawn from the side: keep a horizontal facing
-          if (a.facing === 'up' || a.facing === 'down') a.facing = dx < 0 ? 'left' : 'right';
+          // walking into a tree or a rock: turn aside instead of pushing on
+          const moved = Math.hypot(a.x - b.last.x, a.y - b.last.y);
+          b.stuck = moved < speed * dt * 0.3 ? b.stuck + dt : 0;
+          if (b.stuck > 0.5) {
+            b.stuck = 0;
+            const side = Math.random() < 0.5 ? -1 : 1;
+            const tx = a.x - (dx / dist) * 50 - (dy / dist) * 70 * side;
+            const ty = a.y - (dy / dist) * 50 + (dx / dist) * 70 * side;
+            b.target = this.terrain.isWaterAt(tx, ty) ? null : { x: tx, y: ty };
+            b.until = time + 3000;
+            if (!b.target) a.stop();
+          } else {
+            a.move((dx / dist) * speed, (dy / dist) * speed * 0.8);
+            // animals are drawn from the side: keep a horizontal facing
+            if (a.facing === 'up' || a.facing === 'down') a.facing = dx < 0 ? 'left' : 'right';
+          }
         }
+        b.last = { x: a.x, y: a.y };
       }
       a.refresh();
     }

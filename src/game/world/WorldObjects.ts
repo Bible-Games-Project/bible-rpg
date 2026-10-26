@@ -369,6 +369,19 @@ export class WorldObjects {
     }
   }
 
+  nearestTree(x: number, y: number, range: number, ok: (t: TreeInstance) => boolean = () => true): TreeInstance | undefined {
+    let best: TreeInstance | undefined;
+    let bd = range;
+    for (const t of this.trees) {
+      const d = Math.hypot(t.x - x, t.y - y);
+      if (d < bd && ok(t)) {
+        bd = d;
+        best = t;
+      }
+    }
+    return best;
+  }
+
   isCovered(x: number, y: number): boolean {
     return this.covers.some((c) => Math.hypot(c.x - x, (c.y - y) * 1.3) < c.r);
   }

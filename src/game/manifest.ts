@@ -23,6 +23,8 @@ export interface SheetAsset {
   anchorX: number;
   anchorY: number;
   idle?: number[];
+  /** idle animation speed (animals breathe slowly) */
+  idleFps?: number;
   walk?: number[];
   /** walk animation speed in frames per second (default 8) */
   walkFps?: number;

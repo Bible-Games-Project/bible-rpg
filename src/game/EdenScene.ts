@@ -108,7 +108,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.adam = new Actor(this, { id: 'adam', x: POINTS.adamStart[0], y: POINTS.adamStart[1], charId: 'adam', outfit: c.adam.outfit, body: { w: 22, h: 10 } });
     this.eve = new Actor(this, { id: 'eve', x: POINTS.eveArrive[0], y: POINTS.eveArrive[1], charId: 'eve', outfit: c.eve.outfit, body: { w: 22, h: 10 } });
     this.god = new Actor(this, { id: 'god', x: POINTS.godAppear[0], y: POINTS.godAppear[1], charId: 'god', outfit: 'robe', body: { w: 26, h: 10 }, solid: true });
-    this.serpent = new Actor(this, { id: 'serpent', x: POINTS.serpentBranch[0], y: POINTS.serpentBranch[1], sheet: 'serpent-tree', shadow: null, body: { w: 10, h: 6 } });
+    this.serpent = new Actor(this, { id: 'serpent', x: POINTS.serpentBranch[0], y: POINTS.serpentBranch[1], sheet: 'serpent-tree', body: { w: 10, h: 6 } });
     this.eve.setVisible(false);
     this.god.setVisible(false);
     this.serpent.setVisible(false);
@@ -211,7 +211,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       // "px-" textures are small pixel shapes drawn in art pixels at runtime
       const perPixel = zoom * (key.startsWith('px-') ? 1 / ART_RESOLUTION : textureScale(key));
       const smooth = key.startsWith('fx-') || key === 'tiles-extruded';
-      const crisp = !smooth && perPixel >= 0.98 && Math.abs(perPixel - Math.round(perPixel)) < 0.02;
+      // the objective arrows are always drawn at whole screen pixels per pixel
+      const crisp = key === 'ui-arrows' || (!smooth && perPixel >= 0.98 && Math.abs(perPixel - Math.round(perPixel)) < 0.02);
       this.textures.get(key).setFilter(crisp ? Phaser.Textures.FilterMode.NEAREST : Phaser.Textures.FilterMode.LINEAR);
     }
   }
@@ -527,9 +528,36 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     }
   }
 
-  godLight(on: boolean): void {
+  godLight(on: boolean, beam = false): void {
     this.godLit = on;
-    this.holy.set(on);
+    this.holy.set(on, beam);
+  }
+
+  /** The base of the nearest tree or bush to the right of `at` within
+   * `range` (somewhere to go out of sight behind). */
+  coverNear(at: Pt, range = 420): Pt | null {
+    const t = this.objects.nearestTree(at[0], at[1], range, (tr) => tr.x > at[0] + 40);
+    return t ? [t.x, t.y] : null;
+  }
+
+  /** Fade someone out (the LORD God leaving, the serpent going away). */
+  vanish(actor: Actor, ms = 1100): Promise<void> {
+    return new Promise((resolve) => {
+      if (!actor.visible) return resolve();
+      const parts = [actor.sprite, actor.shadow].filter((o): o is NonNullable<typeof o> => !!o);
+      const from = parts.map((o) => o.alpha);
+      if (actor === this.god) void this.holy.fadeOut(ms);
+      this.tweens.add({
+        targets: parts,
+        alpha: 0,
+        duration: ms,
+        onComplete: () => {
+          this.hide(actor);
+          parts.forEach((o, i) => o.setAlpha(from[i]));
+          resolve();
+        },
+      });
+    });
   }
 
   // ------------------------------------------------------ inventory & flags
@@ -685,6 +713,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       s.depthBias = this.treeAt('forbiddenTree')[1] - POINTS.serpentBranch[1] + 2;
     }
     s.refresh(true);
+    // up in the branches it casts no shadow on the grass under it
+    s.shadow?.setVisible(pose === 'ground');
   }
 
   thorns(on: boolean): void {
@@ -790,22 +820,18 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   // -------------------------------------------------------------- stealth
 
   /**
-   * Mission 8: stay hidden while the LORD God walks through the grove in the
-   * cool of the day. Being seen sends the player back to the start of the
-   * challenge; after three tries the story continues anyway.
-   */
-  /**
    * Hiding from the LORD God (Genesis 3:8). He walks his round of the grove,
    * but comes toward anyone he sees or hears moving in the open, goes to
    * where he last noticed them and looks around there before returning to
-   * his round. Being seen for a moment only sends the player back.
+   * his round. Being seen for a moment only sends the player back, as many
+   * times as it takes (the maintainer did not want the mission to pass by
+   * itself after a few failures).
    */
   stealth(seconds: number): Promise<void> {
     return new Promise((resolve) => {
       const hud = ui().hud;
       const god = this.god;
       let remaining = seconds;
-      let failures = 0;
       let done = false;
       const sight = this.add.image(god.x, god.y, 'shadow-large').setTint(0xfff2c0).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.35).setDepth(DEPTH_GROUND + 20).setScale(4, 3.2);
       const startPos: Pt = POINTS.groveStart;
@@ -836,13 +862,16 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
           remaining -= 0.1;
           grace -= 0.1;
           sight.setPosition(god.x, god.y);
-          // both of them must stay hidden, not only the one being played
+          // both of them must stay hidden, not only the one being played; the
+          // one following is hidden too when it stays close to a hidden leader
           let exposed = false;
           let noticed: Actor | null = null;
-          for (const p of [this.player(), this.other()]) {
+          const lead = this.player();
+          const leadCovered = this.objects.isCovered(lead.x, lead.y);
+          for (const p of [lead, this.other()]) {
             if (!p.visible) continue;
             const d = Phaser.Math.Distance.Between(p.x, p.y, god.x, god.y);
-            const covered = this.objects.isCovered(p.x, p.y);
+            const covered = p === lead ? leadCovered : this.objects.isCovered(p.x, p.y) || (leadCovered && Phaser.Math.Distance.Between(p.x, p.y, lead.x, lead.y) < 50);
             const blocked = this.objects.sightBlocked(god.x, god.y - 20, p.x, p.y - 10);
             const seen = d < 190 && !covered && !blocked;
             const heard = d < 330 && p.moving && !covered;
@@ -883,12 +912,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
           hud.setTimer(remaining, seconds, exposed ? t('stealth.exposed') : t('stealth.hidden'));
           exposedFor = exposed ? exposedFor + 0.1 : 0;
           if (exposedFor >= 0.6 && grace <= 0) {
-            failures++;
             exposedFor = 0;
-            if (failures >= 3) {
-              finish();
-              return;
-            }
             audio.play('detected');
             this.cutscene(true);
             god.stop();

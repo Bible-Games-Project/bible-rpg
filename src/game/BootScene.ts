@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { ARROW_CELL } from '../ui/HUD';
 import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type ShadowAsset } from './manifest';
 
 /**
@@ -33,6 +34,7 @@ export class BootScene extends Phaser.Scene {
       if (t.shadow) this.loadShadow(`tree:${key}:trunk`, t.shadow);
     }
     this.load.spritesheet('tiles', assetUrl(m.tiles.file), { frameWidth: m.tiles.tileSize, frameHeight: m.tiles.tileSize });
+    this.load.spritesheet('ui-arrows', assetUrl('assets/ui/arrows.png'), { frameWidth: ARROW_CELL, frameHeight: ARROW_CELL });
     this.load.on('progress', (p: number) => this.game.events.emit('load-progress', p));
   }
 
@@ -56,7 +58,7 @@ export class BootScene extends Phaser.Scene {
     }
     for (const [key, a] of Object.entries(m.sprites)) {
       if (a.frames <= 1) continue;
-      if (a.idle) this.anims.create({ key: `${key}:idle`, frames: this.anims.generateFrameNumbers(key, { frames: a.idle }), frameRate: 1.2, repeat: -1 });
+      if (a.idle) this.anims.create({ key: `${key}:idle`, frames: this.anims.generateFrameNumbers(key, { frames: a.idle }), frameRate: a.idleFps ?? 1.2, repeat: -1 });
       if (a.walk) this.anims.create({ key: `${key}:walk`, frames: this.anims.generateFrameNumbers(key, { frames: a.walk }), frameRate: a.walkFps ?? 7, repeat: -1 });
       if (a.fly) this.anims.create({ key: `${key}:fly`, frames: this.anims.generateFrameNumbers(key, { frames: a.fly }), frameRate: 8, repeat: -1 });
       if (!a.idle && !a.walk) {

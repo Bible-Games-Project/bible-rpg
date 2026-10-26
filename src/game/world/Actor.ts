@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { CHARACTERS } from '../../data/characters';
-import { MANIFEST, charKey, sized, textureScale, type Direction } from '../manifest';
+import { MANIFEST, charKey, shadowOf, sized, textureScale, type Direction } from '../manifest';
 import { addShadow, fitShadow } from './shadows';
 
 export type Facing = 'down' | 'up' | 'left' | 'right';
@@ -40,6 +40,7 @@ export class Actor {
   readonly body: Phaser.Physics.Arcade.Body;
   shadow: Phaser.GameObjects.Image | null = null;
   private castShadow = false;
+  private roundShadow = 'shadow-small';
   facing: Facing;
   moving = false;
   /** current walking speed (px/s) */
@@ -78,7 +79,8 @@ export class Actor {
     this.applyAnchor();
     if (o.shadow !== null) {
       // the sprite's own cast shadow when it has one, else a soft round one
-      this.shadow = addShadow(scene, o.x, o.y, key) ?? scene.add.image(o.x, o.y, o.shadow ?? 'shadow-small').setDepth(DEPTH_SHADOW).setAlpha(0.9);
+      this.roundShadow = o.shadow ?? 'shadow-small';
+      this.shadow = addShadow(scene, o.x, o.y, key) ?? scene.add.image(o.x, o.y, this.roundShadow).setDepth(DEPTH_SHADOW).setAlpha(0.9);
       this.castShadow = this.shadow.texture.key.startsWith('shadow:');
       // the shadow moves with the legs, arms and wings: one cell per frame
       this.sprite.on(Phaser.Animations.Events.ANIMATION_UPDATE, () => this.syncShadow());
@@ -254,6 +256,12 @@ export class Actor {
     if (this.sprite.texture.key !== tex) {
       this.sprite.setTexture(tex);
       this.applyAnchor();
+      // a sheet with its own cast shadow, or back to the soft round one
+      if (this.shadow && shadowOf(tex)) this.castShadow = true;
+      else if (this.shadow && this.castShadow) {
+        this.castShadow = false;
+        this.shadow.setTexture(this.roundShadow).setOrigin(0.5).setScale(1).setAlpha(0.9);
+      }
       force = true;
     }
     this.sprite.setFlipX(this.facing === 'left');
@@ -292,7 +300,7 @@ export class Actor {
     const x = Math.round(this.feet.x);
     const y = Math.round(this.feet.y);
     const up = Math.max(0, this.lift);
-    this.shadow.setPosition(x + up * 0.5, y + up * 0.22);
+    this.shadow.setPosition(x + up * 0.45, y + up * 0.11);
     if (!this.castShadow) return;
     const k = 1 / (1 + up / 60);
     this.shadow.setScale(textureScale(this.sprite.texture.key) * k).setAlpha(0.35 + 0.65 * k);

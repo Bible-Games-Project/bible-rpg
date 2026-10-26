@@ -752,20 +752,33 @@ def bob(s: np.ndarray, lift: float = 0.7) -> np.ndarray:
 # above the object's base lands SHADOW_X * h to the right and SHADOW_Y * h
 # lower; the result is blurred, as the art is soft. (The maintainer found
 # round shadows that ignore the object's shape wrong.)
-SHADOW_X = 0.5
-SHADOW_Y = 0.22
+# (0.5, 0.22) put the shadows of tall trees well below their base, and the
+# maintainer saw the trees float; flatter, they stay against the trunk.
+SHADOW_X = 0.45
+SHADOW_Y = 0.11
 SHADOW_ALPHA = 0.34
 SHADOW_RGB = (14, 30, 24)
 
 
-def cast_shadow(s: np.ndarray, ax: int, ay: int) -> tuple[np.ndarray, int, int]:
+def cast_shadow(s: np.ndarray, ax: int, ay: int, lying: bool = False) -> tuple[np.ndarray, int, int]:
     """(shadow image, anchor x, anchor y): the shadow of sprite `s` standing
-    at (ax, ay); the anchor is where that base point falls in the image."""
+    at (ax, ay); the anchor is where that base point falls in the image.
+    Something `lying` on the ground (a log, a rock, the crawling serpent)
+    touches it all along its lower edge: each column stands on its own
+    lowest pixel, so the shadow stays against the object (the maintainer
+    saw the log's shadow apart from the log)."""
     from PIL import ImageFilter
     ys, xs = np.nonzero(s[:, :, 3] > 0)
-    z = np.maximum(0, ay - ys)
+    if lying:
+        low = np.full(s.shape[1], ay)
+        for x in np.unique(xs):
+            low[x] = ys[xs == x].max()
+        base = low[xs]
+    else:
+        base = np.full(len(ys), ay)
+    z = np.maximum(0, base - ys)
     tx = xs + SHADOW_X * z
-    ty = ay + SHADOW_Y * z
+    ty = base + SHADOW_Y * z
     blur = px(1.6)
     m = blur * 3 + 2
     ox, oy = int(np.floor(tx.min())) - m, int(np.floor(ty.min())) - m
@@ -784,7 +797,7 @@ def cast_shadow(s: np.ndarray, ax: int, ay: int) -> tuple[np.ndarray, int, int]:
     return out, ax - ox, ay - oy
 
 
-def shadow_entry(save, frames: np.ndarray | list[np.ndarray], ax: int, ay: int, name: str) -> dict:
+def shadow_entry(save, frames: np.ndarray | list[np.ndarray], ax: int, ay: int, name: str, lying: bool = False) -> dict:
     """The shadow of each frame of a sheet, then of each frame mirrored: a
     sprite drawn flipped (facing left) still has the sun at the upper left,
     so its shadow is not the flipped shadow. All on one strip with the base
@@ -793,7 +806,7 @@ def shadow_entry(save, frames: np.ndarray | list[np.ndarray], ax: int, ay: int, 
     cells = frames if isinstance(frames, list) else [frames]
     w = cells[0].shape[1]
     # flipped, the base point (ax from the left edge) is w - ax from it
-    shots = [cast_shadow(c, ax, ay) for c in cells] + [cast_shadow(c[:, ::-1].copy(), w - ax, ay) for c in cells]
+    shots = [cast_shadow(c, ax, ay, lying) for c in cells] + [cast_shadow(c[:, ::-1].copy(), w - ax, ay, lying) for c in cells]
     left = max(sx for _, sx, _ in shots)
     right = max(img.shape[1] - sx for img, sx, _ in shots)
     up = max(sy for _, _, sy in shots)
@@ -806,29 +819,39 @@ def shadow_entry(save, frames: np.ndarray | list[np.ndarray], ax: int, ay: int, 
     return {'file': save(out, f'shadows/{name}.png'), 'anchorX': int(left), 'anchorY': int(up), 'frameWidth': int(cw), 'frameHeight': int(ch), 'frames': len(cells)}
 
 
-def sprite_sheet(m, save, strip, sheet_entry, key: str, frames: list[np.ndarray], folder: str = 'sprites', **extra) -> None:
+def sprite_sheet(m, save, strip, sheet_entry, key: str, frames: list[np.ndarray], folder: str = 'sprites', lying: bool | None = None, **extra) -> None:
+    """A sheet of frames on one baseline; with `lying` set, also the shadows
+    of its frames (see cast_shadow)."""
     w = max(f.shape[1] for f in frames) + 2
     h = max(f.shape[0] for f in frames) + 2
     cells = [place(f, w, h, w // 2, h - 2) for f in frames]
+    if lying is not None:
+        extra['shadow'] = shadow_entry(save, cells, w // 2, h - 2, key, lying)
     file = save(strip(cells) if len(cells) > 1 else cells[0], f'{folder}/{key}.png')
     m.setdefault('sprites', {})[key] = sheet_entry(file, cells, (w // 2, h - 2), **extra)
 
 
 ANIMALS = [  # order in the "animals" sheet, target height in world pixels
-    [('horse', 116), ('camel', 132), ('lion', 74), ('deer', 104)],
+    [('horse', 116), ('bear', 86), ('lion', 74), ('deer', 104)],
     [('sheep', 58), ('goat', 64), ('rabbit', 32), ('dove', 22)],
 ]
 
 
 # animation strips: frame 1 standing, then six frames of walking (the hare
 # hops; the dove walks two frames and flies four)
-ANIMATION_JOBS = {name: f'walk-animal-{name}' for name in ('horse', 'camel', 'lion', 'deer', 'sheep', 'goat', 'rabbit')}
+ANIMATION_JOBS = {name: f'walk-animal-{name}' for name in ('horse', 'lion', 'deer', 'sheep', 'goat', 'rabbit')}
 ANIMATION_JOBS['dove'] = 'fly-animal-dove'
 JUMPS = {'rabbit', 'dove'}  # frames keep their height above the ground
-# A calm walk drawn from the standing frame instead of the generated strip
-# (which looked like a run for the sheep and too jerky for the horse and the
-# camel): (leg swing at the hoof in world px, where the legs start).
-GENTLE = {'sheep': (2.0, 0.6), 'horse': (2.5, 0.58), 'camel': (2.5, 0.6)}
+# Four-legged walks drawn from the standing frame, each leg on its own beat:
+# a walk, where the back and front leg of one side are a quarter cycle
+# apart and the other side half a cycle later. The generated strips looked
+# like a run (sheep), walked backwards (deer) and cut the tail (lion), and a
+# first calm walk moved both front and both back legs together (the
+# maintainer: "no alterna"). (swing of a hoof as a share of the leg length)
+QUAD = {'sheep': 0.16, 'horse': 0.13, 'deer': 0.14, 'lion': 0.16, 'bear': 0.14}
+QUAD_FRAMES = 8
+# animals drawn from one standing image rather than a walk strip
+STILL_JOBS = {'bear': 'v3-animal-bear'}
 
 
 def unpink(s: np.ndarray) -> np.ndarray:
@@ -852,51 +875,130 @@ def unpink(s: np.ndarray) -> np.ndarray:
     return out
 
 
-def gentle_walk(stand: np.ndarray, swing: float, legs: float, n: int = 6) -> list[np.ndarray]:
-    """Legs swinging a little from the hips, front pair against back pair,
-    and the body one pixel lower while the legs are apart."""
+def runs_of(cols: np.ndarray) -> list[tuple[int, int]]:
+    out, x = [], 0
+    while x < len(cols):
+        if cols[x]:
+            x0 = x
+            while x < len(cols) and cols[x]:
+                x += 1
+            out.append((x0, x))
+        x += 1
+    return out
+
+
+def leg_map(stand: np.ndarray) -> tuple[int, np.ndarray, list[int]]:
+    """(row where the legs start, a map of which leg each pixel belongs to
+    (-1: body, tail…), the legs from far to near). Legs are found from the
+    hooves: the runs of pixels along the bottom under the body, split until
+    there are four; every pixel below the belly goes to the nearest hoof
+    within reach. The darker leg of each pair is the far one."""
+    a = stand[:, :, 3] > 0
+    h, w = a.shape
+    cov = a.sum(1)
+    top = h - 1
+    while top > 0 and cov[top - 1] < 0.55 * cov.max():
+        top -= 1
+    # hooves lie under the body (a tail tuft on the ground does not)
+    under = np.nonzero(a[max(0, top - 8):top].any(0))[0]
+    left, right = under.min() - 3, under.max() + 3
+    band = a[h - max(3, (h - top) // 6):]
+    hooves = [r for r in runs_of(band.any(0)) if left <= (r[0] + r[1]) / 2 <= right and r[1] - r[0] >= 2]
+    while len(hooves) < 4 and hooves:
+        k = max(range(len(hooves)), key=lambda i: hooves[i][1] - hooves[i][0])
+        x0, x1 = hooves[k]
+        mid = (x0 + x1) // 2
+        hooves[k:k + 1] = [(x0, mid), (mid, x1)]
+    hooves = sorted(sorted(hooves, key=lambda r: r[0] - r[1])[:4])
+    centres = np.array([(x0 + x1) / 2 for x0, x1 in hooves])
+    reach = max(x1 - x0 for x0, x1 in hooves) * 1.1 + 2
+    legs = np.full((h, w), -1, int)
+    for y in range(top, h):
+        for x in np.nonzero(a[y])[0]:
+            d = np.abs(centres - x)
+            i = int(d.argmin())
+            if d[i] <= reach:
+                legs[y, x] = i
+    shade = [float(stand[legs == i][:, :3].mean()) if (legs == i).any() else 0 for i in range(4)]
+    # back pair, then front pair (the animals face right); darker = far
+    order = []
+    for pair in ((0, 1), (2, 3)):
+        far, near = sorted(pair, key=lambda i: shade[i])
+        order.append((far, near))
+    return top, legs, [order[0][0], order[1][0], order[0][1], order[1][1]]
+
+
+def quad_walk(stand: np.ndarray, swing: float, n: int = QUAD_FRAMES) -> list[np.ndarray]:
+    """A walk cycle: each leg swings from the top of the leg (forward with
+    the hoof a little lifted, back along the ground), the body one pixel
+    lower while the legs are spread."""
     h, w = stand.shape[:2]
-    hip = int(h * legs)
-    c = torso_center(stand)
-    amp = px(swing)
+    top, legs, depth = leg_map(stand)
+    far_back, far_front, near_back, near_front = depth
+    phase = {near_back: 0.0, near_front: 0.25, far_back: 0.5, far_front: 0.75}
+    amp = max(1.0, swing * (h - top))
+    lift = max(1.0, 0.08 * (h - top))
+    pad = int(np.ceil(amp)) + 1
+    ys, xs = np.nonzero(stand[:, :, 3] > 0)
     frames = []
-    for i in range(n):
-        ph = np.sin(2 * np.pi * i / n)
-        sink = int(round(abs(ph)))
-        f = np.zeros((h, w + 2 * amp + 2, 4), np.uint8)
-        ox = amp + 1
-        # the hooves stay on the ground; the body over the legs sinks a little
-        for y in range(hip, h):
-            k = (y - hip + 1) / (h - hip)
-            row = stand[y]
-            for x in np.nonzero(row[:, 3])[0]:
-                dx = int(round(amp * k * ph)) * (1 if x >= c else -1)
-                f[y, ox + x + dx] = row[x]
-        body = f[sink:hip + sink, ox:ox + w]
-        solid = stand[:hip, :, 3] > 0
-        body[solid] = stand[:hip][solid]
-        frames.append(trim(f))
+    for f in range(n):
+        t = f / n
+        sink = 1 if np.cos(4 * np.pi * t) > 0.3 else 0
+        out = np.zeros((h, w + 2 * pad, 4), np.uint8)
+
+        def put(i: int) -> None:
+            p = 2 * np.pi * (t - phase[i])
+            dx, up = amp * np.sin(p), lift * max(0.0, np.cos(p))
+            for y, x in zip(*np.nonzero(legs == i)):
+                k = (y - top + 1) / (h - top)
+                out[y - int(round(up * k * k)), x + pad + int(round(dx * k))] = stand[y, x]
+
+        for i in (far_back, far_front):
+            put(i)
+        for y, x in zip(ys, xs):
+            if legs[y, x] < 0:
+                out[y + (sink if y < top else 0), x + pad] = stand[y, x]
+        for i in (near_back, near_front):
+            put(i)
+        frames.append(trim(out))
     return frames
+
+
+def inhale(stand: np.ndarray, at: float) -> np.ndarray:
+    """An animal breathing in: the back and head one pixel higher (a row of the chest
+    at `at` of the height is drawn twice)."""
+    h = stand.shape[0]
+    cut = max(1, int(h * at))
+    return np.concatenate([stand[:cut], stand[cut - 1:cut], stand[cut:]], axis=0)
 
 
 def build_animals(m, save, strip, sheet_entry) -> None:
     if has_output('v2-animals') and not has_output(f'v2-{ANIMATION_JOBS["horse"]}'):
         build_still_animals(m, save, strip, sheet_entry)
         return
+    # the camel was replaced by the bear (the maintainer's call)
+    m['sprites'].pop('animal-camel', None)
     for row in ANIMALS:
         for name, height in row:
-            img = cutout(ANIMATION_JOBS[name])
-            boxes = split_strip(img, 7)
-            period = (boxes[0][2] - boxes[0][0]) / (height * CREATURE_SCALE * ART)
-            base = boxes[0][2]
-            frames = []
-            for b in boxes:
-                f = unpink(resample(img, b, period))
-                up = max(0, int(round((base - b[2]) / period))) if name in JUMPS else 0
-                frames.append((f, up))
-            if name in GENTLE:
-                stand = frames[0][0]
-                frames = [(stand, 0)] + [(f, 0) for f in gentle_walk(stand, *GENTLE[name])]
+            if name in STILL_JOBS:
+                img = cutout(STILL_JOBS[name])
+                box = bbox(clean_mask(img[:, :, 3]))
+                frames = [(unpink(resample(img, box, (box[2] - box[0]) / (height * CREATURE_SCALE * ART))), 0)]
+            else:
+                img = cutout(ANIMATION_JOBS[name])
+                boxes = split_strip(img, 7)
+                period = (boxes[0][2] - boxes[0][0]) / (height * CREATURE_SCALE * ART)
+                base = boxes[0][2]
+                frames = []
+                for b in boxes:
+                    f = unpink(resample(img, b, period))
+                    up = max(0, int(round((base - b[2]) / period))) if name in JUMPS else 0
+                    frames.append((f, up))
+            stand = frames[0][0]
+            if name in QUAD:
+                frames = [(stand, 0)] + [(f, 0) for f in quad_walk(stand, QUAD[name])]
+            # a last frame breathing in, for a slow idle (all animals)
+            frames.append((inhale(stand, 0.45 if name in QUAD else 0.5), 0))
             center = (lambda f: f.shape[1] / 2) if name == 'dove' else torso_center
             # wide enough for the farther side from the body's centre (a
             # neck or a tail): cells as wide as the widest frame cut them
@@ -904,12 +1006,13 @@ def build_animals(m, save, strip, sheet_entry) -> None:
             w = 2 * int(np.ceil(half)) + 4
             h = max(f.shape[0] + up for f, up in frames) + 2
             cells = [place(f, w, h, w // 2, h - 2 - up, center(f)) for f, up in frames]
+            idle = {'idle': [0, len(cells) - 1], 'idleFps': 0.8}
             if name == 'dove':
-                extra = {'idle': [0], 'walk': [1, 0, 2, 0], 'walkFps': 6, 'fly': [3, 4, 5, 6]}
-            elif name in GENTLE:
-                extra = {'idle': [0], 'walk': list(range(1, len(cells))), 'walkFps': 6}
+                extra = {**idle, 'walk': [1, 0, 2, 0], 'walkFps': 6, 'fly': [3, 4, 5, 6]}
+            elif name in QUAD:
+                extra = {**idle, 'walk': list(range(1, len(cells) - 1)), 'walkFps': 9}
             else:
-                extra = {'idle': [0], 'walk': [1, 2, 3, 4, 5, 6], 'walkFps': 8 if name != 'rabbit' else 11}
+                extra = {**idle, 'walk': [1, 2, 3, 4, 5, 6], 'walkFps': 8 if name != 'rabbit' else 11}
             key = f'animal-{name}'
             file = save(strip(cells), f'sprites/{key}.png')
             extra['shadow'] = shadow_entry(save, cells, w // 2, h - 2, key)
@@ -996,7 +1099,7 @@ def build_serpent(m, save, strip, sheet_entry) -> None:
         ground_box = bbox(clean_mask(img[:, :, 3]))
     g = resample(img, ground_box, (ground_box[3] - ground_box[1]) / (110 * CREATURE_SCALE * ART))
     frames = slither(g)
-    sprite_sheet(m, save, strip, sheet_entry, 'serpent-ground', frames, idle=[0], walk=list(range(len(frames))), walkFps=6)
+    sprite_sheet(m, save, strip, sheet_entry, 'serpent-ground', frames, lying=True, idle=[0], walk=list(range(len(frames))), walkFps=6)
     print(f'  serpent {t.shape[1]}x{t.shape[0]}, {g.shape[1]}x{g.shape[0]}')
 
 
@@ -1448,6 +1551,8 @@ PROPS = {
 }
 # drawn centred on their position instead of standing on it
 CENTERED = {'lily-pad', 'stepping-stone', 'soil-marked', 'soil-tilled', 'soil-seeded', 'soil-watered'}
+# props lying on the ground rather than standing up (see cast_shadow)
+LYING = {'log', 'rock-large', 'rock-medium', 'rock-small', 'rock-mossy', 'flat-stone', 'mushrooms', 'seeds', 'digging-stick', 'fig-leaf'}
 
 
 def build_props(m, save, sheet_entry) -> None:
@@ -1465,7 +1570,7 @@ def build_props(m, save, sheet_entry) -> None:
                 else:
                     anchor = (w // 2, h - 1)
                 f = save(sp, f'props/{key}.png')
-                extra = {} if key in CENTERED or key.startswith('fruit-') else {'shadow': shadow_entry(save, sp, *anchor, key)}
+                extra = {} if key in CENTERED or key.startswith('fruit-') else {'shadow': shadow_entry(save, sp, *anchor, key, lying=key in LYING)}
                 m['sprites'][key] = sheet_entry(f, [sp], anchor, **extra)
         print(f'  {job}: {sum(len(r) for r in rows)} sprites')
 

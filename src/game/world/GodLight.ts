@@ -18,9 +18,11 @@ export class GodLight {
   private on = false;
   /** 1 while the column of light shines; it fades once he walks. */
   private beam = 1;
+  /** fades everything out when he leaves */
+  private level = 1;
   private lastTime = 0;
 
-  constructor(scene: Phaser.Scene, private still: boolean) {
+  constructor(private scene: Phaser.Scene, private still: boolean) {
     makeTextures(scene);
     const add = (key: string) => scene.add.image(0, 0, key).setBlendMode(Phaser.BlendModes.ADD).setVisible(false);
     this.pool = add('fx-holy-pool');
@@ -32,11 +34,31 @@ export class GodLight {
     }
   }
 
-  set(on: boolean): void {
-    if (on && !this.on) this.beam = 1;
+  /** `beam`: the column of light, only when he first appears (the
+   * maintainer did not want it back at the end). */
+  set(on: boolean, beam = false): void {
+    if (on && !this.on) this.beam = beam ? 1 : 0;
+    this.scene.tweens.killTweensOf(this);
+    this.level = 1;
     this.on = on;
     for (const o of this.parts()) o.setVisible(on);
     for (const m of this.motes) m.img.setVisible(on && !this.still);
+  }
+
+  /** Fade the light away over `ms`, then switch it off. */
+  fadeOut(ms: number): Promise<void> {
+    return new Promise((resolve) => {
+      if (!this.on) return resolve();
+      this.scene.tweens.add({
+        targets: this,
+        level: 0,
+        duration: ms,
+        onComplete: () => {
+          this.set(false);
+          resolve();
+        },
+      });
+    });
   }
 
   private parts(): Phaser.GameObjects.Image[] {
@@ -52,16 +74,16 @@ export class GodLight {
     if (!this.on) return;
     if (moving) this.beam = Math.max(0, this.beam - dt / 0.8);
     const t = this.still ? 0 : time / 1000;
-    const breathe = 0.85 + 0.15 * Math.sin(t * 1.3);
+    const breathe = (0.85 + 0.15 * Math.sin(t * 1.3)) * this.level;
     this.pool.setPosition(x + 6, y + 2).setDepth(DEPTH_GROUND + 30).setScale(1.1, 1).setAlpha(0.55 * breathe);
     this.halo.setPosition(x, y - height * 0.55).setDepth(y - 1).setScale(height / 140).setAlpha(0.7 * breathe);
-    this.beamWide.setPosition(x + 4, y + 4).setDepth(y + 1).setScale(1.3, 1.25).setAlpha((0.22 + 0.06 * Math.sin(t * 0.9)) * this.beam);
-    this.beamCore.setPosition(x + 2, y + 2).setDepth(y + 1).setScale(0.55, 1.15).setAlpha((0.2 + 0.08 * Math.sin(t * 1.7 + 1)) * this.beam);
+    this.beamWide.setPosition(x + 4, y + 4).setDepth(y + 1).setScale(1.3, 1.25).setAlpha((0.22 + 0.06 * Math.sin(t * 0.9)) * this.beam * this.level);
+    this.beamCore.setPosition(x + 2, y + 2).setDepth(y + 1).setScale(0.55, 1.15).setAlpha((0.2 + 0.08 * Math.sin(t * 1.7 + 1)) * this.beam * this.level);
     for (const m of this.motes) {
       if (this.still) break;
       const k = (m.phase + t * m.speed) % 1;
       m.img.setPosition(x + m.dx + Math.sin((k + m.phase) * 6.28) * 6, y - 8 - k * height * 1.3).setDepth(y + 2);
-      m.img.setAlpha(Math.sin(k * Math.PI) * 0.9);
+      m.img.setAlpha(Math.sin(k * Math.PI) * 0.9 * this.level);
     }
   }
 }

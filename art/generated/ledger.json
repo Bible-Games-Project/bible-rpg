@@ -2266,5 +2266,26 @@
    "total_tokens": 1887
   },
   "at": "20261024-060853"
+ },
+ {
+  "job": "v3-animal-bear",
+  "file": "art/generated/v3-animal-bear/20261025-064527-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0495,
+  "usage": {
+   "input_tokens": 1143,
+   "input_tokens_details": {
+    "image_tokens": 864,
+    "text_tokens": 279
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 2515
+  },
+  "at": "20261025-064527"
  }
 ]

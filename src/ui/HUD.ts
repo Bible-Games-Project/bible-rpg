@@ -4,6 +4,11 @@ import { assetUrl, MANIFEST } from '../game/manifest';
 import { h } from './dom';
 import { wireButtonSounds } from './overlays';
 
+/** The arrow strip (public/assets/ui/arrows.png): cells of 21 px, one per
+ * heading, clockwise from pointing right. */
+export const ARROW_CELL = 21;
+export const ARROW_HEADINGS = 16;
+
 export interface MissionInfo {
   number: number;
   title: string;
@@ -48,16 +53,10 @@ export class HUD {
     this.inventory = h('div', { class: 'inventory-bar' });
     this.switchBtn = h('button', { class: 'btn small', onclick: actions.switchCharacter }, t('hud.switch')) as HTMLButtonElement;
     this.charChip = h('div', { class: 'character-chip panel', hidden: true });
-    const ns = 'http://www.w3.org/2000/svg';
-    const svg = document.createElementNS(ns, 'svg');
-    svg.setAttribute('viewBox', '0 0 34 34');
-    // violet, the complement of the meadow's yellow-green, like the marker in the world
-    svg.innerHTML =
-      '<defs><linearGradient id="arrow-fill" x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stop-color="#d0a6fa"/><stop offset="1" stop-color="#7f42c4"/></linearGradient></defs>' +
-      '<path d="M31 17 L11.5 5.2 Q8.6 3.6 9.6 6.8 L13.2 17 L9.6 27.2 Q8.6 30.4 11.5 28.8 Z" fill="url(#arrow-fill)" stroke="#f4e6ff" stroke-width="1.6" stroke-linejoin="round"/>' +
-      '<path d="M26 16 L13 8.6 L15.4 16 Z" fill="#ead7ff" opacity="0.7"/>';
+    // the pixel-art arrow of the world marker (tools/art/ui_markers.py), one
+    // drawing per heading: a rotated pixel image looks ragged
     this.arrow = h('div', { class: 'objective-arrow', hidden: true });
-    this.arrow.append(svg);
+    this.arrow.style.backgroundImage = `url(${assetUrl('assets/ui/arrows.png')})`;
     this.timerText = h('div', {});
     this.timerBar = h('div', {});
     this.timer = h('div', { class: 'timer panel', hidden: true }, this.timerText, h('div', { class: 'bar' }, this.timerBar));
@@ -134,9 +133,17 @@ export class HUD {
       return;
     }
     this.arrow.hidden = false;
-    this.arrow.style.left = `${x}px`;
-    this.arrow.style.top = `${y}px`;
-    this.arrow.style.transform = `rotate(${angle}rad)`;
+    // whole device pixels per arrow pixel keep it sharp
+    const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+    const px = Math.max(2, Math.round(1.5 * dpr)) / dpr;
+    const heading = (((Math.round(angle / ((2 * Math.PI) / ARROW_HEADINGS)) % ARROW_HEADINGS) + ARROW_HEADINGS) % ARROW_HEADINGS);
+    const st = this.arrow.style;
+    st.left = `${x}px`;
+    st.top = `${y}px`;
+    st.width = st.height = `${ARROW_CELL * px}px`;
+    st.marginLeft = st.marginTop = `${(-ARROW_CELL * px) / 2}px`;
+    st.backgroundSize = `${ARROW_CELL * ARROW_HEADINGS * px}px ${ARROW_CELL * px}px`;
+    st.backgroundPosition = `${-heading * ARROW_CELL * px}px 0`;
   }
 
   setTimer(remaining: number | null, total = 1, label = ''): void {

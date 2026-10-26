@@ -156,20 +156,29 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   `width - anchorX` (the shadow of flipped trees was off). Something off the
   ground (a dove flying) has its shadow slide toward the lower right and
   shrink with height. Trees and bushes sway a little in the breeze from the
-  base, each at its own pace, shadows leaning along (`updateWind`).
+  base, each at its own pace, shadows leaning along (`updateWind`). The
+  projection is flat (`SHADOW_X` 0.45, `SHADOW_Y` 0.11): steeper, the
+  shadows of tall trees fell well below their base and the trees seemed to
+  float. Things lying on the ground (`LYING`: the log, rocks, the crawling
+  serpent) cast from each column's own lowest pixel, so the shadow touches
+  them along their length.
 - The cherub faces east with the flaming sword in hand (`flame` marks the
   blade for a flickering glow); the floating sword is gone. In mission 10
   the cherubim drop fast from the sky, each landing with thunder, a screen
   shake and a crack that stays (`GroundCrack.ts`). The crawling serpent is
   a top-down S with a gentle wave running along it (`slither`; the
-  maintainer wanted it slower and subtler). The serpent is already in the
-  tree (fading in) when mission 6 starts.
-- Objective arrows: one style near and far, the HUD's violet arrow (the
-  complement of the meadow's yellow-green). In view it hovers over the
-  target pointing down (`ObjectiveMarkers.ts`); off screen it sits at the
-  screen edge. `objective(…, { markAll: true })` puts one over every target
-  (the animals still to name, both fig trees). The maintainer liked the far
-  arrow and not the old bevelled near marker.
+  maintainer wanted it slower and subtler), with its moving shadow; in
+  mission 9 it crawls away behind the nearest bush or tree and fades out.
+  The serpent is already in the tree (fading in) when mission 6 starts.
+- Objective arrows: one pixel-art arrow near and far, in the warm gold of
+  the game's frames with a dark brown outline (`public/assets/ui/arrows.png`,
+  drawn by `tools/art/ui_markers.py` at 16 headings, since a rotated pixel
+  image looks ragged). In view it hovers over the target pointing down
+  (`ObjectiveMarkers.ts`); off screen the HUD shows the heading nearest the
+  target at the screen edge. Both keep whole screen pixels per arrow pixel.
+  `objective(…, { markAll: true })` puts one over every target (the animals
+  still to name, both fig trees). The maintainer rejected a bevelled marker
+  and then smooth violet arrows as foreign to the game.
 - Walks are all built from one clean standing frame per direction, so the
   drawing never changes between frames (8 frames at 12 fps). The maintainer
   asked for clearly visible steps and soft arm swings. Front/back: legs split
@@ -189,11 +198,17 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   `src/data/characters.ts`); any other speed scales the animation with it,
   so feet and ground keep pace (the maintainer saw them not matching).
   Up/down walks of Adam and Eve play at `WALK_FPS_FRONT` 19 (at 15 the
-  feet seemed to slide). Animals use generated 7-frame strips (stand + 6),
-  except the sheep, horse and camel: a calm walk made from the standing
-  frame (`GENTLE`, `gentle_walk`) at 6 fps and slow speeds; the generated
-  strips looked like a run or too jerky. Animal cells are as wide as the
-  farther side from the body's centre (heads and tails were cut).
+  feet seemed to slide). Four-legged animals (sheep, horse, deer, lion,
+  bear: `QUAD`) walk with each leg on its own beat, drawn from the standing
+  frame (`quad_walk`: legs found from the hooves, the darker of each pair
+  is the far one); the generated strips looked like a run, walked
+  backwards or cut the lion's tail, and a first calm walk moved both front
+  and both back legs together. The goat, hare and dove keep their
+  generated strips. Every animal breathes when idle (a frame with the back
+  one pixel higher, `idleFps`). Speeds are slow (`src/data/animals.ts`).
+  Animal cells are as wide as the farther side from the body's centre
+  (heads and tails were cut). The bear replaced the camel
+  (`v3-animal-bear`, one standing image).
 - Ground (`ART_GRASS=scene`, the default): grass colours are sampled from the
   meadow of `style-scene.webp` (nudged `ART_GRASS_HUE` 8° greener and
   `ART_GRASS_SAT` ×0.88 so a whole map is not mustard) and drawn smooth: base
@@ -224,10 +239,13 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
 - Ambient life (`Ambience.ts`, off with reduced motion), all very subtle:
   leaves, petals and bits of grass on the breeze with tiny shadows, gnats
   by the banks, a white cloud passing now and then with its shadow far off
-  toward the lower right (sun, cloud, shadow in line), fish shadows and
-  glints in the river, which also has a darker deep middle and more reeds
-  and lily pads (the maintainer found it plain). Small pixel shapes drawn at
-  runtime use "px-" keys and art-pixel scale so they stay crisp.
+  toward the lower right and well below (the cloud is drawn in pixel art
+  like the clouds of the story map painting; its shadow is the same shape,
+  dark and soft), fish shadows and glints in the river, a few deeper pools
+  of overlapping ovals here and there (a dark channel along the whole
+  river was rejected), and more reeds and lily pads. Small pixel shapes
+  drawn at runtime use "px-" keys and art-pixel scale so they stay crisp.
+  Animals that push against a tree turn aside.
 - Story map (Old Testament): the maintainer's painting
   `art/reference/v2/story-map.webp` (copied to `public/assets/ui/`) with no
   drawn route; each story's node sits on the painted road next to its
@@ -266,15 +284,18 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   and Eve picks the fruit; each takes leaves from their own fig tree; the
   other one's task shows a short "switch" hint. In mission 3 the animals
   stay where they graze (they no longer come to Adam), each still unnamed
-  one has an arrow, and naming five ends the mission.
+  one has an arrow, and naming five ends the mission. One hint per animal.
 - God appears as a luminous human figure and is never an enemy; the hiding
   challenge (mission 8, 20 seconds: the maintainer found a minute too long)
-  only sends the player back, and the canonical conversation always happens.
+  only sends the player back, as many times as it takes (it no longer
+  passes by itself after a few failures), and the canonical conversation
+  always happens.
   During it God walks his round but goes toward anyone he sees or hears
   moving in the open and looks around where he last noticed them. Either of
   them being seen counts, not only the one being played (the follower keeps
-  closer while hiding). His column of light fades once he walks; the glow
-  and the motes stay.
+  closer while hiding, and counts as hidden next to a hidden leader). His column of light shows only at his first
+  appearance (`godLight(true, true)`) and fades once he walks; the glow and
+  the motes stay. He leaves with a fade (`vanish`).
 
 ### Code conventions
 

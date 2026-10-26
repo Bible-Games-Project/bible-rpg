@@ -70,7 +70,12 @@ export interface WorldApi {
   fx(name: 'sparkle' | 'mist' | 'splash' | 'leaves' | 'holy', at: Pt): void;
   /** The closest point in the river's water to `at` (within 200 px). */
   waterNear(at: Pt): Pt;
-  godLight(on: boolean): void;
+  /** `beam`: his column of light, only for his first appearance. */
+  godLight(on: boolean, beam?: boolean): void;
+  /** The base of the nearest tree or bush to the right of a point. */
+  coverNear(at: Pt, range?: number): Pt | null;
+  /** Fade someone out, then hide them. */
+  vanish(actor: Actor, ms?: number): Promise<void>;
 
   // party
   setActive(id: PlayableId): void;

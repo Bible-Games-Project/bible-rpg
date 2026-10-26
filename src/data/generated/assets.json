@@ -327,8 +327,8 @@
       "file": "assets/shadows/char-adam-leaves-down.png",
       "anchorX": 23,
       "anchorY": 8,
-      "frameWidth": 113,
-      "frameHeight": 49,
+      "frameWidth": 106,
+      "frameHeight": 33,
       "frames": 10
      }
     },
@@ -359,8 +359,8 @@
       "file": "assets/shadows/char-adam-leaves-up.png",
       "anchorX": 23,
       "anchorY": 8,
-      "frameWidth": 113,
-      "frameHeight": 49,
+      "frameWidth": 106,
+      "frameHeight": 33,
       "frames": 10
      }
     },
@@ -389,10 +389,10 @@
      "walkFps": 19,
      "shadow": {
       "file": "assets/shadows/char-adam-leaves-right.png",
-      "anchorX": 34,
+      "anchorX": 35,
       "anchorY": 8,
-      "frameWidth": 126,
-      "frameHeight": 49,
+      "frameWidth": 121,
+      "frameHeight": 33,
       "frames": 10
      }
     }
@@ -425,8 +425,8 @@
       "file": "assets/shadows/char-adam-fig-down.png",
       "anchorX": 23,
       "anchorY": 8,
-      "frameWidth": 114,
-      "frameHeight": 49,
+      "frameWidth": 107,
+      "frameHeight": 33,
       "frames": 10
      }
     },
@@ -457,8 +457,8 @@
       "file": "assets/shadows/char-adam-fig-up.png",
       "anchorX": 24,
       "anchorY": 8,
-      "frameWidth": 114,
-      "frameHeight": 49,
+      "frameWidth": 108,
+      "frameHeight": 33,
       "frames": 10
      }
     },
@@ -489,8 +489,8 @@
       "file": "assets/shadows/char-adam-fig-right.png",
       "anchorX": 26,
       "anchorY": 8,
-      "frameWidth": 118,
-      "frameHeight": 49,
+      "frameWidth": 111,
+      "frameHeight": 33,
       "frames": 10
      }
     }
@@ -523,8 +523,8 @@
       "file": "assets/shadows/char-adam-tunic-down.png",
       "anchorX": 23,
       "anchorY": 8,
-      "frameWidth": 114,
-      "frameHeight": 49,
+      "frameWidth": 107,
+      "frameHeight": 33,
       "frames": 10
      }
     },
@@ -555,8 +555,8 @@
       "file": "assets/shadows/char-adam-tunic-up.png",
       "anchorX": 24,
       "anchorY": 8,
-      "frameWidth": 114,
-      "frameHeight": 49,
+      "frameWidth": 107,
+      "frameHeight": 33,
       "frames": 10
      }
     },
@@ -585,10 +585,10 @@
      "walkFps": 19,
      "shadow": {
       "file": "assets/shadows/char-adam-tunic-right.png",
-      "anchorX": 31,
+      "anchorX": 32,
       "anchorY": 8,
-      "frameWidth": 123,
-      "frameHeight": 49,
+      "frameWidth": 117,
+      "frameHeight": 33,
       "frames": 10
      }
     }
@@ -623,8 +623,8 @@
       "file": "assets/shadows/char-eve-leaves-down.png",
       "anchorX": 19,
       "anchorY": 8,
-      "frameWidth": 105,
-      "frameHeight": 48,
+      "frameWidth": 99,
+      "frameHeight": 33,
       "frames": 10
      }
     },
@@ -655,8 +655,8 @@
       "file": "assets/shadows/char-eve-leaves-up.png",
       "anchorX": 19,
       "anchorY": 8,
-      "frameWidth": 105,
-      "frameHeight": 48,
+      "frameWidth": 98,
+      "frameHeight": 33,
       "frames": 10
      }
     },
@@ -685,10 +685,10 @@
      "walkFps": 19,
      "shadow": {
       "file": "assets/shadows/char-eve-leaves-right.png",
-      "anchorX": 38,
+      "anchorX": 39,
       "anchorY": 8,
-      "frameWidth": 130,
-      "frameHeight": 48,
+      "frameWidth": 124,
+      "frameHeight": 33,
       "frames": 10
      }
     }
@@ -721,8 +721,8 @@
       "file": "assets/shadows/char-eve-fig-down.png",
       "anchorX": 22,
       "anchorY": 8,
-      "frameWidth": 108,
-      "frameHeight": 48,
+      "frameWidth": 102,
+      "frameHeight": 33,
       "frames": 10
      }
     },
@@ -753,8 +753,8 @@
       "file": "assets/shadows/char-eve-fig-up.png",
       "anchorX": 23,
       "anchorY": 8,
-      "frameWidth": 109,
-      "frameHeight": 48,
+      "frameWidth": 102,
+      "frameHeight": 33,
       "frames": 10
      }
     },
@@ -783,10 +783,10 @@
      "walkFps": 19,
      "shadow": {
       "file": "assets/shadows/char-eve-fig-right.png",
-      "anchorX": 30,
+      "anchorX": 31,
       "anchorY": 8,
-      "frameWidth": 123,
-      "frameHeight": 48,
+      "frameWidth": 117,
+      "frameHeight": 33,
       "frames": 10
      }
     }
@@ -819,8 +819,8 @@
       "file": "assets/shadows/char-eve-tunic-down.png",
       "anchorX": 19,
       "anchorY": 8,
-      "frameWidth": 105,
-      "frameHeight": 48,
+      "frameWidth": 99,
+      "frameHeight": 33,
       "frames": 10
      }
     },
@@ -851,8 +851,8 @@
       "file": "assets/shadows/char-eve-tunic-up.png",
       "anchorX": 19,
       "anchorY": 8,
-      "frameWidth": 105,
-      "frameHeight": 48,
+      "frameWidth": 99,
+      "frameHeight": 33,
       "frames": 10
      }
     },
@@ -883,8 +883,8 @@
       "file": "assets/shadows/char-eve-tunic-right.png",
       "anchorX": 36,
       "anchorY": 8,
-      "frameWidth": 129,
-      "frameHeight": 48,
+      "frameWidth": 122,
+      "frameHeight": 33,
       "frames": 10
      }
     }
@@ -917,10 +917,10 @@
      "walkFps": 15,
      "shadow": {
       "file": "assets/shadows/char-god-robe-down.png",
-      "anchorX": 25,
+      "anchorX": 26,
       "anchorY": 8,
-      "frameWidth": 116,
-      "frameHeight": 50,
+      "frameWidth": 110,
+      "frameHeight": 34,
       "frames": 10
      }
     },
@@ -949,10 +949,10 @@
      "walkFps": 15,
      "shadow": {
       "file": "assets/shadows/char-god-robe-up.png",
-      "anchorX": 25,
+      "anchorX": 26,
       "anchorY": 8,
-      "frameWidth": 116,
-      "frameHeight": 50,
+      "frameWidth": 110,
+      "frameHeight": 34,
       "frames": 10
      }
     },
@@ -981,10 +981,10 @@
      "walkFps": 15,
      "shadow": {
       "file": "assets/shadows/char-god-robe-right.png",
-      "anchorX": 28,
+      "anchorX": 29,
       "anchorY": 8,
-      "frameWidth": 122,
-      "frameHeight": 50,
+      "frameWidth": 116,
+      "frameHeight": 34,
       "frames": 10
      }
     }
@@ -1004,43 +1004,49 @@
   "animal-sheep": {
    "file": "assets/sprites/animal-sheep.png",
    "frameWidth": 100,
-   "frameHeight": 74,
-   "frames": 7,
+   "frameHeight": 75,
+   "frames": 10,
    "anchorX": 50,
-   "anchorY": 72,
+   "anchorY": 73,
    "scale": 0.694444,
    "idle": [
-    0
+    0,
+    9
    ],
+   "idleFps": 0.8,
    "walk": [
     1,
     2,
     3,
     4,
     5,
-    6
+    6,
+    7,
+    8
    ],
-   "walkFps": 6,
+   "walkFps": 9,
    "shadow": {
     "file": "assets/shadows/animal-sheep.png",
     "anchorX": 49,
     "anchorY": 8,
-    "frameWidth": 134,
-    "frameHeight": 33,
-    "frames": 7
+    "frameWidth": 132,
+    "frameHeight": 25,
+    "frames": 10
    }
   },
   "animal-goat": {
    "file": "assets/sprites/animal-goat.png",
    "frameWidth": 120,
-   "frameHeight": 81,
-   "frames": 7,
+   "frameHeight": 82,
+   "frames": 8,
    "anchorX": 60,
-   "anchorY": 79,
+   "anchorY": 80,
    "scale": 0.694444,
    "idle": [
-    0
+    0,
+    7
    ],
+   "idleFps": 0.8,
    "walk": [
     1,
     2,
@@ -1054,22 +1060,24 @@
     "file": "assets/shadows/animal-goat.png",
     "anchorX": 63,
     "anchorY": 8,
-    "frameWidth": 154,
-    "frameHeight": 35,
-    "frames": 7
+    "frameWidth": 152,
+    "frameHeight": 26,
+    "frames": 8
    }
   },
   "animal-rabbit": {
    "file": "assets/sprites/animal-rabbit.png",
    "frameWidth": 68,
    "frameHeight": 49,
-   "frames": 7,
+   "frames": 8,
    "anchorX": 34,
    "anchorY": 47,
    "scale": 0.694444,
    "idle": [
-    0
+    0,
+    7
    ],
+   "idleFps": 0.8,
    "walk": [
     1,
     2,
@@ -1081,82 +1089,92 @@
    "walkFps": 11,
    "shadow": {
     "file": "assets/shadows/animal-rabbit.png",
-    "anchorX": 31,
+    "anchorX": 32,
     "anchorY": 8,
     "frameWidth": 81,
-    "frameHeight": 28,
-    "frames": 7
+    "frameHeight": 23,
+    "frames": 8
    }
   },
   "animal-deer": {
    "file": "assets/sprites/animal-deer.png",
-   "frameWidth": 148,
+   "frameWidth": 138,
    "frameHeight": 131,
-   "frames": 7,
-   "anchorX": 74,
+   "frames": 10,
+   "anchorX": 69,
    "anchorY": 129,
    "scale": 0.694444,
    "idle": [
-    0
+    0,
+    9
    ],
+   "idleFps": 0.8,
    "walk": [
     1,
     2,
     3,
     4,
     5,
-    6
+    6,
+    7,
+    8
    ],
-   "walkFps": 8,
+   "walkFps": 9,
    "shadow": {
     "file": "assets/shadows/animal-deer.png",
-    "anchorX": 78,
+    "anchorX": 74,
     "anchorY": 8,
-    "frameWidth": 176,
-    "frameHeight": 46,
-    "frames": 7
+    "frameWidth": 170,
+    "frameHeight": 32,
+    "frames": 10
    }
   },
   "animal-lion": {
    "file": "assets/sprites/animal-lion.png",
-   "frameWidth": 168,
-   "frameHeight": 94,
-   "frames": 7,
-   "anchorX": 84,
-   "anchorY": 92,
+   "frameWidth": 154,
+   "frameHeight": 95,
+   "frames": 10,
+   "anchorX": 77,
+   "anchorY": 93,
    "scale": 0.694444,
    "idle": [
-    0
+    0,
+    9
    ],
+   "idleFps": 0.8,
    "walk": [
     1,
     2,
     3,
     4,
     5,
-    6
+    6,
+    7,
+    8
    ],
-   "walkFps": 8,
+   "walkFps": 9,
    "shadow": {
     "file": "assets/shadows/animal-lion.png",
-    "anchorX": 83,
+    "anchorX": 78,
     "anchorY": 8,
-    "frameWidth": 181,
-    "frameHeight": 38,
-    "frames": 7
+    "frameWidth": 169,
+    "frameHeight": 28,
+    "frames": 10
    }
   },
   "animal-dove": {
    "file": "assets/sprites/animal-dove.png",
    "frameWidth": 38,
    "frameHeight": 46,
-   "frames": 7,
+   "frames": 8,
    "anchorX": 19,
    "anchorY": 44,
    "scale": 0.694444,
    "idle": [
-    0
+    0,
+    7
    ],
+   "idleFps": 0.8,
    "walk": [
     1,
     0,
@@ -1174,67 +1192,42 @@
     "file": "assets/shadows/animal-dove.png",
     "anchorX": 24,
     "anchorY": 8,
-    "frameWidth": 63,
-    "frameHeight": 27,
-    "frames": 7
+    "frameWidth": 61,
+    "frameHeight": 22,
+    "frames": 8
    }
   },
   "animal-horse": {
    "file": "assets/sprites/animal-horse.png",
-   "frameWidth": 192,
-   "frameHeight": 146,
-   "frames": 7,
-   "anchorX": 96,
-   "anchorY": 144,
+   "frameWidth": 188,
+   "frameHeight": 147,
+   "frames": 10,
+   "anchorX": 94,
+   "anchorY": 145,
    "scale": 0.694444,
    "idle": [
-    0
+    0,
+    9
    ],
+   "idleFps": 0.8,
    "walk": [
     1,
     2,
     3,
     4,
     5,
-    6
+    6,
+    7,
+    8
    ],
-   "walkFps": 6,
+   "walkFps": 9,
    "shadow": {
     "file": "assets/shadows/animal-horse.png",
     "anchorX": 86,
     "anchorY": 8,
-    "frameWidth": 216,
-    "frameHeight": 49,
-    "frames": 7
-   }
-  },
-  "animal-camel": {
-   "file": "assets/sprites/animal-camel.png",
-   "frameWidth": 206,
-   "frameHeight": 165,
-   "frames": 7,
-   "anchorX": 103,
-   "anchorY": 163,
-   "scale": 0.694444,
-   "idle": [
-    0
-   ],
-   "walk": [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6
-   ],
-   "walkFps": 6,
-   "shadow": {
-    "file": "assets/shadows/animal-camel.png",
-    "anchorX": 80,
-    "anchorY": 8,
-    "frameWidth": 262,
-    "frameHeight": 53,
-    "frames": 7
+    "frameWidth": 213,
+    "frameHeight": 33,
+    "frames": 10
    }
   },
   "serpent-tree": {
@@ -1267,7 +1260,15 @@
     6,
     7
    ],
-   "walkFps": 6
+   "walkFps": 6,
+   "shadow": {
+    "file": "assets/shadows/serpent-ground.png",
+    "anchorX": 75,
+    "anchorY": 37,
+    "frameWidth": 150,
+    "frameHeight": 46,
+    "frames": 8
+   }
   },
   "cherub": {
    "file": "assets/sprites/cherub.png",
@@ -1285,8 +1286,8 @@
     "file": "assets/shadows/cherub.png",
     "anchorX": 40,
     "anchorY": 8,
-    "frameWidth": 214,
-    "frameHeight": 65,
+    "frameWidth": 204,
+    "frameHeight": 41,
     "frames": 2
    }
   },
@@ -1303,7 +1304,7 @@
     "anchorX": 20,
     "anchorY": 8,
     "frameWidth": 48,
-    "frameHeight": 22,
+    "frameHeight": 20,
     "frames": 1
    }
   },
@@ -1317,10 +1318,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/grass-tuft-1.png",
-    "anchorX": 17,
+    "anchorX": 18,
     "anchorY": 8,
-    "frameWidth": 42,
-    "frameHeight": 21,
+    "frameWidth": 43,
+    "frameHeight": 19,
     "frames": 1
    }
   },
@@ -1334,10 +1335,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/grass-tuft-2.png",
-    "anchorX": 13,
+    "anchorX": 14,
     "anchorY": 8,
-    "frameWidth": 33,
-    "frameHeight": 20,
+    "frameWidth": 34,
+    "frameHeight": 19,
     "frames": 1
    }
   },
@@ -1353,8 +1354,8 @@
     "file": "assets/shadows/flowers-white.png",
     "anchorX": 16,
     "anchorY": 8,
-    "frameWidth": 41,
-    "frameHeight": 22,
+    "frameWidth": 40,
+    "frameHeight": 20,
     "frames": 1
    }
   },
@@ -1371,7 +1372,7 @@
     "anchorX": 18,
     "anchorY": 8,
     "frameWidth": 45,
-    "frameHeight": 22,
+    "frameHeight": 20,
     "frames": 1
    }
   },
@@ -1385,10 +1386,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/flowers-red.png",
-    "anchorX": 18,
+    "anchorX": 19,
     "anchorY": 8,
     "frameWidth": 45,
-    "frameHeight": 22,
+    "frameHeight": 20,
     "frames": 1
    }
   },
@@ -1405,7 +1406,7 @@
     "anchorX": 18,
     "anchorY": 8,
     "frameWidth": 44,
-    "frameHeight": 22,
+    "frameHeight": 20,
     "frames": 1
    }
   },
@@ -1419,10 +1420,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/flowers-pink.png",
-    "anchorX": 19,
+    "anchorX": 20,
     "anchorY": 8,
     "frameWidth": 46,
-    "frameHeight": 22,
+    "frameHeight": 20,
     "frames": 1
    }
   },
@@ -1436,10 +1437,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/flowers-purple.png",
-    "anchorX": 24,
+    "anchorX": 25,
     "anchorY": 8,
     "frameWidth": 63,
-    "frameHeight": 22,
+    "frameHeight": 20,
     "frames": 1
    }
   },
@@ -1453,10 +1454,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/fern-a.png",
-    "anchorX": 37,
+    "anchorX": 38,
     "anchorY": 8,
     "frameWidth": 96,
-    "frameHeight": 27,
+    "frameHeight": 22,
     "frames": 1
    }
   },
@@ -1472,8 +1473,8 @@
     "file": "assets/shadows/fern-b.png",
     "anchorX": 46,
     "anchorY": 8,
-    "frameWidth": 115,
-    "frameHeight": 30,
+    "frameWidth": 113,
+    "frameHeight": 24,
     "frames": 1
    }
   },
@@ -1487,10 +1488,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/reeds.png",
-    "anchorX": 33,
+    "anchorX": 34,
     "anchorY": 8,
-    "frameWidth": 87,
-    "frameHeight": 31,
+    "frameWidth": 86,
+    "frameHeight": 24,
     "frames": 1
    }
   },
@@ -1513,10 +1514,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/mushrooms.png",
-    "anchorX": 16,
-    "anchorY": 8,
-    "frameWidth": 39,
-    "frameHeight": 21,
+    "anchorX": 17,
+    "anchorY": 14,
+    "frameWidth": 38,
+    "frameHeight": 25,
     "frames": 1
    }
   },
@@ -1530,10 +1531,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/grain-plant.png",
-    "anchorX": 29,
+    "anchorX": 30,
     "anchorY": 8,
-    "frameWidth": 81,
-    "frameHeight": 30,
+    "frameWidth": 80,
+    "frameHeight": 24,
     "frames": 1
    }
   },
@@ -1547,10 +1548,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/thistle.png",
-    "anchorX": 28,
+    "anchorX": 29,
     "anchorY": 8,
-    "frameWidth": 74,
-    "frameHeight": 27,
+    "frameWidth": 73,
+    "frameHeight": 22,
     "frames": 1
    }
   },
@@ -1567,7 +1568,7 @@
     "anchorX": 26,
     "anchorY": 8,
     "frameWidth": 63,
-    "frameHeight": 24,
+    "frameHeight": 21,
     "frames": 1
    }
   },
@@ -1581,10 +1582,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/rock-small.png",
-    "anchorX": 18,
-    "anchorY": 8,
-    "frameWidth": 42,
-    "frameHeight": 21,
+    "anchorX": 20,
+    "anchorY": 12,
+    "frameWidth": 43,
+    "frameHeight": 23,
     "frames": 1
    }
   },
@@ -1598,10 +1599,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/rock-medium.png",
-    "anchorX": 32,
-    "anchorY": 8,
+    "anchorX": 35,
+    "anchorY": 15,
     "frameWidth": 73,
-    "frameHeight": 26,
+    "frameHeight": 29,
     "frames": 1
    }
   },
@@ -1615,10 +1616,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/rock-large.png",
-    "anchorX": 45,
-    "anchorY": 8,
-    "frameWidth": 109,
-    "frameHeight": 32,
+    "anchorX": 51,
+    "anchorY": 25,
+    "frameWidth": 108,
+    "frameHeight": 42,
     "frames": 1
    }
   },
@@ -1632,10 +1633,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/rock-mossy.png",
-    "anchorX": 41,
-    "anchorY": 8,
-    "frameWidth": 95,
-    "frameHeight": 29,
+    "anchorX": 46,
+    "anchorY": 18,
+    "frameWidth": 96,
+    "frameHeight": 33,
     "frames": 1
    }
   },
@@ -1658,10 +1659,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/log.png",
-    "anchorX": 44,
-    "anchorY": 8,
-    "frameWidth": 106,
-    "frameHeight": 27,
+    "anchorX": 47,
+    "anchorY": 25,
+    "frameWidth": 100,
+    "frameHeight": 38,
     "frames": 1
    }
   },
@@ -1675,10 +1676,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/flat-stone.png",
-    "anchorX": 31,
-    "anchorY": 8,
+    "anchorX": 35,
+    "anchorY": 16,
     "frameWidth": 74,
-    "frameHeight": 24,
+    "frameHeight": 29,
     "frames": 1
    }
   },
@@ -1730,8 +1731,8 @@
     "file": "assets/shadows/plant-sprout.png",
     "anchorX": 16,
     "anchorY": 8,
-    "frameWidth": 41,
-    "frameHeight": 21,
+    "frameWidth": 40,
+    "frameHeight": 19,
     "frames": 1
    }
   },
@@ -1745,10 +1746,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/plant-young.png",
-    "anchorX": 19,
+    "anchorX": 20,
     "anchorY": 8,
     "frameWidth": 55,
-    "frameHeight": 24,
+    "frameHeight": 21,
     "frames": 1
    }
   },
@@ -1762,10 +1763,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/plant-grown.png",
-    "anchorX": 26,
+    "anchorX": 27,
     "anchorY": 8,
     "frameWidth": 68,
-    "frameHeight": 27,
+    "frameHeight": 22,
     "frames": 1
    }
   },
@@ -1779,10 +1780,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/digging-stick.png",
-    "anchorX": 21,
-    "anchorY": 8,
-    "frameWidth": 51,
-    "frameHeight": 21,
+    "anchorX": 22,
+    "anchorY": 22,
+    "frameWidth": 45,
+    "frameHeight": 32,
     "frames": 1
    }
   },
@@ -1798,8 +1799,8 @@
     "file": "assets/shadows/gourd.png",
     "anchorX": 21,
     "anchorY": 8,
-    "frameWidth": 52,
-    "frameHeight": 24,
+    "frameWidth": 51,
+    "frameHeight": 21,
     "frames": 1
    }
   },
@@ -1815,8 +1816,8 @@
     "file": "assets/shadows/gourd-full.png",
     "anchorX": 21,
     "anchorY": 8,
-    "frameWidth": 52,
-    "frameHeight": 24,
+    "frameWidth": 51,
+    "frameHeight": 21,
     "frames": 1
    }
   },
@@ -1830,10 +1831,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/basket.png",
-    "anchorX": 22,
+    "anchorX": 23,
     "anchorY": 8,
     "frameWidth": 62,
-    "frameHeight": 24,
+    "frameHeight": 21,
     "frames": 1
    }
   },
@@ -1849,8 +1850,8 @@
     "file": "assets/shadows/basket-full.png",
     "anchorX": 21,
     "anchorY": 8,
-    "frameWidth": 61,
-    "frameHeight": 25,
+    "frameWidth": 60,
+    "frameHeight": 21,
     "frames": 1
    }
   },
@@ -1918,10 +1919,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/fig-leaf.png",
-    "anchorX": 18,
-    "anchorY": 8,
-    "frameWidth": 49,
-    "frameHeight": 24,
+    "anchorX": 23,
+    "anchorY": 20,
+    "frameWidth": 51,
+    "frameHeight": 32,
     "frames": 1
    }
   },
@@ -1935,10 +1936,10 @@
    "scale": 0.694444,
    "shadow": {
     "file": "assets/shadows/seeds.png",
-    "anchorX": 16,
-    "anchorY": 8,
-    "frameWidth": 41,
-    "frameHeight": 22,
+    "anchorX": 18,
+    "anchorY": 12,
+    "frameWidth": 42,
+    "frameHeight": 24,
     "frames": 1
    }
   },
@@ -2069,16 +2070,49 @@
    "frames": 1,
    "anchorX": 9,
    "anchorY": 19
+  },
+  "animal-bear": {
+   "file": "assets/sprites/animal-bear.png",
+   "frameWidth": 184,
+   "frameHeight": 110,
+   "frames": 10,
+   "anchorX": 92,
+   "anchorY": 108,
+   "scale": 0.694444,
+   "idle": [
+    0,
+    9
+   ],
+   "idleFps": 0.8,
+   "walk": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "walkFps": 9,
+   "shadow": {
+    "file": "assets/shadows/animal-bear.png",
+    "anchorX": 93,
+    "anchorY": 8,
+    "frameWidth": 227,
+    "frameHeight": 29,
+    "frames": 10
+   }
   }
  },
  "trees": {
   "oak-large-a": {
    "shadow": {
     "file": "assets/shadows/tree-oak-large-a.png",
-    "anchorX": 107,
+    "anchorX": 114,
     "anchorY": 8,
-    "frameWidth": 406,
-    "frameHeight": 104,
+    "frameWidth": 398,
+    "frameHeight": 61,
     "frames": 1
    },
    "trunk": "assets/trees/oak-large-a-trunk.png",
@@ -2100,10 +2134,10 @@
   "oak-large-b": {
    "shadow": {
     "file": "assets/shadows/tree-oak-large-b.png",
-    "anchorX": 107,
+    "anchorX": 114,
     "anchorY": 8,
-    "frameWidth": 406,
-    "frameHeight": 104,
+    "frameWidth": 398,
+    "frameHeight": 61,
     "frames": 1
    },
    "trunk": "assets/trees/oak-large-b-trunk.png",
@@ -2125,10 +2159,10 @@
   "oak-medium-a": {
    "shadow": {
     "file": "assets/shadows/tree-oak-medium-a.png",
-    "anchorX": 90,
+    "anchorX": 96,
     "anchorY": 8,
-    "frameWidth": 334,
-    "frameHeight": 88,
+    "frameWidth": 327,
+    "frameHeight": 53,
     "frames": 1
    },
    "trunk": "assets/trees/oak-medium-a-trunk.png",
@@ -2150,10 +2184,10 @@
   "oak-medium-b": {
    "shadow": {
     "file": "assets/shadows/tree-oak-medium-b.png",
-    "anchorX": 90,
+    "anchorX": 96,
     "anchorY": 8,
-    "frameWidth": 334,
-    "frameHeight": 88,
+    "frameWidth": 327,
+    "frameHeight": 53,
     "frames": 1
    },
    "trunk": "assets/trees/oak-medium-b-trunk.png",
@@ -2175,10 +2209,10 @@
   "oak-small-a": {
    "shadow": {
     "file": "assets/shadows/tree-oak-small-a.png",
-    "anchorX": 65,
+    "anchorX": 70,
     "anchorY": 8,
-    "frameWidth": 242,
-    "frameHeight": 71,
+    "frameWidth": 240,
+    "frameHeight": 44,
     "frames": 1
    },
    "trunk": "assets/trees/oak-small-a-trunk.png",
@@ -2200,10 +2234,10 @@
   "oak-small-b": {
    "shadow": {
     "file": "assets/shadows/tree-oak-small-b.png",
-    "anchorX": 65,
+    "anchorX": 70,
     "anchorY": 8,
-    "frameWidth": 242,
-    "frameHeight": 71,
+    "frameWidth": 240,
+    "frameHeight": 44,
     "frames": 1
    },
    "trunk": "assets/trees/oak-small-b-trunk.png",
@@ -2225,10 +2259,10 @@
   "blossom": {
    "shadow": {
     "file": "assets/shadows/tree-blossom.png",
-    "anchorX": 89,
+    "anchorX": 95,
     "anchorY": 8,
-    "frameWidth": 323,
-    "frameHeight": 83,
+    "frameWidth": 320,
+    "frameHeight": 50,
     "frames": 1
    },
    "trunk": "assets/trees/blossom-trunk.png",
@@ -2252,8 +2286,8 @@
     "file": "assets/shadows/tree-cypress-a.png",
     "anchorX": 42,
     "anchorY": 8,
-    "frameWidth": 245,
-    "frameHeight": 102,
+    "frameWidth": 228,
+    "frameHeight": 60,
     "frames": 1
    },
    "trunk": "assets/trees/cypress-a-trunk.png",
@@ -2277,8 +2311,8 @@
     "file": "assets/shadows/tree-cypress-b.png",
     "anchorX": 42,
     "anchorY": 8,
-    "frameWidth": 245,
-    "frameHeight": 102,
+    "frameWidth": 228,
+    "frameHeight": 60,
     "frames": 1
    },
    "trunk": "assets/trees/cypress-b-trunk.png",
@@ -2300,10 +2334,10 @@
   "fig-a": {
    "shadow": {
     "file": "assets/shadows/tree-fig-a.png",
-    "anchorX": 70,
+    "anchorX": 74,
     "anchorY": 8,
-    "frameWidth": 289,
-    "frameHeight": 85,
+    "frameWidth": 282,
+    "frameHeight": 51,
     "frames": 1
    },
    "trunk": "assets/trees/fig-a-trunk.png",
@@ -2374,10 +2408,10 @@
   "fig-b": {
    "shadow": {
     "file": "assets/shadows/tree-fig-b.png",
-    "anchorX": 70,
+    "anchorX": 74,
     "anchorY": 8,
-    "frameWidth": 289,
-    "frameHeight": 85,
+    "frameWidth": 282,
+    "frameHeight": 51,
     "frames": 1
    },
    "trunk": "assets/trees/fig-b-trunk.png",
@@ -2448,10 +2482,10 @@
   "pomegranate-a": {
    "shadow": {
     "file": "assets/shadows/tree-pomegranate-a.png",
-    "anchorX": 67,
+    "anchorX": 73,
     "anchorY": 8,
-    "frameWidth": 282,
-    "frameHeight": 80,
+    "frameWidth": 277,
+    "frameHeight": 49,
     "frames": 1
    },
    "trunk": "assets/trees/pomegranate-a-trunk.png",
@@ -2522,10 +2556,10 @@
   "pomegranate-b": {
    "shadow": {
     "file": "assets/shadows/tree-pomegranate-b.png",
-    "anchorX": 67,
+    "anchorX": 73,
     "anchorY": 8,
-    "frameWidth": 282,
-    "frameHeight": 80,
+    "frameWidth": 277,
+    "frameHeight": 49,
     "frames": 1
    },
    "trunk": "assets/trees/pomegranate-b-trunk.png",
@@ -2596,10 +2630,10 @@
   "olive-a": {
    "shadow": {
     "file": "assets/shadows/tree-olive-a.png",
-    "anchorX": 71,
+    "anchorX": 76,
     "anchorY": 8,
-    "frameWidth": 307,
-    "frameHeight": 85,
+    "frameWidth": 301,
+    "frameHeight": 51,
     "frames": 1
    },
    "trunk": "assets/trees/olive-a-trunk.png",
@@ -2621,10 +2655,10 @@
   "olive-b": {
    "shadow": {
     "file": "assets/shadows/tree-olive-b.png",
-    "anchorX": 71,
+    "anchorX": 76,
     "anchorY": 8,
-    "frameWidth": 307,
-    "frameHeight": 85,
+    "frameWidth": 301,
+    "frameHeight": 51,
     "frames": 1
    },
    "trunk": "assets/trees/olive-b-trunk.png",
@@ -2646,10 +2680,10 @@
   "palm-a": {
    "shadow": {
     "file": "assets/shadows/tree-palm-a.png",
-    "anchorX": 61,
+    "anchorX": 71,
     "anchorY": 8,
-    "frameWidth": 369,
-    "frameHeight": 108,
+    "frameWidth": 364,
+    "frameHeight": 63,
     "frames": 1
    },
    "trunk": "assets/trees/palm-a-trunk.png",
@@ -2671,10 +2705,10 @@
   "palm-b": {
    "shadow": {
     "file": "assets/shadows/tree-palm-b.png",
-    "anchorX": 61,
+    "anchorX": 71,
     "anchorY": 8,
-    "frameWidth": 369,
-    "frameHeight": 108,
+    "frameWidth": 364,
+    "frameHeight": 63,
     "frames": 1
    },
    "trunk": "assets/trees/palm-b-trunk.png",
@@ -2696,10 +2730,10 @@
   "forbidden-tree": {
    "shadow": {
     "file": "assets/shadows/tree-forbidden-tree.png",
-    "anchorX": 124,
+    "anchorX": 131,
     "anchorY": 8,
-    "frameWidth": 455,
-    "frameHeight": 118,
+    "frameWidth": 448,
+    "frameHeight": 68,
     "frames": 1
    },
    "trunk": "assets/trees/forbidden-tree-trunk.png",
@@ -2810,10 +2844,10 @@
   "tree-of-life": {
    "shadow": {
     "file": "assets/shadows/tree-tree-of-life.png",
-    "anchorX": 138,
+    "anchorX": 147,
     "anchorY": 8,
-    "frameWidth": 497,
-    "frameHeight": 121,
+    "frameWidth": 491,
+    "frameHeight": 69,
     "frames": 1
    },
    "trunk": "assets/trees/tree-of-life-trunk.png",
@@ -2835,10 +2869,10 @@
   "bush-round": {
    "shadow": {
     "file": "assets/shadows/tree-bush-round.png",
-    "anchorX": 57,
+    "anchorX": 58,
     "anchorY": 8,
-    "frameWidth": 153,
-    "frameHeight": 39,
+    "frameWidth": 151,
+    "frameHeight": 28,
     "frames": 1
    },
    "trunk": "assets/trees/bush-round-trunk.png",
@@ -2860,10 +2894,10 @@
   "bush-dark": {
    "shadow": {
     "file": "assets/shadows/tree-bush-dark.png",
-    "anchorX": 60,
+    "anchorX": 61,
     "anchorY": 8,
-    "frameWidth": 162,
-    "frameHeight": 41,
+    "frameWidth": 159,
+    "frameHeight": 29,
     "frames": 1
    },
    "trunk": "assets/trees/bush-dark-trunk.png",
@@ -2885,10 +2919,10 @@
   "bush-flower": {
    "shadow": {
     "file": "assets/shadows/tree-bush-flower.png",
-    "anchorX": 58,
+    "anchorX": 59,
     "anchorY": 8,
-    "frameWidth": 152,
-    "frameHeight": 39,
+    "frameWidth": 150,
+    "frameHeight": 28,
     "frames": 1
    },
    "trunk": "assets/trees/bush-flower-trunk.png",
@@ -2910,10 +2944,10 @@
   "bush-berry": {
    "shadow": {
     "file": "assets/shadows/tree-bush-berry.png",
-    "anchorX": 49,
+    "anchorX": 50,
     "anchorY": 8,
-    "frameWidth": 133,
-    "frameHeight": 39,
+    "frameWidth": 132,
+    "frameHeight": 28,
     "frames": 1
    },
    "trunk": "assets/trees/bush-berry-trunk.png",
@@ -2935,10 +2969,10 @@
   "grapevine": {
    "shadow": {
     "file": "assets/shadows/tree-grapevine.png",
-    "anchorX": 38,
+    "anchorX": 41,
     "anchorY": 8,
-    "frameWidth": 171,
-    "frameHeight": 58,
+    "frameWidth": 167,
+    "frameHeight": 38,
     "frames": 1
    },
    "trunk": "assets/trees/grapevine-trunk.png",

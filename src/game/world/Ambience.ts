@@ -6,13 +6,17 @@ import type { Terrain } from './Terrain';
 
 /** Where a point at height z above the ground casts its shadow (the sun is
  * at the upper left; see SHADOW_X, SHADOW_Y in tools/art/from_generated.py). */
-const SHADOW_X = 0.5;
-const SHADOW_Y = 0.22;
+const SHADOW_X = 0.45;
+const SHADOW_Y = 0.11;
 /** The breeze, world px per second (the cloud shadows drift the same way). */
 const WIND = { x: 22, y: 7 };
 /** The little pixel shapes ("px-" textures) are drawn in art pixels, like
  * the sprites, so they stay crisp (see EdenScene.applyFilters). */
 const PX = 1 / ART_RESOLUTION;
+/** The cloud is drawn in chunkier pixels: art pixels per cloud pixel. */
+const CLOUD_PIXEL = 3;
+/** Where the cloud's shadow falls, per world px of the cloud's height. */
+const CLOUD_SHADOW = { x: 0.34, y: 0.4 };
 
 interface Drift {
   img: Phaser.GameObjects.Image;
@@ -94,18 +98,35 @@ export class Ambience {
       const img = scene.add.image(x, y, 'fx-fish').setDepth(DEPTH_GROUND - 960).setAlpha(0.28);
       this.fish.push({ img, x, y, dir: Math.atan2(b[1] - a[1], b[0] - a[0]) + (rnd.frac() < 0.5 ? Math.PI : 0), speed: rnd.realInRange(10, 22), turn: rnd.realInRange(2, 6) });
     }
-    // deeper, darker water along the middle of the river and its heads
-    const depth = scene.add.graphics().setDepth(DEPTH_GROUND - 965);
-    for (const [line, width] of [[RIVER.points, RIVER.width], ...RIVER.branches.map((b) => [b, RIVER.branchWidth] as const)] as const) {
-      const curve = new Phaser.Curves.Spline(line.map(([x, y]) => new Phaser.Math.Vector2(x, y)));
-      const pts = curve.getPoints(line.length * 24);
-      for (const k of [0.62, 0.42, 0.22]) {
-        depth.lineStyle(width * k, 0x0b4f5c, 0.07);
-        depth.strokePoints(pts);
+    // a few deeper pools here and there (the maintainer disliked a dark
+    // channel following the whole river): each a different cluster of
+    // overlapping ovals, darker where they overlap, kept inside the water
+    const pools = scene.add.graphics().setDepth(DEPTH_GROUND - 965);
+    const lines = [RIVER.points, ...RIVER.branches];
+    for (let n = 0, tries = 0; n < 14 && tries < 500; tries++) {
+      const line = rnd.pick(lines);
+      const seg = rnd.between(0, line.length - 2);
+      const [ax, ay] = line[seg];
+      const [bx, by] = line[seg + 1];
+      const k = rnd.frac();
+      const cx = ax + (bx - ax) * k + rnd.realInRange(-14, 14);
+      const cy = ay + (by - ay) * k + rnd.realInRange(-14, 14);
+      if (terrain.riverDistance(cx, cy) > -30) continue;
+      const along = Math.atan2(by - ay, bx - ax);
+      for (let i = 0; i < rnd.between(4, 8); i++) {
+        const ox = cx + Math.cos(along) * rnd.realInRange(-40, 40) + rnd.realInRange(-8, 8);
+        const oy = cy + Math.sin(along) * rnd.realInRange(-40, 40) + rnd.realInRange(-8, 8);
+        const rw = rnd.realInRange(10, 26);
+        const room = -terrain.riverDistance(ox, oy) - 6;
+        if (room < rw * 0.7) continue;
+        pools.fillStyle(0x0b4a58, 0.11);
+        pools.fillEllipse(ox, oy, rw * 2, rw * rnd.realInRange(1.0, 1.5));
       }
+      n++;
     }
-    this.cloud = scene.add.image(-9999, -9999, 'fx-cloud').setDepth(DEPTH_OVERLAY - 97).setAlpha(0);
-    this.cloudShadow = scene.add.image(-9999, -9999, 'fx-cloud-shadow').setDepth(DEPTH_OVERLAY - 300).setAlpha(0);
+    this.cloud = scene.add.image(-9999, -9999, 'px-cloud').setScale(CLOUD_PIXEL * PX).setDepth(DEPTH_OVERLAY - 97).setAlpha(0);
+    // its shadow: the same shape, flat and dark, on the ground
+    this.cloudShadow = scene.add.image(-9999, -9999, 'fx-cloud-shade').setScale(CLOUD_PIXEL * PX).setDepth(DEPTH_OVERLAY - 300).setAlpha(0);
   }
 
   /** How strong the sunlight is (0 at night): shadows and glints follow. */
@@ -238,18 +259,19 @@ export class Ambience {
       if (this.cloudWait > 0) return;
       // a new cloud, upwind of the view
       this.cloudHeight = 420 + Math.random() * 200;
-      c.setPosition(view.x - 500, view.y + Math.random() * view.height * 0.6).setScale(1.3 + Math.random() * 0.6, 1 + Math.random() * 0.3);
+      c.setPosition(view.x - 500, view.y + Math.random() * view.height * 0.5).setFlipX(Math.random() < 0.5);
       c.setAlpha(0.001);
-      this.cloudShadow.setScale(c.scaleX * 1.25, c.scaleY * 1.15);
+      this.cloudShadow.setFlipX(c.flipX);
     }
     c.x += WIND.x * 2.2 * dt;
     c.y += WIND.y * 2.2 * dt;
     // fade in at the start, out once it has crossed
     const across = (c.x - (view.x - 500)) / (view.width + 1000);
     const a = Math.max(0, Math.min(1, across * 6, (1 - across) * 6));
-    c.setAlpha(Math.max(0.001, 0.42 * a));
-    // its shadow on the ground, away from the sun
-    this.cloudShadow.setPosition(c.x + this.cloudHeight * SHADOW_X, c.y + this.cloudHeight * SHADOW_Y).setAlpha(0.32 * a * this.sun);
+    c.setAlpha(Math.max(0.001, 0.62 * a));
+    // its shadow on the ground, away from the sun and well below it (the
+    // maintainer wanted it lower than the low sun of the objects' shadows)
+    this.cloudShadow.setPosition(c.x + this.cloudHeight * CLOUD_SHADOW.x, c.y + this.cloudHeight * CLOUD_SHADOW.y).setAlpha(0.27 * a * this.sun);
     if (across > 1 || c.x > WORLD_W + 600) {
       c.setPosition(-9999, -9999).setAlpha(0);
       this.cloudShadow.setAlpha(0);
@@ -309,24 +331,55 @@ function makeTextures(scene: Phaser.Scene): void {
     ctx.fillRect(3, 0, 2, 1);
     canvas.refresh();
   }
-  if (!tex.exists('fx-cloud')) {
-    // a white cumulus seen from below the sun: bright top, a cooler base
-    const w = 420;
-    const h = 220;
-    const canvas = tex.createCanvas('fx-cloud', w, h)!;
+  if (!tex.exists('px-cloud')) {
+    // a cumulus in pixel art like the clouds of the story map painting:
+    // round puffs on a flat base, white where the sun (upper left) lights
+    // them, blue-grey underneath, in four flat tones
+    const w = 128;
+    const h = 56;
+    const canvas = tex.createCanvas('px-cloud', w, h)!;
     const ctx = canvas.getContext();
-    const rnd = new Phaser.Math.RandomDataGenerator(['white-cloud']);
-    for (let i = 0; i < 11; i++) {
-      const x = w * rnd.realInRange(0.25, 0.75);
-      const y = h * rnd.realInRange(0.35, 0.65);
-      const r = rnd.realInRange(55, 95);
-      const g = ctx.createRadialGradient(x - r * 0.25, y - r * 0.3, 0, x, y, r);
-      g.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-      g.addColorStop(0.55, 'rgba(244, 246, 250, 0.7)');
-      g.addColorStop(1, 'rgba(214, 222, 232, 0)');
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
+    const rnd = new Phaser.Math.RandomDataGenerator(['pixel-cloud']);
+    const base = h - 6;
+    const puffs: { x: number; y: number; r: number }[] = [];
+    for (let i = 0; i < 9; i++) {
+      const x = 16 + (i / 8) * (w - 32) + rnd.realInRange(-3, 3);
+      const middle = 1 - Math.abs(i - 4) / 4.5;
+      const r = 9 + middle * 15 + rnd.realInRange(-2, 2);
+      puffs.push({ x, y: base - r * 0.55, r });
+    }
+    const tones = ['#ffffff', '#eef2f8', '#d2dceb', '#b4c3da'];
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (y > base) continue;
+        let lit = -2;
+        for (const p of puffs) {
+          const dx = (x + 0.5 - p.x) / p.r;
+          const dy = (y + 0.5 - p.y) / p.r;
+          if (dx * dx + dy * dy > 1) continue;
+          // facing the light: toward the upper left of each puff
+          lit = Math.max(lit, -(dx * 0.6 + dy * 0.8));
+        }
+        if (lit < -1.5) continue;
+        const low = (y - (base - 4)) / 4;
+        const v = lit - Math.max(0, low) * 0.8;
+        const tone = v > 0.35 ? 0 : v > -0.15 ? 1 : v > -0.55 ? 2 : 3;
+        ctx.fillStyle = tones[tone];
+        ctx.fillRect(x, y, 1, 1);
+      }
     }
     canvas.refresh();
+    // its shadow: the same outline, dark, with soft edges (a tinted copy of
+    // the cloud showed a light rim)
+    const pad = 4;
+    const shade = tex.createCanvas('fx-cloud-shade', w + pad * 2, h + pad * 2)!;
+    const sctx = shade.getContext();
+    sctx.filter = 'blur(1.5px)';
+    sctx.drawImage(canvas.getSourceImage() as HTMLCanvasElement, pad, pad);
+    sctx.filter = 'none';
+    sctx.globalCompositeOperation = 'source-in';
+    sctx.fillStyle = 'rgb(14, 30, 24)';
+    sctx.fillRect(0, 0, w + pad * 2, h + pad * 2);
+    shade.refresh();
   }
 }

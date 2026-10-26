@@ -282,7 +282,7 @@ const m02: MissionDef = {
   async run(w) {
     w.cutscene(true);
     w.show(w.god, POINTS.godAppear, 'left');
-    w.godLight(true);
+    w.godLight(true, true);
     w.fx('holy', POINTS.godAppear);
     w.sfx('holy');
     w.music('wonder');
@@ -336,8 +336,7 @@ const m02: MissionDef = {
     w.cutscene(true);
     w.fx('holy', [w.god.x, w.god.y]);
     w.sfx('holy');
-    await w.wait(600);
-    w.hide(w.god);
+    await w.vanish(w.god);
     w.cutscene(false);
   },
 };
@@ -450,8 +449,7 @@ const m04: MissionDef = {
     await w.say('m04_wake');
     w.fx('holy', [w.god.x, w.god.y]);
     w.sfx('holy');
-    await w.wait(600);
-    w.hide(w.god);
+    await w.vanish(w.god);
 
     w.allowSwitch(true);
     w.follow(true);
@@ -724,8 +722,10 @@ const m09: MissionDef = {
     w.face(w.god, w.serpent);
     await w.cameraTo([POINTS.godGrove[0] + 60, POINTS.godGrove[1] + 40], 700);
     await w.say('m09_serpent');
-    await w.walk(w.serpent, [POINTS.serpentGround[0] + 200, POINTS.serpentGround[1] + 30], 30);
-    w.serpentPose('hidden');
+    // it crawls away and goes out of sight behind a bush or a tree
+    const cover = w.coverNear(POINTS.serpentGround) ?? [POINTS.serpentGround[0] + 200, POINTS.serpentGround[1] + 30];
+    const behind: Pt = [cover[0], cover[1] - 10];
+    void w.walk(w.serpent, behind, 30).then(() => w.vanish(w.serpent, 900));
     w.face(w.god, w.eve);
     await w.say('m09_woman');
     w.face(w.god, w.adam);
@@ -761,8 +761,7 @@ const m10: MissionDef = {
     await w.say('m10_intro');
     w.fx('holy', [w.god.x, w.god.y]);
     w.sfx('holy');
-    await w.wait(600);
-    w.hide(w.god);
+    await w.vanish(w.god);
     w.cutscene(false);
 
     w.openExit(true);
