@@ -775,7 +775,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   /** The cherubim at the east of the garden (Genesis 3:24), facing east with
    * the flaming sword in hand; the blade flickers. With `drop` they come down
    * from the sky one after the other, fast and straight, each landing with
-   * thunder, a shake of the screen and a crack left in the ground. */
+   * a heavy thud, a shake of the screen and a crack left in the ground. */
   cherubim(on: boolean, drop = false): Promise<void> {
     for (const o of this.cherubSprites) o.destroy();
     this.cherubSprites = [];
@@ -822,7 +822,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
             shadow?.setAlpha(near).setScale(shadowScale * (0.4 + 0.6 * near));
           },
           onComplete: () => {
-            audio.play('thunder');
+            audio.play('land');
             if (!still) this.cameras.main.shake(320, 0.009);
             this.tweens.add({ targets: crack, alpha: 1, duration: 140 });
             this.dust(p[0], p[1]);

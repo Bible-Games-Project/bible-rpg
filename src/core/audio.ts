@@ -29,7 +29,7 @@ export type Sfx =
   | 'detected'
   | 'bite'
   | 'leaves'
-  | 'thunder'
+  | 'land'
   | 'hiss';
 
 export type Mood = 'none' | 'peaceful' | 'wonder' | 'solemn' | 'tension' | 'sorrow';
@@ -141,6 +141,39 @@ class AudioManager {
     src.stop(t + dur + 0.05);
   }
 
+  /**
+   * Crackle: many tiny clicks at random moments, thinning out over `dur`
+   * (`density` clicks per second at the start), band-passed around `freq`.
+   * A crunch, crinkling leaves or falling grit are made of such clicks,
+   * which a smooth burst of noise only hints at.
+   */
+  private crackle(t: number, dur: number, peak: number, density: number, freq: number, q = 0.7, fade = 3): void {
+    const ctx = this.ctx!;
+    const rate = ctx.sampleRate;
+    const len = Math.max(1, Math.floor(dur * rate));
+    const buf = ctx.createBuffer(1, len, rate);
+    const d = buf.getChannelData(0);
+    let at = 0;
+    while (at < dur) {
+      const k = Math.exp(-fade * (at / dur));
+      at += -Math.log(1 - Math.random()) / (density * Math.max(0.05, k));
+      const i0 = Math.floor(at * rate);
+      const n = 6 + Math.floor(Math.random() * 40);
+      const amp = (0.4 + Math.random() * 0.6) * k;
+      for (let i = 0; i < n && i0 + i < len; i++) d[i0 + i] += (Math.random() * 2 - 1) * amp * (1 - i / n);
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const f = ctx.createBiquadFilter();
+    f.type = 'bandpass';
+    f.frequency.value = freq;
+    f.Q.value = q;
+    const g = ctx.createGain();
+    g.gain.value = peak;
+    src.connect(f).connect(g).connect(this.sfx);
+    src.start(t);
+  }
+
   /** A drawn-out hiss: filtered noise that swells, holds and dies away. */
   private hissOnce(t: number, dur: number, peak: number): void {
     const ctx = this.ctx!;
@@ -226,21 +259,42 @@ class AudioManager {
         this.tone(330, t, 0.4, 0.05 * v, 'sine', undefined, 247);
         break;
       case 'bite':
-        // a crisp bite into a fruit, then a little crunching
-        this.noiseBurst(t, 0.09, 0.22 * v, 'bandpass', 2600, 0.9);
-        this.noiseBurst(t + 0.01, 0.05, 0.12 * v, 'highpass', 5000, 0.6);
-        [0.22, 0.38, 0.52, 0.68].forEach((d, i) => this.noiseBurst(t + d, 0.06, (0.09 - i * 0.015) * v, 'bandpass', 1500 + i * 200, 1.1));
+        // biting into an apple: the skin snaps, the flesh crunches (a dense
+        // burst of tiny cracks), then a few muffled chews
+        this.tone(190, t, 0.05, 0.12 * v, 'triangle', undefined, 120);
+        this.crackle(t, 0.14, 0.6 * v, 900, 3400, 0.6, 4);
+        this.crackle(t + 0.005, 0.1, 0.35 * v, 600, 6500, 0.9, 5);
+        [0.32, 0.55, 0.78].forEach((d, i) => this.crackle(t + d, 0.11, (0.3 - i * 0.07) * v, 500, 1700, 0.8, 3));
         break;
       case 'leaves':
-        // handfuls of leaves being gathered and tied
-        for (let i = 0; i < 7; i++) this.noiseBurst(t + i * 0.16 + Math.random() * 0.05, 0.22, (0.05 + Math.random() * 0.03) * v, 'bandpass', 2600 + Math.random() * 1600, 0.6);
+        // fig leaves sewn together: handfuls of crinkling leaves, and the
+        // pull of the cord through them now and then
+        [0, 0.34, 0.95, 1.3].forEach((d) => this.crackle(t + d, 0.28, 0.35 * v, 260, 4200, 0.6, 1.5));
+        [0.62, 1.62].forEach((d) => {
+          const ctx = this.ctx!;
+          const src = ctx.createBufferSource();
+          src.buffer = this.noise;
+          const f = ctx.createBiquadFilter();
+          f.type = 'bandpass';
+          f.Q.value = 2.2;
+          f.frequency.setValueAtTime(700, t + d);
+          f.frequency.exponentialRampToValueAtTime(2200, t + d + 0.24);
+          const g = ctx.createGain();
+          this.env(g, t + d, 0.06, 0.09 * v, 0.2);
+          src.connect(f).connect(g).connect(this.sfx);
+          src.start(t + d, Math.random());
+          src.stop(t + d + 0.35);
+        });
         break;
-      case 'thunder':
-        // a sharp crack, then a long low rumble
-        this.noiseBurst(t, 0.18, 0.3 * v, 'highpass', 1200, 0.5);
-        this.noiseBurst(t, 2.4, 0.5 * v, 'lowpass', 160, 0.9);
-        this.noiseBurst(t + 0.25, 1.8, 0.3 * v, 'lowpass', 90, 1.2);
-        this.tone(48, t, 1.6, 0.18 * v, 'sine', undefined, 34);
+      case 'land':
+        // a cherub landing: a deep, heavy thud that shakes the ground, earth
+        // and grit thrown up and falling back, a low rumble dying away
+        this.tone(95, t, 0.55, 0.5 * v, 'sine', undefined, 32);
+        this.tone(55, t, 0.9, 0.35 * v, 'sine', undefined, 28);
+        this.noiseBurst(t, 0.35, 0.45 * v, 'lowpass', 420, 0.8);
+        this.noiseBurst(t, 1.6, 0.28 * v, 'lowpass', 120, 1);
+        this.crackle(t + 0.04, 0.9, 0.35 * v, 220, 2400, 0.5, 2.5);
+        this.crackle(t + 0.25, 1.1, 0.18 * v, 90, 5200, 0.7, 2);
         break;
       case 'hiss':
         // the serpent: a long hiss, then a shorter one
