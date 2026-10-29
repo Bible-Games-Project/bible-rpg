@@ -166,6 +166,8 @@
   "stealth": {
     "timer": "Hide among the trees",
     "seen": "You stepped into the open. Fear and shame send you back to hide.",
+    "found": "The LORD God found you there. Fear and shame send you back to hide.",
+    "banner": "Run and hide!",
     "hidden": "Hidden",
     "exposed": "Exposed"
   },

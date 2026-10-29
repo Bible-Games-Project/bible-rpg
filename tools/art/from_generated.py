@@ -987,14 +987,24 @@ def quad_walk(stand: np.ndarray, swing: float, n: int = QUAD_FRAMES) -> list[np.
         shift = int(round(centres[far] - centres[near]))
         shade = np.array([0.78, 0.78, 0.8, 1.0])
         pixels[near] = [(y, x, stand[y, x]) for y, x in own]
-        pixels[far] = [(y, x + shift, (stand[y, x] * shade).astype(np.uint8)) for y, x in own if 0 <= x + shift < w]
+        # near the belly the copy blends into the body: what would stick out
+        # of the silhouette there (a piece of the chest) is left out
+        thigh = top + 0.3 * (h - top)
+        pixels[far] = [(y, x + shift, (stand[y, x] * shade).astype(np.uint8)) for y, x in own
+                       if 0 <= x + shift < w and (y >= thigh or alpha[y, x + shift])]
         pair = np.zeros((h, w), bool)
         for y, x in own:
             pair[y, x] = True
             if 0 <= x + shift < w:
                 pair[y, x + shift] = True
-        # the original pixels of both legs of the pair are drawn anew
-        moving |= pair | (_between(pair) & (legs >= 0))
+        # the original pixels of both legs of the pair are drawn anew, the
+        # hooves whole (a stray hoof pixel left behind looked like dirt)
+        low = np.zeros((h, w), bool)
+        low[int(top + 0.6 * (h - top)):] = True
+        near_hoof = np.zeros((h, w), bool)
+        for i in (far, near):
+            near_hoof[:, max(0, int(centres[i]) - 9):int(centres[i]) + 10] = True
+        moving |= pair | (_between(pair) & (legs >= 0)) | (low & near_hoof & np.isin(legs, (far, near)))
     # what is left under the belly (a tail, a fringe of wool) stays still
     legs = np.where(moving, 0, -1)
     phase = {near_back: 0.0, near_front: 0.25, far_back: 0.5, far_front: 0.75}
@@ -1328,9 +1338,10 @@ def build_trees(m, save, strip, sheet_entry) -> None:
 
 # portrait -> job. Adam and Eve have one per outfit ("adam-fig", "eve-tunic"):
 # the maintainer saw Eve's portrait in a leaf sweater while she still wore
-# only a leaf top. "adam" is the maintainer's own portrait.
+# only a leaf top, then asked for that top to cover more (a higher neckline).
+# "adam" is the maintainer's own portrait.
 PORTRAITS = {
-    'eve': 'v3-eve-portrait-leaves', 'eve-fig': 'v3-eve-portrait', 'eve-tunic': 'v3-eve-portrait-tunic',
+    'eve': 'v3-eve-portrait-leaves-modest', 'eve-fig': 'v3-eve-portrait', 'eve-tunic': 'v3-eve-portrait-tunic',
     'adam-fig': 'v3-adam-portrait-fig', 'adam-tunic': 'v3-adam-portrait-tunic',
     'god': 'god-portrait', 'serpent': 'serpent-portrait',
 }

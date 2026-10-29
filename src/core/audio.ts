@@ -29,7 +29,8 @@ export type Sfx =
   | 'detected'
   | 'bite'
   | 'leaves'
-  | 'thunder';
+  | 'thunder'
+  | 'hiss';
 
 export type Mood = 'none' | 'peaceful' | 'wonder' | 'solemn' | 'tension' | 'sorrow';
 export type Ambience = 'none' | 'garden' | 'evening' | 'outside';
@@ -140,6 +141,26 @@ class AudioManager {
     src.stop(t + dur + 0.05);
   }
 
+  /** A drawn-out hiss: filtered noise that swells, holds and dies away. */
+  private hissOnce(t: number, dur: number, peak: number): void {
+    const ctx = this.ctx!;
+    const src = ctx.createBufferSource();
+    src.buffer = this.noise;
+    const f = ctx.createBiquadFilter();
+    f.type = 'bandpass';
+    f.Q.value = 1.3;
+    f.frequency.setValueAtTime(4200, t);
+    f.frequency.linearRampToValueAtTime(6400, t + dur);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(peak, t + dur * 0.3);
+    g.gain.linearRampToValueAtTime(peak * 0.75, t + dur * 0.8);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(f).connect(g).connect(this.sfx);
+    src.start(t, Math.random() * 0.5);
+    src.stop(t + dur + 0.05);
+  }
+
   play(name: Sfx, opts: { pitch?: number; volume?: number } = {}): void {
     const ctx = this.unlocked ? this.ensure() : null;
     if (!ctx || ctx.state !== 'running') return;
@@ -220,6 +241,11 @@ class AudioManager {
         this.noiseBurst(t, 2.4, 0.5 * v, 'lowpass', 160, 0.9);
         this.noiseBurst(t + 0.25, 1.8, 0.3 * v, 'lowpass', 90, 1.2);
         this.tone(48, t, 1.6, 0.18 * v, 'sine', undefined, 34);
+        break;
+      case 'hiss':
+        // the serpent: a long hiss, then a shorter one
+        this.hissOnce(t, 1.1, 0.2 * v);
+        this.hissOnce(t + 1.35, 0.7, 0.13 * v);
         break;
     }
   }

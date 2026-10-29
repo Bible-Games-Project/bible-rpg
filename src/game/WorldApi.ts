@@ -74,6 +74,9 @@ export interface WorldApi {
   godLight(on: boolean, beam?: boolean): void;
   /** The base of the nearest tree or bush to the right of a point. */
   coverNear(at: Pt, range?: number): Pt | null;
+  /** Show someone fading in (the LORD God with his light; `beam`: his
+   * column of light, as in godLight). */
+  appear(actor: Actor, at: Pt, facing?: Facing, opts?: { ms?: number; beam?: boolean }): Promise<void>;
   /** Fade someone out, then hide them. */
   vanish(actor: Actor, ms?: number): Promise<void>;
 

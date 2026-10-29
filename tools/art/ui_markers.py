@@ -1,16 +1,15 @@
-"""Small pixel-art markers for the menus and the world, drawn here and
-scaled up with pixelated rendering:
+"""Painted markers for the menus and the world, drawn here at 4x and
+reduced (the maintainer found pixel-art markers too "pixelart" next to the
+paintings):
 
-- round story-map nodes in the palette of the story map painting
-  (art/reference/v2/story-map.webp): a dark brown outline, a sand rim like
-  the path and a bevelled centre, one disc per state;
-- the objective arrow, in the warm gold of the game's frames with a dark
-  brown outline and lit from the upper left like the art, drawn pixel by
-  pixel at 16 headings (a rotated pixel image looks ragged). The world
-  marker uses the one pointing down, the HUD's edge arrow the others. The
-  maintainer found the smooth violet arrows foreign to the game.
+- round story-map medallions in the palette of the story map painting
+  (art/reference/v2/story-map.webp): a dark brown outline, a gold rim and a
+  glossy centre with a symbol, one per state;
+- the objective arrow in the same gold, at 24 headings (one strip) so its
+  light and shadow stay put whichever way it points. The world marker uses
+  the one pointing down, the HUD's edge arrow the others.
 
-    python3 tools/art/ui_markers.py     # writes public/assets/ui/map-node-*.png, arrows.png
+    python3 tools/art/ui_markers.py     # writes public/assets/ui/map-node-*.png, objective-arrows.png
 """
 
 from __future__ import annotations
@@ -111,57 +110,65 @@ def disc(state: str) -> np.ndarray:
     return np.asarray(img.resize((size // k, size // k), Image.LANCZOS))
 
 
-ARROW_SIZE = 19
-ARROW_HEADINGS = 16
-# outline, then the gold from light to dark
-ARROW_OUTLINE = (62, 36, 18)
-ARROW_RAMP = [(255, 246, 204), (255, 220, 128), (240, 176, 66), (196, 122, 38), (150, 86, 30)]
+# The objective arrow, painted like the medallions (the maintainer disliked
+# both the smooth violet arrow and the pixel-art one): gold, bevelled, a dark
+# brown outline and a soft shadow, drawn at 24 headings so the light and the
+# shadow stay on the upper left and lower right whichever way it points.
+ARROW_CELL = 80
+ARROW_HEADINGS = 24
+ARROW_SS = 4
+# from lit to shaded
+ARROW_RAMP = [(255, 244, 200), (255, 214, 112), (232, 158, 56), (168, 98, 34)]
+# the shape pointing right, in half-cells around the centre
+ARROW_SHAPE = [(0.86, 0.0), (0.1, -0.7), (0.1, -0.27), (-0.8, -0.27), (-0.8, 0.27), (0.1, 0.27), (0.1, 0.7)]
+
+
+def _blur(a: np.ndarray, radius: float) -> np.ndarray:
+    from PIL import ImageFilter
+    img = Image.fromarray(np.clip(a * 255, 0, 255).astype(np.uint8))
+    return np.asarray(img.filter(ImageFilter.GaussianBlur(radius))).astype(float) / 255
 
 
 def arrow(heading: float) -> np.ndarray:
-    """An arrow (head and shaft), pointing along `heading` (radians,
-    0 = right, clockwise on screen)."""
-    n = ARROW_SIZE
-    c = (n - 1) / 2
-    # the shape pointing right, around the centre
-    poly = np.array([(8.6, 0.0), (1.2, -6.6), (1.2, -2.5), (-7.8, -2.5), (-7.8, 2.5), (1.2, 2.5), (1.2, 6.6)])
-    rot = np.array([[np.cos(heading), -np.sin(heading)], [np.sin(heading), np.cos(heading)]])
-    pts = poly @ rot.T + c
-
-    def inside(x: float, y: float) -> bool:
-        hit = False
-        for i in range(len(pts)):
-            (x0, y0), (x1, y1) = pts[i], pts[(i + 1) % len(pts)]
-            if (y0 > y) != (y1 > y) and x < x0 + (y - y0) * (x1 - x0) / (y1 - y0):
-                hit = not hit
-        return hit
-
-    k = 6
-    cover = np.zeros((n, n))
-    for y in range(n):
-        for x in range(n):
-            cover[y, x] = np.mean([inside(x + (i + 0.5) / k, y + (j + 0.5) / k) for i in range(k) for j in range(k)])
-    body = cover >= 0.45
-    img = np.zeros((n + 2, n + 2, 4), np.uint8)
-    pad = np.pad(body, 1)
-    # light from the upper left: lighter toward it across the shape
-    ys, xs = np.nonzero(pad)
-    cy, cx = ys.mean(), xs.mean()
-    proj = ((cx - xs) + (cy - ys)) / np.sqrt(2)
-    lo, hi = proj.min(), proj.max()
-    for y, x, v in zip(ys, xs, proj):
-        t = (v - lo) / max(1e-6, hi - lo)
-        img[y, x] = (*ARROW_RAMP[1 + min(3, int((1 - t) * 4))], 255)
-    # a bright rim on the edges facing the light, the outline all around
-    for y, x in zip(ys, xs):
-        if not pad[y - 1, x] or not pad[y, x - 1]:
-            img[y, x] = (*ARROW_RAMP[0], 255)
-    ring = np.zeros_like(pad)
-    for dy in (-1, 0, 1):
-        for dx in (-1, 0, 1):
-            ring |= np.roll(np.roll(pad, dy, 0), dx, 1)
-    img[ring & ~pad] = (*ARROW_OUTLINE, 255)
-    return img
+    """The arrow pointing along `heading` (radians, 0 = right, clockwise on
+    screen), lit from the upper left, in a cell of ARROW_CELL px."""
+    from PIL import ImageDraw
+    k = ARROW_SS
+    N = ARROW_CELL * k
+    half = N / 2 * 0.86
+    cos, sin = np.cos(heading), np.sin(heading)
+    pts = [(N / 2 + (x * cos - y * sin) * half, N / 2 + (x * sin + y * cos) * half) for x, y in ARROW_SHAPE]
+    shape = Image.new('L', (N, N))
+    ImageDraw.Draw(shape).polygon(pts, fill=255)
+    # rounded corners
+    body = (_blur(np.asarray(shape).astype(float) / 255, 2.2 * k) > 0.5).astype(float)
+    outline = (_blur(body, 1.6 * k) > 0.08).astype(float)
+    # a bevel: the height rises over ~3 px from the edge; lit where it faces
+    # the upper left
+    height = np.clip((_blur(body, 3.0 * k) - 0.5) * 2, 0, 1) * body
+    gy, gx = np.gradient(height)
+    lit = np.clip((gx + gy) / np.sqrt(2) / max(1e-6, np.abs(np.hypot(gx, gy)).max()) * 1.6, -1, 1)
+    yy, xx = np.mgrid[0:N, 0:N] + 0.5
+    # the flat top: lighter toward the upper left of the arrow
+    ys, xs = np.nonzero(body)
+    proj = ((xs.mean() - xx) + (ys.mean() - yy)) / np.sqrt(2)
+    proj = proj / max(1.0, np.abs(proj[body > 0]).max())
+    t = np.clip(0.55 - 0.45 * proj - 0.6 * lit, 0, 1) * (len(ARROW_RAMP) - 1)
+    i0 = np.floor(t).astype(int).clip(0, len(ARROW_RAMP) - 2)
+    f = (t - i0)[..., None]
+    ramp = np.array(ARROW_RAMP, float)
+    gold = ramp[i0] * (1 - f) + ramp[i0 + 1] * f
+    # a soft gloss along the upper left of the flat top
+    gloss = np.clip(proj - 0.25, 0, 1) * (height > 0.95)
+    gold = gold * (1 - gloss[..., None] * 0.45) + 255 * gloss[..., None] * 0.45
+    out = np.zeros((N, N, 4), float)
+    shadow = _blur(np.roll(np.roll(outline, int(2.5 * k), 0), int(1.5 * k), 1), 1.8 * k) * 0.5
+    out[..., :3] = OUTLINE
+    out[..., 3] = shadow
+    out[outline > 0, 3] = 1
+    out[body > 0, :3] = gold[body > 0]
+    img = Image.fromarray(np.clip(out * [1, 1, 1, 255], 0, 255).astype(np.uint8), 'RGBA')
+    return np.asarray(img.resize((ARROW_CELL, ARROW_CELL), Image.LANCZOS))
 
 
 def main() -> None:
@@ -170,8 +177,8 @@ def main() -> None:
         Image.fromarray(disc(state)).save(os.path.join(OUT, f'map-node-{state}.png'), optimize=True)
         print('wrote', f'map-node-{state}.png')
     frames = [arrow(2 * np.pi * i / ARROW_HEADINGS) for i in range(ARROW_HEADINGS)]
-    Image.fromarray(np.concatenate(frames, axis=1)).save(os.path.join(OUT, 'arrows.png'), optimize=True)
-    print('wrote arrows.png', frames[0].shape[1], 'px cells x', len(frames))
+    Image.fromarray(np.concatenate(frames, axis=1)).save(os.path.join(OUT, 'objective-arrows.png'), optimize=True)
+    print('wrote objective-arrows.png', ARROW_CELL, 'px cells x', len(frames))
 
 
 if __name__ == '__main__':

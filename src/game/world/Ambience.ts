@@ -15,8 +15,11 @@ const WIND = { x: 22, y: 7 };
 const PX = 1 / ART_RESOLUTION;
 /** The cloud is drawn in chunkier pixels: art pixels per cloud pixel. */
 const CLOUD_PIXEL = 3;
-/** Where the cloud's shadow falls, per world px of the cloud's height. */
-const CLOUD_SHADOW = { x: 0.34, y: 0.4 };
+/** Where the cloud's shadow falls, per world px of the cloud's height (the
+ * maintainer asked for it twice as far from the cloud as before). */
+const CLOUD_SHADOW = { x: 0.68, y: 0.8 };
+/** Drifting leaves and petals: world px per texture pixel. */
+const DRIFT_SCALE = 2 * PX;
 
 interface Drift {
   img: Phaser.GameObjects.Image;
@@ -63,6 +66,8 @@ export class Ambience {
   private cloudShadow: Phaser.GameObjects.Image;
   private cloudHeight = 520;
   private cloudWait = 6;
+  /** world px per second; each cloud takes its own diagonal and pace */
+  private cloudVel = { x: 48, y: 15 };
   private spawn = 0;
   private glintWait = 0;
   private sun = 1;
@@ -152,7 +157,7 @@ export class Ambience {
       const key = roll < 0.55 ? 'px-drift-leaf' : roll < 0.8 ? 'px-drift-petal' : 'px-drift-grass';
       const img = this.scene.add.image(0, 0, key).setDepth(DEPTH_OVERLAY - 205);
       if (key === 'px-drift-petal') img.setTint(Phaser.Utils.Array.GetRandom([0xffffff, 0xffd6e4, 0xfff2a8]));
-      const shadow = this.scene.add.image(0, 0, 'px-drift-shadow').setScale(PX).setDepth(DEPTH_GROUND + 30).setAlpha(0);
+      const shadow = this.scene.add.image(0, 0, 'px-drift-shadow').setScale(DRIFT_SCALE).setDepth(DEPTH_GROUND + 30).setAlpha(0);
       // start upwind of the view so it floats across
       this.drifts.push({
         img,
@@ -173,7 +178,7 @@ export class Ambience {
       d.z -= d.fall * dt * (0.6 + 0.4 * Math.sin(t * 2 + d.phase));
       const fade = Math.min(1, d.life / 0.8) * Math.min(1, Math.max(0, d.z) / 12);
       // tumbling: the leaf turns and shows its edge now and then
-      d.img.setPosition(d.x, d.y - d.z).setRotation(Math.sin(t * d.spin + d.phase) * 1.2).setScale(PX * Math.cos(t * d.spin * 0.7 + d.phase), PX).setAlpha(0.9 * fade);
+      d.img.setPosition(d.x, d.y - d.z).setRotation(Math.sin(t * d.spin + d.phase) * 1.2).setScale(DRIFT_SCALE * Math.cos(t * d.spin * 0.7 + d.phase), DRIFT_SCALE).setAlpha(0.9 * fade);
       d.shadow.setPosition(d.x + d.z * SHADOW_X, d.y + d.z * SHADOW_Y).setAlpha(0.22 * fade * this.sun);
       const away = d.x < view.x - 200 || d.x > view.right + 200 || d.y < view.y - 200 || d.y > view.bottom + 200;
       const gone = d.z <= 0 || d.life > 14 || away;
@@ -257,14 +262,22 @@ export class Ambience {
     if (c.alpha <= 0 && c.x < 0) {
       this.cloudWait -= dt;
       if (this.cloudWait > 0) return;
-      // a new cloud, upwind of the view
+      // a new cloud, left of the view, crossing it to the right on a slant
+      // of its own (always the same path looked mechanical): half way across,
+      // the cloud and its shadow are around the middle of the view
       this.cloudHeight = 420 + Math.random() * 200;
-      c.setPosition(view.x - 500, view.y + Math.random() * view.height * 0.5).setFlipX(Math.random() < 0.5);
+      const slant = -0.22 + Math.random() * 0.6;
+      const pace = WIND.x * (1.8 + Math.random() * 0.8);
+      this.cloudVel = { x: pace * Math.cos(slant), y: pace * Math.sin(slant) };
+      const half = view.width / 2 + 500;
+      const middle = view.centerY + (Math.random() - 0.5) * 0.6 * view.height - this.cloudHeight * CLOUD_SHADOW.y * 0.5;
+      const size = CLOUD_PIXEL * PX * (0.85 + Math.random() * 0.35);
+      c.setPosition(view.x - 500, middle - Math.tan(slant) * half).setFlipX(Math.random() < 0.5).setScale(size);
       c.setAlpha(0.001);
-      this.cloudShadow.setFlipX(c.flipX);
+      this.cloudShadow.setFlipX(c.flipX).setScale(size);
     }
-    c.x += WIND.x * 2.2 * dt;
-    c.y += WIND.y * 2.2 * dt;
+    c.x += this.cloudVel.x * dt;
+    c.y += this.cloudVel.y * dt;
     // fade in at the start, out once it has crossed
     const across = (c.x - (view.x - 500)) / (view.width + 1000);
     const a = Math.max(0, Math.min(1, across * 6, (1 - across) * 6));
@@ -333,25 +346,31 @@ function makeTextures(scene: Phaser.Scene): void {
   }
   if (!tex.exists('px-cloud')) {
     // a cumulus in pixel art like the clouds of the story map painting:
-    // round puffs on a flat base, white where the sun (upper left) lights
-    // them, blue-grey underneath, in four flat tones
+    // round puffs, white where the sun (upper left) lights them, blue-grey
+    // underneath, in four flat tones. Smaller puffs hang under the big ones
+    // at uneven depths (a flat base looked cut with a ruler).
     const w = 128;
-    const h = 56;
+    const h = 66;
     const canvas = tex.createCanvas('px-cloud', w, h)!;
     const ctx = canvas.getContext();
     const rnd = new Phaser.Math.RandomDataGenerator(['pixel-cloud']);
-    const base = h - 6;
+    const base = h - 18;
     const puffs: { x: number; y: number; r: number }[] = [];
     for (let i = 0; i < 9; i++) {
       const x = 16 + (i / 8) * (w - 32) + rnd.realInRange(-3, 3);
       const middle = 1 - Math.abs(i - 4) / 4.5;
       const r = 9 + middle * 15 + rnd.realInRange(-2, 2);
-      puffs.push({ x, y: base - r * 0.55, r });
+      puffs.push({ x, y: base - r * 0.55 + rnd.realInRange(-2, 3), r });
+    }
+    for (let i = 0; i < 7; i++) {
+      const edge = Math.abs(i - 3) / 3;
+      const r = (6 + rnd.realInRange(0, 5)) * (1 - 0.35 * edge);
+      const x = 18 + (i / 6) * (w - 36) + rnd.realInRange(-5, 5);
+      puffs.push({ x, y: base + rnd.realInRange(-3, 6) * (1 - 0.5 * edge) - r * 0.35, r });
     }
     const tones = ['#ffffff', '#eef2f8', '#d2dceb', '#b4c3da'];
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
-        if (y > base) continue;
         let lit = -2;
         for (const p of puffs) {
           const dx = (x + 0.5 - p.x) / p.r;
@@ -361,7 +380,7 @@ function makeTextures(scene: Phaser.Scene): void {
           lit = Math.max(lit, -(dx * 0.6 + dy * 0.8));
         }
         if (lit < -1.5) continue;
-        const low = (y - (base - 4)) / 4;
+        const low = (y - (base - 6)) / 8;
         const v = lit - Math.max(0, low) * 0.8;
         const tone = v > 0.35 ? 0 : v > -0.15 ? 1 : v > -0.55 ? 2 : 3;
         ctx.fillStyle = tones[tone];

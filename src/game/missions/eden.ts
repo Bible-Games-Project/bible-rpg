@@ -281,8 +281,7 @@ const m02: MissionDef = {
   reference: 'Genesis 2:16–17',
   async run(w) {
     w.cutscene(true);
-    w.show(w.god, POINTS.godAppear, 'left');
-    w.godLight(true, true);
+    void w.appear(w.god, POINTS.godAppear, 'left', { ms: 1400, beam: true });
     w.fx('holy', POINTS.godAppear);
     w.sfx('holy');
     w.music('wonder');
@@ -348,8 +347,7 @@ const m03: MissionDef = {
   kind: 'scripture',
   reference: 'Genesis 2:18–20',
   async run(w) {
-    w.show(w.god, POINTS.godMeadow, 'right');
-    w.godLight(true);
+    void w.appear(w.god, POINTS.godMeadow, 'right');
     w.music('peaceful');
     w.objective(step('m03', 'go'), w.god);
     await w.until(() => near(w.player(), w.god, 230));
@@ -435,10 +433,7 @@ const m04: MissionDef = {
     // the LORD God brings the woman to the man
     w.show(w.eve, POINTS.eveArrive, 'left');
     w.fx('sparkle', POINTS.eveArrive);
-    if (!w.god.visible) {
-      w.show(w.god, POINTS.godRest, 'right');
-      w.godLight(true);
-    }
+    if (!w.god.visible) void w.appear(w.god, POINTS.godRest, 'right');
     await w.fade(0, 1400);
     await w.wait(500);
     w.sleeping(false);
@@ -573,6 +568,7 @@ const m06: MissionDef = {
     w.face(w.eve, 'up');
     w.face(w.adam, w.eve);
     await w.cameraTo([POINTS.serpentBranch[0], POINTS.serpentBranch[1] + 60], 900);
+    w.sfx('hiss');
     w.eve.emote('question');
     await w.say('m06_serpent');
 
@@ -684,8 +680,7 @@ const m08: MissionDef = {
 
     await w.say('m08_hide');
     w.objective(step('m08', 'hide'));
-    w.show(w.god, [2200, 2330], 'right');
-    w.godLight(true);
+    void w.appear(w.god, [2200, 2330], 'right', { ms: 1400 });
     w.sfx('holy');
     await w.stealth(20);
 
@@ -720,6 +715,7 @@ const m09: MissionDef = {
     w.serpent.setPosition(POINTS.serpentGround[0], POINTS.serpentGround[1]);
     w.serpent.face('left');
     w.face(w.god, w.serpent);
+    w.sfx('hiss');
     await w.cameraTo([POINTS.godGrove[0] + 60, POINTS.godGrove[1] + 40], 700);
     await w.say('m09_serpent');
     // it crawls away and goes out of sight behind a bush or a tree

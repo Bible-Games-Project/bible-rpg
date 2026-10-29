@@ -4,10 +4,13 @@ import { assetUrl, MANIFEST } from '../game/manifest';
 import { h } from './dom';
 import { wireButtonSounds } from './overlays';
 
-/** The arrow strip (public/assets/ui/arrows.png): cells of 21 px, one per
- * heading, clockwise from pointing right. */
-export const ARROW_CELL = 21;
-export const ARROW_HEADINGS = 16;
+/** The painted arrow strip (public/assets/ui/objective-arrows.png, drawn by
+ * tools/art/ui_markers.py): cells of 80 px, one per heading, clockwise from
+ * pointing right. */
+export const ARROW_CELL = 80;
+export const ARROW_HEADINGS = 24;
+/** How big the arrow shows, CSS px. */
+export const ARROW_CSS = 38;
 
 export interface MissionInfo {
   number: number;
@@ -40,6 +43,7 @@ export class HUD {
   private timerText: HTMLElement;
   private timerBar: HTMLElement;
   private fader: HTMLElement;
+  private banners: HTMLElement;
   private switchBtn: HTMLButtonElement;
 
   constructor(host: HTMLElement, actions: { pause(): void; switchCharacter(): void }) {
@@ -53,16 +57,17 @@ export class HUD {
     this.inventory = h('div', { class: 'inventory-bar' });
     this.switchBtn = h('button', { class: 'btn small', onclick: actions.switchCharacter }, t('hud.switch')) as HTMLButtonElement;
     this.charChip = h('div', { class: 'character-chip panel', hidden: true });
-    // the pixel-art arrow of the world marker (tools/art/ui_markers.py), one
-    // drawing per heading: a rotated pixel image looks ragged
+    // the painted arrow of the world marker (tools/art/ui_markers.py), one
+    // drawing per heading so its light and shadow stay put
     this.arrow = h('div', { class: 'objective-arrow', hidden: true });
-    this.arrow.style.backgroundImage = `url(${assetUrl('assets/ui/arrows.png')})`;
+    this.arrow.style.backgroundImage = `url(${assetUrl('assets/ui/objective-arrows.png')})`;
     this.timerText = h('div', {});
     this.timerBar = h('div', {});
     this.timer = h('div', { class: 'timer panel', hidden: true }, this.timerText, h('div', { class: 'bar' }, this.timerBar));
     this.fader = h('div', { class: 'fader' });
+    this.banners = h('div', { class: 'hud-banners', 'aria-live': 'assertive' });
     const buttons = h('div', { class: 'hud-buttons' }, h('button', { class: 'btn small', onclick: actions.pause, 'aria-label': t('hud.pause') }, `☰ ${t('hud.pause')}`));
-    this.root = h('div', { class: 'hud', hidden: true }, this.mission, buttons, this.inventory, this.charChip, this.prompt, this.toasts, this.timer, this.arrow, this.fader);
+    this.root = h('div', { class: 'hud', hidden: true }, this.mission, buttons, this.inventory, this.charChip, this.prompt, this.toasts, this.timer, this.arrow, this.banners, this.fader);
     wireButtonSounds(this.root);
     host.append(this.root);
   }
@@ -133,9 +138,7 @@ export class HUD {
       return;
     }
     this.arrow.hidden = false;
-    // whole device pixels per arrow pixel keep it sharp
-    const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
-    const px = Math.max(2, Math.round(1.5 * dpr)) / dpr;
+    const px = ARROW_CSS / ARROW_CELL;
     const heading = (((Math.round(angle / ((2 * Math.PI) / ARROW_HEADINGS)) % ARROW_HEADINGS) + ARROW_HEADINGS) % ARROW_HEADINGS);
     const st = this.arrow.style;
     st.left = `${x}px`;
@@ -144,6 +147,15 @@ export class HUD {
     st.marginLeft = st.marginTop = `${(-ARROW_CELL * px) / 2}px`;
     st.backgroundSize = `${ARROW_CELL * ARROW_HEADINGS * px}px ${ARROW_CELL * px}px`;
     st.backgroundPosition = `${-heading * ARROW_CELL * px}px 0`;
+  }
+
+  /** A big word in the middle of the screen for a moment ("Run and hide!"). */
+  banner(text: string, ms = 1700): void {
+    this.banners.replaceChildren();
+    const b = h('div', { class: 'hud-banner' }, text);
+    b.style.animationDuration = `${ms}ms`;
+    b.addEventListener('animationend', () => b.remove());
+    this.banners.append(b);
   }
 
   setTimer(remaining: number | null, total = 1, label = ''): void {

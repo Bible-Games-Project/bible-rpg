@@ -34,7 +34,7 @@ export class BootScene extends Phaser.Scene {
       if (t.shadow) this.loadShadow(`tree:${key}:trunk`, t.shadow);
     }
     this.load.spritesheet('tiles', assetUrl(m.tiles.file), { frameWidth: m.tiles.tileSize, frameHeight: m.tiles.tileSize });
-    this.load.spritesheet('ui-arrows', assetUrl('assets/ui/arrows.png'), { frameWidth: ARROW_CELL, frameHeight: ARROW_CELL });
+    this.load.spritesheet('fx-arrows', assetUrl('assets/ui/objective-arrows.png'), { frameWidth: ARROW_CELL, frameHeight: ARROW_CELL });
     this.load.on('progress', (p: number) => this.game.events.emit('load-progress', p));
   }
 

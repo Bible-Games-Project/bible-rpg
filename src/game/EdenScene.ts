@@ -214,8 +214,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       // "px-" textures are small pixel shapes drawn in art pixels at runtime
       const perPixel = zoom * (key.startsWith('px-') ? 1 / ART_RESOLUTION : textureScale(key));
       const smooth = key.startsWith('fx-') || key === 'tiles-extruded';
-      // the objective arrows are always drawn at whole screen pixels per pixel
-      const crisp = key === 'ui-arrows' || (!smooth && perPixel >= 0.98 && Math.abs(perPixel - Math.round(perPixel)) < 0.02);
+      const crisp = !smooth && perPixel >= 0.98 && Math.abs(perPixel - Math.round(perPixel)) < 0.02;
       this.textures.get(key).setFilter(crisp ? Phaser.Textures.FilterMode.NEAREST : Phaser.Textures.FilterMode.LINEAR);
     }
   }
@@ -543,6 +542,27 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     return t ? [t.x, t.y] : null;
   }
 
+  /** Fade someone in where they stand (the LORD God coming: the maintainer
+   * did not want him to pop up). */
+  appear(actor: Actor, at: Pt, facing: Facing = 'down', opts: { ms?: number; beam?: boolean } = {}): Promise<void> {
+    const ms = opts.ms ?? 1100;
+    this.show(actor, at, facing);
+    const parts = [actor.sprite, actor.shadow].filter((o): o is NonNullable<typeof o> => !!o);
+    if (actor === this.god) {
+      this.godLight(true, opts.beam);
+      this.holy.fadeIn(ms);
+    }
+    return new Promise((resolve) => {
+      parts.forEach((o) => {
+        const to = o.alpha;
+        this.tweens.killTweensOf(o);
+        o.setAlpha(0);
+        this.tweens.add({ targets: o, alpha: to, duration: ms });
+      });
+      this.time.delayedCall(ms, resolve);
+    });
+  }
+
   /** Fade someone out (the LORD God leaving, the serpent going away). */
   vanish(actor: Actor, ms = 1100): Promise<void> {
     return new Promise((resolve) => {
@@ -824,11 +844,13 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
 
   /**
    * Hiding from the LORD God (Genesis 3:8). He walks his round of the grove,
-   * but comes toward anyone he sees or hears moving in the open, goes to
-   * where he last noticed them and looks around there before returning to
-   * his round. Being seen for a moment only sends the player back, as many
-   * times as it takes (the maintainer did not want the mission to pass by
-   * itself after a few failures).
+   * but comes toward anyone he sees or hears moving in the open, heading for
+   * where they were going, then looks behind the trees and bushes around
+   * that spot before returning to his round (the maintainer wanted him
+   * smarter): hiding right where you were noticed, or next to him, gets you
+   * found. Being seen for a moment only sends the player back, as many times
+   * as it takes (the maintainer did not want the mission to pass by itself
+   * after a few failures). "Run and hide!" opens every attempt.
    */
   stealth(seconds: number): Promise<void> {
     return new Promise((resolve) => {
@@ -838,10 +860,26 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       let done = false;
       const sight = this.add.image(god.x, god.y, 'shadow-large').setTint(0xfff2c0).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.35).setDepth(DEPTH_GROUND + 20).setScale(4, 3.2);
       const startPos: Pt = POINTS.groveStart;
-      let mode: 'round' | 'search' | 'look' = 'round';
+      let mode: 'round' | 'search' | 'check' | 'look' = 'round';
       let round = 0;
       let target: Pt = GOD_PATROL[0];
       let lookFor = 0;
+      let legFor = 0;
+      // the hiding places he still means to look behind
+      let checks: Pt[] = [];
+      const last = new Map<Actor, Pt>();
+      const coversAround = (at: Pt): Pt[] =>
+        this.objects.covers
+          .filter((c) => Math.hypot(c.x - at[0], c.y - at[1]) < 260)
+          .sort((a, b) => Math.hypot(a.x - at[0], a.y - at[1]) - Math.hypot(b.x - at[0], b.y - at[1]))
+          .slice(0, 3)
+          .map((c) => {
+            // stand beside it, on his side, and look behind
+            const dx = god.x - c.x;
+            const dy = god.y - c.y;
+            const d = Math.max(1, Math.hypot(dx, dy));
+            return [c.x + (dx / d) * (c.r * 0.6 + 14), c.y + (dy / d) * (c.r * 0.6 + 14)] as Pt;
+          });
       const nearestStop = (): number => {
         let best = 0;
         GOD_PATROL.forEach((q, i) => {
@@ -853,6 +891,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       this.followGap = 24;
       let grace = 1.5;
       let exposedFor = 0;
+      let found = false;
+      hud.banner(t('stealth.banner'));
       const tick = this.time.addEvent({
         delay: 100,
         loop: true,
@@ -869,6 +909,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
           // one following is hidden too when it stays close to a hidden leader
           let exposed = false;
           let noticed: Actor | null = null;
+          let heading: Pt = [0, 0];
+          found = false;
           const lead = this.player();
           const leadCovered = this.objects.isCovered(lead.x, lead.y);
           for (const p of [lead, this.other()]) {
@@ -876,14 +918,26 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
             const d = Phaser.Math.Distance.Between(p.x, p.y, god.x, god.y);
             const covered = p === lead ? leadCovered : this.objects.isCovered(p.x, p.y) || (leadCovered && Phaser.Math.Distance.Between(p.x, p.y, lead.x, lead.y) < 50);
             const blocked = this.objects.sightBlocked(god.x, god.y - 20, p.x, p.y - 10);
-            const seen = d < 190 && !covered && !blocked;
+            // cover does not help right under his eyes, nor behind the bush
+            // he has come to look behind
+            const caught = covered && (d < 45 || (mode === 'look' && d < 85));
+            const seen = (d < 190 && !covered && !blocked) || caught;
             const heard = d < 330 && p.moving && !covered;
             if (seen) exposed = true;
-            if ((seen || heard) && !noticed) noticed = p;
+            if (caught) found = true;
+            if ((seen || heard) && !noticed) {
+              noticed = p;
+              const was = last.get(p) ?? [p.x, p.y];
+              heading = [(p.x - was[0]) * 7, (p.y - was[1]) * 7];
+            }
+            last.set(p, [p.x, p.y]);
           }
           if (noticed && grace <= 0) {
+            // where they were going (0.7 s on), not only where they were
             mode = 'search';
-            target = [noticed.x, noticed.y];
+            legFor = 0;
+            target = [noticed.x + heading[0], noticed.y + heading[1]];
+            checks = [];
           }
           // walking: his round, or toward where he last noticed someone
           if (mode === 'look') {
@@ -891,24 +945,40 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
             lookFor -= 0.1;
             if (Math.random() < 0.08) god.face((['left', 'right', 'up', 'down'] as const)[Math.floor(Math.random() * 4)]);
             if (lookFor <= 0) {
-              mode = 'round';
-              round = nearestStop();
-              target = GOD_PATROL[round];
+              const next = checks.shift();
+              if (next) {
+                mode = 'check';
+                legFor = 0;
+                target = next;
+              } else {
+                mode = 'round';
+                round = nearestStop();
+                target = GOD_PATROL[round];
+              }
             }
           } else {
             const dx = target[0] - god.x;
             const dy = target[1] - god.y;
             const left = Math.hypot(dx, dy);
-            if (left < 12) {
+            legFor += 0.1;
+            // a tree in the way can keep him from the very spot: near is enough
+            const there = left < 12 || (mode !== 'round' && legFor > 4);
+            if (there) {
               if (mode === 'search') {
                 mode = 'look';
-                lookFor = 1.8;
+                lookFor = 1.0;
+                checks = coversAround(target);
+              } else if (mode === 'check') {
+                mode = 'look';
+                lookFor = 0.8;
+                const c = target;
+                god.face(Math.abs(c[0] - god.x) > Math.abs(c[1] - god.y) ? (c[0] > god.x ? 'right' : 'left') : c[1] > god.y ? 'down' : 'up');
               } else {
                 round = (round + 1) % GOD_PATROL.length;
                 target = GOD_PATROL[round];
               }
             } else {
-              const speed = mode === 'search' ? 95 : 62;
+              const speed = mode === 'round' ? 66 : 105;
               god.move((dx / left) * speed, (dy / left) * speed);
             }
           }
@@ -920,15 +990,19 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
             this.cutscene(true);
             god.stop();
             mode = 'round';
+            checks = [];
+            last.clear();
+            const why = found ? 'stealth.found' : 'stealth.seen';
             void (async () => {
               await this.fade(1, 400);
-              hud.toast(t('stealth.seen'), false, 3600);
+              hud.toast(t(why), false, 3600);
               this.player().setPosition(startPos[0], startPos[1]);
               this.other().setPosition(startPos[0] - 30, startPos[1] + 10);
               remaining = seconds;
               grace = 2;
               await this.fade(0, 500);
               this.cutscene(false);
+              hud.banner(t('stealth.banner'));
             })();
           }
           if (remaining <= 0) finish();

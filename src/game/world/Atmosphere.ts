@@ -11,16 +11,14 @@ const CLOUD_ALPHA = 0.2;
 /** Wind (world px per second) that carries the cloud shadows. */
 const WIND = { x: 14, y: 5 };
 const BEAM_ALPHA = 0.075;
-/** How far the sunbeams move against the ground as the camera moves. */
-const BEAM_PARALLAX = 0.15;
 
 /**
  * Light shared by everything in the garden, so the ground, plants, animals
  * and people feel like one world (the maintainer felt they did not):
  * soft cloud shadows drifting across the whole map, over trees and people
  * alike; warm sunbeams from the upper left, the side the art is lit from,
- * that slide a little against the ground as the camera moves (parallax);
- * and a gentle vignette. Its textures are drawn here at startup.
+ * fixed to the ground like the trees (the maintainer did not want them to
+ * follow the camera); and a gentle vignette. Its textures are drawn here at startup.
  */
 export class Atmosphere {
   private clouds: Phaser.GameObjects.Image[] = [];
@@ -74,8 +72,11 @@ export class Atmosphere {
         if (c.y - my > WORLD_H) c.y = -my;
       }
     }
-    const drift = this.still ? 0 : this.time * 6;
-    this.beams.setTilePosition(cam.scrollX * BEAM_PARALLAX + drift, cam.scrollY * BEAM_PARALLAX);
+    // the texture is laid on the world: its offset is the world point at the
+    // layer's top left corner (the view, plus the 4 px margin of resize())
+    const left = cam.scrollX + (cam.width - cam.width / cam.zoom) / 2 - 4;
+    const top = cam.scrollY + (cam.height - cam.height / cam.zoom) / 2 - 4;
+    this.beams.setTilePosition(left, top);
     const breathe = this.still ? 1 : 0.8 + 0.2 * Math.sin(this.time * 0.5);
     this.beams.setAlpha(BEAM_ALPHA * this.sun * breathe);
   }

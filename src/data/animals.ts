@@ -22,7 +22,7 @@ export const ANIMALS: AnimalDef[] = [
   { id: 'goat', species: 'goat', home: [3140, 470], wander: 150, speed: 24, solid: true, nameable: true },
   { id: 'rabbit', species: 'rabbit', home: [2680, 860], wander: 110, speed: 70, solid: false, nameable: true },
   { id: 'deer', species: 'deer', home: [3560, 560], wander: 170, speed: 28, solid: true, nameable: true },
-  { id: 'lion', species: 'lion', home: [3880, 820], wander: 130, speed: 24, solid: true, nameable: true },
+  { id: 'lion', species: 'lion', home: [3880, 820], wander: 130, speed: 12, solid: true, nameable: true },
   { id: 'dove', species: 'dove', home: [3260, 900], wander: 90, speed: 36, solid: false, nameable: true, flies: true },
   { id: 'horse', species: 'horse', home: [3560, 980], wander: 150, speed: 26, solid: true, nameable: true },
   { id: 'bear', species: 'bear', home: [3980, 470], wander: 120, speed: 20, solid: true, nameable: true },

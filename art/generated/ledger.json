@@ -2287,5 +2287,26 @@
    "total_tokens": 2515
   },
   "at": "20261025-064527"
+ },
+ {
+  "job": "v3-eve-portrait-leaves-modest",
+  "file": "art/generated/v3-eve-portrait-leaves-modest/20261029-074211-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0547,
+  "usage": {
+   "input_tokens": 1794,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 258
+   },
+   "output_tokens": 1372,
+   "output_tokens_details": {
+    "image_tokens": 1372,
+    "text_tokens": 0
+   },
+   "total_tokens": 3166
+  },
+  "at": "20261029-074211"
  }
 ]

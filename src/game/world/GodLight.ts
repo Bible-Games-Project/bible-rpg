@@ -45,6 +45,13 @@ export class GodLight {
     for (const m of this.motes) m.img.setVisible(on && !this.still);
   }
 
+  /** Bring the light up from nothing over `ms` (after set(true)). */
+  fadeIn(ms: number): void {
+    this.scene.tweens.killTweensOf(this);
+    this.level = 0;
+    this.scene.tweens.add({ targets: this, level: 1, duration: ms });
+  }
+
   /** Fade the light away over `ms`, then switch it off. */
   fadeOut(ms: number): Promise<void> {
     return new Promise((resolve) => {

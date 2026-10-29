@@ -2097,9 +2097,9 @@
    "walkFps": 9,
    "shadow": {
     "file": "assets/shadows/animal-bear.png",
-    "anchorX": 93,
+    "anchorX": 90,
     "anchorY": 8,
-    "frameWidth": 227,
+    "frameWidth": 224,
     "frameHeight": 29,
     "frames": 10
    }
@@ -2110,9 +2110,9 @@
    "shadow": {
     "file": "assets/shadows/tree-oak-large-a.png",
     "anchorX": 114,
-    "anchorY": 8,
+    "anchorY": 46,
     "frameWidth": 398,
-    "frameHeight": 61,
+    "frameHeight": 72,
     "frames": 1
    },
    "trunk": "assets/trees/oak-large-a-trunk.png",
@@ -2135,9 +2135,9 @@
    "shadow": {
     "file": "assets/shadows/tree-oak-large-b.png",
     "anchorX": 114,
-    "anchorY": 8,
+    "anchorY": 46,
     "frameWidth": 398,
-    "frameHeight": 61,
+    "frameHeight": 72,
     "frames": 1
    },
    "trunk": "assets/trees/oak-large-b-trunk.png",
@@ -2160,9 +2160,9 @@
    "shadow": {
     "file": "assets/shadows/tree-oak-medium-a.png",
     "anchorX": 96,
-    "anchorY": 8,
+    "anchorY": 39,
     "frameWidth": 327,
-    "frameHeight": 53,
+    "frameHeight": 62,
     "frames": 1
    },
    "trunk": "assets/trees/oak-medium-a-trunk.png",
@@ -2185,9 +2185,9 @@
    "shadow": {
     "file": "assets/shadows/tree-oak-medium-b.png",
     "anchorX": 96,
-    "anchorY": 8,
+    "anchorY": 39,
     "frameWidth": 327,
-    "frameHeight": 53,
+    "frameHeight": 62,
     "frames": 1
    },
    "trunk": "assets/trees/oak-medium-b-trunk.png",
@@ -2210,9 +2210,9 @@
    "shadow": {
     "file": "assets/shadows/tree-oak-small-a.png",
     "anchorX": 70,
-    "anchorY": 8,
+    "anchorY": 32,
     "frameWidth": 240,
-    "frameHeight": 44,
+    "frameHeight": 51,
     "frames": 1
    },
    "trunk": "assets/trees/oak-small-a-trunk.png",
@@ -2235,9 +2235,9 @@
    "shadow": {
     "file": "assets/shadows/tree-oak-small-b.png",
     "anchorX": 70,
-    "anchorY": 8,
+    "anchorY": 32,
     "frameWidth": 240,
-    "frameHeight": 44,
+    "frameHeight": 51,
     "frames": 1
    },
    "trunk": "assets/trees/oak-small-b-trunk.png",
@@ -2260,9 +2260,9 @@
    "shadow": {
     "file": "assets/shadows/tree-blossom.png",
     "anchorX": 95,
-    "anchorY": 8,
+    "anchorY": 37,
     "frameWidth": 320,
-    "frameHeight": 50,
+    "frameHeight": 59,
     "frames": 1
    },
    "trunk": "assets/trees/blossom-trunk.png",
@@ -2285,9 +2285,9 @@
    "shadow": {
     "file": "assets/shadows/tree-cypress-a.png",
     "anchorX": 42,
-    "anchorY": 8,
+    "anchorY": 45,
     "frameWidth": 228,
-    "frameHeight": 60,
+    "frameHeight": 71,
     "frames": 1
    },
    "trunk": "assets/trees/cypress-a-trunk.png",
@@ -2310,9 +2310,9 @@
    "shadow": {
     "file": "assets/shadows/tree-cypress-b.png",
     "anchorX": 42,
-    "anchorY": 8,
+    "anchorY": 45,
     "frameWidth": 228,
-    "frameHeight": 60,
+    "frameHeight": 71,
     "frames": 1
    },
    "trunk": "assets/trees/cypress-b-trunk.png",
@@ -2335,9 +2335,9 @@
    "shadow": {
     "file": "assets/shadows/tree-fig-a.png",
     "anchorX": 74,
-    "anchorY": 8,
+    "anchorY": 38,
     "frameWidth": 282,
-    "frameHeight": 51,
+    "frameHeight": 60,
     "frames": 1
    },
    "trunk": "assets/trees/fig-a-trunk.png",
@@ -2409,9 +2409,9 @@
    "shadow": {
     "file": "assets/shadows/tree-fig-b.png",
     "anchorX": 74,
-    "anchorY": 8,
+    "anchorY": 38,
     "frameWidth": 282,
-    "frameHeight": 51,
+    "frameHeight": 60,
     "frames": 1
    },
    "trunk": "assets/trees/fig-b-trunk.png",
@@ -2483,9 +2483,9 @@
    "shadow": {
     "file": "assets/shadows/tree-pomegranate-a.png",
     "anchorX": 73,
-    "anchorY": 8,
+    "anchorY": 36,
     "frameWidth": 277,
-    "frameHeight": 49,
+    "frameHeight": 58,
     "frames": 1
    },
    "trunk": "assets/trees/pomegranate-a-trunk.png",
@@ -2557,9 +2557,9 @@
    "shadow": {
     "file": "assets/shadows/tree-pomegranate-b.png",
     "anchorX": 73,
-    "anchorY": 8,
+    "anchorY": 36,
     "frameWidth": 277,
-    "frameHeight": 49,
+    "frameHeight": 58,
     "frames": 1
    },
    "trunk": "assets/trees/pomegranate-b-trunk.png",
@@ -2631,9 +2631,9 @@
    "shadow": {
     "file": "assets/shadows/tree-olive-a.png",
     "anchorX": 76,
-    "anchorY": 8,
+    "anchorY": 38,
     "frameWidth": 301,
-    "frameHeight": 51,
+    "frameHeight": 60,
     "frames": 1
    },
    "trunk": "assets/trees/olive-a-trunk.png",
@@ -2656,9 +2656,9 @@
    "shadow": {
     "file": "assets/shadows/tree-olive-b.png",
     "anchorX": 76,
-    "anchorY": 8,
+    "anchorY": 38,
     "frameWidth": 301,
-    "frameHeight": 51,
+    "frameHeight": 60,
     "frames": 1
    },
    "trunk": "assets/trees/olive-b-trunk.png",
@@ -2681,9 +2681,9 @@
    "shadow": {
     "file": "assets/shadows/tree-palm-a.png",
     "anchorX": 71,
-    "anchorY": 8,
+    "anchorY": 48,
     "frameWidth": 364,
-    "frameHeight": 63,
+    "frameHeight": 75,
     "frames": 1
    },
    "trunk": "assets/trees/palm-a-trunk.png",
@@ -2706,9 +2706,9 @@
    "shadow": {
     "file": "assets/shadows/tree-palm-b.png",
     "anchorX": 71,
-    "anchorY": 8,
+    "anchorY": 48,
     "frameWidth": 364,
-    "frameHeight": 63,
+    "frameHeight": 75,
     "frames": 1
    },
    "trunk": "assets/trees/palm-b-trunk.png",
@@ -2731,9 +2731,9 @@
    "shadow": {
     "file": "assets/shadows/tree-forbidden-tree.png",
     "anchorX": 131,
-    "anchorY": 8,
+    "anchorY": 53,
     "frameWidth": 448,
-    "frameHeight": 68,
+    "frameHeight": 81,
     "frames": 1
    },
    "trunk": "assets/trees/forbidden-tree-trunk.png",
@@ -2845,9 +2845,9 @@
    "shadow": {
     "file": "assets/shadows/tree-tree-of-life.png",
     "anchorX": 147,
-    "anchorY": 8,
+    "anchorY": 54,
     "frameWidth": 491,
-    "frameHeight": 69,
+    "frameHeight": 83,
     "frames": 1
    },
    "trunk": "assets/trees/tree-of-life-trunk.png",
@@ -2870,9 +2870,9 @@
    "shadow": {
     "file": "assets/shadows/tree-bush-round.png",
     "anchorX": 58,
-    "anchorY": 8,
+    "anchorY": 18,
     "frameWidth": 151,
-    "frameHeight": 28,
+    "frameHeight": 31,
     "frames": 1
    },
    "trunk": "assets/trees/bush-round-trunk.png",
@@ -2895,9 +2895,9 @@
    "shadow": {
     "file": "assets/shadows/tree-bush-dark.png",
     "anchorX": 61,
-    "anchorY": 8,
+    "anchorY": 18,
     "frameWidth": 159,
-    "frameHeight": 29,
+    "frameHeight": 32,
     "frames": 1
    },
    "trunk": "assets/trees/bush-dark-trunk.png",
@@ -2920,9 +2920,9 @@
    "shadow": {
     "file": "assets/shadows/tree-bush-flower.png",
     "anchorX": 59,
-    "anchorY": 8,
+    "anchorY": 18,
     "frameWidth": 150,
-    "frameHeight": 28,
+    "frameHeight": 31,
     "frames": 1
    },
    "trunk": "assets/trees/bush-flower-trunk.png",
@@ -2945,9 +2945,9 @@
    "shadow": {
     "file": "assets/shadows/tree-bush-berry.png",
     "anchorX": 50,
-    "anchorY": 8,
+    "anchorY": 18,
     "frameWidth": 132,
-    "frameHeight": 28,
+    "frameHeight": 31,
     "frames": 1
    },
    "trunk": "assets/trees/bush-berry-trunk.png",
@@ -2970,9 +2970,9 @@
    "shadow": {
     "file": "assets/shadows/tree-grapevine.png",
     "anchorX": 41,
-    "anchorY": 8,
+    "anchorY": 26,
     "frameWidth": 167,
-    "frameHeight": 38,
+    "frameHeight": 43,
     "frames": 1
    },
    "trunk": "assets/trees/grapevine-trunk.png",

@@ -875,6 +875,16 @@
       "prompt": "The same dialogue portrait of Eve as the first image. Keep EXACTLY the same face, hair, expression, head size, framing, pixel size, colours and soft shading as the first image; change only the clothes visible at the shoulders and chest. She now wears only a simple strapless top made of a few green leaves, as in the second image: bare shoulders and arms, no sweater."
     },
     {
+      "id": "v3-eve-portrait-leaves-modest",
+      "title": "Eve portrait, start outfit, leaf top covering more",
+      "size": "1536x1024",
+      "style": "style2",
+      "references": [
+        "@v3-eve-portrait-leaves"
+      ],
+      "prompt": "The same dialogue portrait of Eve as this image. Keep EXACTLY the same face, hair, expression, head size, framing, pixel size, background colour, colours and soft shading; change only her leaf top. Make the leaf top cover more: overlapping green leaves come up high, to just below the collarbones, with a straight, modest neckline and no cleavage at all; the chest is fully covered by leaves. Shoulders and arms stay bare. The same kind of green leaves as now."
+    },
+    {
       "id": "v3-eve-portrait-tunic",
       "title": "Eve portrait, coat of skins",
       "size": "1536x1024",
