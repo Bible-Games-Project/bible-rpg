@@ -92,12 +92,17 @@ export const POINTS: Record<string, Pt> = {
   adamSerpent: [3080, 1700],
   serpentBranch: [3010, 1450],
   sewingStone: [2690, 2010],
-  groveStart: [2470, 2420],
+  // where the hiding begins, at the far side of the grove from God (GOD_PATROL[0])
+  groveStart: [2600, 2860],
   eveGrove: [2440, 2460],
   godGrove: [2470, 2230],
   adamBefore: [2420, 2330],
   eveBefore: [2520, 2330],
   serpentGround: [2640, 2290],
+  // behind the trunk of the oak below serpentGround, where it comes from in
+  // mission 9, and a bend around the mossy rock on the way
+  serpentFrom: [2662, 2506],
+  serpentBend: [2705, 2405],
   exit: [4330, 1720],
   cherubN: [4170, 1630],
   cherubS: [4170, 1820],

@@ -3,7 +3,7 @@ import { BOUNDS, EXIT_GAP, FORDS, PLACEMENTS, WORLD_H, WORLD_W, ZONES, type Plac
 import { OBJECTS, type ObjectKind } from '../../data/eden/objects';
 import { MANIFEST, sized } from '../manifest';
 import { DEPTH_GROUND } from './Actor';
-import { distToPolyline, pick, rng } from './geometry';
+import { distToPolyline, distToSegment, pick, rng } from './geometry';
 import { addShadow } from './shadows';
 import type { Terrain } from './Terrain';
 
@@ -286,12 +286,17 @@ export class WorldObjects {
     flat(['flowers-white', 'flowers-yellow', 'flowers-red', 'flowers-pink'], 50, ZONES.midst);
     flat(['mushrooms', 'rock-small'], 70);
     // reeds along the banks, lily pads on the water (more of both since the
-    // maintainer found the river plain)
+    // maintainer found the river plain); none in front of the stepping
+    // stones, where they hid the way across
+    const byFord = (x: number, y: number) => FORDS.some((f) => distToSegment(x, y, f.from[0], f.from[1], f.to[0], f.to[1]) < 70);
     for (let i = 0; i < 2400; i++) {
       const x = 1200 + r() * 1700;
       const y = r() * WORLD_H;
       const d = this.terrain.riverDistance(x, y);
-      if (d > -4 && d < 14 && r() < 0.45) this.place({ kind: 'reeds', x, y: y + 6, flip: r() < 0.5 });
+      if (d > -4 && d < 14 && r() < 0.45) {
+        const flip = r() < 0.5;
+        if (!byFord(x, y)) this.place({ kind: 'reeds', x, y: y + 6, flip });
+      }
       else if (d < -26 && r() < 0.3 && !FORDS.some((f) => Math.hypot(x - (f.from[0] + f.to[0]) / 2, y - (f.from[1] + f.to[1]) / 2) < 140)) {
         // lily pads grow in little groups
         for (let j = 0, n = 1 + Math.floor(r() * 3); j < n; j++) {

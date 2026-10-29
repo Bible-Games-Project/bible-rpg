@@ -742,6 +742,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   }
 
   thorns(on: boolean): void {
+    // already grown (mission 9 grows them, mission 10's setup asks again):
+    // keep them, or they vanished and grew back
+    if (on && this.thornSprites.length) return;
     for (const s of this.thornSprites) s.destroy();
     this.thornSprites = [];
     if (!on) return;
@@ -851,7 +854,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
    * smarter): hiding right where you were noticed, or next to him, gets you
    * found. Being seen for a moment only sends the player back, as many times
    * as it takes (the maintainer did not want the mission to pass by itself
-   * after a few failures). "Run and hide!" opens every attempt.
+   * after a few failures). Every attempt starts with the two of them at the
+   * far side of the grove and him at the start of his round, then "Run and
+   * hide!".
    */
   stealth(seconds: number): Promise<void> {
     return new Promise((resolve) => {
@@ -890,15 +895,49 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       };
       god.scripted = false;
       this.followGap = 24;
-      let grace = 1.5;
+      let grace = 2;
       let exposedFor = 0;
       let found = false;
-      hud.banner(t('stealth.banner'));
+      let staging = true;
+      // Every attempt starts the same way, far apart (the maintainer was
+      // caught at once when they began close to him): the screen goes dark,
+      // the two of them wait at the far side of the grove and the LORD God
+      // at the start of his round, then "Run and hide!".
+      const stage = async (first: boolean) => {
+        staging = true;
+        this.cutscene(true);
+        god.stop();
+        await this.fade(1, first ? 500 : 400);
+        if (!first) hud.toast(t(found ? 'stealth.found' : 'stealth.seen'), false, 3600);
+        this.player().setPosition(startPos[0], startPos[1]);
+        this.other().setPosition(startPos[0] - 30, startPos[1] + 10);
+        this.player().face('up');
+        this.other().face('up');
+        if (first) god.setVisible(false);
+        god.setPosition(GOD_PATROL[0][0], GOD_PATROL[0][1]);
+        god.face('right');
+        mode = 'round';
+        round = 0;
+        target = GOD_PATROL[1];
+        checks = [];
+        last.clear();
+        remaining = seconds;
+        grace = 2;
+        exposedFor = 0;
+        sight.setPosition(god.x, god.y);
+        this.cameraSnap();
+        await this.fade(0, 500);
+        if (first) void this.appear(god, GOD_PATROL[0], 'right', { ms: 1200 });
+        this.cutscene(false);
+        hud.banner(t('stealth.banner'));
+        staging = false;
+      };
+      void stage(true);
       const tick = this.time.addEvent({
         delay: 100,
         loop: true,
         callback: () => {
-          if (done) return;
+          if (done || staging) return;
           if (ui().dialogue.open) {
             god.stop();
             return;
@@ -986,25 +1025,10 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
           hud.setTimer(remaining, seconds, exposed ? t('stealth.exposed') : t('stealth.hidden'));
           exposedFor = exposed ? exposedFor + 0.1 : 0;
           if (exposedFor >= 0.6 && grace <= 0) {
-            exposedFor = 0;
+            // caught: everyone back to where the attempt began
             audio.play('detected');
-            this.cutscene(true);
-            god.stop();
-            mode = 'round';
-            checks = [];
-            last.clear();
-            const why = found ? 'stealth.found' : 'stealth.seen';
-            void (async () => {
-              await this.fade(1, 400);
-              hud.toast(t(why), false, 3600);
-              this.player().setPosition(startPos[0], startPos[1]);
-              this.other().setPosition(startPos[0] - 30, startPos[1] + 10);
-              remaining = seconds;
-              grace = 2;
-              await this.fade(0, 500);
-              this.cutscene(false);
-              hud.banner(t('stealth.banner'));
-            })();
+            void stage(false);
+            return;
           }
           if (remaining <= 0) finish();
         },

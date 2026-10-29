@@ -179,11 +179,6 @@ export function stageEden(w: WorldApi, n: number, o: StageOptions): void {
     w.show(w.god, POINTS.godGrove, 'down');
     w.godLight(true);
   }
-  if (n === 9) {
-    w.serpentPose('ground');
-    w.serpent.setPosition(POINTS.serpentGround[0], POINTS.serpentGround[1]);
-    w.serpent.face('left');
-  }
   // people only move while the screen is faded out (a resumed save): jump
   // there; between missions the camera glides back to the player
   if (o.place) w.cameraSnap();
@@ -680,8 +675,8 @@ const m08: MissionDef = {
 
     await w.say('m08_hide');
     w.objective(step('m08', 'hide'));
-    void w.appear(w.god, [2200, 2330], 'right', { ms: 1400 });
     w.sfx('holy');
+    // the LORD God comes in at the start of his round (see stealth())
     await w.stealth(20);
 
     // the LORD God calls, and they come out
@@ -711,12 +706,15 @@ const m09: MissionDef = {
   async run(w) {
     w.music('solemn');
     w.cutscene(true);
+    // the serpent crawls out from behind the oak below (it popped up on its
+    // spot before)
+    w.serpent.setPosition(POINTS.serpentFrom[0], POINTS.serpentFrom[1]);
     w.serpentPose('ground');
-    w.serpent.setPosition(POINTS.serpentGround[0], POINTS.serpentGround[1]);
+    w.sfx('hiss');
+    await w.cameraTo([POINTS.godGrove[0] + 60, POINTS.godGrove[1] + 80], 700);
+    await w.walk(w.serpent, [POINTS.serpentBend, POINTS.serpentGround], 45);
     w.serpent.face('left');
     w.face(w.god, w.serpent);
-    w.sfx('hiss');
-    await w.cameraTo([POINTS.godGrove[0] + 60, POINTS.godGrove[1] + 40], 700);
     await w.say('m09_serpent');
     // it crawls away and goes out of sight behind a bush or a tree
     const cover = w.coverNear(POINTS.serpentGround) ?? [POINTS.serpentGround[0] + 200, POINTS.serpentGround[1] + 30];
