@@ -163,30 +163,37 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   projection is flat (`SHADOW_X` 0.45, `SHADOW_Y` 0.11): steeper, the
   shadows of tall trees fell well below their base and the trees seemed to
   float. Tree and bush shadows are also a little shorter and lifted toward
-  the trunk (`TREE_SHADOW`: `sy` 0.14, `lift` 0.7 of the drop of the top),
+  the trunk (`TREE_SHADOW`: `sy` 0.14, `lift` 0.45 of the drop of the top),
   so they gather around the base: lower, the maintainer still saw flying
-  trees. Things lying on the ground (`LYING`: the log, rocks, the crawling
+  trees; at 0.7 they sat a little too high. The bear's shadow is lifted the
+  same way (`ANIMAL_SHADOW_LIFT`). Things lying on the ground (`LYING`: the log, rocks, the crawling
   serpent) cast from each column's own lowest pixel, so the shadow touches
   them along their length.
 - The cherub faces east with the flaming sword in hand (`flame` marks the
   blade for a flickering glow); the floating sword is gone. In mission 10
-  the cherubim drop fast from the sky, each landing with thunder, a screen
-  shake and a crack that stays (`GroundCrack.ts`). The crawling serpent is
+  the cherubim drop fast from the sky, each landing with a heavy thud
+  (`sfx('land')`), a screen shake and a crack that stays (`GroundCrack.ts`). The crawling serpent is
   a top-down S with a gentle wave running along it (`slither`; the
   maintainer wanted it slower and subtler), with its moving shadow; in
-  mission 9 it crawls away behind the nearest bush or tree and fades out.
+  mission 9 it comes out from behind the oak below its spot (fading in
+  hidden by the trunk, `serpentFrom`) and crawls up to it (it popped up on
+  the spot before), then crawls away behind the nearest bush or tree and
+  fades out.
   The serpent is already in the tree (fading in) when mission 6 starts.
-- Objective arrows: one painted arrow near and far, in the style of the
-  story-map medallions: gold, bevelled, a dark brown outline and a soft
-  shadow (`public/assets/ui/objective-arrows.png`, drawn by
-  `tools/art/ui_markers.py` at 24 headings so the light and the shadow stay
-  on the upper left and lower right; texture key `fx-arrows`, smooth). In
-  view it hovers over the target pointing down (`ObjectiveMarkers.ts`); off
-  screen the HUD shows the heading nearest the target at the screen edge,
-  both `ARROW_CSS` px wide. `objective(…, { markAll: true })` puts one over
-  every target (the animals still to name, both fig trees). The maintainer
-  rejected a bevelled marker, smooth violet arrows and pixel-art gold
-  arrows.
+- Objective arrows: one pixel-art arrow near and far, without an outline,
+  in a blue violet opposite the meadow's yellow green (hue ~66°) on the
+  colour wheel, lit from the upper left (`public/assets/ui/arrows.png`,
+  drawn by `tools/art/ui_markers.py` pixel by pixel at 16 headings, since a
+  rotated pixel image looks ragged; texture key `ui-arrows`, always crisp).
+  In view it hovers over the target pointing down (`ObjectiveMarkers.ts`);
+  off screen the HUD shows the heading nearest the target at the screen
+  edge. Both keep whole device pixels per arrow pixel (`arrowPixel`).
+  `objective(…, { markAll: true })` puts one over every target (the animals
+  still to name, both fig trees). The maintainer rejected, in turn, a
+  bevelled marker, smooth violet arrows, gold pixel arrows with a dark
+  outline and a painted gold arrow; this one is what they asked for:
+  "more pixel art, no dark outline, a bit smaller, the grass's
+  complementary colour".
 - Walks are all built from one clean standing frame per direction, so the
   drawing never changes between frames (8 frames at 12 fps). The maintainer
   asked for clearly visible steps and soft arm swings. Front/back: legs split
@@ -211,13 +218,17 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   frame (`quad_walk`: legs found from the hooves, the darker of each pair
   is the far one); the generated strips looked like a run, walked
   backwards or cut the lion's tail, and a first calm walk moved both front
-  and both back legs together. Each near leg is traced from its hoof up to
-  the belly (`trace_leg`) and the far leg of its pair is a darker copy of
-  it moved over the far hoof: far legs are mostly hidden in the standing
-  frame, and drawn from their own pixels they showed cut once the legs
-  parted (the maintainer saw it on the horse, sheep and deer). Near the
-  belly the copy keeps to the silhouette (a piece of the deer's chest stuck
-  out), and the hooves move whole. The goat, hare and dove keep their
+  and both back legs together. Each leg is traced from its own hoof (not
+  always on the lowest row) up to the belly (`trace_leg`), as wide as it
+  really is (`leg_width`: a fixed width split the bear's thick legs, one
+  part walking and one left behind). A far leg in full view (the bear's)
+  keeps its own drawing; one mostly hidden behind the near leg (horse,
+  sheep, deer) is a darker copy of the near leg moved over its own hoof,
+  since drawn from its own few pixels it showed cut once the legs parted.
+  Near the belly the copy keeps to the silhouette, what the traces leave of
+  two joined legs moves with the nearer one (it hung from the deer's chest),
+  the rows next to the belly stay in place under the moving legs (so the
+  belly is never cut) and the hooves move whole. The goat, hare and dove keep their
   generated strips. Every animal breathes when idle (a frame with the back
   one pixel higher, `idleFps`). Speeds are slow (`src/data/animals.ts`).
   Animal cells are as wide as the farther side from the body's centre
@@ -262,19 +273,26 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   Every cloud crosses from left to right on its own slant and pace and at
   its own size (the same path each time looked mechanical). Fish shadows and glints in the river, a few deeper pools
   of overlapping ovals here and there (a dark channel along the whole
-  river was rejected), and more reeds and lily pads. Small pixel shapes
+  river was rejected), and more reeds and lily pads, but none in front of
+  the stepping stones (they hid the way across). Small pixel shapes
   drawn at runtime use "px-" keys and art-pixel scale so they stay crisp.
   Animals that push against a tree turn aside.
 - Story map (Old Testament): the maintainer's painting
-  `art/reference/v2/story-map.webp` (2000×723) with no drawn route, inked by
-  `tools/art/story_map.py` into `public/assets/ui/story-map.webp`: dark
-  shading in the creases and shadows, like the cover, so it matches the
-  game's look (the maintainer's request). Each story's node sits on the
-  painted road next to the scene of its story, in Genesis order from left
-  to right (`pos` in painting pixels, placed in percent); Isaac's node is
-  Rebekah at the well (Genesis 24). Nodes are painted medallions (gold rim,
-  glossy centre, a star, a check or a padlock; `tools/art/ui_markers.py`):
-  the maintainer found pixel discs too "pixelart" over the painting.
+  `art/reference/v2/story-map.webp` (1983×793; they replace it now and
+  then: measure the new size and place the nodes again) with no drawn
+  route, inked by `tools/art/story_map.py` into
+  `public/assets/ui/story-map.webp`: dark shading in the creases and
+  shadows, like the cover, so it matches the game's look (the maintainer's
+  request). Each story's node sits on the painted road next to the scene of
+  its story, in Genesis order from left to right (`pos` in painting pixels,
+  placed in percent): the garden's tree, the fields (Cain and Abel), the
+  ark, the tower, the tents (Abraham), the burning city (Lot), the well
+  (Isaac and Rebekah), the stairway (Jacob) and the bridge to the pyramids
+  (Joseph). Nodes are the maintainer's padlock pins
+  (`art/reference/v2/story-pin-*.webp`, reduced by
+  `tools/art/ui_markers.py`): closed for a story still locked, open for one
+  that can be played or is done, the tip on the road. The chosen one grows
+  and shrinks from its tip with a warm glow (`node-glow`).
 - Before the game: a black screen suggesting headphones (moves on by itself
   or with any key or tap), then the controls (W A S D, Shift to run, E, Tab,
   Esc; the touch stick and button on touch screens), then the game
@@ -326,8 +344,12 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   popped up before). The maintainer wanted him smarter while they hide: he
   heads for where someone he noticed was going, then looks behind the
   three nearest bushes and trees around that spot, and anyone hiding right
-  there, or right next to him, is found. "Run and hide!" fills the middle
-  of the screen at every attempt (`hud.banner`). The serpent hisses when it
+  there, or right next to him, is found. Every attempt starts the same way
+  (`stage` in `stealth()`): the screen goes dark, Adam and Eve wait at the
+  far side of the grove (`groveStart`, on dry ground: a point by the
+  river put Eve in the water) and the LORD God at the start of his round,
+  about 650 px apart (they began next to him and were caught at once),
+  then "Run and hide!" fills the middle of the screen (`hud.banner`). The serpent hisses when it
   shows (`sfx('hiss')`).
 
 ### Code conventions
@@ -343,6 +365,16 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   of `{ s, t, ref }` read with `tRaw()`. Add a language only when complete.
 - Depth = feet Y. Trees are split into trunk (collider) and canopy (fades when
   the player walks behind it).
+- Sounds are synthesized in `src/core/audio.ts`. `crackle()` (many tiny
+  random clicks, band-passed) makes crunching, crinkling and grit, which a
+  smooth noise burst only hints at: the bite, the sewn fig leaves and the
+  cherubim landing use it. The maintainer would like real recorded sounds:
+  free CC0 packs (kenney.nl, opengameart.org, freesound.org) are blocked by
+  the cloud environment's network policy; they need those domains allowed
+  in the environment's network settings, or the files sent in the chat.
+  Only use sounds whose licence is CC0 and keep a credits list.
+- Thorns (`thorns(true)`) are grown once: asking again keeps them (mission
+  10's setup asked again and they vanished and grew back).
 - Headless Chromium in the cloud container renders with SwiftShader at only
   ~4 fps, and Phaser's clock advances at most one capped step per frame, so
   `wait(900)` can take 10+ real seconds there: a mission that seems stuck
