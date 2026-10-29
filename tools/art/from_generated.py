@@ -757,9 +757,12 @@ def bob(s: np.ndarray, lift: float = 0.7) -> np.ndarray:
 SHADOW_X = 0.45
 SHADOW_Y = 0.11
 SHADOW_ALPHA = 0.34
-# Trees: a little deeper, and raised by 70% of their depth so the shadow lies
-# around the trunk; below the base the maintainer saw the trees float.
-TREE_SHADOW = {'sy': 0.14, 'lift': 0.7}
+# Trees: a little deeper, and raised by part of their depth so the shadow
+# lies around the trunk: below the base the maintainer saw the trees float,
+# and raised by 70% the shadows sat a little too high.
+TREE_SHADOW = {'sy': 0.14, 'lift': 0.45}
+# Animals whose shadow is raised the same way (the bear's looked too low).
+ANIMAL_SHADOW_LIFT = {'bear': 0.6}
 SHADOW_RGB = (14, 30, 24)
 
 
@@ -936,36 +939,40 @@ def leg_map(stand: np.ndarray) -> tuple[int, np.ndarray, list[int], np.ndarray]:
     return top, legs, [order[0][0], order[1][0], order[0][1], order[1][1]], centres
 
 
-def trace_leg(alpha: np.ndarray, top: int, centre: float) -> list[tuple[int, int]]:
+def trace_leg(alpha: np.ndarray, top: int, centre: float, widest: float = 40) -> list[tuple[int, int]]:
     """The pixels of one leg, followed from its hoof up to the belly: on each
-    row the run of pixels nearest to the leg's line on the row below."""
+    row the run of pixels nearest to the leg's line on the row below. A run
+    wider than `widest` is the leg joining the body or another leg: only the
+    part around the line is kept."""
     h, w = alpha.shape
     out: list[tuple[int, int]] = []
     c = centre
     for y in range(h - 1, top - 1, -1):
         runs = runs_of(alpha[y])
-        if not runs:
+        near = [r for r in runs if abs((r[0] + r[1]) / 2 - c) <= 8 or r[0] <= c <= r[1]]
+        if not near:
+            # a hoof a little above the lowest one: start where it is
+            if not out:
+                continue
             break
-        x0, x1 = min(runs, key=lambda r: abs((r[0] + r[1]) / 2 - c))
-        if abs((x0 + x1) / 2 - c) > 8 and not (x0 <= c <= x1):
-            break
-        # a wide run is two legs side by side: keep the part around the line
-        if x1 - x0 > 14:
-            x0, x1 = max(x0, int(c) - 7), min(x1, int(c) + 7)
+        x0, x1 = min(near, key=lambda r: abs((r[0] + r[1]) / 2 - c))
+        if x1 - x0 > widest:
+            half = widest / 2
+            x0, x1 = max(x0, int(round(c - half))), min(x1, int(round(c + half)))
         out += [(y, x) for x in range(x0, x1)]
         c = (x0 + x1) / 2
     return out
 
 
-def _between(covered: np.ndarray) -> np.ndarray:
-    """Per row, the span from the first to the last covered pixel."""
-    h, w = covered.shape
-    out = np.zeros_like(covered)
-    for y in range(h):
-        xs = np.nonzero(covered[y])[0]
-        if len(xs):
-            out[y, xs.min():xs.max() + 1] = True
-    return out
+def leg_width(alpha: np.ndarray, top: int, centre: float) -> float:
+    """How wide a leg is at mid height (above the hoof, below the body)."""
+    pix = trace_leg(alpha, top, centre)
+    h = alpha.shape[0]
+    rows: dict[int, int] = {}
+    for y, _ in pix:
+        rows[y] = rows.get(y, 0) + 1
+    span = [rows[y] for y in rows if top + 0.35 * (h - top) <= y <= h - 0.2 * (h - top)]
+    return float(np.median(span)) if span else 10.0
 
 
 def quad_walk(stand: np.ndarray, swing: float, n: int = QUAD_FRAMES) -> list[np.ndarray]:
@@ -975,36 +982,62 @@ def quad_walk(stand: np.ndarray, swing: float, n: int = QUAD_FRAMES) -> list[np.
     h, w = stand.shape[:2]
     top, legs, depth, centres = leg_map(stand)
     far_back, far_front, near_back, near_front = depth
-    # Each leg's pixels. A far leg is mostly hidden behind the near one in the
-    # standing frame, so it showed gaps as soon as they parted (the
-    # maintainer saw cut legs): it is drawn as a darker copy of the near leg
-    # of its pair instead, placed over its own hoof.
     alpha = stand[:, :, 3] > 0
+    # Each leg is traced whole, as wide as it really is (a fixed width split
+    # the bear's thick legs in two, one part walking and one left behind). A
+    # far leg mostly hidden behind the near one is drawn as a darker copy of
+    # the near leg placed over its own hoof (drawn from its own few pixels it
+    # showed cut once the legs parted); a far leg in full view (the bear's)
+    # keeps its own drawing.
     pixels: dict[int, list] = {}
     moving = np.zeros((h, w), bool)
+    # near the belly the legs are left in place under the moving ones, so the
+    # belly is never cut
+    keep = top + 0.12 * (h - top)
+    low = np.zeros((h, w), bool)
+    low[int(top + 0.6 * (h - top)):] = True
     for far, near in ((far_back, near_back), (far_front, near_front)):
-        own = trace_leg(alpha, top, centres[near])
-        shift = int(round(centres[far] - centres[near]))
-        shade = np.array([0.78, 0.78, 0.8, 1.0])
+        widest = 1.6 * leg_width(alpha, top, centres[near])
+        own = trace_leg(alpha, top, centres[near], widest)
         pixels[near] = [(y, x, stand[y, x]) for y, x in own]
-        # near the belly the copy blends into the body: what would stick out
-        # of the silhouette there (a piece of the chest) is left out
-        thigh = top + 0.3 * (h - top)
-        pixels[far] = [(y, x + shift, (stand[y, x] * shade).astype(np.uint8)) for y, x in own
-                       if 0 <= x + shift < w and (y >= thigh or alpha[y, x + shift])]
-        pair = np.zeros((h, w), bool)
-        for y, x in own:
-            pair[y, x] = True
-            if 0 <= x + shift < w:
-                pair[y, x + shift] = True
-        # the original pixels of both legs of the pair are drawn anew, the
-        # hooves whole (a stray hoof pixel left behind looked like dirt)
-        low = np.zeros((h, w), bool)
-        low[int(top + 0.6 * (h - top)):] = True
+        far_own = trace_leg(alpha, top, centres[far], 1.6 * leg_width(alpha, top, centres[far]))
+        reach = lambda pix: h - min((y for y, _ in pix), default=h)
+        if reach(far_own) >= 0.8 * reach(own):
+            # what the traces left of the two legs (where they join into one
+            # wide run) moves with the nearer leg: left in place, it hung
+            # from the chest as the legs moved (the deer)
+            traced = set(own) | set(far_own)
+            rows: dict[int, dict[int, list[int]]] = {}
+            for leg, pix in ((near, own), (far, far_own)):
+                for y, x in pix:
+                    rows.setdefault(y, {}).setdefault(leg, []).append(x)
+            extra: dict[int, list[tuple[int, int]]] = {near: [], far: []}
+            for y, x in zip(*np.nonzero(np.isin(legs, (far, near)))):
+                if y < keep or (y, x) in traced or y not in rows:
+                    continue
+                leg = min(rows[y], key=lambda i: min(abs(x - v) for v in rows[y][i]))
+                extra[leg].append((y, x))
+            own_all, far_all = own + extra[near], far_own + extra[far]
+            pixels[near] = [(y, x, stand[y, x]) for y, x in own_all]
+            pixels[far] = [(y, x, stand[y, x]) for y, x in far_all]
+            erase = own_all + far_all
+        else:
+            shift = int(round(centres[far] - centres[near]))
+            shade = np.array([0.78, 0.78, 0.8, 1.0])
+            # near the belly the copy blends into the body: what would stick
+            # out of the silhouette there (a piece of the chest) is left out
+            thigh = top + 0.3 * (h - top)
+            pixels[far] = [(y, x + shift, (stand[y, x] * shade).astype(np.uint8)) for y, x in own
+                           if 0 <= x + shift < w and (y >= thigh or alpha[y, x + shift])]
+            erase = own + [(y, x) for y, x in zip(*np.nonzero(legs == far))]
+        for y, x in erase:
+            if y >= keep:
+                moving[y, x] = True
+        # the hooves move whole (a stray hoof pixel left behind looked like dirt)
         near_hoof = np.zeros((h, w), bool)
         for i in (far, near):
             near_hoof[:, max(0, int(centres[i]) - 9):int(centres[i]) + 10] = True
-        moving |= pair | (_between(pair) & (legs >= 0)) | (low & near_hoof & np.isin(legs, (far, near)))
+        moving |= low & near_hoof & np.isin(legs, (far, near))
     # what is left under the belly (a tail, a fringe of wool) stays still
     legs = np.where(moving, 0, -1)
     phase = {near_back: 0.0, near_front: 0.25, far_back: 0.5, far_front: 0.75}
@@ -1087,7 +1120,7 @@ def build_animals(m, save, strip, sheet_entry) -> None:
                 extra = {**idle, 'walk': [1, 2, 3, 4, 5, 6], 'walkFps': 8 if name != 'rabbit' else 11}
             key = f'animal-{name}'
             file = save(strip(cells), f'sprites/{key}.png')
-            extra['shadow'] = shadow_entry(save, cells, w // 2, h - 2, key)
+            extra['shadow'] = shadow_entry(save, cells, w // 2, h - 2, key, lift=ANIMAL_SHADOW_LIFT.get(name, 0.0))
             m['sprites'][key] = sheet_entry(file, cells, (w // 2, h - 2), **extra)
             print(f'  animal {name}: {w}x{h}, {len(cells)} frames')
 
