@@ -22,22 +22,22 @@ export const MAP_HEIGHT = 520;
 
 /** Paintings used as the story map background, with their size in pixels. */
 export const MAP_ART: Partial<Record<Testament, { file: string; width: number; height: number }>> = {
-  ot: { file: 'assets/ui/story-map.webp', width: 2000, height: 723 },
+  ot: { file: 'assets/ui/story-map.webp', width: 1983, height: 793 },
 };
 
 export const CHAPTERS: ChapterDef[] = [
   // Each node on the painted road beside its scene: Eden's tree, the ark,
   // the tower, Abraham's tent under the stars, Sodom burning, the well where
   // Rebekah meets Abraham's servant, Jacob's ladder, Egypt.
-  { id: 'eden', testament: 'ot', reference: 'Genesis 2–3', playable: true, pos: { x: 136, y: 418 } },
-  { id: 'cain-abel', testament: 'ot', reference: 'Genesis 4', playable: false, pos: { x: 250, y: 440 } },
-  { id: 'noah', testament: 'ot', reference: 'Genesis 6–9', playable: false, pos: { x: 330, y: 459 } },
-  { id: 'babel', testament: 'ot', reference: 'Genesis 11', playable: false, pos: { x: 640, y: 405 } },
-  { id: 'abraham', testament: 'ot', reference: 'Genesis 12–15', playable: false, pos: { x: 870, y: 452 } },
-  { id: 'lot', testament: 'ot', reference: 'Genesis 18–19', playable: false, pos: { x: 1120, y: 469 } },
-  { id: 'isaac', testament: 'ot', reference: 'Genesis 24', playable: false, pos: { x: 1300, y: 450 } },
-  { id: 'jacob', testament: 'ot', reference: 'Genesis 27–33', playable: false, pos: { x: 1540, y: 463 } },
-  { id: 'joseph', testament: 'ot', reference: 'Genesis 37–45', playable: false, pos: { x: 1730, y: 434 } },
+  { id: 'eden', testament: 'ot', reference: 'Genesis 2–3', playable: true, pos: { x: 95, y: 462 } },
+  { id: 'cain-abel', testament: 'ot', reference: 'Genesis 4', playable: false, pos: { x: 430, y: 492 } },
+  { id: 'noah', testament: 'ot', reference: 'Genesis 6–9', playable: false, pos: { x: 595, y: 392 } },
+  { id: 'babel', testament: 'ot', reference: 'Genesis 11', playable: false, pos: { x: 760, y: 382 } },
+  { id: 'abraham', testament: 'ot', reference: 'Genesis 12–15', playable: false, pos: { x: 880, y: 462 } },
+  { id: 'lot', testament: 'ot', reference: 'Genesis 18–19', playable: false, pos: { x: 1110, y: 392 } },
+  { id: 'isaac', testament: 'ot', reference: 'Genesis 24', playable: false, pos: { x: 1238, y: 458 } },
+  { id: 'jacob', testament: 'ot', reference: 'Genesis 27–33', playable: false, pos: { x: 1525, y: 445 } },
+  { id: 'joseph', testament: 'ot', reference: 'Genesis 37–45', playable: false, pos: { x: 1780, y: 455 } },
   { id: 'nativity', testament: 'nt', reference: 'Luke 2', playable: false, pos: { x: 120, y: 320 } },
   { id: 'baptism', testament: 'nt', reference: 'Matthew 3', playable: false, pos: { x: 300, y: 210 } },
   { id: 'disciples', testament: 'nt', reference: 'Mark 1', playable: false, pos: { x: 480, y: 320 } },

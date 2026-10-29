@@ -4,13 +4,18 @@ import { assetUrl, MANIFEST } from '../game/manifest';
 import { h } from './dom';
 import { wireButtonSounds } from './overlays';
 
-/** The painted arrow strip (public/assets/ui/objective-arrows.png, drawn by
- * tools/art/ui_markers.py): cells of 80 px, one per heading, clockwise from
+/** The pixel-art arrow strip (public/assets/ui/arrows.png, drawn by
+ * tools/art/ui_markers.py): cells of 17 px, one per heading, clockwise from
  * pointing right. */
-export const ARROW_CELL = 80;
-export const ARROW_HEADINGS = 24;
-/** How big the arrow shows, CSS px. */
-export const ARROW_CSS = 46;
+export const ARROW_CELL = 17;
+export const ARROW_HEADINGS = 16;
+/** CSS px per arrow pixel, before rounding to whole device pixels. */
+export const ARROW_CSS_PER_PIXEL = 1.75;
+
+/** Screen pixels per arrow pixel: a whole number of device pixels keeps it sharp. */
+export function arrowPixel(dpr: number): number {
+  return Math.max(2, Math.round(ARROW_CSS_PER_PIXEL * dpr));
+}
 
 export interface MissionInfo {
   number: number;
@@ -57,10 +62,10 @@ export class HUD {
     this.inventory = h('div', { class: 'inventory-bar' });
     this.switchBtn = h('button', { class: 'btn small', onclick: actions.switchCharacter }, t('hud.switch')) as HTMLButtonElement;
     this.charChip = h('div', { class: 'character-chip panel', hidden: true });
-    // the painted arrow of the world marker (tools/art/ui_markers.py), one
-    // drawing per heading so its light and shadow stay put
+    // the pixel-art arrow of the world marker (tools/art/ui_markers.py), one
+    // drawing per heading: a rotated pixel image looks ragged
     this.arrow = h('div', { class: 'objective-arrow', hidden: true });
-    this.arrow.style.backgroundImage = `url(${assetUrl('assets/ui/objective-arrows.png')})`;
+    this.arrow.style.backgroundImage = `url(${assetUrl('assets/ui/arrows.png')})`;
     this.timerText = h('div', {});
     this.timerBar = h('div', {});
     this.timer = h('div', { class: 'timer panel', hidden: true }, this.timerText, h('div', { class: 'bar' }, this.timerBar));
@@ -138,7 +143,8 @@ export class HUD {
       return;
     }
     this.arrow.hidden = false;
-    const px = ARROW_CSS / ARROW_CELL;
+    const dpr = window.devicePixelRatio || 1;
+    const px = arrowPixel(dpr) / dpr;
     const heading = (((Math.round(angle / ((2 * Math.PI) / ARROW_HEADINGS)) % ARROW_HEADINGS) + ARROW_HEADINGS) % ARROW_HEADINGS);
     const st = this.arrow.style;
     st.left = `${x}px`;

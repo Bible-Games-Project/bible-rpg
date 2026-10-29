@@ -670,15 +670,16 @@ select:focus-visible {
 }
 
 .story-node.painted {
-  /* the disc's centre is 56 px into the 120 px image (its shadow below) */
-  transform: translate(-46.7%, -46.7%);
+  /* a pin: its tip is on the road */
+  transform: translate(-50%, -100%);
   display: block;
   line-height: 0;
 }
 
 .story-node.painted .marker {
-  width: min(calc(54px * var(--ui-scale)), var(--node-max, 54px));
-  height: auto;
+  height: min(calc(60px * var(--ui-scale)), var(--node-max, 60px));
+  width: auto;
+  transform-origin: 50% 100%;
   transition: transform 140ms, filter 140ms;
 }
 
@@ -690,7 +691,7 @@ select:focus-visible {
 .story-node.painted:focus-visible .marker {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
-  border-radius: 50%;
+  border-radius: 40%;
 }
 
 .story-node.painted[aria-pressed='true'] {
@@ -704,12 +705,12 @@ select:focus-visible {
 @keyframes node-glow {
   0%,
   100% {
-    filter: drop-shadow(0 0 3px rgba(255, 226, 150, 0.7));
-    transform: scale(1.06);
+    filter: drop-shadow(0 0 4px rgba(255, 226, 150, 0.75));
+    transform: scale(1.04);
   }
   50% {
-    filter: drop-shadow(0 0 9px rgba(255, 226, 150, 1));
-    transform: scale(1.14);
+    filter: drop-shadow(0 0 12px rgba(255, 230, 160, 1));
+    transform: scale(1.16);
   }
 }
 
@@ -1032,6 +1033,7 @@ select:focus-visible {
   position: absolute;
   pointer-events: none;
   background-repeat: no-repeat;
+  image-rendering: pixelated;
 }
 
 .timer {

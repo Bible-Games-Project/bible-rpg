@@ -214,7 +214,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       // "px-" textures are small pixel shapes drawn in art pixels at runtime
       const perPixel = zoom * (key.startsWith('px-') ? 1 / ART_RESOLUTION : textureScale(key));
       const smooth = key.startsWith('fx-') || key === 'tiles-extruded';
-      const crisp = !smooth && perPixel >= 0.98 && Math.abs(perPixel - Math.round(perPixel)) < 0.02;
+      // the objective arrows are always drawn at whole screen pixels per pixel
+      const crisp = key === 'ui-arrows' || (!smooth && perPixel >= 0.98 && Math.abs(perPixel - Math.round(perPixel)) < 0.02);
       this.textures.get(key).setFilter(crisp ? Phaser.Textures.FilterMode.NEAREST : Phaser.Textures.FilterMode.LINEAR);
     }
   }
