@@ -124,11 +124,78 @@ export class App {
     this.setScreen(loading);
     await this.assetsReady;
     this.setScreen(null);
+    await this.preGame();
     this.playing = true;
     this.touch.setActive(true);
     this.hud.show(true);
     const data: EdenStartData = { mode };
     this.game.scene.start('eden', data);
+  }
+
+  /**
+   * Before playing: a black screen suggesting headphones, then the controls
+   * (keys, or the touch controls on a touch screen). Any key or tap moves on
+   * (the maintainer asked for both before the game starts).
+   */
+  private preGame(): Promise<void> {
+    return new Promise((resolve) => {
+      const touch = input.lastDevice === 'touch' || window.matchMedia('(pointer: coarse)').matches;
+      const el = h('div', { class: 'pregame', role: 'dialog', 'aria-modal': 'true' });
+      this.host.append(el);
+      const layer: InputLayer = { modal: true, allowMovement: false, captureKeys: true, onAction: () => true };
+      input.push(layer);
+      const key = (k: string, wide = false) => h('kbd', { class: wide ? 'wide' : '' }, k);
+      const row = (keys: HTMLElement, label: string) => h('div', { class: 'ctl' }, keys, h('span', {}, label));
+      const headphones = h('div', { class: 'pregame-step' }, headphonesIcon(), h('p', {}, t('pregame.headphones')));
+      const controls = h(
+        'div',
+        { class: 'pregame-step pregame-controls' },
+        h('h2', {}, t('pregame.controls')),
+        touch
+          ? h('div', { class: 'ctl-grid' }, row(h('div', { class: 'touch-stick' }), t('pregame.touchMove')), row(h('div', { class: 'touch-btn' }, 'E'), t('pregame.touchAct')))
+          : h(
+              'div',
+              { class: 'ctl-grid' },
+              row(h('div', { class: 'wasd' }, key('W'), key('A'), key('S'), key('D')), t('pregame.move')),
+              row(key('Shift', true), t('pregame.run')),
+              row(key('E'), t('pregame.interact')),
+              row(key('Tab', true), t('pregame.switch')),
+              row(key('Esc', true), t('pregame.menu')),
+            ),
+        h('p', { class: 'pregame-start' }, t(touch ? 'pregame.startTouch' : 'pregame.start')),
+      );
+      let step = 0;
+      let ready = false;
+      el.append(headphones);
+      const next = () => {
+        if (!ready) return;
+        window.clearTimeout(auto);
+        step++;
+        if (step === 1) {
+          el.replaceChildren(controls);
+          ready = false;
+          window.setTimeout(() => (ready = true), 500);
+          return;
+        }
+        window.removeEventListener('keydown', onKey, true);
+        input.remove(layer);
+        el.classList.add('out');
+        window.setTimeout(() => el.remove(), 450);
+        resolve();
+      };
+      const onKey = (e: KeyboardEvent) => {
+        e.preventDefault();
+        next();
+      };
+      window.addEventListener('keydown', onKey, true);
+      el.addEventListener('pointerdown', next);
+      window.setTimeout(() => (ready = true), 400);
+      // the headphones note moves on by itself
+      const auto = window.setTimeout(() => {
+        ready = true;
+        if (step === 0) next();
+      }, 2600);
+    });
   }
 
   /** Leave the chapter (progress is saved at the end of every mission). */
@@ -264,4 +331,12 @@ export class App {
       ],
     );
   }
+}
+
+function headphonesIcon(): HTMLElement {
+  const wrap = h('div', { class: 'pregame-icon', 'aria-hidden': 'true' });
+  wrap.innerHTML =
+    '<svg viewBox="0 0 64 64" width="72" height="72"><path d="M10 38v-6a22 22 0 0 1 44 0v6" fill="none" stroke="#d9ae59" stroke-width="5" stroke-linecap="round"/>' +
+    '<rect x="6" y="36" width="12" height="20" rx="4" fill="#d9ae59"/><rect x="46" y="36" width="12" height="20" rx="4" fill="#d9ae59"/></svg>';
+  return wrap;
 }

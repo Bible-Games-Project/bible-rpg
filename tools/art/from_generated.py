@@ -757,10 +757,13 @@ def bob(s: np.ndarray, lift: float = 0.7) -> np.ndarray:
 SHADOW_X = 0.45
 SHADOW_Y = 0.11
 SHADOW_ALPHA = 0.34
+# Trees: a little deeper, and raised by 70% of their depth so the shadow lies
+# around the trunk; below the base the maintainer saw the trees float.
+TREE_SHADOW = {'sy': 0.14, 'lift': 0.7}
 SHADOW_RGB = (14, 30, 24)
 
 
-def cast_shadow(s: np.ndarray, ax: int, ay: int, lying: bool = False) -> tuple[np.ndarray, int, int]:
+def cast_shadow(s: np.ndarray, ax: int, ay: int, lying: bool = False, sy: float | None = None) -> tuple[np.ndarray, int, int]:
     """(shadow image, anchor x, anchor y): the shadow of sprite `s` standing
     at (ax, ay); the anchor is where that base point falls in the image.
     Something `lying` on the ground (a log, a rock, the crawling serpent)
@@ -778,7 +781,7 @@ def cast_shadow(s: np.ndarray, ax: int, ay: int, lying: bool = False) -> tuple[n
         base = np.full(len(ys), ay)
     z = np.maximum(0, base - ys)
     tx = xs + SHADOW_X * z
-    ty = base + SHADOW_Y * z
+    ty = base + (SHADOW_Y if sy is None else sy) * z
     blur = px(1.6)
     m = blur * 3 + 2
     ox, oy = int(np.floor(tx.min())) - m, int(np.floor(ty.min())) - m
@@ -797,7 +800,7 @@ def cast_shadow(s: np.ndarray, ax: int, ay: int, lying: bool = False) -> tuple[n
     return out, ax - ox, ay - oy
 
 
-def shadow_entry(save, frames: np.ndarray | list[np.ndarray], ax: int, ay: int, name: str, lying: bool = False) -> dict:
+def shadow_entry(save, frames: np.ndarray | list[np.ndarray], ax: int, ay: int, name: str, lying: bool = False, sy: float | None = None, lift: float = 0.0) -> dict:
     """The shadow of each frame of a sheet, then of each frame mirrored: a
     sprite drawn flipped (facing left) still has the sun at the upper left,
     so its shadow is not the flipped shadow. All on one strip with the base
@@ -806,7 +809,13 @@ def shadow_entry(save, frames: np.ndarray | list[np.ndarray], ax: int, ay: int, 
     cells = frames if isinstance(frames, list) else [frames]
     w = cells[0].shape[1]
     # flipped, the base point (ax from the left edge) is w - ax from it
-    shots = [cast_shadow(c, ax, ay, lying) for c in cells] + [cast_shadow(c[:, ::-1].copy(), w - ax, ay, lying) for c in cells]
+    shots = [cast_shadow(c, ax, ay, lying, sy) for c in cells] + [cast_shadow(c[:, ::-1].copy(), w - ax, ay, lying, sy) for c in cells]
+    if lift:
+        # raise the whole shadow by part of its depth, so it lies around the
+        # base instead of below it (see TREE_SHADOW)
+        tall = ay - min(int(np.nonzero(c[:, :, 3])[0].min()) for c in cells)
+        up = int(round(lift * (SHADOW_Y if sy is None else sy) * tall))
+        shots = [(img, sx, sy_ + up) for img, sx, sy_ in shots]
     left = max(sx for _, sx, _ in shots)
     right = max(img.shape[1] - sx for img, sx, _ in shots)
     up = max(sy for _, _, sy in shots)
@@ -887,7 +896,7 @@ def runs_of(cols: np.ndarray) -> list[tuple[int, int]]:
     return out
 
 
-def leg_map(stand: np.ndarray) -> tuple[int, np.ndarray, list[int]]:
+def leg_map(stand: np.ndarray) -> tuple[int, np.ndarray, list[int], np.ndarray]:
     """(row where the legs start, a map of which leg each pixel belongs to
     (-1: body, tail…), the legs from far to near). Legs are found from the
     hooves: the runs of pixels along the bottom under the body, split until
@@ -911,21 +920,52 @@ def leg_map(stand: np.ndarray) -> tuple[int, np.ndarray, list[int]]:
         hooves[k:k + 1] = [(x0, mid), (mid, x1)]
     hooves = sorted(sorted(hooves, key=lambda r: r[0] - r[1])[:4])
     centres = np.array([(x0 + x1) / 2 for x0, x1 in hooves])
-    reach = max(x1 - x0 for x0, x1 in hooves) * 1.1 + 2
+    # every pixel under the body goes to its nearest hoof (a reach limit left
+    # the top of some legs behind, and the leg looked cut at the knee)
     legs = np.full((h, w), -1, int)
     for y in range(top, h):
         for x in np.nonzero(a[y])[0]:
-            d = np.abs(centres - x)
-            i = int(d.argmin())
-            if d[i] <= reach:
-                legs[y, x] = i
+            if left <= x <= right:
+                legs[y, x] = int(np.abs(centres - x).argmin())
     shade = [float(stand[legs == i][:, :3].mean()) if (legs == i).any() else 0 for i in range(4)]
     # back pair, then front pair (the animals face right); darker = far
     order = []
     for pair in ((0, 1), (2, 3)):
         far, near = sorted(pair, key=lambda i: shade[i])
         order.append((far, near))
-    return top, legs, [order[0][0], order[1][0], order[0][1], order[1][1]]
+    return top, legs, [order[0][0], order[1][0], order[0][1], order[1][1]], centres
+
+
+def trace_leg(alpha: np.ndarray, top: int, centre: float) -> list[tuple[int, int]]:
+    """The pixels of one leg, followed from its hoof up to the belly: on each
+    row the run of pixels nearest to the leg's line on the row below."""
+    h, w = alpha.shape
+    out: list[tuple[int, int]] = []
+    c = centre
+    for y in range(h - 1, top - 1, -1):
+        runs = runs_of(alpha[y])
+        if not runs:
+            break
+        x0, x1 = min(runs, key=lambda r: abs((r[0] + r[1]) / 2 - c))
+        if abs((x0 + x1) / 2 - c) > 8 and not (x0 <= c <= x1):
+            break
+        # a wide run is two legs side by side: keep the part around the line
+        if x1 - x0 > 14:
+            x0, x1 = max(x0, int(c) - 7), min(x1, int(c) + 7)
+        out += [(y, x) for x in range(x0, x1)]
+        c = (x0 + x1) / 2
+    return out
+
+
+def _between(covered: np.ndarray) -> np.ndarray:
+    """Per row, the span from the first to the last covered pixel."""
+    h, w = covered.shape
+    out = np.zeros_like(covered)
+    for y in range(h):
+        xs = np.nonzero(covered[y])[0]
+        if len(xs):
+            out[y, xs.min():xs.max() + 1] = True
+    return out
 
 
 def quad_walk(stand: np.ndarray, swing: float, n: int = QUAD_FRAMES) -> list[np.ndarray]:
@@ -933,8 +973,30 @@ def quad_walk(stand: np.ndarray, swing: float, n: int = QUAD_FRAMES) -> list[np.
     the hoof a little lifted, back along the ground), the body one pixel
     lower while the legs are spread."""
     h, w = stand.shape[:2]
-    top, legs, depth = leg_map(stand)
+    top, legs, depth, centres = leg_map(stand)
     far_back, far_front, near_back, near_front = depth
+    # Each leg's pixels. A far leg is mostly hidden behind the near one in the
+    # standing frame, so it showed gaps as soon as they parted (the
+    # maintainer saw cut legs): it is drawn as a darker copy of the near leg
+    # of its pair instead, placed over its own hoof.
+    alpha = stand[:, :, 3] > 0
+    pixels: dict[int, list] = {}
+    moving = np.zeros((h, w), bool)
+    for far, near in ((far_back, near_back), (far_front, near_front)):
+        own = trace_leg(alpha, top, centres[near])
+        shift = int(round(centres[far] - centres[near]))
+        shade = np.array([0.78, 0.78, 0.8, 1.0])
+        pixels[near] = [(y, x, stand[y, x]) for y, x in own]
+        pixels[far] = [(y, x + shift, (stand[y, x] * shade).astype(np.uint8)) for y, x in own if 0 <= x + shift < w]
+        pair = np.zeros((h, w), bool)
+        for y, x in own:
+            pair[y, x] = True
+            if 0 <= x + shift < w:
+                pair[y, x + shift] = True
+        # the original pixels of both legs of the pair are drawn anew
+        moving |= pair | (_between(pair) & (legs >= 0))
+    # what is left under the belly (a tail, a fringe of wool) stays still
+    legs = np.where(moving, 0, -1)
     phase = {near_back: 0.0, near_front: 0.25, far_back: 0.5, far_front: 0.75}
     amp = max(1.0, swing * (h - top))
     lift = max(1.0, 0.08 * (h - top))
@@ -949,9 +1011,9 @@ def quad_walk(stand: np.ndarray, swing: float, n: int = QUAD_FRAMES) -> list[np.
         def put(i: int) -> None:
             p = 2 * np.pi * (t - phase[i])
             dx, up = amp * np.sin(p), lift * max(0.0, np.cos(p))
-            for y, x in zip(*np.nonzero(legs == i)):
+            for y, x, c in pixels[i]:
                 k = (y - top + 1) / (h - top)
-                out[y - int(round(up * k * k)), x + pad + int(round(dx * k))] = stand[y, x]
+                out[y - int(round(up * k * k)), x + pad + int(round(dx * k))] = c
 
         for i in (far_back, far_front):
             put(i)
@@ -1254,7 +1316,7 @@ def build_trees(m, save, strip, sheet_entry) -> None:
                 cf = save(ca, f'trees/{name}-canopy.png')
                 whole = tint(s, 0.92) if i else s
                 trees[name] = {
-                    'shadow': shadow_entry(save, whole, ax, ay, f'tree-{name}'),
+                    'shadow': shadow_entry(save, whole, ax, ay, f'tree-{name}', **TREE_SHADOW),
                     'trunk': tf, 'canopy': cf, 'width': int(s.shape[1]), 'height': int(s.shape[0]),
                     'anchorX': int(ax), 'anchorY': int(ay), 'collider': [int(v) for v in collider],
                     'fruit': slots, 'kind': KIND.get(key, 'bush' if key.startswith('bush-') else 'tree'), 'scale': WORLD_PER_ART,

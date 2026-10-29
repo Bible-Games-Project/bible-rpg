@@ -1465,3 +1465,137 @@ select:focus-visible {
 .dialogue:not([hidden]) ~ .touch-controls {
   visibility: hidden;
 }
+
+/* ------------------------------------------------- before the game starts */
+
+.pregame {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: #000;
+  color: var(--ivory);
+  text-align: center;
+  padding: 24px;
+  transition: opacity 400ms;
+}
+
+.pregame.out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pregame-step {
+  display: grid;
+  justify-items: center;
+  gap: calc(14px * var(--ui-scale));
+  animation: pregame-in 600ms ease-out;
+}
+
+@keyframes pregame-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.pregame-step p {
+  margin: 0;
+  font-size: var(--fs-l);
+}
+
+.pregame-controls h2 {
+  margin: 0 0 calc(6px * var(--ui-scale));
+  font-size: var(--fs-xl);
+  color: var(--gold);
+}
+
+.ctl-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: calc(14px * var(--ui-scale)) calc(22px * var(--ui-scale));
+  align-items: center;
+}
+
+.ctl {
+  display: contents;
+}
+
+.ctl > :first-child {
+  justify-self: end;
+}
+
+.ctl > span {
+  justify-self: start;
+  text-align: left;
+  font-size: var(--fs-m);
+  color: var(--ivory-dim);
+}
+
+.pregame kbd,
+.touch-btn {
+  display: inline-grid;
+  place-items: center;
+  min-width: calc(44px * var(--ui-scale));
+  height: calc(44px * var(--ui-scale));
+  padding: 0 calc(10px * var(--ui-scale));
+  font-family: var(--font);
+  font-size: var(--fs-l);
+  color: var(--ivory);
+  background: linear-gradient(#2c3242, #1b2030);
+  border: 2px solid var(--gold-dim);
+  border-radius: 6px;
+  box-shadow: 0 4px 0 #0c0e13;
+}
+
+.pregame kbd.wide {
+  min-width: calc(76px * var(--ui-scale));
+  font-size: var(--fs-m);
+}
+
+.wasd {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 6px;
+}
+
+.wasd kbd:first-child {
+  grid-column: 2;
+}
+
+.wasd kbd:nth-child(2) {
+  grid-column: 1;
+}
+
+.touch-stick {
+  width: calc(56px * var(--ui-scale));
+  height: calc(56px * var(--ui-scale));
+  border-radius: 50%;
+  border: 3px solid var(--gold-dim);
+  background: radial-gradient(circle, var(--gold) 0 30%, transparent 32%);
+}
+
+.touch-btn {
+  border-radius: 50%;
+}
+
+.pregame-start {
+  margin-top: calc(10px * var(--ui-scale)) !important;
+  font-size: var(--fs-m) !important;
+  color: var(--gold);
+  animation: pregame-blink 1.6s ease-in-out infinite;
+}
+
+@keyframes pregame-blink {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pregame-step,
+  .pregame-start {
+    animation: none;
+  }
+}
