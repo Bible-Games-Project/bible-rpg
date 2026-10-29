@@ -44,7 +44,7 @@ export class Actor {
   facing: Facing;
   moving = false;
   /** current walking speed (px/s) */
-  private pace = 0;
+  pace = 0;
   charId?: string;
   outfit?: string;
   sheet?: string;
@@ -279,7 +279,7 @@ export class Actor {
       this.lastAnim = anim;
     }
     // each character's walk matches its own usual speed (God walks slower, with shorter steps)
-    if (this.charId) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / (CHARACTERS[this.charId]?.speed || WALK_PACE), 0.55, 1.3) : 1;
+    if (this.charId) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / (CHARACTERS[this.charId]?.speed || WALK_PACE), 0.55, 1.75) : 1;
   }
 
   /** The shadow cell of the sprite's current frame, flipped like it. */

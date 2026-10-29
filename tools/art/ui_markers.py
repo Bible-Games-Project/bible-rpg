@@ -23,60 +23,92 @@ from PIL import Image
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 OUT = os.path.join(ROOT, 'public', 'assets', 'ui')
 
-SIZE = 20
-OUTLINE = (58, 34, 20)
-# (rim light, rim shade, centre light, centre, centre shade)
+# Story-map medallions: painted, not pixel art (the maintainer found the
+# pixel discs too "pixelart" for the painting). Drawn at 4x and reduced.
+MEDAL = 112
+MEDAL_SS = 4
+OUTLINE = (40, 24, 14)
+# (rim light, rim dark, centre light, centre dark)
 STATES = {
-    'open': ((255, 222, 150), (214, 160, 88), (255, 198, 112), (226, 140, 58), (166, 86, 38)),
-    'done': ((255, 222, 150), (214, 160, 88), (128, 222, 228), (36, 158, 190), (20, 96, 132)),
-    'locked': ((206, 190, 160), (150, 134, 110), (168, 150, 126), (128, 110, 90), (90, 76, 62)),
+    'open': ((255, 232, 160), (150, 92, 36), (255, 196, 96), (196, 96, 30)),
+    'done': ((255, 232, 160), (150, 92, 36), (120, 220, 226), (18, 104, 136)),
+    'locked': ((214, 204, 184), (110, 100, 88), (176, 166, 150), (88, 80, 70)),
 }
-GLYPH_LIGHT = (255, 244, 214)
-# glyphs on a 7x7 grid, centred on the disc ('#' light, '.' empty)
-GLYPHS = {
-    'done': ['.......', '......#', '.....##', '#...##.', '##.##..', '.###...', '..#....'],
-    'locked': ['..###..', '.#...#.', '.#...#.', '#######', '###.###', '###.###', '#######'],
-    'open': ['...#...', '...#...', '..###..', '#######', '..###..', '...#...', '...#...'],
-}
+
+
+def _star(cx: float, cy: float, r: float) -> list[tuple[float, float]]:
+    pts = []
+    for i in range(10):
+        a = -np.pi / 2 + i * np.pi / 5
+        rr = r if i % 2 == 0 else r * 0.45
+        pts.append((cx + np.cos(a) * rr, cy + np.sin(a) * rr))
+    return pts
 
 
 def disc(state: str) -> np.ndarray:
-    rim_l, rim_d, c_l, c, c_d = STATES[state]
-    img = np.zeros((SIZE + 2, SIZE, 4), np.uint8)
-    yy, xx = np.mgrid[0:SIZE, 0:SIZE] + 0.5
-    cx = cy = SIZE / 2
+    from PIL import ImageDraw, ImageFilter
+    k = MEDAL_SS
+    n = MEDAL * k
+    pad = 8 * k
+    size = n + pad
+    rim_l, rim_d, c_l, c_d = STATES[state]
+    yy, xx = np.mgrid[0:size, 0:size] + 0.5
+    cx = cy = n / 2
     r = np.hypot(xx - cx, yy - cy)
-    # light from the upper left: +1 lit, -1 shaded
-    side = ((cx - xx) + (cy - yy)) / (r + 1e-6)
-    body = img[:SIZE]
-    inside = r <= SIZE / 2
-    body[inside] = (*OUTLINE, 255)
-    rim = r <= SIZE / 2 - 1
-    body[rim] = (*rim_l, 255)
-    body[rim & (side < -0.2)] = (*rim_d, 255)
-    centre = r <= SIZE / 2 - 3.2
-    body[centre & ~(r <= SIZE / 2 - 4.2)] = (*OUTLINE, 255)
-    inner = r <= SIZE / 2 - 4.2
-    body[inner] = (*c, 255)
-    body[inner & (side > 0.45) & (r > 2.2)] = (*c_l, 255)
-    body[inner & (side < -0.45) & (r > 2.2)] = (*c_d, 255)
-    # a speck of shine on the rim
-    body[3, 6] = body[4, 5] = (255, 248, 222, 255)
-    # a soft drop shadow under the disc
-    below = np.zeros((SIZE + 2, SIZE), bool)
-    below[2:, :] = inside
-    shadow = below & (img[..., 3] == 0)
-    img[shadow] = (30, 18, 10, 110)
-    g = GLYPHS[state]
-    gy, gx = SIZE // 2 - 3, SIZE // 2 - 3
-    for y, row in enumerate(g):
-        for x, ch in enumerate(row):
-            if ch == '#':
-                img[gy + y, gx + x] = (*GLYPH_LIGHT, 255) if state != 'locked' else (232, 220, 196, 255)
-    if state == 'locked':
-        # the keyhole and shackle shading
-        img[gy + 4:gy + 6, gx + 3] = (*OUTLINE, 255)
-    return img
+    # light from the upper left: +1 facing it, -1 away
+    side = ((cx - xx) + (cy - yy)) / (np.sqrt(2) * np.maximum(r, 1))
+    R = n / 2 - 3 * k
+    out = np.zeros((size, size, 4), float)
+    # soft shadow under the medallion
+    shadow = Image.fromarray(((np.hypot(xx - cx, (yy - cy - 5 * k) * 1.04) <= R) * 255).astype(np.uint8))
+    shadow = np.asarray(shadow.filter(ImageFilter.GaussianBlur(5 * k))).astype(float) / 255
+    out[..., :3] = OUTLINE
+    out[..., 3] = shadow * 0.55
+    lerp = lambda a, b, t: np.array(a, float) * (1 - t[..., None]) + np.array(b, float) * t[..., None]
+    t_rim = np.clip(0.5 - side * 0.5, 0, 1)
+    rim = lerp(rim_l, rim_d, t_rim)
+    inner = R * 0.76
+    t_c = np.clip((r / inner) * 0.6 + (0.5 - side * 0.5) * 0.6, 0, 1)
+    centre = lerp(c_l, c_d, t_c)
+    layers = [
+        (r <= R + 1.5 * k, np.broadcast_to(np.array(OUTLINE, float), rim.shape)),
+        (r <= R - 0.5 * k, rim),
+        (r <= inner + 1.2 * k, np.broadcast_to(np.array(OUTLINE, float) * 0.9 + 20, rim.shape)),
+        (r <= inner, centre),
+    ]
+    for mask, col in layers:
+        out[mask, :3] = col[mask]
+        out[mask, 3] = 1
+    # the rim's inner edge catches light on the lower right (a bevel)
+    bevel = (r > inner + 1.2 * k) & (r < inner + 3 * k) & (side < 0)
+    out[bevel, :3] = out[bevel, :3] * 0.6 + np.array(rim_l) * 0.4
+    # gloss on the upper left of the centre
+    gloss = np.clip(1 - np.hypot((xx - cx + inner * 0.32) / (inner * 0.55), (yy - cy + inner * 0.42) / (inner * 0.32)), 0, 1)
+    out[..., :3] = out[..., :3] * (1 - gloss[..., None] * 0.35) + 255 * gloss[..., None] * 0.35
+    img = Image.fromarray(np.clip(out * [1, 1, 1, 255], 0, 255).astype(np.uint8), 'RGBA')
+    # the symbol, cream with a soft dark shadow
+    icon = Image.new('RGBA', (size, size))
+    d = ImageDraw.Draw(icon)
+    ink = (255, 247, 222, 255)
+    s = inner
+    if state == 'open':
+        d.polygon(_star(cx, cy, s * 0.62), fill=ink)
+    elif state == 'done':
+        d.line([(cx - s * 0.42, cy + s * 0.02), (cx - s * 0.1, cy + s * 0.34), (cx + s * 0.46, cy - s * 0.36)], fill=ink, width=int(s * 0.2), joint='curve')
+    else:
+        w, h = s * 0.78, s * 0.56
+        d.rounded_rectangle((cx - w / 2, cy - h * 0.05, cx + w / 2, cy + h * 0.95), radius=s * 0.1, fill=ink)
+        # a closed shackle: an arch whose legs reach down into the body
+        sw = int(s * 0.13)
+        d.arc((cx - w * 0.33, cy - h * 0.8, cx + w * 0.33, cy + h * 0.1), 180, 360, fill=ink, width=sw)
+        for x in (cx - w * 0.33 + sw / 2, cx + w * 0.33 - sw / 2):
+            d.line((x, cy - h * 0.35, x, cy + h * 0.1), fill=ink, width=sw)
+        d.ellipse((cx - s * 0.07, cy + h * 0.28, cx + s * 0.07, cy + h * 0.42), fill=(88, 80, 70, 255))
+    icon_shadow = Image.new('RGBA', (size, size), (*OUTLINE, 0))
+    icon_shadow.putalpha(icon.getchannel('A').filter(ImageFilter.GaussianBlur(2 * k)).point(lambda v: int(v * 0.6)))
+    img.alpha_composite(icon_shadow, (k, 2 * k))
+    img.alpha_composite(icon)
+    return np.asarray(img.resize((size // k, size // k), Image.LANCZOS))
 
 
 ARROW_SIZE = 19

@@ -38,9 +38,9 @@
     "cain-abel": { "title": "Cain and Abel", "summary": "The first brothers, their offerings, and the question “Where is your brother?”" },
     "noah": { "title": "Noah and the Flood", "summary": "Noah builds the ark, and God sets the rainbow as a sign of His promise." },
     "babel": { "title": "The Tower of Babel", "summary": "People build a tower to make a name for themselves, and God scatters the languages." },
-    "abraham": { "title": "The Call of Abraham", "summary": "God calls Abram to leave his home for a land He will show him, and promises him a great nation." },
+    "abraham": { "title": "The Call of Abraham", "summary": "God calls Abram to a new land and promises him descendants as many as the stars." },
     "lot": { "title": "Lot and Sodom", "summary": "Angels lead Lot and his family out of Sodom before the city is destroyed." },
-    "isaac": { "title": "Abraham and Isaac", "summary": "Abraham's faith is tested on the mountain, and God provides." },
+    "isaac": { "title": "Isaac and Rebekah", "summary": "At the well, Abraham's servant meets Rebekah, who becomes Isaac's wife." },
     "jacob": { "title": "Jacob", "summary": "Jacob dreams of a ladder reaching to heaven, and God keeps His promise to him." },
     "joseph": { "title": "Joseph and His Brothers", "summary": "From the pit to the palace: Joseph forgives his brothers." },
     "nativity": { "title": "The Birth of Jesus", "summary": "Shepherds hear the good news in the fields near Bethlehem." },
@@ -104,6 +104,19 @@
     "restartConfirm": "Restart the current mission from its beginning?",
     "quit": "Save and return to menu",
     "saveNote": "Your progress is saved at the end of every mission."
+  },
+  "pregame": {
+    "headphones": "For the best experience, use headphones.",
+    "controls": "Controls",
+    "move": "Move",
+    "run": "Run (hold)",
+    "interact": "Pick up, use, talk",
+    "switch": "Play as Adam or Eve",
+    "menu": "Menu",
+    "touchMove": "Drag the stick to move",
+    "touchAct": "Tap the button to pick up, use or talk",
+    "start": "Press any key to start",
+    "startTouch": "Tap to start"
   },
   "hud": {
     "mission": "Mission {n}",

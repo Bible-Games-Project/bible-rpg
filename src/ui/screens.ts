@@ -81,7 +81,7 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
       mapInner.style.width = `${Math.floor(art.width * k)}px`;
       mapInner.style.height = `${Math.floor(art.height * k)}px`;
       // nodes never cover too much of a short map (a phone held sideways)
-      mapInner.style.setProperty('--node-max', `${Math.max(28, Math.round(art.height * k * 0.1))}px`);
+      mapInner.style.setProperty('--node-max', `${Math.max(32, Math.round(art.height * k * 0.12))}px`);
       return;
     }
     const avail = map.clientHeight - 4;

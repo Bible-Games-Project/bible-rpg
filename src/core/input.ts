@@ -6,7 +6,7 @@
  * the pressed actions, so movement can never leak into dialogue or menus.
  */
 
-export type Action = 'up' | 'down' | 'left' | 'right' | 'interact' | 'cancel' | 'pause' | 'switch';
+export type Action = 'up' | 'down' | 'left' | 'right' | 'interact' | 'cancel' | 'pause' | 'switch' | 'run';
 
 const KEYMAP: Record<string, Action> = {
   ArrowUp: 'up',
@@ -26,6 +26,8 @@ const KEYMAP: Record<string, Action> = {
   Backspace: 'cancel',
   Tab: 'switch',
   KeyQ: 'switch',
+  ShiftLeft: 'run',
+  ShiftRight: 'run',
 };
 
 /** Keys shown to the player in prompts. */
@@ -38,6 +40,7 @@ export const KEY_LABELS: Record<Action, string> = {
   cancel: 'Backspace',
   pause: 'Esc',
   switch: 'Tab',
+  run: 'Shift',
 };
 
 export interface InputLayer {

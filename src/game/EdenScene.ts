@@ -29,6 +29,9 @@ export interface EdenStartData {
   mode: 'continue' | 'new';
 }
 
+/** How much faster the player goes while running (Shift). */
+const RUN = 1.6;
+
 /** World pixels of height on screen, and the narrowest view (portrait phones). */
 const VIEW_HEIGHT = 1000;
 const VIEW_MIN_WIDTH = 640;
@@ -961,13 +964,14 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     const canMove = this.canAct() && !p.scripted && input.movementAllowed(this.layer) && !ui().dialogue.open;
     if (canMove) {
       const v = input.moveVector();
-      const speed = CHARACTERS[this.active].speed;
+      // Shift: run
+      const speed = CHARACTERS[this.active].speed * (input.isDown('run') ? RUN : 1);
       p.move(v.x * speed, v.y * speed);
       if (p.moving) {
         this.stepTimer -= dt;
         if (this.stepTimer <= 0) {
           audio.play('step', { pitch: this.terrain.pathDistance(p.x, p.y) < 0 ? 0.7 : 1.15, volume: 0.6 });
-          this.stepTimer = 0.27; // two steps per walk cycle (8 frames at 15 fps)
+          this.stepTimer = 0.27 / (p.pace / CHARACTERS[this.active].speed); // two steps per walk cycle (8 frames at 15 fps)
         }
       }
     } else if (!p.scripted) {
@@ -1011,7 +1015,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     const dy = ty - f.y;
     const gap = Math.hypot(dx, dy);
     if (dist > 64 || gap > 30) {
-      const sp = CHARACTERS[f.id].speed * (dist > 160 ? 1.1 : gap < 60 ? 0.6 : 0.95);
+      // keep up with a leader who runs
+      const sp = Math.max(CHARACTERS[f.id].speed, leader.pace) * (dist > 160 ? 1.1 : gap < 60 ? 0.6 : 0.95);
       const before = { x: f.x, y: f.y };
       f.move((dx / gap) * sp, (dy / gap) * sp);
       this.followStuck = Math.hypot(f.x - before.x, f.y - before.y) < 0.2 ? this.followStuck + dt : 0;

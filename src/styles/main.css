@@ -670,15 +670,15 @@ select:focus-visible {
 }
 
 .story-node.painted {
-  transform: translate(-50%, -45%);
+  /* the disc's centre is 56 px into the 120 px image (its shadow below) */
+  transform: translate(-46.7%, -46.7%);
   display: block;
   line-height: 0;
 }
 
 .story-node.painted .marker {
-  width: min(calc(46px * var(--ui-scale)), var(--node-max, 46px));
+  width: min(calc(54px * var(--ui-scale)), var(--node-max, 54px));
   height: auto;
-  image-rendering: pixelated;
   transition: transform 140ms, filter 140ms;
 }
 
