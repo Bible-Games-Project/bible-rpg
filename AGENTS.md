@@ -142,7 +142,10 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   `SERPENT_TONGUE`: boxes measured on its current portrait). Adam and Eve
   have a portrait per outfit (`adam-fig`, `eve-tunic`, …; the dialogue picks
   it from what they wear: the maintainer saw Eve's portrait in a leaf
-  sweater while she still wore a leaf top). Mouth openings use the lips'
+  sweater while she still wore a leaf top). Eve's leaf-top portrait is
+  `v3-eve-portrait-leaves-modest`, an edit of the first with the leaves up
+  to the collarbones (the maintainer found the first too low-cut; keep it
+  modest). Mouth openings use the lips'
   own colour darkened (black looked pasted on, worst in God's beard), and
   God's sits a little higher (`MOUTH_UP`).
 - Shadows: every sprite, tree and standing prop casts its own silhouette,
@@ -159,7 +162,10 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   base, each at its own pace, shadows leaning along (`updateWind`). The
   projection is flat (`SHADOW_X` 0.45, `SHADOW_Y` 0.11): steeper, the
   shadows of tall trees fell well below their base and the trees seemed to
-  float. Things lying on the ground (`LYING`: the log, rocks, the crawling
+  float. Tree and bush shadows are also a little shorter and lifted toward
+  the trunk (`TREE_SHADOW`: `sy` 0.14, `lift` 0.7 of the drop of the top),
+  so they gather around the base: lower, the maintainer still saw flying
+  trees. Things lying on the ground (`LYING`: the log, rocks, the crawling
   serpent) cast from each column's own lowest pixel, so the shadow touches
   them along their length.
 - The cherub faces east with the flaming sword in hand (`flame` marks the
@@ -170,15 +176,17 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   maintainer wanted it slower and subtler), with its moving shadow; in
   mission 9 it crawls away behind the nearest bush or tree and fades out.
   The serpent is already in the tree (fading in) when mission 6 starts.
-- Objective arrows: one pixel-art arrow near and far, in the warm gold of
-  the game's frames with a dark brown outline (`public/assets/ui/arrows.png`,
-  drawn by `tools/art/ui_markers.py` at 16 headings, since a rotated pixel
-  image looks ragged). In view it hovers over the target pointing down
-  (`ObjectiveMarkers.ts`); off screen the HUD shows the heading nearest the
-  target at the screen edge. Both keep whole screen pixels per arrow pixel.
-  `objective(…, { markAll: true })` puts one over every target (the animals
-  still to name, both fig trees). The maintainer rejected a bevelled marker
-  and then smooth violet arrows as foreign to the game.
+- Objective arrows: one painted arrow near and far, in the style of the
+  story-map medallions: gold, bevelled, a dark brown outline and a soft
+  shadow (`public/assets/ui/objective-arrows.png`, drawn by
+  `tools/art/ui_markers.py` at 24 headings so the light and the shadow stay
+  on the upper left and lower right; texture key `fx-arrows`, smooth). In
+  view it hovers over the target pointing down (`ObjectiveMarkers.ts`); off
+  screen the HUD shows the heading nearest the target at the screen edge,
+  both `ARROW_CSS` px wide. `objective(…, { markAll: true })` puts one over
+  every target (the animals still to name, both fig trees). The maintainer
+  rejected a bevelled marker, smooth violet arrows and pixel-art gold
+  arrows.
 - Walks are all built from one clean standing frame per direction, so the
   drawing never changes between frames (8 frames at 12 fps). The maintainer
   asked for clearly visible steps and soft arm swings. Front/back: legs split
@@ -203,7 +211,13 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   frame (`quad_walk`: legs found from the hooves, the darker of each pair
   is the far one); the generated strips looked like a run, walked
   backwards or cut the lion's tail, and a first calm walk moved both front
-  and both back legs together. The goat, hare and dove keep their
+  and both back legs together. Each near leg is traced from its hoof up to
+  the belly (`trace_leg`) and the far leg of its pair is a darker copy of
+  it moved over the far hoof: far legs are mostly hidden in the standing
+  frame, and drawn from their own pixels they showed cut once the legs
+  parted (the maintainer saw it on the horse, sheep and deer). Near the
+  belly the copy keeps to the silhouette (a piece of the deer's chest stuck
+  out), and the hooves move whole. The goat, hare and dove keep their
   generated strips. Every animal breathes when idle (a frame with the back
   one pixel higher, `idleFps`). Speeds are slow (`src/data/animals.ts`).
   Animal cells are as wide as the farther side from the body's centre
@@ -224,7 +238,8 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
 - Light (`src/game/world/Atmosphere.ts`), so everything feels like one
   world (the maintainer felt objects did not belong together): cloud
   shadows drifting over everything, warm sunbeams from the upper left (the
-  side the art is lit from) with a little parallax, a warm daylight cast
+  side the art is lit from) fixed to the ground like everything else (the
+  maintainer did not want them to follow the camera), a warm daylight cast
   (the day tint) and a soft vignette; all fade with the time of day. Its
   textures are drawn at startup. Sprite strips keep each frame's first and
   last column empty (`build_all.strip`), or smooth scaling shows a line of
@@ -237,22 +252,34 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   trunk stays opaque. The maintainer disliked both a hard cut and a fully
   faded tree.
 - Ambient life (`Ambience.ts`, off with reduced motion), all very subtle:
-  leaves, petals and bits of grass on the breeze with tiny shadows, gnats
-  by the banks, a white cloud passing now and then with its shadow far off
-  toward the lower right and well below (the cloud is drawn in pixel art
-  like the clouds of the story map painting; its shadow is the same shape,
-  dark and soft), fish shadows and glints in the river, a few deeper pools
+  leaves, petals and bits of grass on the breeze with small shadows (twice
+  the art pixel: the maintainer found them too small), gnats by the banks,
+  a white cloud passing now and then with its shadow far off toward the
+  lower right and well below (`CLOUD_SHADOW`, doubled at the maintainer's
+  request). The cloud is drawn in pixel art like the clouds of the story
+  map painting, with smaller puffs hanging under it at uneven depths (a
+  flat base looked cut), and its shadow is the same shape, dark and soft.
+  Every cloud crosses from left to right on its own slant and pace and at
+  its own size (the same path each time looked mechanical). Fish shadows and glints in the river, a few deeper pools
   of overlapping ovals here and there (a dark channel along the whole
   river was rejected), and more reeds and lily pads. Small pixel shapes
   drawn at runtime use "px-" keys and art-pixel scale so they stay crisp.
   Animals that push against a tree turn aside.
 - Story map (Old Testament): the maintainer's painting
-  `art/reference/v2/story-map.webp` (copied to `public/assets/ui/`) with no
-  drawn route; each story's node sits on the painted road next to its
-  scene (`pos` in painting pixels, placed in percent). The painting shows
-  Babel before the flood: Noah's node sits by the ark, Babel's by the tower,
-  and they still unlock in Genesis order. Nodes are pixel discs in the
-  painting's palette (`tools/art/ui_markers.py`).
+  `art/reference/v2/story-map.webp` (2000×723) with no drawn route, inked by
+  `tools/art/story_map.py` into `public/assets/ui/story-map.webp`: dark
+  shading in the creases and shadows, like the cover, so it matches the
+  game's look (the maintainer's request). Each story's node sits on the
+  painted road next to the scene of its story, in Genesis order from left
+  to right (`pos` in painting pixels, placed in percent); Isaac's node is
+  Rebekah at the well (Genesis 24). Nodes are painted medallions (gold rim,
+  glossy centre, a star, a check or a padlock; `tools/art/ui_markers.py`):
+  the maintainer found pixel discs too "pixelart" over the painting.
+- Before the game: a black screen suggesting headphones (moves on by itself
+  or with any key or tap), then the controls (W A S D, Shift to run, E, Tab,
+  Esc; the touch stick and button on touch screens), then the game
+  (`App.preGame`, the maintainer's request). Holding Shift runs at `RUN`
+  times the walking speed.
 - The naming puzzle uses the meadow's green in light and dark steps (the
   maintainer found its old green foreign to the game).
 - New art comes from the OpenAI Image API (maintainer's decision), with a
@@ -295,7 +322,13 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   them being seen counts, not only the one being played (the follower keeps
   closer while hiding, and counts as hidden next to a hidden leader). His column of light shows only at his first
   appearance (`godLight(true, true)`) and fades once he walks; the glow and
-  the motes stay. He leaves with a fade (`vanish`).
+  the motes stay. He comes and leaves with a fade (`appear`, `vanish`; he
+  popped up before). The maintainer wanted him smarter while they hide: he
+  heads for where someone he noticed was going, then looks behind the
+  three nearest bushes and trees around that spot, and anyone hiding right
+  there, or right next to him, is found. "Run and hide!" fills the middle
+  of the screen at every attempt (`hud.banner`). The serpent hisses when it
+  shows (`sfx('hiss')`).
 
 ### Code conventions
 
@@ -310,6 +343,11 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   of `{ s, t, ref }` read with `tRaw()`. Add a language only when complete.
 - Depth = feet Y. Trees are split into trunk (collider) and canopy (fades when
   the player walks behind it).
+- Headless Chromium in the cloud container renders with SwiftShader at only
+  ~4 fps, and Phaser's clock advances at most one capped step per frame, so
+  `wait(900)` can take 10+ real seconds there: a mission that seems stuck
+  in a Playwright run is usually just slow. Measure real fps with
+  requestAnimationFrame before hunting a hang.
 - Water blocks walking through a hidden tilemap layer of half-tile cells,
   solid where the cell's centre is in the river (fords excepted). Row boxes
   over mostly-water tiles left the banks' half-water tiles walkable, and

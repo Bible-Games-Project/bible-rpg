@@ -10,7 +10,7 @@ import { wireButtonSounds } from './overlays';
 export const ARROW_CELL = 80;
 export const ARROW_HEADINGS = 24;
 /** How big the arrow shows, CSS px. */
-export const ARROW_CSS = 38;
+export const ARROW_CSS = 46;
 
 export interface MissionInfo {
   number: number;
