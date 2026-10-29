@@ -1,8 +1,10 @@
 import { settings } from './settings';
 
 /**
- * All sound is synthesised at runtime with the Web Audio API: no third-party
- * audio files, so everything is original and freely redistributable.
+ * Sound is synthesised at runtime with the Web Audio API, except a few
+ * recorded effects (SAMPLES): CC0 recordings (public domain, credited in
+ * art/sfx/CREDITS.md) mixed by tools/audio/build_sfx.py. Until a recording
+ * has loaded, or if it cannot, its synthesised version plays instead.
  *
  * Buses: master -> (music, sfx). Ambience (wind, birds, water) goes through
  * the sfx bus. Everything respects the volume settings and the game remains
@@ -35,6 +37,14 @@ export type Sfx =
 export type Mood = 'none' | 'peaceful' | 'wonder' | 'solemn' | 'tension' | 'sorrow';
 export type Ambience = 'none' | 'garden' | 'evening' | 'outside';
 
+/** Recorded effects (public/assets/sfx) and their level next to the
+ * synthesised ones (the maintainer wanted real sounds for these). */
+const SAMPLES: Partial<Record<Sfx, { file: string; gain: number }>> = {
+  bite: { file: 'assets/sfx/bite.mp3', gain: 0.55 },
+  leaves: { file: 'assets/sfx/sew-leaves.mp3', gain: 0.5 },
+  land: { file: 'assets/sfx/land.mp3', gain: 0.85 },
+};
+
 const PENTA_MAJOR = [0, 2, 4, 7, 9];
 const PENTA_MINOR = [0, 3, 5, 7, 10];
 
@@ -52,6 +62,7 @@ class AudioManager {
   private waterGain: GainNode | null = null;
   private birdTimer: number | null = null;
   private unlocked = false;
+  private samples = new Map<Sfx, AudioBuffer>();
 
   constructor() {
     const unlock = () => {
@@ -80,6 +91,7 @@ class AudioManager {
     this.music.connect(this.master);
     this.sfx.connect(this.master);
     this.master.connect(ctx.destination);
+    this.loadSamples(ctx);
     const len = ctx.sampleRate * 2;
     this.noise = ctx.createBuffer(1, len, ctx.sampleRate);
     const d = this.noise.getChannelData(0);
@@ -194,12 +206,35 @@ class AudioManager {
     src.stop(t + dur + 0.05);
   }
 
+  private loadSamples(ctx: AudioContext): void {
+    for (const [name, s] of Object.entries(SAMPLES) as [Sfx, { file: string }][]) {
+      fetch(`${import.meta.env.BASE_URL}${s.file}`)
+        .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(r.statusText))))
+        .then((data) => ctx.decodeAudioData(data))
+        .then((buf) => this.samples.set(name, buf))
+        .catch(() => {
+          /* the synthesised sound stays */
+        });
+    }
+  }
+
   play(name: Sfx, opts: { pitch?: number; volume?: number } = {}): void {
     const ctx = this.unlocked ? this.ensure() : null;
     if (!ctx || ctx.state !== 'running') return;
     const t = ctx.currentTime + 0.005;
     const v = opts.volume ?? 1;
     const p = opts.pitch ?? 1;
+    const recorded = this.samples.get(name);
+    if (recorded) {
+      const src = ctx.createBufferSource();
+      src.buffer = recorded;
+      src.playbackRate.value = p;
+      const g = ctx.createGain();
+      g.gain.value = (SAMPLES[name]?.gain ?? 1) * v;
+      src.connect(g).connect(this.sfx);
+      src.start(t);
+      return;
+    }
     switch (name) {
       case 'uiMove':
         this.tone(880 * p, t, 0.05, 0.05 * v, 'triangle');

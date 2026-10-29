@@ -365,14 +365,19 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   of `{ s, t, ref }` read with `tRaw()`. Add a language only when complete.
 - Depth = feet Y. Trees are split into trunk (collider) and canopy (fades when
   the player walks behind it).
-- Sounds are synthesized in `src/core/audio.ts`. `crackle()` (many tiny
-  random clicks, band-passed) makes crunching, crinkling and grit, which a
-  smooth noise burst only hints at: the bite, the sewn fig leaves and the
-  cherubim landing use it. The maintainer would like real recorded sounds:
-  free CC0 packs (kenney.nl, opengameart.org, freesound.org) are blocked by
-  the cloud environment's network policy; they need those domains allowed
-  in the environment's network settings, or the files sent in the chat.
-  Only use sounds whose licence is CC0 and keep a credits list.
+- Sounds are synthesized in `src/core/audio.ts`, except recorded effects
+  the maintainer asked for (the bite, the sewn fig leaves, the cherubim
+  landing: `SAMPLES`). Those are CC0 recordings from OpenGameArt
+  (`art/sfx/sources`, every one credited with its page in
+  `art/sfx/CREDITS.md`), mixed, trimmed and levelled into
+  `public/assets/sfx/*.mp3` by `tools/audio/build_sfx.py` (ffmpeg; measure
+  peaks with `astats`: `volumedetect` stops at 0 dB and hid clipping). The
+  synthesized version plays until a recording has loaded, or if it cannot.
+  Use only sounds whose own page says CC0. The cloud environment allows
+  opengameart.org and freesound.org (kenney.nl refuses scripted downloads;
+  Kenney's packs are on OpenGameArt too). `crackle()` (many tiny random
+  clicks, band-passed) makes crunching, crinkling and grit in synthesized
+  sounds.
 - Thorns (`thorns(true)`) are grown once: asking again keeps them (mission
   10's setup asked again and they vanished and grew back).
 - Headless Chromium in the cloud container renders with SwiftShader at only
