@@ -193,7 +193,7 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   bevelled marker, smooth violet arrows, gold pixel arrows with a dark
   outline and a painted gold arrow; this one is what they asked for:
   "more pixel art, no dark outline, a bit smaller, the grass's
-  complementary colour".
+  complementary colour". Both fade in and out (they popped).
 - Walks are all built from one clean standing frame per direction, so the
   drawing never changes between frames (8 frames at 12 fps). The maintainer
   asked for clearly visible steps and soft arm swings. Front/back: legs split
@@ -218,8 +218,10 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   frame (`quad_walk`: legs found from the hooves, the darker of each pair
   is the far one); the generated strips looked like a run, walked
   backwards or cut the lion's tail, and a first calm walk moved both front
-  and both back legs together. Each leg is traced from its own hoof (not
-  always on the lowest row) up to the belly (`trace_leg`), as wide as it
+  and both back legs together. Each leg is traced from under its own hoof
+  (not always on the lowest row; starting on a neighbouring hoof a row lower
+  drew one leg twice and the deer and sheep had three front legs) up to the
+  belly; two legs traced as one are split at the line between their hooves (`trace_leg`), as wide as it
   really is (`leg_width`: a fixed width split the bear's thick legs, one
   part walking and one left behind). A far leg in full view (the bear's)
   keeps its own drawing; one mostly hidden behind the near leg (horse,
@@ -294,10 +296,27 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   that can be played or is done, the tip on the road. The chosen one grows
   and shrinks from its tip with a warm glow (`node-glow`).
 - Before the game: a black screen suggesting headphones (moves on by itself
-  or with any key or tap), then the controls (W A S D, Shift to run, E, Tab,
-  Esc; the touch stick and button on touch screens), then the game
-  (`App.preGame`, the maintainer's request). Holding Shift runs at `RUN`
-  times the walking speed.
+  or with any key or tap), then the controls drawn as a small keyboard (Esc
+  top left, Tab, W A S D, E, Shift where they are on a real one, each action
+  in its own colour with a legend; the touch stick and button on touch
+  screens), then the game (`App.preGame`, the maintainer's request).
+  Holding Shift runs at `RUN` times the walking speed. A new chapter then
+  opens with a creation cinematic (`EdenScene.creationIntro`): darkness and
+  Genesis 1:1, light breaking out, the garden from high above, the camera
+  down to Adam appearing in the light; any key or tap skips it.
+- The interface scales with the screen (`applyUiScale` in `main.ts` sets
+  `--ui-scale` from the tighter of width/1180 and height/700, between 0.75
+  and 1.4, times 1.25 for large text): with fixed sizes it was huge or cut
+  off on a phone. Size new HUD pieces with `calc(… * var(--ui-scale))`.
+  `.touch-ui` on the root while the touch pad shows; on narrow screens the
+  prompt sits above the pad.
+- Missions start and end in the mission panel itself, without pop-up boxes
+  (the maintainer found them too much text): on completion it turns green
+  with a tick and "Progress saved" (`hud.completeMission`), then slides out
+  and back in with the next mission, which a band of light crosses.
+- What Adam picks up he carries in his hand until it has served (the stick,
+  the seeds, the gourd empty then full) and then sets it down beside him
+  (`putDown`, `dropProp`). Seeds are gathered one press at a time.
 - The naming puzzle uses the meadow's green in light and dark steps (the
   maintainer found its old green foreign to the game).
 - New art comes from the OpenAI Image API (maintainer's decision), with a
@@ -315,7 +334,8 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
 ### Biblical content
 
 - Gold scripture cards quote the KJV word for word (verified against a public
-  domain KJV text). Character lines are plain-language paraphrases and always
+  domain KJV text), but the translation is not named on screen (the
+  maintainer: players need not know which version it is). Character lines are plain-language paraphrases and always
   carry their reference. Invented activities are introduced with "Gameplay:"
   and the HUD labels them "Gameplay activity · inspired by …".
 - Keep text short (the maintainer: "hay demasiado texto", and later: players
@@ -344,13 +364,17 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   popped up before). The maintainer wanted him smarter while they hide: he
   heads for where someone he noticed was going, then looks behind the
   three nearest bushes and trees around that spot, and anyone hiding right
-  there, or right next to him, is found. Every attempt starts the same way
-  (`stage` in `stealth()`): the screen goes dark, Adam and Eve wait at the
-  far side of the grove (`groveStart`, on dry ground: a point by the
-  river put Eve in the water) and the LORD God at the start of his round,
-  about 650 px apart (they began next to him and were caught at once),
-  then "Run and hide!" fills the middle of the screen (`hud.banner`). The serpent hisses when it
-  shows (`sfx('hiss')`).
+  there, or right next to him, is found. The hiding starts where Adam and
+  Eve reach the grove's arrow (`groveEntry`), without moving them (the
+  maintainer did not want them teleported), with the LORD God coming in a
+  little west, on the near bank of the river (`godHideStart`); "Run and
+  hide!" fills the middle of the screen (`hud.banner`). A catch fades out
+  and puts all three back where that attempt began (`stage` in
+  `stealth()`). Afterwards the camera glides to him as he walks up, stays
+  on him until "Where are you?", and glides back; they are not held still.
+  His light when he comes and goes is a burst of rays
+  (`tools/art/holy_burst.py`, `fx('holy')`): an expanding disc looked like
+  circles. The serpent hisses when it shows (`sfx('hiss')`).
 
 ### Code conventions
 
@@ -366,12 +390,16 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
 - Depth = feet Y. Trees are split into trunk (collider) and canopy (fades when
   the player walks behind it).
 - Sounds are synthesized in `src/core/audio.ts`, except recorded effects
-  the maintainer asked for (the bite, the sewn fig leaves, the cherubim
-  landing: `SAMPLES`). Those are CC0 recordings from OpenGameArt
-  (`art/sfx/sources`, every one credited with its page in
-  `art/sfx/CREDITS.md`), mixed, trimmed and levelled into
+  the maintainer asked for (footsteps, seeds, filling and pouring water,
+  fig leaves, the bite, the sewing, the serpent's hiss, the cherubim
+  landing, a tool set down: `SAMPLES`, several files for one sound are
+  picked at random). Those are CC0 recordings from OpenGameArt and
+  Freesound (its public preview files of CC0 sounds; `art/sfx/sources`,
+  every one credited with its page in `art/sfx/CREDITS.md`), mixed,
+  trimmed and levelled into
   `public/assets/sfx/*.mp3` by `tools/audio/build_sfx.py` (ffmpeg; measure
-  peaks with `astats`: `volumedetect` stops at 0 dB and hid clipping). The
+  peaks with `astats`: `volumedetect` stops at 0 dB and hid clipping; very
+  quiet recordings need `TRIM_QUIET`, or the silence trim removes them). The
   synthesized version plays until a recording has loaded, or if it cannot.
   Use only sounds whose own page says CC0. The cloud environment allows
   opengameart.org and freesound.org (kenney.nl refuses scripted downloads;
@@ -380,6 +408,12 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   sounds.
 - Thorns (`thorns(true)`) are grown once: asking again keeps them (mission
   10's setup asked again and they vanished and grew back).
+- Publishing: `docs/agents/working-style.md` (shared by all the project's
+  games) says to push every change to `main`, which deploys the Cloudflare
+  preview (https://bgp-bible-rpg.pages.dev, `preview-deploy.yml`). A cloud
+  session may instead be told to push only to its own `claude/…` branch:
+  then nothing reaches the preview. Say so at once and ask the maintainer
+  before pushing to `main`; the Claude artifact was used meanwhile.
 - Headless Chromium in the cloud container renders with SwiftShader at only
   ~4 fps, and Phaser's clock advances at most one capped step per frame, so
   `wait(900)` can take 10+ real seconds there: a mission that seems stuck
