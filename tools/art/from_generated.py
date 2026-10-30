@@ -949,7 +949,13 @@ def trace_leg(alpha: np.ndarray, top: int, centre: float, widest: float = 40) ->
     c = centre
     for y in range(h - 1, top - 1, -1):
         runs = runs_of(alpha[y])
-        near = [r for r in runs if abs((r[0] + r[1]) / 2 - c) <= 8 or r[0] <= c <= r[1]]
+        if out:
+            near = [r for r in runs if abs((r[0] + r[1]) / 2 - c) <= 8 or r[0] <= c <= r[1]]
+        else:
+            # it starts only under its own hoof: a neighbouring hoof a row
+            # lower was close enough to be taken for it, and two legs were
+            # drawn from the same one (the deer and sheep had three front legs)
+            near = [r for r in runs if r[0] - 2 <= c <= r[1] + 2]
         if not near:
             # a hoof a little above the lowest one: start where it is
             if not out:
@@ -1001,6 +1007,16 @@ def quad_walk(stand: np.ndarray, swing: float, n: int = QUAD_FRAMES) -> list[np.
         own = trace_leg(alpha, top, centres[near], widest)
         pixels[near] = [(y, x, stand[y, x]) for y, x in own]
         far_own = trace_leg(alpha, top, centres[far], 1.6 * leg_width(alpha, top, centres[far]))
+        shared = set(own) & set(far_own)
+        if len(shared) > 0.4 * min(len(own), len(far_own) or 1):
+            # two legs side by side traced as one (the lion's front paws):
+            # each keeps its side of the line midway between the hooves
+            mid = (centres[near] + centres[far]) / 2
+            mine = (lambda x: x < mid) if centres[near] < mid else (lambda x: x >= mid)
+            both = sorted(set(own) | set(far_own))
+            own = [(y, x) for y, x in both if mine(x)]
+            far_own = [(y, x) for y, x in both if not mine(x)]
+            pixels[near] = [(y, x, stand[y, x]) for y, x in own]
         reach = lambda pix: h - min((y for y, _ in pix), default=h)
         if reach(far_own) >= 0.8 * reach(own):
             # what the traces left of the two legs (where they join into one
