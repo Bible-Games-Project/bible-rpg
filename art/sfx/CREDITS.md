@@ -21,3 +21,14 @@ in `sources/`; `tools/audio/build_sfx.py` mixes them into
 | `water-poured-from-bottle.mp3` | craigsmith | [Water Poured from Bottle](https://freesound.org/people/craigsmith/sounds/482857/) (Freesound, CC0) | `pour.mp3` (the seeds watered) |
 | `hiss-1.mp3`, `hiss-3.mp3` | Reitanna | [hiss](https://freesound.org/people/Reitanna/sounds/241562/), [hiss3](https://freesound.org/people/Reitanna/sounds/343928/) (Freesound, CC0) | `hiss.mp3` (the serpent) |
 | `kenney-dropLeather.ogg` | Kenney (www.kenney.nl) | [50 RPG sound effects](https://opengameart.org/content/50-rpg-sound-effects) | `drop.mp3` (a tool set down) |
+
+## Character voices (not CC0)
+
+The spoken lines in `public/assets/voice/` are made with
+[ElevenLabs](https://elevenlabs.io) text to speech by
+`tools/audio/build_voices.py`, with ElevenLabs' own voices: Bill (the LORD
+God), Chris (Adam), River (Eve), Callum (the serpent) and George (the
+narrator, who reads the gold verses). They fall under
+the ElevenLabs terms of the account that made them, not CC0; on the free plan
+ElevenLabs asks to be credited, which the settings screen does ("Character
+voices made with ElevenLabs").

@@ -9,6 +9,7 @@ export interface Settings {
   masterVolume: number; // 0..1
   musicVolume: number;
   sfxVolume: number;
+  voiceVolume: number;
   language: string;
   textSpeed: TextSpeed;
   textSounds: boolean;
@@ -23,6 +24,7 @@ export const DEFAULT_SETTINGS: Settings = {
   masterVolume: 0.8,
   musicVolume: 0.6,
   sfxVolume: 0.8,
+  voiceVolume: 1,
   language: 'en',
   textSpeed: 'normal',
   textSounds: true,

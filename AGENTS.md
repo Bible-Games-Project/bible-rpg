@@ -406,6 +406,30 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   Kenney's packs are on OpenGameArt too). `crackle()` (many tiny random
   clicks, band-passed) makes crunching, crinkling and grit in synthesized
   sounds.
+- Characters speak their lines (the maintainer's request; English first, all
+  languages later). `tools/audio/build_voices.py` voices each line with
+  ElevenLabs text to speech into `public/assets/voice/<lang>/<key>.mp3`
+  (`<dialogue id>.<index>`, `scripture.<id>`, `creation`) and lists its text
+  in `manifest.json`; it only sends lines whose text or voice changed (each
+  costs credits, `--dry-run` shows the cost). The game plays a file only
+  while its manifest text is the line's text (`src/core/voices.ts`), so an
+  edited line falls silent until the script is run again. Voiced lines skip
+  the reveal's blips, the portrait talks until the voice ends, the next press
+  cuts it off, the music dips under it, and it has its own volume
+  (`voiceVolume`). Voices: Bill (God), Chris (Adam), River (Eve), Callum
+  (the serpent), George (the narrator: gold verses, the creation verse, the
+  short narrations), chosen by the maintainer; God and the narrator are
+  "a bit more natural" (`NATURAL`, stability 0.3 instead of 0.5).
+  Narrations with a value or a key ("Adam called it {name}", "Gameplay: …")
+  stay unvoiced. The creation cinematic keeps its darkness until the verse
+  has been read. The account is on the free plan: Voice Library voices are
+  refused over the API (only ElevenLabs' own voices work; the maintainer's
+  pick for the serpent, "Dante - Growly and Menacing Monster", needs a paid
+  plan) and ElevenLabs asks to be credited (the settings screen does). The API key is a network secret of the cloud
+  environment for `api.elevenlabs.io` sent as the `xi-api-key` header with
+  no prefix (the form starts with `Authorization` / `Bearer`, which
+  ElevenLabs rejects as "Invalid API key"); a saved secret cannot be viewed
+  again, only replaced.
 - Thorns (`thorns(true)`) are grown once: asking again keeps them (mission
   10's setup asked again and they vanished and grew back).
 - Publishing: `docs/agents/working-style.md` (shared by all the project's

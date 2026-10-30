@@ -2,6 +2,7 @@ import { audio } from '../core/audio';
 import { input, KEY_LABELS, type InputLayer } from '../core/input';
 import { graphemes, t } from '../core/i18n';
 import { settings, TEXT_SPEED_CPS } from '../core/settings';
+import { voices } from '../core/voices';
 import { CHARACTERS } from '../data/characters';
 import { h } from './dom';
 import { PortraitAnimator } from './PortraitAnimator';
@@ -12,12 +13,15 @@ export interface Line {
   ref?: string;               // Bible reference shown with the line
   scripture?: boolean;        // a verbatim quotation (gold card)
   portrait?: string;          // portrait to show instead of the speaker's usual one
+  voice?: string;             // key of its recorded voice (src/core/voices.ts)
 }
 
 /**
  * Dialogue with an animated portrait above a text box. The text is
  * revealed progressively; the first press shows the whole line, the next
- * press continues. Movement is blocked while it is open.
+ * press continues. Movement is blocked while it is open. A line with a
+ * recorded voice is spoken (instead of the reveal's blips) and cut off when
+ * the player moves on.
  */
 export class DialogueBox {
   private root: HTMLElement;
@@ -36,6 +40,8 @@ export class DialogueBox {
   private raf = 0;
   private last = 0;
   private resolve: (() => void) | null = null;
+  private speaking: { ended: Promise<void>; stop(): void } | null = null;
+  private lineNo = 0;
   private layer: InputLayer;
   open = false;
 
@@ -67,6 +73,8 @@ export class DialogueBox {
     return new Promise((resolve) => {
       this.queue = [...lines];
       this.resolve = resolve;
+      // the recorded voices load while the first line starts
+      for (const l of lines) if (l.voice) void voices.prepare(l.voice, l.text);
       if (!this.open) {
         this.open = true;
         this.root.hidden = false;
@@ -78,6 +86,8 @@ export class DialogueBox {
   }
 
   private nextLine(): void {
+    this.stopVoice();
+    const no = ++this.lineNo;
     const line = this.queue.shift();
     if (!line) {
       this.close();
@@ -102,6 +112,8 @@ export class DialogueBox {
     this.nextEl.hidden = true;
     const touch = document.documentElement.classList.contains('touch-ui');
     this.hintEl.textContent = touch ? t('dialogue.tapHint') : t('dialogue.skipHint', { key: KEY_LABELS.interact });
+    const voiced = !!line.voice && voices.has(line.voice, line.text);
+    if (voiced) this.speak(line, no, !narrator && !line.scripture);
     const cps = TEXT_SPEED_CPS[settings.get().textSpeed];
     if (!isFinite(cps)) {
       this.finishLine();
@@ -121,7 +133,7 @@ export class DialogueBox {
         this.shown++;
         added = true;
         const c = this.chars[this.shown - 1];
-        if (this.shown % 3 === 0 && c.trim() && !narrator) audio.blip(voice);
+        if (this.shown % 3 === 0 && c.trim() && !narrator && !voiced) audio.blip(voice);
         if (/[.,;:!?…—]/.test(c)) this.acc -= cps * 0.06;
       }
       if (added) this.textEl.textContent = this.chars.slice(0, this.shown).join('');
@@ -136,8 +148,31 @@ export class DialogueBox {
     this.revealing = false;
     this.shown = this.chars.length;
     this.textEl.textContent = this.chars.join('');
-    this.portrait.setTalking(false);
+    if (!this.speaking) this.portrait.setTalking(false);
     this.nextEl.hidden = false;
+  }
+
+  /** Plays the line's recorded voice; the portrait talks until it ends. */
+  private speak(line: Line, no: number, talks: boolean): void {
+    const asked = performance.now();
+    void voices.prepare(line.voice!, line.text).then((buf) => {
+      // the player moved on, or it loaded too late to match the text
+      if (!buf || no !== this.lineNo || !this.open || performance.now() - asked > 2500) return;
+      const v = audio.speak(buf);
+      if (!v) return;
+      this.speaking = v;
+      if (talks) this.portrait.setTalking(true);
+      void v.ended.then(() => {
+        if (this.speaking !== v) return;
+        this.speaking = null;
+        if (!this.revealing) this.portrait.setTalking(false);
+      });
+    });
+  }
+
+  private stopVoice(): void {
+    this.speaking?.stop();
+    this.speaking = null;
   }
 
   advance(): void {
@@ -159,6 +194,8 @@ export class DialogueBox {
 
   private close(): void {
     cancelAnimationFrame(this.raf);
+    this.stopVoice();
+    this.lineNo++;
     this.open = false;
     this.root.hidden = true;
     input.remove(this.layer);

@@ -76,6 +76,8 @@
     "master": "Master volume",
     "music": "Music volume",
     "sfx": "Sound effects",
+    "voices": "Voices",
+    "voicesHint": "Character voices made with ElevenLabs.",
     "language": "Language",
     "languageHint": "More languages are planned.",
     "textSpeed": "Text speed",

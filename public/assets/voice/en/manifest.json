@@ -1,0 +1,214 @@
+{
+  "creation": {
+    "text": "In the beginning God created the heaven and the earth.",
+    "voice": "George",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "m02_command.0": {
+    "text": "Eat freely from every tree — but not from the tree of the knowledge of good and evil. The day you eat of it, you will surely die.",
+    "voice": "Bill",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "m02_forbidden.0": {
+    "text": "The tree of the knowledge of good and evil.",
+    "voice": "George",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "m02_life.0": {
+    "text": "The tree of life.",
+    "voice": "George",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "m03_intro.0": {
+    "text": "It is not good for the man to be alone. I will make a helper suitable for him.",
+    "voice": "Bill",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "m04_wake.0": {
+    "text": "This at last is bone of my bones and flesh of my flesh. She shall be called Woman, because she was taken out of Man.",
+    "voice": "Chris",
+    "model": "eleven_v4"
+  },
+  "m05_forbidden_touch.0": {
+    "text": "Not this one.",
+    "voice": "River",
+    "model": "eleven_v4"
+  },
+  "m05_intro.0": {
+    "text": "Let us gather fruit — from every tree but one.",
+    "voice": "River",
+    "model": "eleven_v4"
+  },
+  "m05_share.0": {
+    "text": "Every tree is a gift — all but the one in the midst.",
+    "voice": "Chris",
+    "model": "eleven_v4"
+  },
+  "m06_serpent.0": {
+    "text": "Did God really say, “You shall not eat of any tree of the garden”?",
+    "voice": "Callum",
+    "model": "eleven_v4"
+  },
+  "m06_serpent.1": {
+    "text": "We may eat from the trees, but not from the one in the midst, or we will die.",
+    "voice": "River",
+    "model": "eleven_v4"
+  },
+  "m06_serpent.2": {
+    "text": "You will not surely die. God knows your eyes will be opened, and you will be like God, knowing good and evil.",
+    "voice": "Callum",
+    "model": "eleven_v4"
+  },
+  "m08_answer.0": {
+    "text": "I heard your voice and was afraid, because I was naked; so I hid.",
+    "voice": "Chris",
+    "model": "eleven_v4"
+  },
+  "m08_answer.1": {
+    "text": "Did you eat from the tree I commanded you not to eat from?",
+    "voice": "Bill",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "m08_answer.2": {
+    "text": "The woman you gave me — she gave me fruit from the tree, and I ate.",
+    "voice": "Chris",
+    "model": "eleven_v4"
+  },
+  "m08_answer.3": {
+    "text": "What is this that you have done?",
+    "voice": "Bill",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "m08_answer.4": {
+    "text": "The serpent deceived me, and I ate.",
+    "voice": "River",
+    "model": "eleven_v4"
+  },
+  "m08_call.0": {
+    "text": "Where are you?",
+    "voice": "Bill",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "m09_adam.0": {
+    "text": "The ground is cursed because of you; it will bring thorns and thistles. Dust you are, and to dust you will return.",
+    "voice": "Bill",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "m09_serpent.0": {
+    "text": "You are cursed; on your belly you will go. He will bruise your head, and you will bruise his heel.",
+    "voice": "Bill",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "m09_woman.0": {
+    "text": "In pain you will bear children. You will long for your husband, and he will rule over you.",
+    "voice": "Bill",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "m10_intro.0": {
+    "text": "The man now knows good and evil. He must not take from the tree of life and live forever.",
+    "voice": "Bill",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "scripture.gen2_15": {
+    "text": "And the LORD God took the man, and put him into the garden of Eden to dress it and to keep it.",
+    "voice": "George",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "scripture.gen2_20": {
+    "text": "And Adam gave names to all cattle, and to the fowl of the air, and to every beast of the field; but for Adam there was not found an help meet for him.",
+    "voice": "George",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "scripture.gen2_22": {
+    "text": "And the rib, which the LORD God had taken from man, made he a woman, and brought her unto the man.",
+    "voice": "George",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "scripture.gen3_21": {
+    "text": "Unto Adam also and to his wife did the LORD God make coats of skins, and clothed them.",
+    "voice": "George",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "scripture.gen3_24": {
+    "text": "So he drove out the man; and he placed at the east of the garden of Eden Cherubims, and a flaming sword which turned every way, to keep the way of the tree of life.",
+    "voice": "George",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  },
+  "scripture.gen3_6": {
+    "text": "And when the woman saw that the tree was good for food, and that it was pleasant to the eyes, and a tree to be desired to make one wise, she took of the fruit thereof, and did eat, and gave also unto her husband with her; and he did eat.",
+    "voice": "George",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75
+    }
+  }
+}

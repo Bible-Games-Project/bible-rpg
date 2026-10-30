@@ -4,7 +4,7 @@ import { audio } from '../core/audio';
 import { h } from './dom';
 import { openOverlay } from './overlays';
 
-function slider(id: string, key: 'masterVolume' | 'musicVolume' | 'sfxVolume'): HTMLInputElement {
+function slider(id: string, key: 'masterVolume' | 'musicVolume' | 'sfxVolume' | 'voiceVolume'): HTMLInputElement {
   const el = h('input', {
     id,
     type: 'range',
@@ -66,6 +66,9 @@ export function openSettings(onClose?: () => void): void {
       slider('set-music', 'musicVolume'),
       h('label', { for: 'set-sfx' }, t('settings.sfx')),
       slider('set-sfx', 'sfxVolume'),
+      h('label', { for: 'set-voices' }, t('settings.voices')),
+      slider('set-voices', 'voiceVolume'),
+      h('div', { class: 'hint' }, t('settings.voicesHint')),
       h('label', { for: 'set-lang' }, t('settings.language')),
       lang,
       h('div', { class: 'hint' }, t('settings.languageHint')),

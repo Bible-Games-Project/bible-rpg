@@ -4,6 +4,7 @@ import { settings } from './core/settings';
 import { App } from './ui/App';
 import { setOverlayHost } from './ui/overlays';
 import { preloadPortraits } from './ui/PortraitAnimator';
+import { voices } from './core/voices';
 
 /**
  * The interface grows and shrinks with the screen (the maintainer saw it huge
@@ -32,6 +33,9 @@ window.addEventListener('resize', applyUiScale);
 const host = document.getElementById('ui')!;
 setOverlayHost(host);
 preloadPortraits();
+// the list of recorded voice lines, so the first dialogue knows them
+voices.preload();
+settings.on('change', () => voices.preload());
 const app = new App(host);
 app.start();
 // ?debug exposes the app for automated browser tests

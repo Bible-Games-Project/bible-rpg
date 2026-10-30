@@ -66,6 +66,8 @@ class AudioManager {
   private master!: GainNode;
   private music!: GainNode;
   private sfx!: GainNode;
+  private voices!: GainNode;
+  private speaking = 0;
   private noise!: AudioBuffer;
   private mood: Mood = 'none';
   private musicTimer: number | null = null;
@@ -101,8 +103,10 @@ class AudioManager {
     this.master = ctx.createGain();
     this.music = ctx.createGain();
     this.sfx = ctx.createGain();
+    this.voices = ctx.createGain();
     this.music.connect(this.master);
     this.sfx.connect(this.master);
+    this.voices.connect(this.master);
     this.master.connect(ctx.destination);
     this.loadSamples(ctx);
     const len = ctx.sampleRate * 2;
@@ -125,8 +129,10 @@ class AudioManager {
     const s = settings.get();
     const t = this.ctx.currentTime;
     this.master.gain.setTargetAtTime(s.masterVolume, t, 0.05);
-    this.music.gain.setTargetAtTime(s.musicVolume * 0.55, t, 0.05);
+    // the music dips while someone speaks
+    this.music.gain.setTargetAtTime(s.musicVolume * 0.55 * (this.speaking ? 0.55 : 1), t, 0.12);
     this.sfx.gain.setTargetAtTime(s.sfxVolume, t, 0.05);
+    this.voices.gain.setTargetAtTime(s.voiceVolume, t, 0.05);
   }
 
   // ------------------------------------------------------------------ sfx
@@ -363,6 +369,52 @@ class AudioManager {
         this.hissOnce(t + 1.35, 0.7, 0.13 * v);
         break;
     }
+  }
+
+  /** Decodes a recorded file (a spoken line); null without sound or file. */
+  async decode(url: string): Promise<AudioBuffer | null> {
+    const ctx = this.ensure();
+    if (!ctx) return null;
+    try {
+      const r = await fetch(url);
+      if (!r.ok) return null;
+      return await ctx.decodeAudioData(await r.arrayBuffer());
+    } catch {
+      return null;
+    }
+  }
+
+  /** Plays a spoken line on the voice channel (src/core/voices.ts). */
+  speak(buffer: AudioBuffer): { ended: Promise<void>; stop(): void } | null {
+    const ctx = this.unlocked ? this.ensure() : null;
+    if (!ctx || ctx.state !== 'running') return null;
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    const g = ctx.createGain();
+    src.connect(g).connect(this.voices);
+    let over = false;
+    const ended = new Promise<void>((resolve) => {
+      src.onended = () => {
+        if (!over) {
+          over = true;
+          this.speaking--;
+          this.applyVolumes();
+        }
+        resolve();
+      };
+    });
+    this.speaking++;
+    this.applyVolumes();
+    src.start();
+    return {
+      ended,
+      stop: () => {
+        // a short fade, not a click
+        const t = ctx.currentTime;
+        g.gain.setTargetAtTime(0, t, 0.02);
+        src.stop(t + 0.1);
+      },
+    };
   }
 
   /** Soft per-character "voice" blip for dialogue reveal. */

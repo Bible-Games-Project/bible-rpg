@@ -3,6 +3,7 @@ import { audio, type Mood } from '../core/audio';
 import { input, type InputLayer } from '../core/input';
 import { t, tRaw, interpolate } from '../core/i18n';
 import { settings } from '../core/settings';
+import { voices } from '../core/voices';
 import { CHARACTERS, type PlayableId } from '../data/characters';
 import { ANIMALS } from '../data/animals';
 import { GOD_PATROL, PLOT_PATCHES, POINTS, TILE, WORLD_H, WORLD_W, ZONES, type Pt } from '../data/eden/map';
@@ -241,9 +242,11 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       const timers: number[] = [];
       const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
       let done = false;
+      let said: { stop(): void } | null = null;
       const finish = () => {
         if (done) return;
         done = true;
+        said?.stop();
         timers.forEach((id) => window.clearTimeout(id));
         window.removeEventListener('keydown', skip, true);
         window.removeEventListener('pointerdown', skip, true);
@@ -276,36 +279,44 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       };
       place();
       audio.setMood('wonder');
-      at(400, () => overlay.showVerse(true));
-      at(3400, () => overlay.showVerse(false));
-      at(4300, () => {
-        // "Let there be light"
-        overlay.burst();
-        audio.play('holy');
-      });
-      at(5800, () => {
-        overlay.clear();
-        // drifting over the garden toward where Adam is
-        this.tweens.add({ targets: view, x: (WORLD_W * 0.5 + adam.x) / 2, y: (WORLD_H * 0.48 + adam.y) / 2, duration: 4200, ease: 'Sine.easeInOut', onUpdate: place });
-      });
-      at(10000, () => {
-        // down to him
-        this.tweens.add({
-          targets: view,
-          z: near,
-          x: adam.x,
-          y: adam.y - 40,
-          duration: 3400,
-          ease: 'Sine.easeInOut',
-          onUpdate: place,
+      const verse = t('eden.creation.verse');
+      // when the verse is read aloud, the darkness lasts until it has been said
+      const late = new Promise<null>((r) => window.setTimeout(() => r(null), 1500));
+      void Promise.race([voices.prepare('creation', verse), late]).then((buf) => {
+        if (done) return;
+        const d = buf ? Math.max(0, 900 + buf.duration * 1000 + 700 - 3400) : 0;
+        at(400, () => overlay.showVerse(true));
+        if (buf) at(900, () => (said = audio.speak(buf)));
+        at(3400 + d, () => overlay.showVerse(false));
+        at(4300 + d, () => {
+          // "Let there be light"
+          overlay.burst();
+          audio.play('holy');
         });
+        at(5800 + d, () => {
+          overlay.clear();
+          // drifting over the garden toward where Adam is
+          this.tweens.add({ targets: view, x: (WORLD_W * 0.5 + adam.x) / 2, y: (WORLD_H * 0.48 + adam.y) / 2, duration: 4200, ease: 'Sine.easeInOut', onUpdate: place });
+        });
+        at(10000 + d, () => {
+          // down to him
+          this.tweens.add({
+            targets: view,
+            z: near,
+            x: adam.x,
+            y: adam.y - 40,
+            duration: 3400,
+            ease: 'Sine.easeInOut',
+            onUpdate: place,
+          });
+        });
+        at(12600 + d, () => {
+          this.fx('sparkle', [adam.x, adam.y]);
+          audio.play('holy');
+          this.tweens.add({ targets: parts, alpha: 1, duration: 1400 });
+        });
+        at(14600 + d, finish);
       });
-      at(12600, () => {
-        this.fx('sparkle', [adam.x, adam.y]);
-        audio.play('holy');
-        this.tweens.add({ targets: parts, alpha: 1, duration: 1400 });
-      });
-      at(14600, finish);
     });
   }
 
@@ -369,11 +380,12 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   say(id: string, params?: Record<string, string | number>): Promise<void> {
     const raw = tRaw<{ s: string; t: string; ref?: string }[]>(`eden.dialogue.${id}`);
     if (!Array.isArray(raw)) console.warn(`[dialogue] missing: ${id}`);
-    const lines: Line[] = (Array.isArray(raw) ? raw : []).map((l) => ({
+    const lines: Line[] = (Array.isArray(raw) ? raw : []).map((l, i) => ({
       speaker: l.s,
       text: interpolate(l.t, params),
       ref: l.ref,
       portrait: this.portraitFor(l.s),
+      voice: `${id}.${i}`,
     }));
     return this.lines(lines);
   }
@@ -386,7 +398,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   }
 
   scripture(id: string): Promise<void> {
-    return this.lines([{ speaker: 'narrator', text: t(`eden.scripture.${id}.text`), ref: t(`eden.scripture.${id}.ref`), scripture: true }]);
+    return this.lines([{ speaker: 'narrator', text: t(`eden.scripture.${id}.text`), ref: t(`eden.scripture.${id}.ref`), scripture: true, voice: `scripture.${id}` }]);
   }
 
   async lines(lines: Line[]): Promise<void> {
