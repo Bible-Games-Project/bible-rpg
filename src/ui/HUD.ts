@@ -39,6 +39,7 @@ export class HUD {
   private mTitle: HTMLElement;
   private mObj: HTMLElement;
   private mSource: HTMLElement;
+  private mSaved: HTMLElement;
   private prompt: HTMLElement;
   private toasts: HTMLElement;
   private inventory: HTMLElement;
@@ -56,7 +57,8 @@ export class HUD {
     this.mTitle = h('div', { class: 'mission-title' });
     this.mObj = h('div', { class: 'objective' });
     this.mSource = h('div', { class: 'source' });
-    this.mission = h('div', { class: 'mission-panel panel', 'aria-live': 'polite' }, this.mNum, this.mTitle, this.mObj, this.mSource);
+    this.mSaved = h('div', { class: 'saved' });
+    this.mission = h('div', { class: 'mission-panel panel', 'aria-live': 'polite' }, this.mNum, this.mTitle, this.mObj, this.mSaved, this.mSource);
     this.prompt = h('div', { class: 'prompt panel', hidden: true });
     this.toasts = h('div', { class: 'toast-stack' });
     this.inventory = h('div', { class: 'inventory-bar' });
@@ -64,7 +66,7 @@ export class HUD {
     this.charChip = h('div', { class: 'character-chip panel', hidden: true });
     // the pixel-art arrow of the world marker (tools/art/ui_markers.py), one
     // drawing per heading: a rotated pixel image looks ragged
-    this.arrow = h('div', { class: 'objective-arrow', hidden: true });
+    this.arrow = h('div', { class: 'objective-arrow' });
     this.arrow.style.backgroundImage = `url(${assetUrl('assets/ui/arrows.png')})`;
     this.timerText = h('div', {});
     this.timerBar = h('div', {});
@@ -81,16 +83,55 @@ export class HUD {
     this.root.hidden = !v;
   }
 
+  /**
+   * The mission panel shows the new mission. Coming from a completed one it
+   * slides out and back in with the new mission, then shines (the maintainer
+   * found a separate "new mission" box too much text).
+   */
   setMission(info: MissionInfo | null): void {
-    this.mission.hidden = !info;
-    if (!info) return;
-    this.mNum.textContent = t('hud.mission', { n: String(info.number).padStart(2, '0') });
-    this.mTitle.textContent = info.title;
-    this.mObj.textContent = info.objective;
-    this.mSource.replaceChildren(h('span', { class: 'kind' }, info.kind === 'scripture' ? t('hud.story', { ref: info.reference }) : t('hud.inspired', { ref: info.reference })));
+    const fill = () => {
+      this.mission.classList.remove('complete');
+      this.mission.hidden = !info;
+      if (!info) return;
+      this.mNum.textContent = t('hud.mission', { n: String(info.number).padStart(2, '0') });
+      this.mTitle.textContent = info.title;
+      this.mObj.textContent = info.objective;
+      this.mSource.replaceChildren(h('span', { class: 'kind' }, info.kind === 'scripture' ? t('hud.story', { ref: info.reference }) : t('hud.inspired', { ref: info.reference })));
+      this.shine();
+    };
+    const still = document.documentElement.dataset.reduceMotion === 'true' || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (!info || this.mission.hidden || !this.mission.classList.contains('complete') || still || !this.mission.animate) {
+      fill();
+      return;
+    }
+    const away = [{ transform: 'none', opacity: 1 }, { transform: 'translateX(-30px)', opacity: 0 }];
+    const out = this.mission.animate(away, { duration: 280, easing: 'ease-in', fill: 'forwards' });
+    out.onfinish = () => {
+      fill();
+      out.cancel();
+      this.mission.animate([...away].reverse(), { duration: 420, easing: 'ease-out' });
+    };
+  }
+
+  /** The panel's own "mission complete": a green tick and a glow, with the
+   * note that progress is saved, until the next mission takes its place. */
+  completeMission(): void {
+    if (this.mission.hidden) return;
+    this.mObj.textContent = t('hud.missionComplete');
+    this.mSaved.textContent = t('hud.saved');
+    this.mission.classList.remove('fresh');
+    this.mission.classList.add('complete');
+  }
+
+  private shine(): void {
+    this.mission.classList.remove('fresh');
+    void this.mission.offsetWidth;
+    this.mission.classList.add('fresh');
   }
 
   setObjective(text: string): void {
+    // the completed mission stays on show until the next one replaces it
+    if (this.mission.classList.contains('complete') && !text) return;
     if (this.mObj.textContent === text) return;
     this.mObj.textContent = text;
     this.mObj.animate?.([{ opacity: 0.3 }, { opacity: 1 }], { duration: 400 });
@@ -138,11 +179,9 @@ export class HUD {
 
   /** Arrow at the screen edge pointing to an off-screen objective. */
   setArrow(x: number | null, y = 0, angle = 0): void {
-    if (x === null) {
-      this.arrow.hidden = true;
-      return;
-    }
-    this.arrow.hidden = false;
+    // it fades in and out (the maintainer did not want it to pop)
+    this.arrow.classList.toggle('shown', x !== null);
+    if (x === null) return;
     const dpr = window.devicePixelRatio || 1;
     const px = arrowPixel(dpr) / dpr;
     const heading = (((Math.round(angle / ((2 * Math.PI) / ARROW_HEADINGS)) % ARROW_HEADINGS) + ARROW_HEADINGS) % ARROW_HEADINGS);

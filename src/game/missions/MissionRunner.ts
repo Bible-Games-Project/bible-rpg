@@ -77,7 +77,6 @@ export class MissionRunner {
     if (chapterStart) await ui().chapterIntro();
     if (fromSave) await w.fade(0, 900);
     audio.play('missionStart');
-    w.toast(`${t('hud.mission', { n: String(m.number).padStart(2, '0') })} — ${title}`, true);
     await w.wait(900);
 
     await m.run(w);
@@ -96,9 +95,7 @@ export class MissionRunner {
       return;
     }
     audio.play('missionComplete');
-    w.toast(t('hud.missionComplete'), true);
-    await w.wait(1400);
-    w.toast(t('hud.saved'));
-    await w.wait(900);
+    hud.completeMission();
+    await w.wait(2300);
   }
 }

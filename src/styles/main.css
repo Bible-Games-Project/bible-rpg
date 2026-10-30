@@ -858,6 +858,83 @@ select:focus-visible {
   color: var(--sunset);
 }
 
+.mission-panel .saved {
+  display: none;
+  margin-top: 4px;
+  font-size: var(--fs-xs);
+  color: var(--ivory-dim);
+}
+
+/* a mission just completed: a green tick and a glow, until the next one */
+.mission-panel.complete {
+  animation: mission-done 1.6s ease-out;
+  border-color: #8fd16a;
+}
+
+.mission-panel.complete .objective {
+  color: #b4ec8c;
+  font-weight: 600;
+}
+
+.mission-panel.complete .objective::before {
+  content: '✓';
+  width: auto;
+  height: auto;
+  background: none;
+  box-shadow: none;
+  transform: none;
+  color: #8fd16a;
+}
+
+.mission-panel.complete .saved {
+  display: block;
+}
+
+@keyframes mission-done {
+  0% {
+    filter: drop-shadow(0 0 0 rgba(143, 209, 106, 0.9));
+  }
+  35% {
+    filter: drop-shadow(0 0 14px rgba(143, 209, 106, 0.85));
+  }
+  100% {
+    filter: drop-shadow(0 0 0 rgba(143, 209, 106, 0));
+  }
+}
+
+/* a new mission: a band of light sweeps across the panel */
+.mission-panel.fresh {
+  overflow: hidden;
+}
+
+.mission-panel.fresh::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 226, 150, 0.35) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: mission-shine 1.3s ease-out 0.25s forwards;
+  pointer-events: none;
+}
+
+.mission-panel.fresh .mission-number {
+  animation: mission-number 1.6s ease-out;
+}
+
+@keyframes mission-shine {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes mission-number {
+  0%,
+  40% {
+    color: #fff3c4;
+    text-shadow: 0 0 8px rgba(255, 226, 150, 0.9);
+  }
+}
+
 .hud-buttons {
   position: absolute;
   right: calc(12px + var(--safe-r));
@@ -1041,6 +1118,12 @@ select:focus-visible {
   pointer-events: none;
   background-repeat: no-repeat;
   image-rendering: pixelated;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.objective-arrow.shown {
+  opacity: 1;
 }
 
 .timer {

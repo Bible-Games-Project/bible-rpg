@@ -1183,7 +1183,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     const hud = ui().hud;
     if (!pts.length || !this.canAct()) {
       hud.setArrow(null);
-      this.markers.hide();
+      this.markers.hide(time);
       return;
     }
     const p = this.player();

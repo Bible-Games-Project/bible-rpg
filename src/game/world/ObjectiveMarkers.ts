@@ -7,30 +7,37 @@ import { DEPTH_OVERLAY } from './Actor';
 const DOWN = ARROW_HEADINGS / 4;
 /** Where the tip is in its cell, from the top. */
 const TIP = 0.88;
+/** How long an arrow takes to fade in or out (ms). */
+const FADE = 300;
 
 /**
  * Arrows hovering over objective targets in view: the pixel-art arrow of the
  * game (`ui-arrows`, drawn by tools/art/ui_markers.py, the same as the HUD's
  * edge arrow), pointing down, bobbing a little. Each arrow pixel covers a
  * whole number of screen pixels, so it stays sharp at any zoom. Several can
- * show at once (e.g. every animal still to be named).
+ * show at once (e.g. every animal still to be named). They fade in and out
+ * (the maintainer did not want them to pop).
  */
 export class ObjectiveMarkers {
   private pool: Phaser.GameObjects.Image[] = [];
+  private last = 0;
 
   constructor(private scene: Phaser.Scene) {}
 
-  /** Show one arrow above each point (world px); hide the rest. */
+  /** Show one arrow above each point (world px); fade out the rest. */
   show(points: [number, number][], time: number, zoom: number, dpr: number, still: boolean): void {
     while (this.pool.length < points.length) {
       // the tip of the arrow is on the point
-      const img = this.scene.add.image(0, 0, 'ui-arrows', DOWN).setOrigin(0.5, TIP).setDepth(DEPTH_OVERLAY - 20);
+      const img = this.scene.add.image(0, 0, 'ui-arrows', DOWN).setOrigin(0.5, TIP).setDepth(DEPTH_OVERLAY - 20).setAlpha(0);
       this.pool.push(img);
     }
+    const step = Math.min(1, Math.max(0, time - this.last) / FADE);
+    this.last = time;
     const scale = arrowPixel(dpr) / zoom;
     this.pool.forEach((img, i) => {
       const p = points[i];
-      img.setVisible(!!p);
+      img.setAlpha(Phaser.Math.Clamp(img.alpha + (p ? step : -step), 0, 1));
+      img.setVisible(img.alpha > 0);
       if (!p) return;
       // bob by whole arrow pixels
       const bob = still ? 0 : Math.round(Math.sin(time / 260 + i * 0.9) * 1.5) * scale;
@@ -38,7 +45,7 @@ export class ObjectiveMarkers {
     });
   }
 
-  hide(): void {
-    for (const img of this.pool) img.setVisible(false);
+  hide(time: number): void {
+    this.show([], time, 1, 1, true);
   }
 }
