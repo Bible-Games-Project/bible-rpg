@@ -92,14 +92,16 @@ export class DialogueBox {
     if (!narrator) this.portrait.setPortrait(line.portrait ?? ch.portrait);
     this.frame.classList.toggle('divine', line.speaker === 'god');
     this.nameEl.textContent = line.scripture ? '' : t(ch.nameKey);
-    this.refEl.textContent = line.ref ? (line.scripture ? `${line.ref} (KJV)` : line.ref) : '';
+    // the reference only: players need not see which translation it is
+    this.refEl.textContent = line.ref ?? '';
     const text = line.scripture ? `“${line.text}”` : line.text;
     this.chars = graphemes(text);
     this.shown = 0;
     this.acc = 0;
     this.textEl.textContent = '';
     this.nextEl.hidden = true;
-    this.hintEl.textContent = t('dialogue.skipHint', { key: KEY_LABELS.interact });
+    const touch = document.documentElement.classList.contains('touch-ui');
+    this.hintEl.textContent = touch ? t('dialogue.tapHint') : t('dialogue.skipHint', { key: KEY_LABELS.interact });
     const cps = TEXT_SPEED_CPS[settings.get().textSpeed];
     if (!isFinite(cps)) {
       this.finishLine();

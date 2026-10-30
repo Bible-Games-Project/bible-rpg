@@ -207,7 +207,6 @@ const m01: MissionDef = {
   reference: 'Genesis 2:15',
   async run(w) {
     w.music('peaceful');
-    await w.say('m01_intro', { move: t('hud.moveKeys'), interact: KEY_LABELS.interact });
     await w.scripture('gen2_15');
 
     w.objective(step('m01', 'explore'), [ZONES.plot.x, ZONES.plot.y]);

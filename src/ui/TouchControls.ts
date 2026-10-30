@@ -84,6 +84,8 @@ export class TouchControls {
     const touch = input.lastDevice === 'touch' || window.matchMedia?.('(pointer: coarse)').matches;
     const show = this.active && (mode === 'on' || (mode === 'auto' && touch));
     this.root.hidden = !show;
+    // the HUD keeps its prompts clear of the pad (see .touch-ui in main.css)
+    document.documentElement.classList.toggle('touch-ui', show);
     if (!show) input.setVirtualMove(0, 0);
   }
 }

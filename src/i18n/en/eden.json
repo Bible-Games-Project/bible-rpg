@@ -1,8 +1,7 @@
 {
   "chapter": {
     "title": "The Garden of Eden",
-    "reference": "Genesis 2–3",
-    "intro": "Gold cards quote the Bible (KJV). “Gameplay” marks activities added for the game."
+    "reference": "Genesis 2–3"
   },
   "missions": {
     "m01": {
@@ -119,7 +118,6 @@
     }
   },
   "dialogue": {
-    "m01_intro": [{ "s": "narrator", "t": "Gameplay: move with {move}; {interact} to pick up, use or talk." }],
     "m02_command": [{ "s": "god", "t": "Eat freely from every tree — but not from the tree of the knowledge of good and evil. The day you eat of it, you will surely die.", "ref": "Genesis 2:16–17" }],
     "m02_life": [{ "s": "narrator", "t": "The tree of life." }],
     "m02_forbidden": [{ "s": "narrator", "t": "The tree of the knowledge of good and evil." }],

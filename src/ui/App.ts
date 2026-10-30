@@ -144,23 +144,40 @@ export class App {
       this.host.append(el);
       const layer: InputLayer = { modal: true, allowMovement: false, captureKeys: true, onAction: () => true };
       input.push(layer);
-      const key = (k: string, wide = false) => h('kbd', { class: wide ? 'wide' : '' }, k);
       const row = (keys: HTMLElement, label: string) => h('div', { class: 'ctl' }, keys, h('span', {}, label));
       const headphones = h('div', { class: 'pregame-step' }, headphonesIcon(), h('p', {}, t('pregame.headphones')));
+      // the keys where they are on a keyboard (the maintainer asked for that
+      // layout), each action in its own colour, named in the legend beside it
+      const kb = (label: string, w = 1, action = '') => h('kbd', { class: action ? `used ${action}` : '', style: `--w:${w}` }, label);
+      const keyboard = h(
+        'div',
+        { class: 'kb', 'aria-hidden': 'true' },
+        h('div', { class: 'kb-row kb-esc' }, kb('Esc', 1.25, 'menu')),
+        h('div', { class: 'kb-row' }, kb('Tab', 1.5, 'switch'), kb('Q'), kb('W', 1, 'move'), kb('E', 1, 'use'), kb('R')),
+        h('div', { class: 'kb-row' }, kb('Caps', 1.75), kb('A', 1, 'move'), kb('S', 1, 'move'), kb('D', 1, 'move'), kb('F')),
+        h('div', { class: 'kb-row' }, kb('Shift', 2.25, 'run'), kb('Z'), kb('X'), kb('C'), kb('V')),
+      );
+      const legend = (action: string, keys: string, label: string) =>
+        h('li', { class: action }, h('span', { class: 'kb-keys' }, keys), h('span', {}, label));
       const controls = h(
         'div',
         { class: 'pregame-step pregame-controls' },
         h('h2', {}, t('pregame.controls')),
         touch
-          ? h('div', { class: 'ctl-grid' }, row(h('div', { class: 'touch-stick' }), t('pregame.touchMove')), row(h('div', { class: 'touch-btn' }, 'E'), t('pregame.touchAct')))
+          ? h('div', { class: 'ctl-grid' }, row(h('div', { class: 'ctl-stick' }), t('pregame.touchMove')), row(h('div', { class: 'ctl-btn' }, 'E'), t('pregame.touchAct')))
           : h(
               'div',
-              { class: 'ctl-grid' },
-              row(h('div', { class: 'wasd' }, key('W'), key('A'), key('S'), key('D')), t('pregame.move')),
-              row(key('Shift', true), t('pregame.run')),
-              row(key('E'), t('pregame.interact')),
-              row(key('Tab', true), t('pregame.switch')),
-              row(key('Esc', true), t('pregame.menu')),
+              { class: 'kb-wrap' },
+              keyboard,
+              h(
+                'ul',
+                { class: 'kb-legend' },
+                legend('move', 'W A S D', t('pregame.move')),
+                legend('run', 'Shift', t('pregame.run')),
+                legend('use', 'E', t('pregame.interact')),
+                legend('switch', 'Tab', t('pregame.switch')),
+                legend('menu', 'Esc', t('pregame.menu')),
+              ),
             ),
         h('p', { class: 'pregame-start' }, t(touch ? 'pregame.startTouch' : 'pregame.start')),
       );
@@ -310,7 +327,7 @@ export class App {
         resolve();
       } }, t('map.start'));
       const c = this.card(
-        [h('h1', {}, t('eden.chapter.title')), h('h2', {}, t('eden.chapter.reference')), h('p', {}, t('eden.chapter.intro'))],
+        [h('h1', {}, t('eden.chapter.title')), h('h2', {}, t('eden.chapter.reference'))],
         [begin],
       );
     });

@@ -120,7 +120,6 @@
   },
   "hud": {
     "mission": "Mission {n}",
-    "moveKeys": "WASD or the arrow keys",
     "pause": "Menu",
     "switch": "Switch",
     "playingAs": "Playing as {name}",
@@ -149,7 +148,8 @@
   },
   "dialogue": {
     "next": "Next",
-    "skipHint": "{key} to continue"
+    "skipHint": "{key} to continue",
+    "tapHint": "Tap to continue"
   },
   "puzzle": {
     "title": "Name the Animal",
