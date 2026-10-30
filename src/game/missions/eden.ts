@@ -692,8 +692,9 @@ const m08: MissionDef = {
   async run(w) {
     w.setTime('evening');
     w.music('tension');
-    w.objective(step('m08', 'grove'), [ZONES.grove.x, ZONES.grove.y - 200]);
-    await w.until(() => near(w.player(), [ZONES.grove.x, ZONES.grove.y], ZONES.grove.r - 120));
+    w.objective(step('m08', 'grove'), POINTS.groveEntry);
+    // the hiding starts where the arrow is
+    await w.until(() => near(w.player(), POINTS.groveEntry, 70));
 
     await w.say('m08_hide');
     w.objective(step('m08', 'hide'));
@@ -701,12 +702,14 @@ const m08: MissionDef = {
     // the LORD God comes in at the start of his round (see stealth())
     await w.stealth(20);
 
-    // the LORD God calls, and they come out
-    w.cutscene(true);
+    // the LORD God calls, and they come out: the camera glides over to him
+    // while he walks and comes back to them once he has called (they were
+    // held still before, which the maintainer did not like)
+    w.cameraFollow(w.god);
     await w.walk(w.god, POINTS.godGrove, 90);
     w.face(w.god, 'down');
     await w.say('m08_call');
-    w.cutscene(false);
+    w.cameraFollow();
     w.objective(step('m08', 'answer'), w.god);
     await useOnce(w, { id: 'answer', at: () => godAt(w), radius: 110, prompt: talkPrompt });
     w.cutscene(true);

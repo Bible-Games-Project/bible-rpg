@@ -59,7 +59,8 @@ export interface WorldApi {
   walk(actor: Actor, to: Pt | Pt[], speed?: number): Promise<void>;
   face(actor: Actor, target: Facing | Actor): void;
   cameraTo(at: Pt | Actor, ms?: number): Promise<void>;
-  cameraFollow(): void;
+  /** Glide to and follow the active character, or `actor` if given. */
+  cameraFollow(actor?: Actor): void;
   /** Centre the camera on the player at once (no glide). */
   cameraSnap(): void;
   fade(to: number, ms?: number, color?: string): Promise<void>;

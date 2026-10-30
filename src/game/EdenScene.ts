@@ -536,10 +536,12 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   /** Follow the active character, gliding there from where the camera is
    * (Phaser's startFollow jumps straight to the target, which showed as a
    * jolt at the end of missions). */
-  cameraFollow(): void {
+  cameraFollow(actor?: Actor): void {
     const cam = this.cameras.main;
     const { scrollX, scrollY } = cam;
-    cam.startFollow(this.player().sprite, true, 0.12, 0.12, 0, 40);
+    // someone else is followed more gently (the camera glides over to them)
+    const lerp = actor ? 0.05 : 0.12;
+    cam.startFollow((actor ?? this.player()).sprite, true, lerp, lerp, 0, 40);
     cam.setScroll(scrollX, scrollY);
   }
 
@@ -628,8 +630,11 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
         this.tweens.add({ targets: l, y: y + 10, x: l.x + (Math.random() - 0.5) * 40, angle: 180, duration: 1200 + Math.random() * 600, onComplete: () => l.destroy() });
       }
     } else if (name === 'holy') {
-      const g = this.add.image(x, y, 'god-glow').setBlendMode(Phaser.BlendModes.ADD).setOrigin(0.5, 0.82).setDepth(DEPTH_OVERLAY - 40).setAlpha(0).setScale(0.4);
-      this.tweens.add({ targets: g, alpha: 1, scale: 1.3, duration: 900, yoyo: true, onComplete: () => g.destroy() });
+      // a burst of rays (tools/art/holy_burst.py) that opens, turns a little
+      // and fades: an expanding disc of light looked like circles
+      const g = this.add.image(x, y - 46, 'fx-holy-burst').setBlendMode(Phaser.BlendModes.ADD).setDepth(DEPTH_OVERLAY - 40).setAlpha(0).setScale(0.3);
+      this.tweens.add({ targets: g, scale: 0.72, angle: 18, duration: 2400, ease: 'Sine.easeOut' });
+      this.tweens.add({ targets: g, alpha: 0.9, duration: 520, ease: 'Sine.easeOut', hold: 650, yoyo: true, onComplete: () => g.destroy() });
     }
   }
 
@@ -979,7 +984,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       let remaining = seconds;
       let done = false;
       const sight = this.add.image(god.x, god.y, 'shadow-large').setTint(0xfff2c0).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.35).setDepth(DEPTH_GROUND + 20).setScale(4, 3.2);
-      const startPos: Pt = POINTS.groveStart;
+      // where the two of them were when the hiding began (every catch puts
+      // them back there, and him back at the start of his round)
+      let starts: Pt[] = [];
       let mode: 'round' | 'search' | 'check' | 'look' = 'round';
       let round = 0;
       let target: Pt = GOD_PATROL[0];
@@ -1013,36 +1020,42 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       let exposedFor = 0;
       let found = false;
       let staging = true;
-      // Every attempt starts the same way, far apart (the maintainer was
-      // caught at once when they began close to him): the screen goes dark,
-      // the two of them wait at the far side of the grove and the LORD God
-      // at the start of his round, then "Run and hide!".
+      // Every attempt starts the same way: the two of them where they
+      // stood when it began (the maintainer did not want them moved), the
+      // LORD God a little to the west, at the start of his round, then
+      // "Run and hide!". A catch fades out and puts everyone back.
       const stage = async (first: boolean) => {
         staging = true;
-        this.cutscene(true);
         god.stop();
-        await this.fade(1, first ? 500 : 400);
-        if (!first) hud.toast(t(found ? 'stealth.found' : 'stealth.seen'), false, 3600);
-        this.player().setPosition(startPos[0], startPos[1]);
-        this.other().setPosition(startPos[0] - 30, startPos[1] + 10);
-        this.player().face('up');
-        this.other().face('up');
-        if (first) god.setVisible(false);
-        god.setPosition(GOD_PATROL[0][0], GOD_PATROL[0][1]);
-        god.face('right');
-        mode = 'round';
-        round = 0;
-        target = GOD_PATROL[1];
-        checks = [];
-        last.clear();
-        remaining = seconds;
-        grace = 2;
-        exposedFor = 0;
-        sight.setPosition(god.x, god.y);
-        this.cameraSnap();
-        await this.fade(0, 500);
-        if (first) void this.appear(god, GOD_PATROL[0], 'right', { ms: 1200 });
-        this.cutscene(false);
+        const reset = () => {
+          god.setPosition(POINTS.godHideStart[0], POINTS.godHideStart[1]);
+          god.face('right');
+          mode = 'round';
+          round = 0;
+          target = GOD_PATROL[0];
+          checks = [];
+          last.clear();
+          remaining = seconds;
+          grace = 2;
+          exposedFor = 0;
+          sight.setPosition(god.x, god.y);
+        };
+        if (first) {
+          starts = [[this.player().x, this.player().y], [this.other().x, this.other().y]];
+          god.setVisible(false);
+          reset();
+          void this.appear(god, POINTS.godHideStart, 'right', { ms: 1200 });
+        } else {
+          this.cutscene(true);
+          await this.fade(1, 400);
+          hud.toast(t(found ? 'stealth.found' : 'stealth.seen'), false, 3600);
+          this.player().setPosition(starts[0][0], starts[0][1]);
+          this.other().setPosition(starts[1][0], starts[1][1]);
+          reset();
+          this.cameraSnap();
+          await this.fade(0, 500);
+          this.cutscene(false);
+        }
         hud.banner(t('stealth.banner'));
         staging = false;
       };
