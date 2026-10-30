@@ -95,6 +95,8 @@ export interface WorldApi {
   setPlot(i: number, state: 'grass' | 'marked' | 'tilled' | 'seeded' | 'watered' | 'sprout' | 'young' | 'grown'): void;
   hideProp(id: string): void;
   showProp(id: string): void;
+  /** Set a prop down somewhere else (an item left on the ground after use). */
+  dropProp(id: string, at: Pt): void;
   fruitOf(treeIds: string[]): { tree: string; index: number; at: Pt; type: string }[];
   pickFruit(tree: string, index: number): void;
   treeAt(id: string): Pt;

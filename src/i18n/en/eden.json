@@ -3,6 +3,10 @@
     "title": "The Garden of Eden",
     "reference": "Genesis 2–3"
   },
+  "creation": {
+    "verse": "In the beginning God created the heaven and the earth.",
+    "ref": "Genesis 1:1"
+  },
   "missions": {
     "m01": {
       "title": "Tend the Garden",
@@ -11,7 +15,7 @@
         "explore": "Walk to the garden plot by the river",
         "stick": "Find something to dig with",
         "till": "Till the soil ({n}/{total})",
-        "seeds": "Gather seeds from the wild grain",
+        "seeds": "Gather seeds from the wild grain ({n}/{total})",
         "plant": "Plant the seeds ({n}/{total})",
         "gourd": "Take the gourd by the river",
         "fill": "Fill the gourd at the river",

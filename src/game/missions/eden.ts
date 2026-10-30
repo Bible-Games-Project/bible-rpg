@@ -73,6 +73,16 @@ function pickUp(w: WorldApi, propId: string, at: Pt, item: string, n = 1): Promi
   });
 }
 
+/** Leave a carried item on the ground beside the player once it has served
+ * (the maintainer wanted tools held in the hand until used, then set down). */
+function putDown(w: WorldApi, propId: string, item: string): void {
+  const p = w.player();
+  p.hold(null);
+  w.dropProp(propId, [p.x + (p.facing === 'left' ? -24 : 24), p.y + 6]);
+  w.take(item);
+  w.sfx('drop');
+}
+
 function narrate(w: WorldApi, text: string): Promise<void> {
   return w.lines([{ speaker: 'narrator', text }]);
 }
@@ -212,27 +222,37 @@ const m01: MissionDef = {
     w.objective(step('m01', 'explore'), [ZONES.plot.x, ZONES.plot.y]);
     await w.waitZone('plot');
 
+    // what he picks up he carries in his hand until it has served
     w.objective(step('m01', 'stick'), POINTS.stick);
     await pickUp(w, 'stick', POINTS.stick, 'stick');
+    w.player().hold('digging-stick');
 
     await plotTask(w, 'till', 'till', 'tilled', 'dig', 'tilled', (i) => w.fx('leaves', PLOT_PATCHES[i]));
+    putDown(w, 'stick', 'stick');
 
-    w.objective(step('m01', 'seeds'), POINTS.grain);
-    await useOnce(w, {
-      id: 'grain',
-      at: POINTS.grain,
-      radius: 80,
-      prompt: () => t('prompt.gather'),
-      onUse: () => {
-        w.sfx('rustle');
-        w.give('seeds', PLOT_PATCHES.length);
-        w.toast(E('toasts.got', { item: itemName('seeds') }));
-      },
-    });
+    // a seed for each patch, one handful at a time
+    const seeds = PLOT_PATCHES.length;
+    for (let n = 0; n < seeds; n++) {
+      w.objective(step('m01', 'seeds', { n, total: seeds }), POINTS.grain);
+      await useOnce(w, {
+        id: `grain-${n}`,
+        at: POINTS.grain,
+        radius: 80,
+        prompt: () => t('prompt.gather'),
+        onUse: () => {
+          w.sfx('seed');
+          w.fx('leaves', POINTS.grain);
+          w.give('seeds');
+          w.player().hold('seeds');
+        },
+      });
+    }
     await plotTask(w, 'plant', 'plant', 'seeded', 'plant', 'planted', () => w.take('seeds'));
+    w.player().hold(null);
 
     w.objective(step('m01', 'gourd'), POINTS.gourd);
     await pickUp(w, 'gourd', POINTS.gourd, 'gourd');
+    w.player().hold('gourd');
 
     w.objective(step('m01', 'fill'), POINTS.riverFill);
     await useOnce(w, {
@@ -241,16 +261,19 @@ const m01: MissionDef = {
       radius: 90,
       prompt: () => t('prompt.fill'),
       onUse: () => {
-        w.sfx('splash');
+        w.sfx('fill');
         w.fx('splash', w.waterNear(POINTS.riverFill));
         w.take('gourd');
         w.give('water');
+        w.player().hold('gourd-full');
       },
     });
 
-    await plotTask(w, 'water', 'water', 'watered', 'splash', 'watered', (i) => w.fx('splash', [PLOT_PATCHES[i][0], PLOT_PATCHES[i][1] + 6]));
+    await plotTask(w, 'water', 'water', 'watered', 'pour', 'watered', (i) => w.fx('splash', [PLOT_PATCHES[i][0], PLOT_PATCHES[i][1] + 6]));
+    // the gourd is empty again: he sets it down
+    w.give('gourd');
+    putDown(w, 'gourd', 'gourd');
     w.take('water');
-    w.take('stick');
 
     // the seeds grow
     w.cutscene(true);
@@ -632,7 +655,7 @@ const m07: MissionDef = {
               }
               taken[id] = (taken[id] ?? 0) + 1;
               w.fx('leaves', at);
-              w.sfx('rustle');
+              w.sfx('leafPick');
               w.give('figLeaf');
               w.toast(E('toasts.leaf', { n: w.count('figLeaf'), total: LEAF_GOAL }));
               update();

@@ -32,17 +32,30 @@ export type Sfx =
   | 'bite'
   | 'leaves'
   | 'land'
-  | 'hiss';
+  | 'hiss'
+  | 'seed'
+  | 'fill'
+  | 'pour'
+  | 'leafPick'
+  | 'drop';
 
 export type Mood = 'none' | 'peaceful' | 'wonder' | 'solemn' | 'tension' | 'sorrow';
 export type Ambience = 'none' | 'garden' | 'evening' | 'outside';
 
 /** Recorded effects (public/assets/sfx) and their level next to the
  * synthesised ones (the maintainer wanted real sounds for these). */
-const SAMPLES: Partial<Record<Sfx, { file: string; gain: number }>> = {
-  bite: { file: 'assets/sfx/bite.mp3', gain: 0.55 },
-  leaves: { file: 'assets/sfx/sew-leaves.mp3', gain: 0.5 },
-  land: { file: 'assets/sfx/land.mp3', gain: 0.85 },
+const SAMPLES: Partial<Record<Sfx, { files: string[]; gain: number }>> = {
+  bite: { files: ['assets/sfx/bite.mp3'], gain: 0.55 },
+  leaves: { files: ['assets/sfx/sew-leaves.mp3'], gain: 0.5 },
+  land: { files: ['assets/sfx/land.mp3'], gain: 0.85 },
+  // footsteps on grass, a different one each step
+  step: { files: [1, 2, 3, 4, 5, 6].map((i) => `assets/sfx/step-${i}.mp3`), gain: 0.2 },
+  seed: { files: ['assets/sfx/seed.mp3'], gain: 0.5 },
+  fill: { files: ['assets/sfx/fill.mp3'], gain: 0.5 },
+  pour: { files: ['assets/sfx/pour.mp3'], gain: 0.5 },
+  leafPick: { files: ['assets/sfx/leaf-pick.mp3'], gain: 0.45 },
+  hiss: { files: ['assets/sfx/hiss.mp3'], gain: 0.6 },
+  drop: { files: ['assets/sfx/drop.mp3'], gain: 0.45 },
 };
 
 const PENTA_MAJOR = [0, 2, 4, 7, 9];
@@ -62,7 +75,7 @@ class AudioManager {
   private waterGain: GainNode | null = null;
   private birdTimer: number | null = null;
   private unlocked = false;
-  private samples = new Map<Sfx, AudioBuffer>();
+  private samples = new Map<Sfx, AudioBuffer[]>();
 
   constructor() {
     const unlock = () => {
@@ -207,11 +220,15 @@ class AudioManager {
   }
 
   private loadSamples(ctx: AudioContext): void {
-    for (const [name, s] of Object.entries(SAMPLES) as [Sfx, { file: string }][]) {
-      fetch(`${import.meta.env.BASE_URL}${s.file}`)
-        .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(r.statusText))))
-        .then((data) => ctx.decodeAudioData(data))
-        .then((buf) => this.samples.set(name, buf))
+    for (const [name, s] of Object.entries(SAMPLES) as [Sfx, { files: string[] }][]) {
+      Promise.all(
+        s.files.map((file) =>
+          fetch(`${import.meta.env.BASE_URL}${file}`)
+            .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(r.statusText))))
+            .then((data) => ctx.decodeAudioData(data)),
+        ),
+      )
+        .then((bufs) => this.samples.set(name, bufs))
         .catch(() => {
           /* the synthesised sound stays */
         });
@@ -227,7 +244,7 @@ class AudioManager {
     const recorded = this.samples.get(name);
     if (recorded) {
       const src = ctx.createBufferSource();
-      src.buffer = recorded;
+      src.buffer = recorded[Math.floor(Math.random() * recorded.length)];
       src.playbackRate.value = p;
       const g = ctx.createGain();
       g.gain.value = (SAMPLES[name]?.gain ?? 1) * v;
@@ -282,7 +299,16 @@ class AudioManager {
         [0, 7, 12, 19].forEach((s, i) => this.tone(261.6 * Math.pow(2, s / 12), t + i * 0.18, 2.4, 0.035 * v, 'sine'));
         break;
       case 'rustle':
+      case 'leafPick':
+      case 'seed':
         this.noiseBurst(t, 0.3, 0.05 * v, 'highpass', 2500, 0.4);
+        break;
+      case 'drop':
+        this.noiseBurst(t, 0.12, 0.12 * v, 'lowpass', 600, 0.7);
+        break;
+      case 'fill':
+      case 'pour':
+        this.noiseBurst(t, 0.6, 0.1 * v, 'bandpass', 1400, 0.6);
         break;
       case 'grow':
         [0, 2, 4, 7, 9, 12].forEach((s, i) => this.tone(523 * Math.pow(2, s / 12), t + i * 0.09, 0.6, 0.04 * v, 'sine'));

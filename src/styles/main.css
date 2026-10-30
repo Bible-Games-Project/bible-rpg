@@ -1834,3 +1834,96 @@ select:focus-visible {
     animation: none;
   }
 }
+
+/* ------------------------------------------------------- creation intro */
+
+.creation {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  background: #000;
+  pointer-events: auto;
+  transition: background-color 1200ms ease;
+}
+
+.creation.clear {
+  background-color: transparent;
+}
+
+.creation-verse {
+  max-width: min(calc(720px * var(--ui-scale)), calc(100vw - 48px));
+  margin: 0;
+  padding: 0 24px;
+  text-align: center;
+  font-size: var(--fs-xl);
+  line-height: 1.5;
+  color: #fff4dc;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 900ms ease,
+    transform 900ms ease;
+}
+
+.creation-verse.on {
+  opacity: 1;
+  transform: none;
+}
+
+.creation-ref {
+  display: block;
+  margin-top: calc(10px * var(--ui-scale));
+  font-size: var(--fs-s);
+  color: var(--gold);
+  letter-spacing: 0.08em;
+}
+
+.creation-light {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, #fff8dc 35%, rgba(255, 236, 170, 0.6) 55%, transparent 72%);
+  opacity: 0;
+  transform: scale(0.2);
+  pointer-events: none;
+}
+
+.creation-light.burst {
+  animation: creation-burst 1500ms ease-in forwards;
+}
+
+.creation.clear .creation-light {
+  animation: creation-fade 1300ms ease-out forwards;
+}
+
+@keyframes creation-burst {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(90);
+  }
+}
+
+@keyframes creation-fade {
+  from {
+    opacity: 1;
+    transform: scale(90);
+  }
+  to {
+    opacity: 0;
+    transform: scale(90);
+  }
+}

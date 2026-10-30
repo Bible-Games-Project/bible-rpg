@@ -74,7 +74,10 @@ export class MissionRunner {
     ambientEden(w, m.number);
     const title = t(`eden.missions.${m.key}.title`);
     hud.setMission({ number: m.number, title, objective: t(`eden.missions.${m.key}.desc`), kind: m.kind, reference: m.reference });
-    if (chapterStart) await ui().chapterIntro();
+    if (chapterStart) {
+      await ui().chapterIntro();
+      await this.scene.creationIntro();
+    }
     if (fromSave) await w.fade(0, 900);
     audio.play('missionStart');
     await w.wait(900);

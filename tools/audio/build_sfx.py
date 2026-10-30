@@ -19,6 +19,8 @@ PEAK_DB = -1.0
 
 # each clip: its sources (file, start delay s, gain, extra filters) and length
 TRIM = 'silenceremove=start_periods=1:start_threshold=-35dB'
+# for very quiet recordings (-35 dB cut them away entirely)
+TRIM_QUIET = 'silenceremove=start_periods=1:start_threshold=-58dB'
 CLIPS = {
     # a bite with its snap, then a softer chew
     'bite': ([
@@ -38,7 +40,31 @@ CLIPS = {
         ('dry-leaves-rustle-05.flac', 0.95, 2.4, TRIM),
         ('kenney-clothBelt.ogg', 1.55, 0.9, TRIM),
     ], 2.4),
+    # gathering grain seeds: a crunchy handful
+    'seed': ([
+        ('steps-leaves-01.ogg', 0.0, 1.0, TRIM_QUIET),
+        ('steps-leaves-02.ogg', 0.16, 1.8, TRIM_QUIET),
+    ], 0.75),
+    # a fig leaf picked
+    'leaf-pick': ([('dry-leaves-rustle-09.flac', 0.0, 1.0, TRIM)], 0.65),
+    # the gourd dipped in the river and filling
+    'fill': ([
+        ('water-splash-02.ogg', 0.0, 0.8, TRIM),
+        ('water-flow.ogg', 0.12, 1.0, 'atrim=0:1.3,afade=t=in:d=0.15'),
+    ], 1.5),
+    # water poured on the seeds, glugging out of the gourd
+    'pour': ([('water-poured-from-bottle.mp3', 0.0, 1.0, 'atrim=7.55:9.2,asetpts=PTS-STARTPTS,afade=t=in:d=0.05')], 1.6),
+    # the serpent: a long hiss, then a shorter one
+    'hiss': ([
+        ('hiss-1.mp3', 0.0, 1.0, TRIM),
+        ('hiss-3.mp3', 1.25, 0.75, TRIM),
+    ], 2.3),
+    # something set down on the grass
+    'drop': ([('kenney-dropLeather.ogg', 0.0, 1.0, TRIM)], 0.45),
 }
+# footsteps on grass: six single steps, played in turn at random
+for i, step in enumerate(['L1', 'R1', 'L2', 'R2', 'L3', 'R3'], 1):
+    CLIPS[f'step-{i}'] = ([(f'footstep-sand-{step}.flac', 0.0, 1.0, TRIM)], 0.45)
 
 
 def ffmpeg(*args: str) -> str:
@@ -54,7 +80,8 @@ def mix(parts: list[tuple[str, float, float, str]], length: float, gain_db: floa
         f += ['aformat=sample_rates=44100:channel_layouts=mono', f'volume={gain}', f'adelay={int(delay * 1000)}:all=1']
         chains.append(f'[{i}:a]' + ','.join(f) + f'[a{i}]')
     labels = ''.join(f'[a{i}]' for i in range(len(parts)))
-    graph = ';'.join(chains) + f';{labels}amix=inputs={len(parts)}:normalize=0,atrim=0:{length},afade=t=out:st={length - 0.3}:d=0.3,volume={gain_db}dB[out]'
+    fade = min(0.3, length / 3)
+    graph = ';'.join(chains) + f';{labels}amix=inputs={len(parts)}:normalize=0,atrim=0:{length},afade=t=out:st={length - fade}:d={fade},volume={gain_db}dB[out]'
     return graph, inputs
 
 

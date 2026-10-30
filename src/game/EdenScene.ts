@@ -7,6 +7,7 @@ import { CHARACTERS, type PlayableId } from '../data/characters';
 import { ANIMALS } from '../data/animals';
 import { GOD_PATROL, PLOT_PATCHES, POINTS, TILE, WORLD_H, WORLD_W, ZONES, type Pt } from '../data/eden/map';
 import type { Line } from '../ui/DialogueBox';
+import { CreationOverlay } from '../ui/CreationOverlay';
 import { openNamingPuzzle } from '../ui/NamingPuzzle';
 import { ui } from './bridge';
 import { ART_RESOLUTION, pixelRatio } from './display';
@@ -194,17 +195,118 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
    * sharp; otherwise the art is scaled smoothly (linear filtering).
    */
   private applyZoom(): void {
+    const z = this.viewZoom();
+    this.applyFilters(z);
+    this.setView(z);
+  }
+
+  /** The zoom of play. */
+  private viewZoom(): number {
     const w = this.scale.width;
     const h = this.scale.height;
     const dpr = pixelRatio();
     const wanted = Math.min(h / VIEW_HEIGHT, w / VIEW_MIN_WIDTH); // device px per world px
     const perArt = wanted / ART_RESOLUTION;
-    const z = perArt >= 0.8 ? ART_RESOLUTION * Math.max(1, Math.round(perArt)) : Math.max(wanted, MIN_ZOOM * dpr);
-    this.applyFilters(z);
+    return perArt >= 0.8 ? ART_RESOLUTION * Math.max(1, Math.round(perArt)) : Math.max(wanted, MIN_ZOOM * dpr);
+  }
+
+  /** Zoom the camera, with the screen-wide layers fitted to the view. */
+  private setView(z: number): void {
+    const w = this.scale.width;
+    const h = this.scale.height;
     this.cameras.main.setZoom(z);
     this.tint.setSize(w / z + 64, h / z + 64);
     this.tint.setPosition(w / 2 - w / z / 2 - 32, h / 2 - h / z / 2 - 32);
     this.atmosphere.resize(w, h, z);
+  }
+
+  /**
+   * The opening of the chapter (the maintainer asked for a creation
+   * cinematic): darkness and the first verse of Genesis, light breaking out
+   * until it fills the screen, the whole garden seen from high above, then
+   * the camera comes down to Adam, who is formed and appears in the light
+   * (Genesis 2:7). Any key or tap skips it.
+   */
+  creationIntro(): Promise<void> {
+    return new Promise((resolve) => {
+      const cam = this.cameras.main;
+      const hud = ui().hud;
+      const adam = this.adam;
+      const parts = [adam.sprite, adam.shadow].filter((o): o is NonNullable<typeof o> => !!o);
+      const overlay = new CreationOverlay(document.getElementById('ui')!, t('eden.creation.verse'), t('eden.creation.ref'));
+      const near = this.viewZoom();
+      // from high above, the garden fills the screen
+      const far = Math.max(this.scale.width / WORLD_W, this.scale.height / WORLD_H) * 1.15;
+      const view = { z: far, x: WORLD_W * 0.5, y: WORLD_H * 0.48 };
+      const timers: number[] = [];
+      const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        timers.forEach((id) => window.clearTimeout(id));
+        window.removeEventListener('keydown', skip, true);
+        window.removeEventListener('pointerdown', skip, true);
+        input.remove(layer);
+        this.tweens.killTweensOf(view);
+        this.tweens.killTweensOf(parts);
+        parts.forEach((o) => o.setAlpha(1));
+        overlay.remove();
+        this.applyZoom();
+        this.cameraSnap();
+        hud.show(true);
+        resolve();
+      };
+      const skip = (e: Event) => {
+        e.preventDefault();
+        finish();
+      };
+      const layer: InputLayer = { modal: true, allowMovement: false, captureKeys: true, onAction: () => true };
+      input.push(layer);
+      window.addEventListener('keydown', skip, true);
+      window.addEventListener('pointerdown', skip, true);
+      hud.show(false);
+      void hud.fade(0, 0);
+      parts.forEach((o) => o.setAlpha(0));
+      cam.stopFollow();
+      this.applyFilters(far);
+      const place = () => {
+        this.setView(view.z);
+        cam.centerOn(view.x, view.y);
+      };
+      place();
+      audio.setMood('wonder');
+      at(400, () => overlay.showVerse(true));
+      at(3400, () => overlay.showVerse(false));
+      at(4300, () => {
+        // "Let there be light"
+        overlay.burst();
+        audio.play('holy');
+      });
+      at(5800, () => {
+        overlay.clear();
+        // drifting over the garden toward where Adam is
+        this.tweens.add({ targets: view, x: (WORLD_W * 0.5 + adam.x) / 2, y: (WORLD_H * 0.48 + adam.y) / 2, duration: 4200, ease: 'Sine.easeInOut', onUpdate: place });
+      });
+      at(10000, () => {
+        // down to him
+        this.tweens.add({
+          targets: view,
+          z: near,
+          x: adam.x,
+          y: adam.y - 40,
+          duration: 3400,
+          ease: 'Sine.easeInOut',
+          onUpdate: place,
+        });
+      });
+      at(12600, () => {
+        this.fx('sparkle', [adam.x, adam.y]);
+        audio.play('holy');
+        this.tweens.add({ targets: parts, alpha: 1, duration: 1400 });
+      });
+      at(14600, finish);
+    });
   }
 
   /** Sharp pixels for textures drawn at a whole number of screen pixels per
@@ -649,6 +751,18 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     p?.shadow?.setVisible(true);
   }
 
+  dropProp(id: string, at: Pt): void {
+    const p = this.objects.prop(id);
+    if (!p) return;
+    // things standing up sort by their base (see WorldObjects.place)
+    const sorted = Math.abs(p.image.depth - p.y) < 1;
+    p.x = at[0];
+    p.y = at[1];
+    p.image.setPosition(at[0], at[1]).setVisible(true);
+    if (sorted) p.image.setDepth(at[1]);
+    p.shadow?.setPosition(at[0], at[1] - (p.shadow.y < p.y ? 1 : 0)).setVisible(true);
+  }
+
   waterNear(at: Pt): Pt {
     let best: Pt = at;
     let bestD = Infinity;
@@ -1069,7 +1183,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       if (p.moving) {
         this.stepTimer -= dt;
         if (this.stepTimer <= 0) {
-          audio.play('step', { pitch: this.terrain.pathDistance(p.x, p.y) < 0 ? 0.7 : 1.15, volume: 0.6 });
+          audio.play('step', { pitch: (this.terrain.pathDistance(p.x, p.y) < 0 ? 0.92 : 1.04) * (0.96 + Math.random() * 0.08), volume: 0.6 });
           this.stepTimer = 0.27 / (p.pace / CHARACTERS[this.active].speed); // two steps per walk cycle (8 frames at 15 fps)
         }
       }
