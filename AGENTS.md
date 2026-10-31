@@ -430,6 +430,24 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   no prefix (the form starts with `Authorization` / `Bearer`, which
   ElevenLabs rejects as "Invalid API key"); a saved secret cannot be viewed
   again, only replaced.
+- Free voices (the maintainer wants voices "libres de copyright siempre",
+  American only, natural): Kokoro-82M (Apache 2.0, trained on non-copyrighted
+  audio; `onnx-community/Kokoro-82M-v1.0-ONNX` on Hugging Face, run with the
+  `kokoro-onnx` PyPI package; 20 American voices `af_*`/`am_*`, two can be
+  mixed half and half into a new one; its authors grade them, best af_heart,
+  af_bella, then am_fenrir, am_michael, am_puck) and Piper
+  (`rhasspy/piper-voices`, `piper-tts` package) keeping only voices whose
+  MODEL_CARD says public domain or CC0 (bryce, joe, john, kathleen, kristin,
+  ljspeech, mike, norman, reza_ibrahim), Apache 2.0 (sam) or CMU ARCTIC
+  (American speakers bdl, rms, aew, fem, slt, clb, eey, ljm, lnh); hfc_*,
+  l2arctic and ryan forbid commercial use, amy, danny, kusal and lessac have
+  unclear terms. The environment allows `huggingface.co` and `*.hf.co`.
+  Each free voice was offered in 7 variations for future characters (Noah,
+  Moses…): rubberband pitch ×0.794, ×0.866, ×0.933, original, ×1.072,
+  ×1.155 and an elderly one (×0.917, tempo 0.93, slight vibrato); monster
+  voices are effects on these (octave-lower double, growl, cave echo).
+  After a vibrato or chorus, render to WAV before `loudnorm`, which
+  otherwise sometimes returns near silence.
 - Thorns (`thorns(true)`) are grown once: asking again keeps them (mission
   10's setup asked again and they vanished and grew back).
 - Publishing: `docs/agents/working-style.md` (shared by all the project's
