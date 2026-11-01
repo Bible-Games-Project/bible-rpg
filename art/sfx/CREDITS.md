@@ -26,9 +26,9 @@ in `sources/`; `tools/audio/build_sfx.py` mixes them into
 
 The spoken lines in `public/assets/voice/` are made with
 [ElevenLabs](https://elevenlabs.io) text to speech by
-`tools/audio/build_voices.py`, with ElevenLabs' own voices: Bill (the LORD
-God), Chris (Adam), River (Eve), Callum (the serpent) and George (the
-narrator, who reads the gold verses). They fall under
-the ElevenLabs terms of the account that made them, not CC0; on the free plan
-ElevenLabs asks to be credited, which the settings screen does ("Character
-voices made with ElevenLabs").
+`tools/audio/build_voices.py`, with Voice Library voices: W. Storytime Oxley
+(the LORD God), Luca (Adam), Zara (Eve), Matthew Schmitz (the serpent) and
+Spuds Oxley (the narrator, who reads the gold verses). They were generated
+on a paid plan, which per ElevenLabs gives a commercial licence that lasts
+after the subscription ends; they are not CC0. The settings screen still
+credits ElevenLabs ("Character voices made with ElevenLabs").

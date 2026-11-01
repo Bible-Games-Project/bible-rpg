@@ -416,10 +416,12 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   edited line falls silent until the script is run again. Voiced lines skip
   the reveal's blips, the portrait talks until the voice ends, the next press
   cuts it off, the music dips under it, and it has its own volume
-  (`voiceVolume`). Voices: Bill (God), Chris (Adam), River (Eve), Callum
-  (the serpent), George (the narrator: gold verses, the creation verse, the
-  short narrations), chosen by the maintainer; God and the narrator are
-  "a bit more natural" (`NATURAL`, stability 0.3 instead of 0.5).
+  (`voiceVolume`). Voices (Voice Library, chosen by the maintainer after
+  several rounds on a listening page): W. Storytime Oxley (God), Luca
+  (Adam), Zara (Eve), Matthew Schmitz "Hissing and Sinister" (the serpent),
+  Spuds Oxley (the narrator: gold verses, the creation verse, the short
+  narrations); all at stability 0.3 and the voice's own speed (`SETTINGS`).
+  The maintainer turned down British voices (the game targets the USA).
   Narrations with a value or a key ("Adam called it {name}", "Gameplay: …")
   stay unvoiced. The creation cinematic keeps its darkness until the verse
   has been read. The account is on the free plan: Voice Library voices are

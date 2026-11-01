@@ -27,22 +27,21 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 API = 'https://api.elevenlabs.io/v1/text-to-speech'
 MODEL = 'eleven_v4'
 SEED = 7
-# less steady than the default 0.5: a more natural, less read-out delivery
-# (the maintainer asked it of God and the narrator)
-NATURAL = {'stability': 0.3, 'similarity_boost': 0.75}
-# ElevenLabs' own voices, chosen by the maintainer from a test of three per
-# character. The free plan cannot use Voice Library voices over the API: the
-# maintainer's choice for the serpent, "Dante - Growly and Menacing Monster"
-# (wXvR48IpOq9HACltTmt7), needs a paid plan.
+# less steady than the default 0.5 (a more natural, less read-out delivery)
+# at the voice's own speed: the maintainer's settings for every voice
+SETTINGS = {'stability': 0.3, 'similarity_boost': 0.75, 'speed': 1.0}
+# Voice Library voices chosen by the maintainer from the account's paid plan:
+# what is generated while subscribed keeps its commercial licence after the
+# subscription ends (generate final lines only while subscribed)
 Voice = tuple[str, str, dict | None]
 VOICES: dict[str, Voice] = {
-    'god': ('Bill', 'pqHfZKP75CvOlQylNhV4', NATURAL),
-    'adam': ('Chris', 'iP95p4xoKVk53GoZ742B', None),
-    'eve': ('River', 'SAz9YHcvj6GT2YYXdXww', None),
-    'serpent': ('Callum', 'N2lVS1w4EtoT3dr4eOWO', None),
+    'god': ('W. Storytime Oxley', 'iUqOXhMfiOIbBejNtfLR', SETTINGS),
+    'adam': ('Luca', '4JVOFy4SLQs9my0OLhEw', SETTINGS),
+    'eve': ('Zara', 'jqcCZkN6Knx8BJ5TBdYR', SETTINGS),
+    'serpent': ('Matthew Schmitz', 'xYWUvKNK6zWCgsdAK7Wi', SETTINGS),
 }
 # reads the gold scripture cards, the creation verse and the short narrations
-NARRATOR: Voice = ('George', 'JBFqnCBsd6RMkjVDRZzb', NATURAL)
+NARRATOR: Voice = ('Spuds Oxley', 'NOpBlnGInO9m6vDvFkFC', SETTINGS)
 # words a voice would spell out or stress wrongly, written as spoken
 SPOKEN = {'LORD': 'Lord'}
 
