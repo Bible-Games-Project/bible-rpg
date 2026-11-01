@@ -448,6 +448,17 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   voices are effects on these (octave-lower double, growl, cave echo).
   After a vibrato or chorus, render to WAV before `loudnorm`, which
   otherwise sometimes returns near silence.
+- The ElevenLabs account is now on the paid Starter plan: Voice Library
+  voices work over the API by their voice_id (no need to add them first).
+  Per ElevenLabs' help centre, audio generated while subscribed keeps its
+  commercial licence after the subscription ends; audio made on the free
+  plan does not (attribution, non-commercial), so final game lines must be
+  generated while subscribed. Library voices were offered by their free
+  preview MP3s (`preview_url`, no credits): the most added American voices
+  with no extra cost, no live moderation and at least a year's withdrawal
+  notice. Some previews are served from `api.us.elevenlabs.io`, which the
+  environment blocks; the same path on `api.elevenlabs.io` works. In a
+  `while read` loop, give ffmpeg `-nostdin` (it eats the loop's input).
 - Thorns (`thorns(true)`) are grown once: asking again keeps them (mission
   10's setup asked again and they vanished and grew back).
 - Publishing: `docs/agents/working-style.md` (shared by all the project's
