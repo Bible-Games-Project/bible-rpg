@@ -8,9 +8,17 @@ import { openOverlay } from './overlays';
 
 /**
  * The maintainer's voices screen (main menu, only with src/core/dev.ts on):
- * every recorded line by character, with the voice that says it, and every
- * sound effect, each with a button to hear it.
+ * the voice banks where voices and sounds are chosen for each character
+ * (pages kept outside the game, see BANKS), every recorded line by
+ * character with the voice that says it, and every sound effect, each with
+ * a button to hear it.
  */
+
+/** The listening pages made for the maintainer (private Claude artifacts). */
+const BANKS: [string, string][] = [
+  ['dev.bankLibrary', 'https://claude.ai/artifact/WVS4TqxoFaeaBFMqNF8bxZ'],
+  ['dev.bankFree', 'https://claude.ai/artifact/W9HHYeatyBLRJcgwjpzYwg'],
+];
 export function openVoices(): void {
   let playing: { stop(): void } | null = null;
   const stop = () => {
@@ -31,6 +39,9 @@ export function openVoices(): void {
     'div',
     { class: 'panel dialog dev-voices-panel', style: 'width:min(860px,100%)' },
     h('h2', { class: 'panel-title' }, t('dev.title')),
+    h('h3', {}, t('dev.bank')),
+    h('p', { class: 'hint' }, t('dev.bankHint')),
+    h('div', { class: 'dev-banks' }, ...BANKS.map(([key, url]) => h('a', { class: 'btn', href: url, target: '_blank', rel: 'noopener' }, t(key)))),
     h('h3', {}, t('dev.lines')),
     lines,
     h('h3', {}, t('dev.sounds')),

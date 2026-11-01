@@ -118,7 +118,12 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
 
   function renderPainted(list: ChapterDef[], art: { file: string; width: number; height: number }) {
     mapInner.style.background = '';
-    mapInner.append(h('img', { class: 'map-art', src: `${BASE}${art.file}`, alt: '', draggable: 'false' }));
+    // it takes a moment to load: it fades in over a second once it has (the maintainer)
+    const img = h('img', { class: 'map-art', src: `${BASE}${art.file}`, alt: '', draggable: 'false' }) as HTMLImageElement;
+    const shown = () => img.classList.add('loaded');
+    if (img.complete && img.naturalWidth) requestAnimationFrame(shown);
+    else img.addEventListener('load', shown, { once: true });
+    mapInner.append(img);
     list.forEach((c, i) => {
       const st = chapterStatus(c);
       const look = st === 'completed' ? 'done' : st === 'locked' || st === 'soon' ? 'locked' : 'open';

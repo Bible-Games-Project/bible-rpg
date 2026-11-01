@@ -303,7 +303,10 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   Holding Shift runs at `RUN` times the walking speed. A new chapter then
   opens with a creation cinematic (`EdenScene.creationIntro`): darkness and
   Genesis 1:1, light breaking out, the garden from high above, the camera
-  down to Adam appearing in the light; any key or tap skips it.
+  down to Adam appearing in the light; any key or tap skips it, except in
+  its first 1.5 s (a tap left over from the screens before skipped it). It
+  plays only when the chapter starts from the beginning, not when a saved
+  game continues.
 - The interface scales with the screen (`applyUiScale` in `main.ts` sets
   `--ui-scale` from the tighter of width/1180 and height/700, between 0.75
   and 1.4, times 1.25 for large text): with fixed sizes it was huge or cut
@@ -324,12 +327,15 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   dialogue waits for it too. A scene can act along with it:
   `w.narrated()` is how much has been said, so mission 6 plays Genesis 3:6
   while it is read (Eve takes and eats, walks slowly to Adam, gives it, he
-  eats). A skipped voice fades out over 0.3 s.
+  eats). A skipped voice fades out over 0.3 s, and the box itself fades in
+  and out over 0.3 s (`reveal`/`conceal`). The serpent hisses, then speaks
+  (a pause after `sfx('hiss')`).
 - What Adam picks up he carries in his hand until it has served (the stick,
   the seeds, the gourd empty then full) and then sets it down beside him
   (`putDown`, `dropProp`). Seeds are gathered one press at a time. Adam
   sets the full basket down after the fruit is shared (`basketFull`); it
-  stays there in the later missions.
+  stays there in the later missions, and so do the stick and the gourd
+  (a resumed game lays them beside the plot).
 - The naming puzzle uses the meadow's green in light and dark steps (the
   maintainer found its old green foreign to the game).
 - New art comes from the OpenAI Image API (maintainer's decision), with a
@@ -399,7 +405,12 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   line by character and voice, every sound effect) has a button at the top
   left of the main menu that only shows in a browser that opened the game
   once with `#dev` at the end of its address (`#nodev` hides it again,
-  `src/core/dev.ts`). It is for the maintainer, not players.
+  `src/core/dev.ts`). It is for the maintainer, not players. It links to
+  the voice bank pages (private Claude artifacts, `BANKS`) where voices and
+  sounds are chosen for each character.
+- The story map painting fades in over a second once loaded (it showed up
+  late). The passing cloud's shadow was made clearer (alpha 0.4) and
+  clouds come more often: the maintainer missed it.
 
 ### Code conventions
 

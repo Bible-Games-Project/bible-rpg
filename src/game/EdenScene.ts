@@ -260,8 +260,11 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
         hud.show(true);
         resolve();
       };
+      // a tap or key left over from the screens before must not skip it
+      const begun = performance.now();
       const skip = (e: Event) => {
         e.preventDefault();
+        if (performance.now() - begun < 1500) return;
         finish();
       };
       const layer: InputLayer = { modal: true, allowMovement: false, captureKeys: true, onAction: () => true };

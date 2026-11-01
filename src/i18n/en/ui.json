@@ -151,6 +151,10 @@
   "dev": {
     "voices": "Voices",
     "title": "Voices and sounds",
+    "bank": "Voice bank",
+    "bankHint": "Choose voices for each character, and the sounds, on these pages; then copy your choice and send it to Claude.",
+    "bankLibrary": "ElevenLabs library and sounds",
+    "bankFree": "Free voices, variations and monsters",
     "lines": "Voice lines",
     "sounds": "Sound effects",
     "recorded": "recording",

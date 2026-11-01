@@ -47,6 +47,7 @@ export class DialogueBox {
   private lineNo = 0;
   private layer: InputLayer;
   private passive: Promise<void> = Promise.resolve();
+  private fading: Animation | null = null;
   private passiveLine = false;
   private voiceStart = 0;
   private voiceLength = 0;
@@ -88,7 +89,7 @@ export class DialogueBox {
       for (const l of lines) if (l.voice) void voices.prepare(l.voice, l.text);
       if (!this.open) {
         this.open = true;
-        this.root.hidden = false;
+        this.reveal();
         input.push(this.layer);
         this.portrait.start();
       }
@@ -107,7 +108,7 @@ export class DialogueBox {
       const no = ++this.lineNo;
       this.narrating = true;
       this.passiveLine = true;
-      this.root.hidden = false;
+      this.reveal();
       const started = performance.now();
       const said = await this.present(line, no);
       if (no !== this.lineNo) return;
@@ -130,13 +131,43 @@ export class DialogueBox {
     return this.chars.length ? (this.shown / this.chars.length) * 0.95 : 0;
   }
 
+  /** The box fades in over 0.3 s (the maintainer); one still fading out
+   * comes straight back. */
+  private reveal(): void {
+    if (this.fading) {
+      this.fading.cancel();
+      this.fading = null;
+      return;
+    }
+    if (!this.root.hidden) return;
+    this.root.hidden = false;
+    this.root.animate?.([{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: 'ease-out' });
+  }
+
+  /** ...and out over 0.3 s; the game goes on meanwhile. */
+  private conceal(): void {
+    if (this.root.hidden || this.fading) return;
+    const fade = this.root.animate?.([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'ease-in', fill: 'forwards' });
+    if (!fade) {
+      this.root.hidden = true;
+      return;
+    }
+    this.fading = fade;
+    fade.onfinish = () => {
+      if (this.fading !== fade) return;
+      this.fading = null;
+      this.root.hidden = true;
+      fade.cancel();
+    };
+  }
+
   private endNarration(): void {
     cancelAnimationFrame(this.raf);
     this.stopVoice();
     this.narrating = false;
     this.passiveLine = false;
     this.voiceLength = 0;
-    if (!this.open) this.root.hidden = true;
+    if (!this.open) this.conceal();
   }
 
   private nextLine(): void {
@@ -267,7 +298,7 @@ export class DialogueBox {
     this.stopVoice();
     this.lineNo++;
     this.open = false;
-    this.root.hidden = true;
+    this.conceal();
     input.remove(this.layer);
     this.portrait.stop();
     const r = this.resolve;

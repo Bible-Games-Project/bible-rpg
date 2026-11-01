@@ -145,7 +145,13 @@ export function stageEden(w: WorldApi, n: number, o: StageOptions): void {
   w.eve.hold(null);
   // the garden plot
   PLOT_PATCHES.forEach((_, i) => w.setPlot(i, n === 1 ? 'marked' : 'grown'));
-  for (const id of ['stick', 'gourd']) (n === 1 ? w.showProp(id) : w.hideProp(id));
+  // the stick and the gourd stay where Adam set them down (the maintainer);
+  // a resumed game puts them beside the plot, where he used them
+  for (const id of ['stick', 'gourd']) w.showProp(id);
+  if (n > 1 && o.place) {
+    w.dropProp('stick', [PLOT_PATCHES[0][0] - 46, PLOT_PATCHES[0][1] + 22]);
+    w.dropProp('gourd', [PLOT_PATCHES[2][0] + 44, PLOT_PATCHES[2][1] + 20]);
+  }
   n <= 5 ? w.showProp('basket') : w.hideProp('basket');
   // the full basket stays where it was set down (the maintainer)
   n >= 6 ? w.showProp('basketFull') : w.hideProp('basketFull');
@@ -590,8 +596,10 @@ const m06: MissionDef = {
     w.face(w.eve, 'up');
     w.face(w.adam, w.eve);
     await w.cameraTo([POINTS.serpentBranch[0], POINTS.serpentBranch[1] + 60], 900);
+    // it hisses first, then speaks (the maintainer: not all at once)
     w.sfx('hiss');
     w.eve.emote('question');
+    await w.wait(2200);
     await w.say('m06_serpent');
 
     // Genesis 3:6, acted while it is read (the maintainer): Eve takes the
@@ -756,6 +764,7 @@ const m09: MissionDef = {
     await w.walk(w.serpent, [POINTS.serpentBend, POINTS.serpentGround], 45);
     w.serpent.face('left');
     w.sfx('hiss');
+    await w.wait(1600);
     w.face(w.god, w.serpent);
     await w.say('m09_serpent');
     // it crawls back the way it came and out of sight behind the oak below

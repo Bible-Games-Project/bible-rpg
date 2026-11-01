@@ -65,7 +65,7 @@ export class Ambience {
   private cloud: Phaser.GameObjects.Image;
   private cloudShadow: Phaser.GameObjects.Image;
   private cloudHeight = 520;
-  private cloudWait = 6;
+  private cloudWait = 3;
   /** world px per second; each cloud takes its own diagonal and pace */
   private cloudVel = { x: 48, y: 15 };
   private spawn = 0;
@@ -284,11 +284,12 @@ export class Ambience {
     c.setAlpha(Math.max(0.001, 0.62 * a));
     // its shadow on the ground, away from the sun and well below it (the
     // maintainer wanted it lower than the low sun of the objects' shadows)
-    this.cloudShadow.setPosition(c.x + this.cloudHeight * CLOUD_SHADOW.x, c.y + this.cloudHeight * CLOUD_SHADOW.y).setAlpha(0.27 * a * this.sun);
+    // (the maintainer loved it and stopped noticing it: clearer, and more often)
+    this.cloudShadow.setPosition(c.x + this.cloudHeight * CLOUD_SHADOW.x, c.y + this.cloudHeight * CLOUD_SHADOW.y).setAlpha(0.4 * a * this.sun);
     if (across > 1 || c.x > WORLD_W + 600) {
       c.setPosition(-9999, -9999).setAlpha(0);
       this.cloudShadow.setAlpha(0);
-      this.cloudWait = 25 + Math.random() * 30;
+      this.cloudWait = 10 + Math.random() * 18;
     }
   }
 }

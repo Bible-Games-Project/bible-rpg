@@ -667,6 +667,12 @@ select:focus-visible {
   height: 100%;
   pointer-events: none;
   user-select: none;
+  opacity: 0;
+  transition: opacity 1s ease-out;
+}
+
+.story-map .map-art.loaded {
+  opacity: 1;
 }
 
 .story-node.painted {
@@ -1977,6 +1983,12 @@ select:focus-visible {
   align-items: baseline;
   margin: 3px 0;
   font-size: var(--fs-s);
+}
+
+.dev-banks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .dev-sounds {
