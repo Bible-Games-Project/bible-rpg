@@ -39,6 +39,8 @@ export interface WorldApi {
   // dialogue
   say(dialogueId: string, params?: Record<string, string | number>): Promise<void>;
   scripture(id: string): Promise<void>;
+  /** How much of the line being narrated has been said (0..1; 1 when none). */
+  narrated(): number;
   lines(lines: Line[]): Promise<void>;
 
   // objective and HUD

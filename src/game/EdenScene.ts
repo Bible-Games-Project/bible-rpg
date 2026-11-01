@@ -113,7 +113,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.adam = new Actor(this, { id: 'adam', x: POINTS.adamStart[0], y: POINTS.adamStart[1], charId: 'adam', outfit: c.adam.outfit, body: { w: 22, h: 10 } });
     this.eve = new Actor(this, { id: 'eve', x: POINTS.eveArrive[0], y: POINTS.eveArrive[1], charId: 'eve', outfit: c.eve.outfit, body: { w: 22, h: 10 } });
     this.god = new Actor(this, { id: 'god', x: POINTS.godAppear[0], y: POINTS.godAppear[1], charId: 'god', outfit: 'robe', body: { w: 26, h: 10 }, solid: true });
-    this.serpent = new Actor(this, { id: 'serpent', x: POINTS.serpentBranch[0], y: POINTS.serpentBranch[1], sheet: 'serpent-tree', body: { w: 10, h: 6 } });
+    this.serpent = new Actor(this, { id: 'serpent', x: POINTS.serpentBranch[0], y: POINTS.serpentBranch[1], sheet: 'serpent-tree', body: { w: 10, h: 6 }, shadowOffset: [2, 2] });
     this.eve.setVisible(false);
     this.god.setVisible(false);
     this.serpent.setVisible(false);
@@ -401,7 +401,14 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     return this.lines([{ speaker: 'narrator', text: t(`eden.scripture.${id}.text`), ref: t(`eden.scripture.${id}.ref`), scripture: true, voice: `scripture.${id}` }]);
   }
 
+  narrated(): number {
+    return ui().dialogue.narrated();
+  }
+
   async lines(lines: Line[]): Promise<void> {
+    // a narrator with a voice tells it while the player keeps moving
+    const [first] = lines;
+    if (lines.length === 1 && first.speaker === 'narrator' && first.voice && voices.has(first.voice, first.text)) return ui().dialogue.narrate(first);
     this.player().stop();
     this.facePartners(lines);
     await ui().dialogue.show(lines);
@@ -448,9 +455,16 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.interactions = [];
   }
 
-  /** The player may move and use things (no cutscene, no interaction in progress). */
+  /** The player may use things: no cutscene, no interaction in progress and
+   * nothing being narrated (one narration at a time, the maintainer). */
   private canAct(): boolean {
-    return this.control && !this.busy;
+    return this.control && !this.busy && !ui().dialogue.narrating;
+  }
+
+  /** The player may walk: as above, but a narration does not hold them, even
+   * one an interaction started (the maintainer: players should feel free). */
+  private canMove(): boolean {
+    return this.control && (!this.busy || ui().dialogue.narrating);
   }
 
   private async useInteract(spec: InteractSpec): Promise<void> {
@@ -1199,7 +1213,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   update(time: number, delta: number): void {
     const dt = delta / 1000;
     const p = this.player();
-    const canMove = this.canAct() && !p.scripted && input.movementAllowed(this.layer) && !ui().dialogue.open;
+    const canMove = this.canMove() && !p.scripted && input.movementAllowed(this.layer) && !ui().dialogue.open;
     if (canMove) {
       const v = input.moveVector();
       // Shift: run
@@ -1234,7 +1248,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private updateFollower(dt: number): void {
     const leader = this.player();
     const f = this.other();
-    if (!this.following || !f.visible || f.scripted || !this.canAct()) {
+    if (!this.following || !f.visible || f.scripted || !this.canMove()) {
       if (!f.scripted) f.stop();
       return;
     }
@@ -1320,7 +1334,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private updateObjectiveIndicator(time: number): void {
     const pts = this.objectivePoints();
     const hud = ui().hud;
-    if (!pts.length || !this.canAct()) {
+    if (!pts.length || !this.canMove()) {
       hud.setArrow(null);
       this.markers.hide(time);
       return;

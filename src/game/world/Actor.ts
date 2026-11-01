@@ -24,6 +24,8 @@ export interface ActorOptions {
   body?: { w: number; h: number };
   solid?: boolean;
   shadow?: 'shadow-small' | 'shadow-medium' | 'shadow-large' | null;
+  /** nudges the shadow (world px), e.g. the serpent's, a touch down and right */
+  shadowOffset?: [number, number];
   facing?: Facing;
 }
 
@@ -57,6 +59,7 @@ export class Actor {
   private grip: 'hand' | 'arms' = 'hand';
   /** offset the sprite vertically (e.g. a dove hopping or flying) */
   lift = 0;
+  private shadowOffset: [number, number];
   /** added to the depth (e.g. the serpent drawn on a branch, in front of the canopy) */
   depthBias = 0;
 
@@ -65,6 +68,7 @@ export class Actor {
     this.id = o.id;
     this.charId = o.charId;
     this.outfit = o.outfit;
+    this.shadowOffset = o.shadowOffset ?? [0, 0];
     this.sheet = o.sheet;
     this.facing = o.facing ?? 'down';
     const bw = o.body?.w ?? 22;
@@ -133,6 +137,12 @@ export class Actor {
   }
 
   faceVector(vx: number, vy: number): void {
+    // sheets drawn from the side (the serpent, animals) only turn left or
+    // right: going up or down they faced right and crawled backwards
+    if (this.sheet) {
+      if (Math.abs(vx) > 0.5) this.facing = vx < 0 ? 'left' : 'right';
+      return;
+    }
     if (Math.abs(vx) > Math.abs(vy) * 1.05) this.facing = vx < 0 ? 'left' : 'right';
     else if (Math.abs(vy) > 0.01) this.facing = vy < 0 ? 'up' : 'down';
   }
@@ -297,8 +307,8 @@ export class Actor {
    */
   private placeShadow(): void {
     if (!this.shadow) return;
-    const x = Math.round(this.feet.x);
-    const y = Math.round(this.feet.y);
+    const x = Math.round(this.feet.x) + this.shadowOffset[0];
+    const y = Math.round(this.feet.y) + this.shadowOffset[1];
     const up = Math.max(0, this.lift);
     this.shadow.setPosition(x + up * 0.45, y + up * 0.11);
     if (!this.castShadow) return;

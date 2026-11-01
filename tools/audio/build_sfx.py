@@ -1,9 +1,12 @@
 """Mix the recorded CC0 sounds (art/sfx/sources, credits in art/sfx/CREDITS.md)
 into the short clips the game plays (public/assets/sfx/*.mp3): mono, 44.1 kHz,
-each peaking at PEAK_DB. The game falls back to its synthesized sound when a
-clip cannot be loaded (src/core/audio.ts, SAMPLES). Needs ffmpeg.
+each peaking at PEAK_DB. A source named `lavfi:…` is made here by ffmpeg
+(shaped noise), so it has no author at all. The game falls back to its
+synthesized sound when a clip cannot be loaded (src/core/audio.ts, SAMPLES).
+Needs ffmpeg.
 
-    python3 tools/audio/build_sfx.py
+    python3 tools/audio/build_sfx.py              # every clip
+    python3 tools/audio/build_sfx.py hiss slither # only these
 """
 
 from __future__ import annotations
@@ -11,6 +14,7 @@ from __future__ import annotations
 import os
 import re
 import subprocess
+import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 SRC = os.path.join(ROOT, 'art', 'sfx', 'sources')
@@ -54,11 +58,26 @@ CLIPS = {
     ], 1.5),
     # water poured on the seeds, glugging out of the gourd
     'pour': ([('water-poured-from-bottle.mp3', 0.0, 1.0, 'atrim=7.55:9.2,asetpts=PTS-STARTPTS,afade=t=in:d=0.05')], 1.6),
-    # the serpent: a long hiss, then a shorter one
+    # the serpent: a long hiss, then a shorter one. Made from noise, as a
+    # snake's hiss is air: the recorded one was a person imitating it (the
+    # maintainer: "muy malo"), and Freesound refuses this server
     'hiss': ([
-        ('hiss-1.mp3', 0.0, 1.0, TRIM),
-        ('hiss-3.mp3', 1.25, 0.75, TRIM),
-    ], 2.3),
+        ('lavfi:anoisesrc=d=1.4:c=white:r=44100:a=0.7:seed=11', 0.0, 1.0,
+         'highpass=f=2400,highpass=f=2400,lowpass=f=8000,lowpass=f=8000,equalizer=f=4600:t=q:w=1.2:g=6,'
+         'tremolo=f=19:d=0.12,afade=t=in:d=0.08,afade=t=out:st=0.8:d=0.6'),
+        ('lavfi:anoisesrc=d=1.4:c=pink:r=44100:a=0.5:seed=5', 0.0, 0.3,
+         'highpass=f=700,lowpass=f=2200,afade=t=in:d=0.1,afade=t=out:st=0.7:d=0.7'),
+        ('lavfi:anoisesrc=d=0.75:c=white:r=44100:a=0.55:seed=23', 1.75, 0.8,
+         'highpass=f=2800,lowpass=f=7500,lowpass=f=7500,equalizer=f=5000:t=q:w=1.2:g=6,afade=t=in:d=0.05,afade=t=out:st=0.3:d=0.45'),
+    ], 2.6),
+    # the serpent crawling through the grass: slowed rustles over a soft
+    # brushing that swells with each push of its body
+    'slither': ([
+        ('dry-leaves-rustle-02.flac', 0.0, 1.4, TRIM + ',atempo=0.75,highpass=f=200,lowpass=f=2600'),
+        ('dry-leaves-rustle-05.flac', 1.1, 1.2, TRIM + ',atempo=0.75,highpass=f=200,lowpass=f=2600'),
+        ('lavfi:anoisesrc=d=3:c=brown:r=44100:a=0.6:seed=3', 0.0, 0.4,
+         'highpass=f=150,lowpass=f=1200,tremolo=f=2.2:d=0.7,afade=t=in:d=0.4'),
+    ], 3.0),
     # something set down on the grass
     'drop': ([('kenney-dropLeather.ogg', 0.0, 1.0, TRIM)], 0.45),
 }
@@ -75,7 +94,7 @@ def mix(parts: list[tuple[str, float, float, str]], length: float, gain_db: floa
     """The ffmpeg filter graph (output [out]) and its input arguments."""
     inputs, chains = [], []
     for i, (file, delay, gain, extra) in enumerate(parts):
-        inputs += ['-i', os.path.join(SRC, file)]
+        inputs += ['-f', 'lavfi', '-i', file[6:]] if file.startswith('lavfi:') else ['-i', os.path.join(SRC, file)]
         f = [extra] if extra else []
         f += ['aformat=sample_rates=44100:channel_layouts=mono', f'volume={gain}', f'adelay={int(delay * 1000)}:all=1']
         chains.append(f'[{i}:a]' + ','.join(f) + f'[a{i}]')
@@ -87,7 +106,10 @@ def mix(parts: list[tuple[str, float, float, str]], length: float, gain_db: floa
 
 def main() -> None:
     os.makedirs(OUT, exist_ok=True)
+    only = sys.argv[1:]
     for name, (parts, length) in CLIPS.items():
+        if only and name not in only:
+            continue
         out = os.path.join(OUT, f'{name}.mp3')
         graph, inputs = mix(parts, length, 0.0)
         # measure the mix's peak, then render it at PEAK_DB

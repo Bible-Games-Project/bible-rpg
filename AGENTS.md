@@ -314,9 +314,22 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   (the maintainer found them too much text): on completion it turns green
   with a tick and "Progress saved" (`hud.completeMission`), then slides out
   and back in with the next mission, which a band of light crosses.
+  Notices ("Eve picks the fruit!", "Got: …") sit under it in the same left
+  column (`.hud-left`), not at the top centre (the maintainer).
+- A narrator line that has a recorded voice does not hold the player
+  (`DialogueBox.narrate`, chosen in `EdenScene.lines`): it is shown and
+  spoken while they walk, closes itself once said, and nothing can be used
+  (E, switching) until it ends (`canAct` vs `canMove`), so a second
+  narration cannot start over it; one asked for waits its turn, and a modal
+  dialogue waits for it too. A scene can act along with it:
+  `w.narrated()` is how much has been said, so mission 6 plays Genesis 3:6
+  while it is read (Eve takes and eats, walks slowly to Adam, gives it, he
+  eats). A skipped voice fades out over 0.3 s.
 - What Adam picks up he carries in his hand until it has served (the stick,
   the seeds, the gourd empty then full) and then sets it down beside him
-  (`putDown`, `dropProp`). Seeds are gathered one press at a time.
+  (`putDown`, `dropProp`). Seeds are gathered one press at a time. Adam
+  sets the full basket down after the fruit is shared (`basketFull`); it
+  stays there in the later missions.
 - The naming puzzle uses the meadow's green in light and dark steps (the
   maintainer found its old green foreign to the game).
 - New art comes from the OpenAI Image API (maintainer's decision), with a
@@ -374,7 +387,19 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   on him until "Where are you?", and glides back; they are not held still.
   His light when he comes and goes is a burst of rays
   (`tools/art/holy_burst.py`, `fx('holy')`): an expanding disc looked like
-  circles. The serpent hisses when it shows (`sfx('hiss')`).
+  circles. The serpent hisses when it shows (`sfx('hiss')`), and rustles
+  through the grass as it crawls (`sfx('slither')`). The hiss is made from
+  shaped noise in `build_sfx.py` (`lavfi:` sources): the recorded one was a
+  person imitating a snake, and Freesound now answers this server with 403
+  (do not work around it). Side-view sheets (the serpent, animals) only
+  face left or right, or the serpent crawled backwards going up or down;
+  its shadow is nudged 2 px down and right (`shadowOffset`). In mission 9
+  it crawls back behind the oak below (`serpentFrom`) to hide.
+- The maintainer's Voices screen (`src/ui/VoicesPanel.ts`: every recorded
+  line by character and voice, every sound effect) has a button at the top
+  left of the main menu that only shows in a browser that opened the game
+  once with `#dev` at the end of its address (`#nodev` hides it again,
+  `src/core/dev.ts`). It is for the maintainer, not players.
 
 ### Code conventions
 
@@ -417,7 +442,7 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   the reveal's blips, the portrait talks until the voice ends, the next press
   cuts it off, the music dips under it, and it has its own volume
   (`voiceVolume`). Voices (Voice Library, chosen by the maintainer after
-  several rounds on a listening page): W. Storytime Oxley (God), Luca
+  several rounds on a listening page): W. Storytime Oxley (God), Adam "Engaging, Friendly and Bright"
   (Adam), Zara (Eve), Matthew Schmitz "Hissing and Sinister" (the serpent),
   Spuds Oxley (the narrator: gold verses, the creation verse, the short
   narrations); all at stability 0.3 and the voice's own speed (`SETTINGS`).

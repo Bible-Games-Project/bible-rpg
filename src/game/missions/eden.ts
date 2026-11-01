@@ -147,6 +147,8 @@ export function stageEden(w: WorldApi, n: number, o: StageOptions): void {
   PLOT_PATCHES.forEach((_, i) => w.setPlot(i, n === 1 ? 'marked' : 'grown'));
   for (const id of ['stick', 'gourd']) (n === 1 ? w.showProp(id) : w.hideProp(id));
   n <= 5 ? w.showProp('basket') : w.hideProp('basket');
+  // the full basket stays where it was set down (the maintainer)
+  n >= 6 ? w.showProp('basketFull') : w.hideProp('basketFull');
   if (n >= 7) w.pickFruit('forbiddenTree', 0);
   // clothing: leaves; fig-leaf coverings (Genesis 3:7); coats of skins (3:21)
   w.setOutfit(n <= 7 ? 'leaves' : n <= 9 ? 'fig' : 'tunic');
@@ -560,8 +562,11 @@ const m05: MissionDef = {
     w.face(w.player(), o);
     await w.say('m05_share');
     w.take('fruit', FRUIT_GOAL);
+    // Adam sets the full basket down beside him; it stays there
     w.take('basket');
     w.adam.hold(null);
+    w.dropProp('basketFull', [w.adam.x + (w.adam.facing === 'left' ? -26 : 26), w.adam.y + 8]);
+    w.sfx('drop');
     w.adam.emote('heart');
     await w.wait(600);
     w.cutscene(false);
@@ -589,23 +594,34 @@ const m06: MissionDef = {
     w.eve.emote('question');
     await w.say('m06_serpent');
 
-    // Genesis 3:6 — told, not played
+    // Genesis 3:6, acted while it is read (the maintainer): Eve takes the
+    // fruit and eats, comes slowly to Adam, gives it, and he eats
     const ft = w.treeAt('forbiddenTree');
     await w.walk(w.eve, [ft[0] - 20, ft[1] + 30], 80);
     w.face(w.eve, 'up');
-    await w.wait(500);
+    void w.cameraTo([(ft[0] + POINTS.adamSerpent[0]) / 2, (ft[1] + POINTS.adamSerpent[1]) / 2 + 40], 1400);
+    const verse = t('eden.scripture.gen3_6.text');
+    // when the reading reaches these words (at once if another language lacks them)
+    const reached = (words: string) => w.until(() => w.narrated() >= Math.max(0, verse.indexOf(words)) / verse.length);
+    const told = w.scripture('gen3_6');
+    await reached('she took');
     w.pickFruit('forbiddenTree', 0);
     w.eve.hold('fruit-forbidden');
+    w.sfx('pickup');
+    await reached('and did eat');
+    w.sfx('bite');
     await w.wait(700);
-    await w.scripture('gen3_6');
-    await w.walk(w.eve, [POINTS.adamSerpent[0] - 40, POINTS.adamSerpent[1]], 80);
+    await w.walk(w.eve, [POINTS.adamSerpent[0] - 40, POINTS.adamSerpent[1]], 42);
     w.face(w.eve, w.adam);
     w.face(w.adam, w.eve);
+    await reached('and gave');
     w.eve.hold(null);
     w.adam.hold('fruit-forbidden');
-    await w.wait(900);
+    await reached('and he did eat');
+    await w.wait(500);
     w.adam.hold(null);
     w.sfx('bite');
+    await told;
     w.music('sorrow');
     await w.fade(1, 900);
     w.serpentPose('hidden');
@@ -735,16 +751,17 @@ const m09: MissionDef = {
     // spot before)
     w.serpent.setPosition(POINTS.serpentFrom[0], POINTS.serpentFrom[1]);
     w.serpentPose('ground');
-    w.sfx('hiss');
+    w.sfx('slither');
     await w.cameraTo([POINTS.godGrove[0] + 60, POINTS.godGrove[1] + 80], 700);
     await w.walk(w.serpent, [POINTS.serpentBend, POINTS.serpentGround], 45);
     w.serpent.face('left');
+    w.sfx('hiss');
     w.face(w.god, w.serpent);
     await w.say('m09_serpent');
-    // it crawls away and goes out of sight behind a bush or a tree
-    const cover = w.coverNear(POINTS.serpentGround) ?? [POINTS.serpentGround[0] + 200, POINTS.serpentGround[1] + 30];
-    const behind: Pt = [cover[0], cover[1] - 10];
-    void w.walk(w.serpent, behind, 30).then(() => w.vanish(w.serpent, 900));
+    // it crawls back the way it came and out of sight behind the oak below
+    // (the maintainer: not the bush to the right)
+    w.sfx('slither');
+    void w.walk(w.serpent, [POINTS.serpentBend, POINTS.serpentFrom], 30).then(() => w.vanish(w.serpent, 900));
     w.face(w.god, w.eve);
     await w.say('m09_woman');
     w.face(w.god, w.adam);

@@ -148,6 +148,16 @@
     "approach": "Approach",
     "hide": "Hide"
   },
+  "dev": {
+    "voices": "Voices",
+    "title": "Voices and sounds",
+    "lines": "Voice lines",
+    "sounds": "Sound effects",
+    "recorded": "recording",
+    "synth": "synthesized",
+    "none": "No recorded voices for this language.",
+    "narrator": "Narrator"
+  },
   "dialogue": {
     "next": "Next",
     "skipHint": "{key} to continue",

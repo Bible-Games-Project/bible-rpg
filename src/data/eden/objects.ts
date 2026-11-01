@@ -72,4 +72,5 @@ export const OBJECTS: Record<string, ObjectKind> = {
   'digging-stick': { sprite: 'digging-stick', layer: 'ground' },
   gourd: { sprite: 'gourd', layer: 'ysort', shadow: 'shadow-small' },
   basket: { sprite: 'basket', layer: 'ysort', shadow: 'shadow-small' },
+  'basket-full': { sprite: 'basket-full', layer: 'ysort', shadow: 'shadow-small' },
 };

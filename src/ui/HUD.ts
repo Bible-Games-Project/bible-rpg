@@ -74,7 +74,9 @@ export class HUD {
     this.fader = h('div', { class: 'fader' });
     this.banners = h('div', { class: 'hud-banners', 'aria-live': 'assertive' });
     const buttons = h('div', { class: 'hud-buttons' }, h('button', { class: 'btn small', onclick: actions.pause, 'aria-label': t('hud.pause') }, `☰ ${t('hud.pause')}`));
-    this.root = h('div', { class: 'hud', hidden: true }, this.mission, buttons, this.inventory, this.charChip, this.prompt, this.toasts, this.timer, this.arrow, this.banners, this.fader);
+    // notices go under the mission, in the left column (the maintainer)
+    const left = h('div', { class: 'hud-left' }, this.mission, this.toasts);
+    this.root = h('div', { class: 'hud', hidden: true }, left, buttons, this.inventory, this.charChip, this.prompt, this.timer, this.arrow, this.banners, this.fader);
     wireButtonSounds(this.root);
     host.append(this.root);
   }

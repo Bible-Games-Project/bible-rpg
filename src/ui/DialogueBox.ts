@@ -7,6 +7,8 @@ import { CHARACTERS } from '../data/characters';
 import { h } from './dom';
 import { PortraitAnimator } from './PortraitAnimator';
 
+const sleep = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+
 export interface Line {
   speaker: string;            // character id, or 'narrator'
   text: string;
@@ -20,8 +22,9 @@ export interface Line {
  * Dialogue with an animated portrait above a text box. The text is
  * revealed progressively; the first press shows the whole line, the next
  * press continues. Movement is blocked while it is open. A line with a
- * recorded voice is spoken (instead of the reveal's blips) and cut off when
- * the player moves on.
+ * recorded voice is spoken (instead of the reveal's blips) and faded out when
+ * the player moves on. A narrated line can also be told without holding the
+ * player (`narrate`).
  */
 export class DialogueBox {
   private root: HTMLElement;
@@ -43,7 +46,14 @@ export class DialogueBox {
   private speaking: { ended: Promise<void>; stop(): void } | null = null;
   private lineNo = 0;
   private layer: InputLayer;
+  private passive: Promise<void> = Promise.resolve();
+  private passiveLine = false;
+  private voiceStart = 0;
+  private voiceLength = 0;
+  /** a modal dialogue is showing */
   open = false;
+  /** a line is being narrated while the player moves (nothing can be used) */
+  narrating = false;
 
   constructor(host: HTMLElement, private onPause: () => void) {
     this.frame = h('div', { class: 'portrait-frame panel' }, this.portrait.canvas);
@@ -70,7 +80,8 @@ export class DialogueBox {
 
   show(lines: Line[]): Promise<void> {
     if (!lines.length) return Promise.resolve();
-    return new Promise((resolve) => {
+    // after the narration being told, never over it
+    return this.passive.then(() => new Promise<void>((resolve) => {
       this.queue = [...lines];
       this.resolve = resolve;
       // the recorded voices load while the first line starts
@@ -82,7 +93,50 @@ export class DialogueBox {
         this.portrait.start();
       }
       this.nextLine();
+    }));
+  }
+
+  /**
+   * A narrated line that does not hold the player (the maintainer: players
+   * should feel free): shown and spoken while they keep moving, closed once
+   * it has been said. Nothing can be used meanwhile (`narrating`), so a
+   * second narration cannot start over it; one asked for waits its turn.
+   */
+  narrate(line: Line): Promise<void> {
+    const run = this.passive.then(async () => {
+      const no = ++this.lineNo;
+      this.narrating = true;
+      this.passiveLine = true;
+      this.root.hidden = false;
+      const started = performance.now();
+      const said = await this.present(line, no);
+      if (no !== this.lineNo) return;
+      // with no voice, the time to read it
+      if (!said) await sleep(Math.max(0, this.chars.length * 55 + 1200 - (performance.now() - started)));
+      if (this.revealing) this.finishLine();
+      await sleep(900);
+      if (no !== this.lineNo) return;
+      this.endNarration();
     });
+    this.passive = run.catch(() => undefined);
+    return run;
+  }
+
+  /** How much of the line being narrated has been said, 0 to 1 (a scene can
+   * act along with it); 1 when nothing is being narrated. */
+  narrated(): number {
+    if (!this.narrating) return 1;
+    if (this.voiceLength) return Math.min(1, (performance.now() - this.voiceStart) / this.voiceLength);
+    return this.chars.length ? (this.shown / this.chars.length) * 0.95 : 0;
+  }
+
+  private endNarration(): void {
+    cancelAnimationFrame(this.raf);
+    this.stopVoice();
+    this.narrating = false;
+    this.passiveLine = false;
+    this.voiceLength = 0;
+    if (!this.open) this.root.hidden = true;
   }
 
   private nextLine(): void {
@@ -93,6 +147,13 @@ export class DialogueBox {
       this.close();
       return;
     }
+    this.passiveLine = false;
+    void this.present(line, no);
+  }
+
+  /** Shows a line, revealing its text; resolves once its voice has been
+   * said (true), or at once when it has none (false). */
+  private present(line: Line, no: number): Promise<boolean> {
     const ch = CHARACTERS[line.speaker] ?? CHARACTERS.narrator;
     const narrator = !ch.portrait;
     this.root.classList.toggle('narration', narrator && !line.scripture);
@@ -111,13 +172,15 @@ export class DialogueBox {
     this.textEl.textContent = '';
     this.nextEl.hidden = true;
     const touch = document.documentElement.classList.contains('touch-ui');
-    this.hintEl.textContent = touch ? t('dialogue.tapHint') : t('dialogue.skipHint', { key: KEY_LABELS.interact });
+    this.hintEl.textContent = this.passiveLine ? '' : touch ? t('dialogue.tapHint') : t('dialogue.skipHint', { key: KEY_LABELS.interact });
+    this.root.classList.toggle('passive', this.passiveLine);
+    this.voiceLength = 0;
     const voiced = !!line.voice && voices.has(line.voice, line.text);
-    if (voiced) this.speak(line, no, !narrator && !line.scripture);
+    const said = voiced ? this.speak(line, no, !narrator && !line.scripture) : Promise.resolve(false);
     const cps = TEXT_SPEED_CPS[settings.get().textSpeed];
     if (!isFinite(cps)) {
       this.finishLine();
-      return;
+      return said;
     }
     this.revealing = true;
     this.portrait.setTalking(!narrator);
@@ -141,6 +204,7 @@ export class DialogueBox {
       else this.raf = requestAnimationFrame(tick);
     };
     this.raf = requestAnimationFrame(tick);
+    return said;
   }
 
   private finishLine(): void {
@@ -149,25 +213,27 @@ export class DialogueBox {
     this.shown = this.chars.length;
     this.textEl.textContent = this.chars.join('');
     if (!this.speaking) this.portrait.setTalking(false);
-    this.nextEl.hidden = false;
+    this.nextEl.hidden = this.passiveLine;
   }
 
-  /** Plays the line's recorded voice; the portrait talks until it ends. */
-  private speak(line: Line, no: number, talks: boolean): void {
+  /** Plays the line's recorded voice; the portrait talks until it ends.
+   * Resolves when it has been said (true) or will not be (false). */
+  private async speak(line: Line, no: number, talks: boolean): Promise<boolean> {
     const asked = performance.now();
-    void voices.prepare(line.voice!, line.text).then((buf) => {
-      // the player moved on, or it loaded too late to match the text
-      if (!buf || no !== this.lineNo || !this.open || performance.now() - asked > 2500) return;
-      const v = audio.speak(buf);
-      if (!v) return;
-      this.speaking = v;
-      if (talks) this.portrait.setTalking(true);
-      void v.ended.then(() => {
-        if (this.speaking !== v) return;
-        this.speaking = null;
-        if (!this.revealing) this.portrait.setTalking(false);
-      });
-    });
+    const buf = await voices.prepare(line.voice!, line.text);
+    // the player moved on, or it loaded too late to match the text
+    if (!buf || no !== this.lineNo || !(this.open || this.narrating) || performance.now() - asked > 2500) return false;
+    const v = audio.speak(buf);
+    if (!v) return false;
+    this.speaking = v;
+    this.voiceStart = performance.now();
+    this.voiceLength = buf.duration * 1000;
+    if (talks) this.portrait.setTalking(true);
+    await v.ended;
+    if (this.speaking !== v) return false;
+    this.speaking = null;
+    if (!this.revealing) this.portrait.setTalking(false);
+    return true;
   }
 
   private stopVoice(): void {
@@ -187,6 +253,10 @@ export class DialogueBox {
 
   /** Close at once (e.g. when leaving the game); resolves the pending show(). */
   dismiss(): void {
+    if (this.narrating) {
+      this.lineNo++;
+      this.endNarration();
+    }
     if (!this.open) return;
     this.queue = [];
     this.close();

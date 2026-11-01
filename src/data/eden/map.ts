@@ -172,6 +172,8 @@ export const PLACEMENTS: Placement[] = [
   { kind: 'grapevine', x: 3920, y: 2420, id: 'vine1' },
   { kind: 'grapevine', x: 3140, y: 2760, id: 'vine2' },
   { kind: 'basket', x: 2990, y: 1934, id: 'basket' },
+  // where Adam sets the full basket down after sharing the fruit (mission 5)
+  { kind: 'basket-full', x: 3480, y: 2338, id: 'basketFull' },
   // fig trees for the coverings (mission 7)
   { kind: 'fig-a', x: 2480, y: 1930, id: 'fig3' },
   { kind: 'fig-b', x: 2760, y: 2080, id: 'fig4' },

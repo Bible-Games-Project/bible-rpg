@@ -51,7 +51,7 @@
   },
   "m04_wake.0": {
     "text": "This at last is bone of my bones and flesh of my flesh. She shall be called Woman, because she was taken out of Man.",
-    "voice": "Luca",
+    "voice": "Adam",
     "model": "eleven_v4",
     "settings": {
       "stability": 0.3,
@@ -81,7 +81,7 @@
   },
   "m05_share.0": {
     "text": "Every tree is a gift — all but the one in the midst.",
-    "voice": "Luca",
+    "voice": "Adam",
     "model": "eleven_v4",
     "settings": {
       "stability": 0.3,
@@ -121,7 +121,7 @@
   },
   "m08_answer.0": {
     "text": "I heard your voice and was afraid, because I was naked; so I hid.",
-    "voice": "Luca",
+    "voice": "Adam",
     "model": "eleven_v4",
     "settings": {
       "stability": 0.3,
@@ -141,7 +141,7 @@
   },
   "m08_answer.2": {
     "text": "The woman you gave me — she gave me fruit from the tree, and I ate.",
-    "voice": "Luca",
+    "voice": "Adam",
     "model": "eleven_v4",
     "settings": {
       "stability": 0.3,

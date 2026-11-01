@@ -806,11 +806,21 @@ select:focus-visible {
   pointer-events: auto;
 }
 
-.mission-panel {
+.hud-left {
   position: absolute;
   left: calc(12px + var(--safe-l));
   top: calc(12px + var(--safe-t));
   max-width: min(calc(420px * var(--ui-scale)), calc(100vw - 120px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(8px * var(--ui-scale));
+  pointer-events: none;
+}
+
+.mission-panel {
+  position: relative;
+  max-width: 100%;
   padding: calc(10px * var(--ui-scale)) calc(14px * var(--ui-scale)) calc(12px * var(--ui-scale));
   pointer-events: none;
 }
@@ -1013,23 +1023,20 @@ select:focus-visible {
 }
 
 .toast-stack {
-  position: absolute;
-  left: 50%;
-  top: calc(14px + var(--safe-t));
-  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  align-items: center;
+  gap: calc(6px * var(--ui-scale));
+  align-items: flex-start;
+  max-width: 100%;
   pointer-events: none;
 }
 
 .toast {
-  padding: 8px 16px;
+  padding: calc(7px * var(--ui-scale)) calc(12px * var(--ui-scale));
   font-size: var(--fs-s);
   animation: toast-in 220ms ease-out;
-  max-width: min(520px, 90vw);
-  text-align: center;
+  max-width: 100%;
+  text-align: left;
 }
 
 .toast.big {
@@ -1041,7 +1048,7 @@ select:focus-visible {
 @keyframes toast-in {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateX(-8px);
   }
 }
 
@@ -1162,6 +1169,18 @@ select:focus-visible {
   align-items: flex-start;
   pointer-events: auto;
   z-index: 42; /* above the fader: scripture cards stay readable during night fades */
+}
+
+/* told while the player keeps moving: clicks and touches go through to the
+   game and the touch pad, and it sits higher on narrow touch screens */
+.dialogue.passive {
+  pointer-events: none;
+}
+
+@media (max-aspect-ratio: 1/1) {
+  .touch-ui .dialogue.passive {
+    bottom: calc(170px + var(--safe-b));
+  }
 }
 
 .dialogue .portrait-frame {
@@ -1926,4 +1945,48 @@ select:focus-visible {
     opacity: 0;
     transform: scale(90);
   }
+}
+
+/* the maintainer's voices screen (src/ui/VoicesPanel.ts) */
+.dev-voices {
+  position: absolute;
+  left: calc(12px + var(--safe-l));
+  top: calc(12px + var(--safe-t));
+  z-index: 2;
+}
+
+.dev-voices-panel {
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.dev-voices-panel h3 {
+  margin: 14px 0 6px;
+  color: var(--gold);
+}
+
+.dev-group h4 {
+  margin: 10px 0 4px;
+  color: var(--gold-bright);
+  font-size: var(--fs-s);
+}
+
+.dev-line {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  margin: 3px 0;
+  font-size: var(--fs-s);
+}
+
+.dev-sounds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.dev-kind {
+  margin-left: 6px;
+  font-size: var(--fs-xs);
+  color: var(--ivory-dim);
 }

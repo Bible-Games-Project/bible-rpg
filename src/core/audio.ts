@@ -11,33 +11,38 @@ import { settings } from './settings';
  * fully playable with audio muted or unavailable.
  */
 
-export type Sfx =
-  | 'uiMove'
-  | 'uiSelect'
-  | 'uiBack'
-  | 'step'
-  | 'pickup'
-  | 'dig'
-  | 'plant'
-  | 'splash'
-  | 'correct'
-  | 'wrong'
-  | 'missionStart'
-  | 'missionComplete'
-  | 'holy'
-  | 'rustle'
-  | 'grow'
-  | 'flame'
-  | 'detected'
-  | 'bite'
-  | 'leaves'
-  | 'land'
-  | 'hiss'
-  | 'seed'
-  | 'fill'
-  | 'pour'
-  | 'leafPick'
-  | 'drop';
+/** Every sound effect by name (the maintainer's voices screen lists them). */
+export const SFX = [
+  'uiMove',
+  'uiSelect',
+  'uiBack',
+  'step',
+  'pickup',
+  'dig',
+  'plant',
+  'splash',
+  'correct',
+  'wrong',
+  'missionStart',
+  'missionComplete',
+  'holy',
+  'rustle',
+  'grow',
+  'flame',
+  'detected',
+  'bite',
+  'leaves',
+  'land',
+  'hiss',
+  'slither',
+  'seed',
+  'fill',
+  'pour',
+  'leafPick',
+  'drop',
+] as const;
+
+export type Sfx = (typeof SFX)[number];
 
 export type Mood = 'none' | 'peaceful' | 'wonder' | 'solemn' | 'tension' | 'sorrow';
 export type Ambience = 'none' | 'garden' | 'evening' | 'outside';
@@ -55,6 +60,7 @@ const SAMPLES: Partial<Record<Sfx, { files: string[]; gain: number }>> = {
   pour: { files: ['assets/sfx/pour.mp3'], gain: 0.5 },
   leafPick: { files: ['assets/sfx/leaf-pick.mp3'], gain: 0.45 },
   hiss: { files: ['assets/sfx/hiss.mp3'], gain: 0.6 },
+  slither: { files: ['assets/sfx/slither.mp3'], gain: 0.5 },
   drop: { files: ['assets/sfx/drop.mp3'], gain: 0.45 },
 };
 
@@ -304,6 +310,7 @@ class AudioManager {
       case 'holy':
         [0, 7, 12, 19].forEach((s, i) => this.tone(261.6 * Math.pow(2, s / 12), t + i * 0.18, 2.4, 0.035 * v, 'sine'));
         break;
+      case 'slither':
       case 'rustle':
       case 'leafPick':
       case 'seed':
@@ -371,6 +378,11 @@ class AudioManager {
     }
   }
 
+  /** Whether a sound plays a recording (else it is synthesized). */
+  recorded(name: Sfx): boolean {
+    return !!SAMPLES[name];
+  }
+
   /** Decodes a recorded file (a spoken line); null without sound or file. */
   async decode(url: string): Promise<AudioBuffer | null> {
     const ctx = this.ensure();
@@ -409,10 +421,11 @@ class AudioManager {
     return {
       ended,
       stop: () => {
-        // a short fade, not a click
+        // faded out over 0.3 s when skipped (the maintainer), not cut
         const t = ctx.currentTime;
-        g.gain.setTargetAtTime(0, t, 0.02);
-        src.stop(t + 0.1);
+        g.gain.setValueAtTime(g.gain.value, t);
+        g.gain.linearRampToValueAtTime(0, t + 0.3);
+        src.stop(t + 0.32);
       },
     };
   }
