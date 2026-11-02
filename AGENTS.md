@@ -437,7 +437,14 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   peaks with `astats`: `volumedetect` stops at 0 dB and hid clipping; very
   quiet recordings need `TRIM_QUIET`, or the silence trim removes them). The
   synthesized version plays until a recording has loaded, or if it cannot.
-  Use only sounds whose own page says CC0. The cloud environment allows
+  Use only sounds whose own page says CC0: the maintainer wants sounds that
+  are always free, without copyright, usable forever without paying (prefer
+  CC0 over generated or licensed ones; ElevenLabs Sound Effects is enabled
+  on the key but only as an extra). Freesound's search with
+  `f=license:"Creative Commons 0"` works from here (it answered 403 for a
+  day; go slowly, a second between requests). Sound options offered for the
+  serpent and the cherubim are listed with their sources and mixes in
+  `art/sfx/options.json`. The cloud environment allows
   opengameart.org and freesound.org (kenney.nl refuses scripted downloads;
   Kenney's packs are on OpenGameArt too). `crackle()` (many tiny random
   clicks, band-passed) makes crunching, crinkling and grit in synthesized

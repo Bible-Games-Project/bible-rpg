@@ -1,0 +1,561 @@
+{
+ "about": "Sound options offered to the maintainer (voice bank page, Sounds tab): CC0 Freesound previews, cut and mixed by recipe. parts = [freesound id, start s, length s, delay s, gain].",
+ "sources": {
+  "212541": {
+   "user": "misstickle",
+   "title": "indian bell chime.wav",
+   "url": "https://freesound.org/people/misstickle/sounds/212541/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "252042": {
+   "user": "Andy19",
+   "title": "Snake Pit",
+   "url": "https://freesound.org/people/Andy19/sounds/252042/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "389634": {
+   "user": "_stubb",
+   "title": "Wing Flap 1.wav",
+   "url": "https://freesound.org/people/_stubb/sounds/389634/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "389636": {
+   "user": "_stubb",
+   "title": "Thump 1.wav",
+   "url": "https://freesound.org/people/_stubb/sounds/389636/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "406089": {
+   "user": "Yin_Yang_Jake007",
+   "title": "Hissing Sound.wav",
+   "url": "https://freesound.org/people/Yin_Yang_Jake007/sounds/406089/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "423454": {
+   "user": "florianreichelt",
+   "title": "snarling Snake",
+   "url": "https://freesound.org/people/florianreichelt/sounds/423454/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "430977": {
+   "user": "AudioPapkin",
+   "title": "Big impact.wav",
+   "url": "https://freesound.org/people/AudioPapkin/sounds/430977/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "430978": {
+   "user": "AudioPapkin",
+   "title": "Low impact.wav",
+   "url": "https://freesound.org/people/AudioPapkin/sounds/430978/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "457531": {
+   "user": "Breviceps",
+   "title": "Dinosaur falls to the ground",
+   "url": "https://freesound.org/people/Breviceps/sounds/457531/",
+   "licenses": [
+    "CC0",
+    "Creative Commons 0"
+   ]
+  },
+  "504626": {
+   "user": "leonelmail",
+   "title": "BODY FALL - V HVY - DIRT",
+   "url": "https://freesound.org/people/leonelmail/sounds/504626/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "511318": {
+   "user": "onehugeeye",
+   "title": "Landing on grass",
+   "url": "https://freesound.org/people/onehugeeye/sounds/511318/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "540162": {
+   "user": "schreibsel",
+   "title": "Snake hissing.mp3",
+   "url": "https://freesound.org/people/schreibsel/sounds/540162/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "553374": {
+   "user": "xoiziox",
+   "title": "Snake Hiss",
+   "url": "https://freesound.org/people/xoiziox/sounds/553374/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "560773": {
+   "user": "Podcapocalipsis",
+   "title": "Siseo Hiss",
+   "url": "https://freesound.org/people/Podcapocalipsis/sounds/560773/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "561009": {
+   "user": "TurboFool",
+   "title": "Light Wing Flap",
+   "url": "https://freesound.org/people/TurboFool/sounds/561009/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "572216": {
+   "user": "shatterstars",
+   "title": "Giant Wings Flapping.mp3",
+   "url": "https://freesound.org/people/shatterstars/sounds/572216/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "596541": {
+   "user": "tothrec2",
+   "title": "Large Wings Flapping - Foley.wav",
+   "url": "https://freesound.org/people/tothrec2/sounds/596541/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "640204": {
+   "user": "7of9Designs",
+   "title": "Heavy Metal Thud on Ground",
+   "url": "https://freesound.org/people/7of9Designs/sounds/640204/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "660486": {
+   "user": "lukabea",
+   "title": "Serpent Spell Sound_1",
+   "url": "https://freesound.org/people/lukabea/sounds/660486/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "660488": {
+   "user": "lukabea",
+   "title": "Serpent Spell Sound_3",
+   "url": "https://freesound.org/people/lukabea/sounds/660488/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "670509": {
+   "user": "2create",
+   "title": "Huge wing flaps for bird, dragon, dinosaur.",
+   "url": "https://freesound.org/people/2create/sounds/670509/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "678971": {
+   "user": "bowlingballout",
+   "title": "Snake Tongue Hiss.WAV",
+   "url": "https://freesound.org/people/bowlingballout/sounds/678971/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "706977": {
+   "user": "JesterWhoo",
+   "title": "Angry snake hissing. OWI.wav",
+   "url": "https://freesound.org/people/JesterWhoo/sounds/706977/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "734629": {
+   "user": "Vrymaa",
+   "title": "Body - Fall, heavy dangerous",
+   "url": "https://freesound.org/people/Vrymaa/sounds/734629/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "736852": {
+   "user": "xkeril",
+   "title": "Transition (hit and whoosh)",
+   "url": "https://freesound.org/people/xkeril/sounds/736852/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "844398": {
+   "user": "SkySpeira",
+   "title": "Mysterious Sparkle Flourish",
+   "url": "https://freesound.org/people/SkySpeira/sounds/844398/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  }
+ },
+ "options": {
+  "hiss-1": {
+   "parts": [
+    [
+     "540162",
+     0,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "hiss-2": {
+   "parts": [
+    [
+     "553374",
+     0,
+     3.6,
+     0,
+     1
+    ]
+   ],
+   "length": 3.6
+  },
+  "hiss-3": {
+   "parts": [
+    [
+     "706977",
+     2.48453514739229,
+     3.5,
+     0,
+     1
+    ]
+   ],
+   "length": 3.5
+  },
+  "hiss-4": {
+   "parts": [
+    [
+     "423454",
+     0.13931972789115646,
+     3.5,
+     0,
+     1
+    ]
+   ],
+   "length": 3.5
+  },
+  "hiss-5": {
+   "parts": [
+    [
+     "252042",
+     0.13931972789115646,
+     3.5,
+     0,
+     1
+    ]
+   ],
+   "length": 3.5
+  },
+  "hiss-6": {
+   "parts": [
+    [
+     "560773",
+     0.626938775510204,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "hiss-9": {
+   "parts": [
+    [
+     "678971",
+     0.2786394557823129,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "hiss-10": {
+   "parts": [
+    [
+     "406089",
+     0.4876190476190476,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "hiss-7": {
+   "parts": [
+    [
+     "660486",
+     0,
+     2.76,
+     0,
+     1
+    ]
+   ],
+   "length": 2.76
+  },
+  "hiss-8": {
+   "parts": [
+    [
+     "660488",
+     0,
+     1.42,
+     0,
+     1
+    ]
+   ],
+   "length": 1.42
+  },
+  "land-1": {
+   "parts": [
+    [
+     "596541",
+     0,
+     1.6,
+     0,
+     1
+    ],
+    [
+     "504626",
+     0,
+     1.67,
+     1.3,
+     1.2
+    ]
+   ],
+   "length": 3.0
+  },
+  "land-2": {
+   "parts": [
+    [
+     "670509",
+     2.1130158730158732,
+     2.0,
+     0,
+     1
+    ],
+    [
+     "457531",
+     2.7524943310657597,
+     2.5,
+     1.6,
+     1.2
+    ]
+   ],
+   "length": 4.0
+  },
+  "land-3": {
+   "parts": [
+    [
+     "736852",
+     0,
+     4.0,
+     0,
+     1
+    ]
+   ],
+   "length": 4.0
+  },
+  "land-4": {
+   "parts": [
+    [
+     "596541",
+     0,
+     1.4,
+     0,
+     1
+    ],
+    [
+     "511318",
+     0,
+     1.22,
+     1.1,
+     1.2
+    ],
+    [
+     "430978",
+     0.0,
+     2.0,
+     1.15,
+     0.5
+    ]
+   ],
+   "length": 3.2
+  },
+  "land-5": {
+   "parts": [
+    [
+     "572216",
+     0.7198185941043084,
+     2.0,
+     0,
+     1
+    ],
+    [
+     "430978",
+     0.0,
+     2.0,
+     1.7,
+     1
+    ],
+    [
+     "844398",
+     0,
+     2.0,
+     1.9,
+     0.35
+    ]
+   ],
+   "length": 4.0
+  },
+  "land-6": {
+   "parts": [
+    [
+     "389634",
+     0,
+     0.96,
+     0,
+     1
+    ],
+    [
+     "734629",
+     0.0,
+     2.0,
+     0.7,
+     1.2
+    ]
+   ],
+   "length": 2.8
+  },
+  "land-7": {
+   "parts": [
+    [
+     "561009",
+     0,
+     1.3,
+     0,
+     0.9
+    ],
+    [
+     "640204",
+     0,
+     0.78,
+     1.2,
+     1.2
+    ],
+    [
+     "212541",
+     0,
+     2.5,
+     1.4,
+     0.3
+    ]
+   ],
+   "length": 3.8
+  },
+  "land-8": {
+   "parts": [
+    [
+     "670509",
+     2.066575963718821,
+     2.4,
+     0,
+     1
+    ],
+    [
+     "430977",
+     0.0,
+     2.5,
+     2.0,
+     1
+    ]
+   ],
+   "length": 4.5
+  },
+  "land-9": {
+   "parts": [
+    [
+     "389634",
+     0,
+     0.96,
+     0,
+     1
+    ],
+    [
+     "389636",
+     0,
+     1.08,
+     0.75,
+     1.1
+    ],
+    [
+     "457531",
+     2.7524943310657597,
+     2.0,
+     0.8,
+     0.6
+    ]
+   ],
+   "length": 3.0
+  },
+  "land-10": {
+   "parts": [
+    [
+     "572216",
+     0.7198185941043084,
+     2.0,
+     0,
+     1
+    ],
+    [
+     "504626",
+     0,
+     1.67,
+     1.6,
+     1.2
+    ],
+    [
+     "212541",
+     0,
+     2.2,
+     1.8,
+     0.35
+    ],
+    [
+     "844398",
+     0,
+     2.0,
+     1.7,
+     0.3
+    ]
+   ],
+   "length": 4.0
+  }
+ }
+}
