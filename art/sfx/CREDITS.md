@@ -23,6 +23,16 @@ no author; `slither.mp3` adds such noise to slowed rustles credited below.
 | `water-poured-from-bottle.mp3` | craigsmith | [Water Poured from Bottle](https://freesound.org/people/craigsmith/sounds/482857/) (Freesound, CC0) | `pour.mp3` (the seeds watered) |
 | `kenney-dropLeather.ogg` | Kenney (www.kenney.nl) | [50 RPG sound effects](https://opengameart.org/content/50-rpg-sound-effects) | `drop.mp3` (a tool set down) |
 
+## Options in the maintainer's library
+
+`public/assets/dev/sounds.mp3` holds the sound options the maintainer can
+choose from in the game's voice and sound library (dev mode only): cuts and
+mixes of CC0 recordings from Freesound, each listed with its author and page
+under `sources` in `options.json` (footsteps on grass, dirt and water;
+hisses, crawling, thunder, impacts, rivers, filling and pouring water). An
+option chosen for good moves into `public/assets/sfx` and gets its own row
+above.
+
 ## Character voices (not CC0)
 
 The spoken lines in `public/assets/voice/` are made with

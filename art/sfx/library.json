@@ -1,0 +1,3476 @@
+{
+ "about": "The maintainer's voice and sound library (src/ui/DevLibrary.ts). Voices: ElevenLabs Voice Library previews, played from their own links. Sounds: CC0 options by category; a sound is a path under public/ or the name of a file packed by tools/audio/pack_dev_library.py.",
+ "voiceGroups": [
+  {
+   "key": "men",
+   "title": "Men",
+   "note": "200 American male voices, among the most used.",
+   "voices": [
+    [
+     "UgBBYS2sOqTuMpoF3BR0",
+     "Mark - Natural Conversations",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/f94e260200764678babc807b935bfb0b/voices/UgBBYS2sOqTuMpoF3BR0/0Oc7jiXwWN9kRTXfQsmw.mp3"
+    ],
+    [
+     "IRHApOXLvnW57QJPQH2P",
+     "Adam - American, Dark and Tough",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/IRHApOXLvnW57QJPQH2P/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiNEdXZzBVd1FLWGJpVkZPMFRybDRqTURTVGI4MiIsImZpbGVuYW1lIjoiNzc1ODgyMmYtYzk4Yy00ZGI5LWFiMGEtMTg2YjZhMTNiZTFhLm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "EkK5I93UQWFDigLMpZcX",
+     "James - Husky, Engaging and Bold",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/48ab3aae468d4e9baded4b1693820088/voices/EkK5I93UQWFDigLMpZcX/xvjT3EK4vD3zlwfawHeV.mp3"
+    ],
+    [
+     "uju3wxzG5OhpWcoi3SMy",
+     "Michael C. Vincent - Confident, Expressive",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/uju3wxzG5OhpWcoi3SMy/ixYUu11jiy8LIVZidnvA.mp3"
+    ],
+    [
+     "wBXNqKUATyqu0RtYt25i",
+     "Adam - Radio Announcer",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1b0aef06ad1848988df4847a8d377baf/voices/wBXNqKUATyqu0RtYt25i/92f83238-5f85-4793-ba6b-dc2cdc482735.mp3"
+    ],
+    [
+     "ZthjuvLPty3kTMaNKVKb",
+     "Peter",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/T05GPpk2fvSBb625DXd4BJHZtu22/voices/ZthjuvLPty3kTMaNKVKb/2nBO0beUcX6fsrvPZbcE.mp3"
+    ],
+    [
+     "1SM7GgM6IMuvQlz2BwM3",
+     "Mark - Casual, Relaxed and Light",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/1SM7GgM6IMuvQlz2BwM3/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJmOTRlMjYwMjAwNzY0Njc4YmFiYzgwN2I5MzViZmIwYiIsImZpbGVuYW1lIjoieTk0RzFyR2l4YXFMMkZ2UDNUdGUubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "9F4C8ztpNUmXkdDDbz3J",
+     "Dan - Upbeat, Dynamic and Friendly",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/oDQDaQK0SGT9AtdG8VDe17L4KjX2/voices/9F4C8ztpNUmXkdDDbz3J/4d3e2bc3-b9f8-4bf0-84b2-22e0c15102f6.mp3"
+    ],
+    [
+     "MFZUKuGQUsGJPQjTS4wC",
+     "Jon - Warm & Grounded Storyteller",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/7bdd69d9e581481a8ea5216493271f81/voices/MFZUKuGQUsGJPQjTS4wC/xEoCh0QqT3VPBukUnnNT.mp3"
+    ],
+    [
+     "alFofuDn3cOwyoz1i44T",
+     "Dallin - Positive, Inspiring and Clear",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/1D73t5OmWJcLCgnlSL28i2bB7Iq2/voices/alFofuDn3cOwyoz1i44T/f3121486-aa47-4540-9e8a-16a642ce77c2.mp3"
+    ],
+    [
+     "s3TPKV1kjDlVtZbl4Ksh",
+     "Adam - Engaging, Friendly and Bright",
+     "male · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/s3TPKV1kjDlVtZbl4Ksh/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoidTdFaWQ3ZVVucVBJVWdMTHBLbGs3V3dSUU5PMiIsImZpbGVuYW1lIjoibGpLNlpvSzJPT1RSOGtYSjhBcnAubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "EiNlNiXeDU1pqqOPrYMO",
+     "John Doe - Deep",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/8RYUsFHsalUXjwVG0LjhNwH1j022/voices/EiNlNiXeDU1pqqOPrYMO/DyICRR04KQnCeB7Y9B7K.mp3"
+    ],
+    [
+     "iiidtqDt9FBdT1vfBluA",
+     "Bill L. Oxley",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/64971298bfc24086b69026970a21f1f9/voices/iiidtqDt9FBdT1vfBluA/T36MtmAvwCajW33mBOpD.mp3"
+    ],
+    [
+     "e5WNhrdI30aXpS2RSGm1",
+     "Ian Cartwell - Suspense and Mystery",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/e5WNhrdI30aXpS2RSGm1/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiVDdiaHF4THlFTmdSYVNnZm5xaFBhNnZQU0lEMiIsImZpbGVuYW1lIjoiaXJaNlpUYkdWQTVXalZBd25aY0oubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "kqVT88a5QfII1HNAEPTJ",
+     "Declan Sage - Wise and Captivating",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/5d6438deeb7d443ca0a6fc6309d5bb8a/voices/kqVT88a5QfII1HNAEPTJ/Hex3MZnpQ3dCbdgTkKyr.mp3"
+    ],
+    [
+     "dtSEyYGNJqjrtBArPCVZ",
+     "Titan - Deep, Bold, and Powerful",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/w8lO88ok8DfgaX1qrZryMJbLze32/voices/dtSEyYGNJqjrtBArPCVZ/Pa4Rn2iJ0mvYrc3PU3Vy.mp3"
+    ],
+    [
+     "Gubgw9l4dtIoQA9YZHgx",
+     "Brian - Deep, Resonant and Comforting",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/bb3de32d375e4462a5d1aebc77eb7b0a/voices/Gubgw9l4dtIoQA9YZHgx/0tEqW9hX1QsyouhvnTSQ.mp3"
+    ],
+    [
+     "XjLkpWUlnhS8i7gGz3lZ",
+     "David Castlemore - Newsreader and Educator",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/T7bhqxLyENgRaSgfnqhPa6vPSID2/voices/XjLkpWUlnhS8i7gGz3lZ/2foqwf4lPNBPWW27H6du.mp3"
+    ],
+    [
+     "dPah2VEoifKnZT37774q",
+     "Knox Dark - Serious, Deep, and Steady",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/dPah2VEoifKnZT37774q/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI4NmI2N2NiODE4OWY0NDRkODc3Zjg3MjMzZGJkYWVmNiIsImZpbGVuYW1lIjoiM2k0OWZGMklCc0xWUnl5T01scmIubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "bfGb7JTLUnZebZRiFYyq",
+     "Adam - Distinct, Deep and Engaging",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b3709ae8839847b6a804736de5e5651c/voices/bfGb7JTLUnZebZRiFYyq/sQiMNu3kolXvAQGhCb2s.mp3"
+    ],
+    [
+     "Gfpl8Yo74Is0W6cPUWWT",
+     "Max - Elearning and Documentary",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/Gfpl8Yo74Is0W6cPUWWT/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiQ0VaWHhmZENmRWZ5WEQ3eVVOS0lQY3VDS2FCMyIsImZpbGVuYW1lIjoiMWVkMGU2YWYtNTcxYi00YjhlLTlhYTItNzcxNWNmMjRkMDFiLm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "6F5Zhi321D3Oq7v1oNT4",
+     "Hank - Deep and Engaging Narrator",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/6F5Zhi321D3Oq7v1oNT4/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiR0pkb3lhUDhUYVp6M3laSENXSTJKd3VDVnN2MSIsImZpbGVuYW1lIjoiZlExUFpQVlJ4YVlTZWp6bXU2N3MubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "gUABw7pXQjhjt0kNFBTF",
+     "Andrew - Smooth, Smart and Clear",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/eR8GN1SLARV1SsZrwn2eoVNdIwg2/voices/gUABw7pXQjhjt0kNFBTF/f5776657-1bda-4fa8-8170-65d3164d02e7.mp3"
+    ],
+    [
+     "DMyrgzQFny3JI1Y1paM5",
+     "Donovan - Articulate, Strong and Deep",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/DMyrgzQFny3JI1Y1paM5/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiVDA1R1BwazJmdlNCYjYyNURYZDRCSkhadHUyMiIsImZpbGVuYW1lIjoib3VZbHVmT2l5aFgwdkltYUZJZUUubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "GUDYcgRAONiI1nXDcNQQ",
+     "Milo - Calm, Soothing and Meditative",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/6ucepsMRFsSPtAkS3qJkLzIdtuw2/voices/GUDYcgRAONiI1nXDcNQQ/aaec8fe5-bb13-4902-8a96-ce845eefca1a.mp3"
+    ],
+    [
+     "pVnrL6sighQX7hVz89cp",
+     "Henry - Deep, Professional, and Soothing",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/pVnrL6sighQX7hVz89cp/gcm5yRM3bqL34syZ72sF.mp3"
+    ],
+    [
+     "7fbQ7yJuEo56rYjrYaEh",
+     "John Doe - Gravely, Deep, and Engaging",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/8RYUsFHsalUXjwVG0LjhNwH1j022/voices/7fbQ7yJuEo56rYjrYaEh/LfgJj1M8v4f7Ca1qWvZI.mp3"
+    ],
+    [
+     "nzFihrBIvB34imQBuxub",
+     "Josh - Teacher for Kids",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/nzFihrBIvB34imQBuxub/PGPEgmq9nbilpoico1PI.mp3"
+    ],
+    [
+     "15CVCzDByBinCIoCblXo",
+     "Lucan Rook  - Energetic Male",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/XfNHbUnzYlfKcyqwGAOVIYehri33/voices/15CVCzDByBinCIoCblXo/7b63eb9a-f231-4f7e-8214-5810a5913b2e.mp3"
+    ],
+    [
+     "n1PvBOwxb8X6m7tahp2h",
+     "Michael C. Vincent - Suspenseful Storyteller",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/KYjz3Y9IA1hOyAaoFAnINnfyIAR2/voices/n1PvBOwxb8X6m7tahp2h/LZUo9zXnQ6nFMFs5oW7f.mp3"
+    ],
+    [
+     "Dslrhjl3ZpzrctukrQSN",
+     "Hey Its Brad - Clear Narrator for Documentary",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/Dslrhjl3ZpzrctukrQSN/eHPz2AP83vzRF9cixck1.mp3"
+    ],
+    [
+     "LruHrtVF6PSyGItzMNHS",
+     "Benjamin - Deep, Warm, Calming",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/LruHrtVF6PSyGItzMNHS/vhEqnmupM72x52dO30Dl.mp3"
+    ],
+    [
+     "wWWn96OtTHu1sn8SRGEr",
+     "Hale - Expressive, Deep and Emotive",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/1D73t5OmWJcLCgnlSL28i2bB7Iq2/voices/wWWn96OtTHu1sn8SRGEr/zpbMSgfLvQGwGB76UKKQ.mp3"
+    ],
+    [
+     "vBKc2FfBKJfcZNyEt1n6",
+     "Finn - Youthful, Eager and Energetic",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/vBKc2FfBKJfcZNyEt1n6/o4o4mqfdaIsxzmOipiS9.mp3"
+    ],
+    [
+     "dXtC3XhB9GtPusIpNtQx",
+     "Hale - Smooth, Confident and Persuasive",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/XWwWNeeRhJOfmltwxQgPxrxDmh02/voices/dXtC3XhB9GtPusIpNtQx/1edb5a1f-3169-4351-b850-22f30a915213.mp3"
+    ],
+    [
+     "asDeXBMC8hUkhqqL7agO",
+     "David - Deep, Mature, and Smooth",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/asDeXBMC8hUkhqqL7agO/oftUfxeCwmNjYZPrWN3K.mp3"
+    ],
+    [
+     "tZssYepgGaQmegsMEXjK",
+     "True - Crime & Horror Narrator",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/tZssYepgGaQmegsMEXjK/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJiMjEwOTQxNmM3NTE0NDQ5YTVmMDY1NDBkMTBmMGU3MyIsImZpbGVuYW1lIjoiekJrWVplZGp0NFlxYWRzeXVzZFMubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "c6SfcYrb2t09NHXiT80T",
+     "Jarnathan - Confident and Versatile",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ae5cf0d6fb064897b39505ab5988252a/voices/c6SfcYrb2t09NHXiT80T/7S2LKVIpyowguc3AxDlB.mp3"
+    ],
+    [
+     "wevlkhfRsG0ND2D2pQHq",
+     "Hank - Natural Conversation",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/wevlkhfRsG0ND2D2pQHq/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiR0pkb3lhUDhUYVp6M3laSENXSTJKd3VDVnN2MSIsImZpbGVuYW1lIjoiVEJLblNYaU5uWUozcFZ6YWFabVAubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "6FiCmD8eY5VyjOdG5Zjk",
+     "Adam - Deep English Story Voice",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/41e6e19dba0f443c9da914bdbaf41559/voices/6FiCmD8eY5VyjOdG5Zjk/ALUjOcvKvAtbiWxYDXTM.mp3"
+    ],
+    [
+     "y1adqrqs4jNaANXsIZnD",
+     "David Boles - Well-spoken and Calm",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/y1adqrqs4jNaANXsIZnD/cOf5zQ2txsGoa0hTO3w2.mp3"
+    ],
+    [
+     "T5cu6IU92Krx4mh43osx",
+     "Bill Oxley - Mature American Male",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/64971298bfc24086b69026970a21f1f9/voices/T5cu6IU92Krx4mh43osx/t40HRPMEFLWl6H3QtS4k.mp3"
+    ],
+    [
+     "rU18Fk3uSDhmg5Xh41o4",
+     "Ryan Kurk - Pleasant and Smooth",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/rU18Fk3uSDhmg5Xh41o4/1ssldWxzIJ4T23tMR561.mp3"
+    ],
+    [
+     "8Es4wFxsDlHBmFWAOWRS",
+     "William Shanks - Rich and Deep",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/D24IGF9ntveLHjWUaVzVpcPora82/voices/8Es4wFxsDlHBmFWAOWRS/sMCtthWYyb65Vblz7xFT.mp3"
+    ],
+    [
+     "GzE4TcXfh9rYCU9gVgPp",
+     "Alex Wright - Clear and Cheerful",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/GzE4TcXfh9rYCU9gVgPp/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiWmZIUlBRdzhYTVE5cENtTXlqVFY5QmVYYk9wMSIsImZpbGVuYW1lIjoiblU3c01lSmZWTDl0ZmNGOVhudDUubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "cCYjmrGZaI86GUJ7F2Nn",
+     "David - Audiobook & Documentary",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/cCYjmrGZaI86GUJ7F2Nn/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJhMjY2ZjQ0ZDg1MDU0NDhkOGZmNzdmMjc1Mzc5M2I3YiIsImZpbGVuYW1lIjoiYVJ0Z2JPR0REVkd2UmZDaHpLRlAubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "Cz0K1kOv9tD8l0b5Qu53",
+     "Jon - Relaxed, Deep and Approachable",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/Cz0K1kOv9tD8l0b5Qu53/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI3YmRkNjlkOWU1ODE0ODFhOGVhNTIxNjQ5MzI3MWY4MSIsImZpbGVuYW1lIjoiZFFGNFBFelRpTmtEZ1d0SDJFUXAubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "HKFOb9iktHA85uKXydRT",
+     "Russ – Deep, Smooth and Articulate",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/f05ba25e25fc468d8f10e4da894d36b7/voices/HKFOb9iktHA85uKXydRT/T2SiV29UPEj88uDU1GnJ.mp3"
+    ],
+    [
+     "8Ln42OXYupYsag45MAUy",
+     "Jay Wayne - Wise University Professor",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/8Ln42OXYupYsag45MAUy/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoibjBBQ2tLMEZoSlhaeHhIZ2IxSUdvRU5MSURWMiIsImZpbGVuYW1lIjoiY2daeHpzRHVNWnVnN1hjdmthYmkubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "sB7vwSCyX0tQmU24cW2C",
+     "Jon - Natural Authority (Agent / Assistant)",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/7bdd69d9e581481a8ea5216493271f81/voices/sB7vwSCyX0tQmU24cW2C/3oa1J14nnQ9Mk8PXyDJ7.mp3"
+    ],
+    [
+     "XA2bIQ92TabjGbpO2xRr",
+     "Jerry - Calm, Expressive and Narrative",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/XA2bIQ92TabjGbpO2xRr/GjIeW766uT1b96dwt98z.mp3"
+    ],
+    [
+     "6xPz2opT0y5qtoRh1U1Y",
+     "Christian - Serious TV Host",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/ideEvUQCAVRZz99Tr3IrRRUvriH2/voices/6xPz2opT0y5qtoRh1U1Y/24372a6d-c40d-485f-897a-a865ec9ecac1.mp3"
+    ],
+    [
+     "lnieQLGTodpbhjpZtg1k",
+     "Professor Bill",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/lnieQLGTodpbhjpZtg1k/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiRDI0SUdGOW50dmVMSGpXVWFWelZwY1BvcmE4MiIsImZpbGVuYW1lIjoiYzdjNTFhNDktYTlkOC00NTk0LWFiMzQtZDcwNTFiODI2YTlhLm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "Aa6nEBJJMKJwJkCx8VU2",
+     "Quentin - Narrator and Educator",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/f05ba25e25fc468d8f10e4da894d36b7/voices/Aa6nEBJJMKJwJkCx8VU2/Jjk2LhXGigKZzoLINPd2.mp3"
+    ],
+    [
+     "HIGUfNOdjuWQwwapnTRW",
+     "Chuck Miller - Deep, Raspy, American",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/QLeoIFNQuWZCsHPkmGfqE1ZH3NA2/voices/HIGUfNOdjuWQwwapnTRW/KmCIshV3FvIyhIDQPsUp.mp3"
+    ],
+    [
+     "C1npRmjB19a6yNkEucvx",
+     "Arthur – Clear & Engaging American Male Audiobook Narrator",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/C1npRmjB19a6yNkEucvx/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJlM2ZmYWYyNzBhOTc0ZjExYWQ4YzFlYTkyNzEzOTBhYSIsImZpbGVuYW1lIjoiRUV3VHhpbUJ2SXNTMUxDdmxmS1UubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "6OzrBCQf8cjERkYgzSg8",
+     "Young Jamal",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/6OzrBCQf8cjERkYgzSg8/YmWdAA5ju6tNyK5Zl104.mp3"
+    ],
+    [
+     "ryn3WBvkCsp4dPZksMIf",
+     "Brian Overturf",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/i6uevFK68WMPNgxaVXRoIW8rHJK2/voices/ryn3WBvkCsp4dPZksMIf/3kSyM4E45gwDYgCRPVYm.mp3"
+    ],
+    [
+     "WTUK291rZZ9CLPCiFTfh",
+     "Mark",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/f94e260200764678babc807b935bfb0b/voices/WTUK291rZZ9CLPCiFTfh/bnnCGcGCSiY3m9CS9dGc.mp3"
+    ],
+    [
+     "4YYIPFl9wE5c4L2eu2Gb",
+     "Burt Reynolds™ - Deep, Smooth and clear",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/4YYIPFl9wE5c4L2eu2Gb/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJmY2FiYWE3Nzc0ZDI0ZGEyOGZlOGI1NmIzZjliNDgwOSIsImZpbGVuYW1lIjoibUpWZzJsVVo5OXNVZHNidGFYbG0ubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "iZURAYccQtQd12U8kEcq",
+     "Roland Rodriguez - Smooth Storyteller",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/y62hwvXQhASZI2O6zPoLb5Hjkzy2/voices/iZURAYccQtQd12U8kEcq/NQy5nQOHZBEbP8uKlftB.mp3"
+    ],
+    [
+     "q0IMILNRPxOgtBTS4taI",
+     "Drew - Casual, Curious & Fun",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/q0IMILNRPxOgtBTS4taI/jKxasnssCutKQDSwe1bV.mp3"
+    ],
+    [
+     "QIhD5ivPGEoYZQDocuHI",
+     "Adam - Articulate Engineering Professor",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/3a00f57607834fe88c35422b4591d1ec/voices/QIhD5ivPGEoYZQDocuHI/c5f1f9c7-aafc-4121-a580-717e11593e87.mp3"
+    ],
+    [
+     "BtWabtumIemAotTjP5sk",
+     "Robert - Calm, Clear and Professional",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/BtWabtumIemAotTjP5sk/tBLvwWMujgcDkgEUvEJ0.mp3"
+    ],
+    [
+     "VCgLBmBjldJmfphyB8sZ",
+     "Liam - Viral Short-Form Storyteller",
+     "male · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/VCgLBmBjldJmfphyB8sZ/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoidlZkVzVXaHZXMFlBMzVLUW1idjNYdlJuQUFnMiIsImZpbGVuYW1lIjoiTUdOek1CSFpJM0JJREFFOGN6MzgubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "0dPqNXnhg2bmxQv1WKDp",
+     "Storyteller Oxley - Grandpa",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/64971298bfc24086b69026970a21f1f9/voices/0dPqNXnhg2bmxQv1WKDp/0GkZlN5DWduEyWnjUz2j.mp3"
+    ],
+    [
+     "2gPFXx8pN3Avh27Dw5Ma",
+     "Oxley - Evil Character",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/2gPFXx8pN3Avh27Dw5Ma/GcxfxoMG5hz8u6uLX9TP.mp3"
+    ],
+    [
+     "7EzWGsX10sAS4c9m9cPf",
+     "Jack John - Conversational and Upbeat",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/7EzWGsX10sAS4c9m9cPf/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiIyZjkwYTFkMDAwODg0NGMyYWFhMGEyOTE4YWU4YWY2NSIsImZpbGVuYW1lIjoiQTEydFg0YnFUd0dnUGpFeE9Wak8ubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "8z82LG47qQ2qjeeQB8lk",
+     "Kenneth - Storyteller",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/c2c551bea72d4afeb2cc09deb3acef5e/voices/8z82LG47qQ2qjeeQB8lk/8njBWGKktWGqpXfNwMak.mp3"
+    ],
+    [
+     "VU16byTywsWv5JpI8rbc",
+     "Ash - Calm, Soothing, Magnetic Narrative Male Voice",
+     "male · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/VU16byTywsWv5JpI8rbc/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoidXNlcl84MDAxa2cycjhwczhmMWNhc3d2aGtycjU4bnlhIiwiZmlsZW5hbWUiOiJ4cDY2OXFjcTZXdTNNVG1KQU45Wi5tcDMiLCJ0aW1lc3RhbXAiOjE3OTM1MTI4MDAwMDAwMDB9"
+    ],
+    [
+     "scOwDtmlUjD3prqpp97I",
+     "Sam - Support Agent",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/60df5e8e85434c87b586860524fe605c/voices/scOwDtmlUjD3prqpp97I/tjCTVpjaOxteXatbVF2L.mp3"
+    ],
+    [
+     "gs0tAILXbY5DNrJrsM6F",
+     "Jeff - Classy, Resonating and Strong",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/gs0tAILXbY5DNrJrsM6F/c5nAdT1KCXzAiRK7CUhs.mp3"
+    ],
+    [
+     "C9fbwSpEaejywLWx722Z",
+     "Marcus - Classic Audiobook Narrator",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/26274c111a484745893fe281ed3a000b/voices/C9fbwSpEaejywLWx722Z/URnM7GoxLCf5EF9SYq68.mp3"
+    ],
+    [
+     "84Fal4DSXWfp7nJ8emqQ",
+     "Motivational Coach - Leader",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/84Fal4DSXWfp7nJ8emqQ/cY8RJM5BQhNzEERHl9hq.mp3"
+    ],
+    [
+     "iLzHtPh0bW6RGWRG0Xo5",
+     "John Doe Gentle",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/8RYUsFHsalUXjwVG0LjhNwH1j022/voices/iLzHtPh0bW6RGWRG0Xo5/enCOLQScwYg372rkvvxj.mp3"
+    ],
+    [
+     "eGSd0uV8dNQnZuEEX9lu",
+     "Adam - Dominant, Firm",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/eGSd0uV8dNQnZuEEX9lu/48f4ae6b-9441-4a77-93f2-acd811b97f81.mp3"
+    ],
+    [
+     "YOq2y2Up4RgXP2HyXjE5",
+     "Xavier - Dominating, Metalic Announcer",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/yAkZ0o1apPRKi8NGRRnh7wGgDJv1/voices/YOq2y2Up4RgXP2HyXjE5/pk67cUl05CrEdRjep88D.mp3"
+    ],
+    [
+     "gOkFV1JMCt0G0n9xmBwV",
+     "W.L. Oxley",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/64971298bfc24086b69026970a21f1f9/voices/gOkFV1JMCt0G0n9xmBwV/bzq9YIfPb3JoAL953C9C.mp3"
+    ],
+    [
+     "u4HtmbcjVZVpiJLQ2GZn",
+     "A Top Narrator VO PRO",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/u4HtmbcjVZVpiJLQ2GZn/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2Y2NhYzZmZGY4YzI0NzE5OTU4Y2Q1ZDMyNDZjZmRkYSIsImZpbGVuYW1lIjoiQnZwbDFsWUgyZmhTT1RQS0FPWVUubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "raMcNf2S8wCmuaBcyI6E",
+     "Tyler Kurk - Smooth, Pleasant and Clear",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/raMcNf2S8wCmuaBcyI6E/i7eNgfmXUnONqBYrrQpn.mp3"
+    ],
+    [
+     "J2FGlQG8Gd7x8uEDt2H8",
+     "The Pharaoh 4 - Narration & Audio books",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/19c4f4c73cc14d64961cd13f7920528b/voices/J2FGlQG8Gd7x8uEDt2H8/w8ueUh8H3h9xl5dSz7lA.mp3"
+    ],
+    [
+     "RexqLjNzkCjWogguKyff",
+     "Bradley - Earnest Narrator",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/RexqLjNzkCjWogguKyff/bKmlc9TbcKuu6w1w1jmF.mp3"
+    ],
+    [
+     "IsEXLHzSvLH9UMB6SLHj",
+     "Mellow Matt",
+     "male · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/IsEXLHzSvLH9UMB6SLHj/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJiNTk0YTc1NDY5YWI0NWJjYTA2ZTZiMGI0ZDFjZjdlNCIsImZpbGVuYW1lIjoiazdSNUhCcjF4bXc2M2xMZnJhYW8ubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "3jR9BuQAOPMWUjWpi0ll",
+     "Mark - Dynamic, Balanced and Emotional",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/f94e260200764678babc807b935bfb0b/voices/3jR9BuQAOPMWUjWpi0ll/M0riHtkWgU8zYy64wQHw.mp3"
+    ],
+    [
+     "SSfU0eLfP3qeuR4j2bwD",
+     "Christopher - Smooth, Deep and Engaging",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/SSfU0eLfP3qeuR4j2bwD/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiVjRtZFBYN0g1ZFp1M2Rua0dpalRCOUVKTW82MyIsImZpbGVuYW1lIjoiRks4cmh5ejA1M2tPQWRnN0JRMEIubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "zQzvQBubVkDWYuqJYMFn",
+     "B. Hardscrabble Oxley",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/64971298bfc24086b69026970a21f1f9/voices/zQzvQBubVkDWYuqJYMFn/mXfKQGAtuXA4b61xkIav.mp3"
+    ],
+    [
+     "Hd8mWkf5kvyBZB0S7yXU",
+     "Ron - Older American Story Teller",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/39286bc96616420fa3c89367aafac4e2/voices/Hd8mWkf5kvyBZB0S7yXU/F1c8Ts490E1BZxzw5E6Z.mp3"
+    ],
+    [
+     "UGTtbzgh3HObxRjWaSpr",
+     "Brian - Energetic, Lively, Storytelling",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/apwq4yNNEQathkG8MvDaLwdw7Ig1/voices/UGTtbzgh3HObxRjWaSpr/aJzOasSiI8jIztqGAKHL.mp3"
+    ],
+    [
+     "douDhHvfoViWmZth0cUX",
+     "Peter - Youthful and Expressive",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/KsmbLPiWyQND8EviMvwDniw49dG2/voices/douDhHvfoViWmZth0cUX/KtbI4EOawJ1ttPpzenKX.mp3"
+    ],
+    [
+     "jbEI5QkrMSKWeDlP27MV",
+     "Ryan - Deep and Meditative",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/f059f095c6234370980ff89467b994ca/voices/jbEI5QkrMSKWeDlP27MV/4pfOMvMCHvQuB688Xtee.mp3"
+    ],
+    [
+     "6lbtrJXRylVZ6EqIQQPT",
+     "Marcus - Robotic, Deep and Smooth",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1efec16c67ef4253b65deefdc467c855/voices/6lbtrJXRylVZ6EqIQQPT/EQIvMz7ayqR2cqEMbXcl.mp3"
+    ],
+    [
+     "S9GPGBaMND8XWwwzxQXp",
+     "Charles - Social Media, TV & Commercial",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/Mu0vmGh9HcMyceyxtemdnLnrGks1/voices/S9GPGBaMND8XWwwzxQXp/KzsnNgRGlZ3TlZoOVFLY.mp3"
+    ],
+    [
+     "bPMKpgEe88vKSwusXTMU",
+     "Bryan - Polished, Measured and Engaging",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/NtXIi7ANHgaMkBYfnNwEHQNIPEq2/voices/bPMKpgEe88vKSwusXTMU/VA5oWqz22sXcoBNJRwuS.mp3"
+    ],
+    [
+     "nmmIJ8k3ukOa1CSFlor3",
+     "Declan - Serious & Straightforward",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/c915cc6b038c4ee594dea6e889603893/voices/nmmIJ8k3ukOa1CSFlor3/6DfOB1nZhQdBeqqYMHVz.mp3"
+    ],
+    [
+     "rPMkKgdwgIwqv4fXgR6N",
+     "Tyler – Clear US YouTube Creator Voice",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/xwEHmhRNEkVoScLi7xXIjrEFik13/voices/rPMkKgdwgIwqv4fXgR6N/E7k618SwZ4QYQr8ncO4w.mp3"
+    ],
+    [
+     "PIGsltMj3gFMR34aFDI3",
+     "Jonathan Livingston - Authentic, Calming & Pleasing",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ae5cf0d6fb064897b39505ab5988252a/voices/PIGsltMj3gFMR34aFDI3/YwBlqdNO99mqRJj1CJ5b.mp3"
+    ],
+    [
+     "SAxJUlDKRc79XAyeWyMu",
+     "Morgan - Deep, Powerful, and Confident",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ca3194d2100848df93e780e96d957ab0/voices/SAxJUlDKRc79XAyeWyMu/88f27994-c9e9-49db-9a4c-0dcd375e85da.mp3"
+    ],
+    [
+     "mtrellq69YZsNwzUSyXh",
+     "Rex Thunder - Deep N Tough",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/mtrellq69YZsNwzUSyXh/HI2RU95dZS3K8lka30TH.mp3"
+    ],
+    [
+     "65dhNaIr3Y4ovumVtdy0",
+     "Drew - Spicy Romantic Comedy",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/65dhNaIr3Y4ovumVtdy0/woRnXmez7cHqQIzFmcpM.mp3"
+    ],
+    [
+     "fIGaHjfrR8KmMy0vGEVJ",
+     "Larry - High-Energy Social Media Voice for Reels & Shorts",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/fIGaHjfrR8KmMy0vGEVJ/Ctw9Y3DwAbcGNBvuk8oh.mp3"
+    ],
+    [
+     "3TStB8f3X3To0Uj5R7RK",
+     "Joseff Novak - Calm and Professional",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/8lgUsXj2nMWOHUuXEXzt2gWNQRu1/voices/3TStB8f3X3To0Uj5R7RK/JSFgZe3SZ47gc4u8MN0E.mp3"
+    ],
+    [
+     "tMvyQtpCVQ0DkixuYm6J",
+     "Asher",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/21mLnHcnSMPfAnyh2c2lhioIpsi2/voices/tMvyQtpCVQ0DkixuYm6J/41YCkXfu2gphTgaG6wsG.mp3"
+    ],
+    [
+     "QAmlwgbPtjxpk7u98Qs9",
+     "Adam - Compelling",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/QAmlwgbPtjxpk7u98Qs9/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJiMzcwOWFlODgzOTg0N2I2YTgwNDczNmRlNWU1NjUxYyIsImZpbGVuYW1lIjoiTGpKN0FTM3FzenJoNHNlMHR4QzIubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "bP8FJDHmWVEgXJDitdQd",
+     "Brian Nguyen - Balanced, Wise and Calm",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/cMLZVwMO0fPnQtVJ6PzzoWLlI203/voices/bP8FJDHmWVEgXJDitdQd/48653223-cfb9-4b56-a235-a298ae84a1a2.mp3"
+    ],
+    [
+     "SF9uvIlY93SJRMdV5jeP",
+     "Andrew Griffin - Football Commentator",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/4567cb2d224245f8b853c0d5e2fd8728/voices/SF9uvIlY93SJRMdV5jeP/242a626d-6d37-4f88-956f-e9c8abcbec5f.mp3"
+    ],
+    [
+     "x8xv0H8Ako6Iw3cKXLoC",
+     "Haven Sands",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/x8xv0H8Ako6Iw3cKXLoC/b4tgcLJA57sIBjGGKshB.mp3"
+    ],
+    [
+     "VJwFZoxTZo5aI0IowiXA",
+     "David - Deep, Warm, and Steady",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/PHH1jucoLCaBzZWDzN2j7C2r1Pq2/voices/VJwFZoxTZo5aI0IowiXA/p252cB2NNcLJ1BURVlBR.mp3"
+    ],
+    [
+     "a4CnuaYbALRvW39mDitg",
+     "Dan - Captivating, Engaging and Inviting",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/Ijz20wdNuXa7ntOHKsb6Sf1Fftr1/voices/a4CnuaYbALRvW39mDitg/kxziKzY4FrvozzWEUsQT.mp3"
+    ],
+    [
+     "zYcjlYFOd3taleS0gkk3",
+     "Edward - Loud, Confident and Cocky",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/zYcjlYFOd3taleS0gkk3/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiWGZ4dW1XWHNzQ1h6bXdQcnpQSmZrR05ORUE3MyIsImZpbGVuYW1lIjoiWk5hSGJzaDNTWEhTbXFYRmxkTnkubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "UpphzPau5vxibPYV2NeV",
+     "Joe Inglewood - Magnetic and Captivating",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/T7bhqxLyENgRaSgfnqhPa6vPSID2/voices/UpphzPau5vxibPYV2NeV/WJQYDqPyRzPvh2pw4xjg.mp3"
+    ],
+    [
+     "g14YnDYCsy3k7XLlcKlO",
+     "Todd - Clear, Engaging and Educational",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/user_3501kf3aq734ewy977wwfpybmzz3/voices/g14YnDYCsy3k7XLlcKlO/8PoqmGvhrKkyBTo11v1X.mp3"
+    ],
+    [
+     "7Uu6s58Uu5fPHvCtI4QZ",
+     "Marcus",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/user_4501kcy9r12ffnh9wedhvnyfxd6t/voices/7Uu6s58Uu5fPHvCtI4QZ/ef86371b-34c5-4c81-a435-3eb06905b3a9.mp3"
+    ],
+    [
+     "4e32WqNVWRquDa1OcRYZ",
+     "Ryan - Product Reviewer",
+     "male · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/4e32WqNVWRquDa1OcRYZ/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiS0FoRjR4UUlYcU52bEEyNVNTYlZqY1FLejVCMiIsImZpbGVuYW1lIjoiSFUwR0V3eFVtUGhWcUpaRU5YbzYubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "JJCR1UICgHnHljtvu5uF",
+     "Don - Movie Trailer Narrator",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/JJCR1UICgHnHljtvu5uF/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiWFd3V05lZVJoSk9mbWx0d3hRZ1B4cnhEbWgwMiIsImZpbGVuYW1lIjoiMzhmMDhlN2QtZTZmOC00MzM5LWI1MDgtNGFkNmM5OTM5NGY4Lm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "ZoiZ8fuDWInAcwPXaVeq",
+     "Josh - Warm, Smooth and Steady",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/FRG9eBYz8ogKLVm7y3tLhgw1gv13/voices/ZoiZ8fuDWInAcwPXaVeq/9EwzECjtvTDxjoH3F7fg.mp3"
+    ],
+    [
+     "QTGiyJvep6bcx4WD1qAq",
+     "Guy - Serious TV Radio Announcer",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/QTGiyJvep6bcx4WD1qAq/OBd6vtJ6cwh4yAoeGG11.mp3"
+    ],
+    [
+     "fbIG6gEosVIM95R5qOna",
+     "W. Clint Oxley",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/fbIG6gEosVIM95R5qOna/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2NDk3MTI5OGJmYzI0MDg2YjY5MDI2OTcwYTIxZjFmOSIsImZpbGVuYW1lIjoiR3BGWjdtRDQybUtBbGt5bHUxdmgubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "KH1SQLVulwP6uG4O3nmT",
+     "Brad - Romantic & Gentle",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/KH1SQLVulwP6uG4O3nmT/odo2hUfsZJhAcZNjgyg3.mp3"
+    ],
+    [
+     "fvVBPXuE7f1iX3dZLKFy",
+     "Dan - Warm, Conversational and Polite",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/25cae4d1732247b89124e2ca52b283b3/voices/fvVBPXuE7f1iX3dZLKFy/oyQWevGCbxNuZQZblgoS.mp3"
+    ],
+    [
+     "ashjVK50jp28G73AUTnb",
+     "Michael Scott - Calm and Natural",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/DSRUfdHm1Pe4e3zq8MNJsmphUYG2/voices/ashjVK50jp28G73AUTnb/hJ7VOWSIcTAzxTzHpC6r.mp3"
+    ],
+    [
+     "68RUZBDjLe2YBQvv8zFx",
+     "Kal Jones - Deep, Smokey and Reliable",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/68RUZBDjLe2YBQvv8zFx/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI4MmY5ZDEyZDBjNDY0NzAwYWQ2M2M1NTIzNzljZDc0ZCIsImZpbGVuYW1lIjoicThDTTFReG1CcnoyRXc2M3hpTWQubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "1t1EeRixsJrKbiF1zwM6",
+     "Jerry B - Realistic and Conversational",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/ckwIURo2ELSVl0fOTOiU9bdtf143/voices/1t1EeRixsJrKbiF1zwM6/nUVmLiZIhiZy7jONcGxj.mp3"
+    ],
+    [
+     "y0s2ExEMuum3muUnA6Zd",
+     "Marcus - Bright, Upbeat and Clear",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/user_7801kf3bd6neey8vehqngkcb0r4c/voices/y0s2ExEMuum3muUnA6Zd/5TXfB5O5rQnIoAihDhsi.mp3"
+    ],
+    [
+     "ByWUwXA3MMLREYmxtB32",
+     "Brian - Calm, Collected and Steady",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/FIG7Ts1oF5XREIdktLhQysMoXMw1/voices/ByWUwXA3MMLREYmxtB32/15147fb1-0e2d-4463-9cca-f10f0160750f.mp3"
+    ],
+    [
+     "kJKMPwrIKzwVkMKOfRtr",
+     "Ken Franson - Professional and Calm",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/KYeirhhETINpeHbDLZdAQF8Cn6O2/voices/kJKMPwrIKzwVkMKOfRtr/303c1591-1c0f-4311-8cf1-eebe28371892.mp3"
+    ],
+    [
+     "mhgBlD8CmCSdwLDOIJpA",
+     "Pulse – Social Media News, Trending Stories, Viral Headlines Voice",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/Rpsyy5oJ1nMlsjotn23vpSaxrqp1/voices/mhgBlD8CmCSdwLDOIJpA/vQeSUJ6pfP31qame8JdD.mp3"
+    ],
+    [
+     "Dnd9VXpAjEGXiRGBf1O6",
+     "Parker Springfield - TV Broadcaster",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/73b2759882d942428779c5095cdf21d9/voices/Dnd9VXpAjEGXiRGBf1O6/M6nbuSiAv93g7R2qpnDW.mp3"
+    ],
+    [
+     "EOVAuWqgSZN2Oel78Psj",
+     "Aidan - Social Media Influencer",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/jOZSyDI5gPZM4KyuW7BwOACgUVu2/voices/EOVAuWqgSZN2Oel78Psj/N3AjE95mMM0g5fa30wPQ.mp3"
+    ],
+    [
+     "zDBYcuJrpuZ6YQ7AgRUw",
+     "Jerry B. - Classic Radio DJ & Energetic",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/ckwIURo2ELSVl0fOTOiU9bdtf143/voices/zDBYcuJrpuZ6YQ7AgRUw/FAjoQNl52onrpW1Ab2p5.mp3"
+    ],
+    [
+     "iUqOXhMfiOIbBejNtfLR",
+     "W. Storytime Oxley",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/64971298bfc24086b69026970a21f1f9/voices/iUqOXhMfiOIbBejNtfLR/kD3H159cQN5vDGml2QJz.mp3"
+    ],
+    [
+     "8IbUB2LiiCZ85IJAHNnZ",
+     "Don - Social Media and Audiobook Voice",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/vZfIroat4gMXmF1rnrp7s7pmwR12/voices/8IbUB2LiiCZ85IJAHNnZ/r2eKriXA4XlXJfFPX0zD.mp3"
+    ],
+    [
+     "GoGUcAZovo4MFeLxJdZd",
+     "Noah - YA Audiobooks Narrator",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/GoGUcAZovo4MFeLxJdZd/JMNzGtrXuQmEqqhxdRBd.mp3"
+    ],
+    [
+     "8dEUmyPMdDdK91vboYih",
+     "Sawyer - Midnight Storyteller",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/8dEUmyPMdDdK91vboYih/YYGMnAuSXy7aGwkcMzM0.mp3"
+    ],
+    [
+     "RolvCZ4e0AkAR2dzyTx0",
+     "Christopher - optimistic storyteller",
+     "male · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/RolvCZ4e0AkAR2dzyTx0/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI5MWUzZTY2MzRiZmY0NTdiOWU3ZjMzOGY5MTg2ODk2OCIsImZpbGVuYW1lIjoidzVlYzB4WURObzQ4MXluNWZTQ1gubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "QMJTqaMXmGnG8TCm8WQG",
+     "Clyde - Vintage and Warm Radio Announcer",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/H2fHN4TKljQ16bAflYGeOPXd0qB2/voices/QMJTqaMXmGnG8TCm8WQG/aa1008ab-76bf-4aa2-96f4-a0f4256722ca.mp3"
+    ],
+    [
+     "4QLC5fepxZkYmdD2IGRU",
+     "Matthew Schmitz - Scriptures, Bible & Religious readings",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/d309ea25683d4d97b92e44772a430c74/voices/4QLC5fepxZkYmdD2IGRU/h4A7Nu9qHXplElEilyoT.mp3"
+    ],
+    [
+     "SA7eD52NRr8WAehitVt1",
+     "Tyler Cruz - Cool Energetic DJ",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/SA7eD52NRr8WAehitVt1/sqcfO22uSrUBp8O51koA.mp3"
+    ],
+    [
+     "NaMUH1vcebhHvD4z3Lku",
+     "Asher James - Deep, Smooth and Romantic",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/zlhquDXmzdaEfif1LwQ0kq5y1n52/voices/NaMUH1vcebhHvD4z3Lku/6ueVjuKhL35dFdRt1Uk8.mp3"
+    ],
+    [
+     "jB108zg64sTcu1kCbN9L",
+     "Zeus Epic",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/jB108zg64sTcu1kCbN9L/haoyTB2GmZRFKTBMZptk.mp3"
+    ],
+    [
+     "CeNX9CMwmxDxUF5Q2Inm",
+     "Johnny Dynamite - Vintage Radio DJ",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/CeNX9CMwmxDxUF5Q2Inm/6iHrHbt7EmeUOai3Dj22.mp3"
+    ],
+    [
+     "n8kTUi6dVrplENT9Un56",
+     "Brian",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/f9fe023ec77441e098b03ad41d4fcc44/voices/n8kTUi6dVrplENT9Un56/nWAx55MkBUMLF6PAGCnC.mp3"
+    ],
+    [
+     "enzbGixeo55iqn1QxbbC",
+     "Jon - Calm Presence",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/7bdd69d9e581481a8ea5216493271f81/voices/enzbGixeo55iqn1QxbbC/M4EXYCwimtFnwT92QFlR.mp3"
+    ],
+    [
+     "Hsmirri4X6khvaZNtgT5",
+     "Chris - Charismatic, Warm, Confident",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/Hsmirri4X6khvaZNtgT5/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoidEsxdnU5UDlrbFJ0TDhqVUZ0OHlwZEZFNVo5MiIsImZpbGVuYW1lIjoiOGNjMTViMzgtMGRkOS00ZWEwLTlmMDUtZWE3OGQ1YWYwNmU5Lm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "JKbdwi8BFwQlr1n3fwoT",
+     "Reel – Conversational Voice for Short Content",
+     "male · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/JKbdwi8BFwQlr1n3fwoT/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoibll3dnNaQjRyV2ZiODkzNzN1R01ZZmdUYUZVMiIsImZpbGVuYW1lIjoiRWNoaEhnekg3TVhidVlwSTlraDkubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "uYkKk3J4lEp7IHQ8CLBi",
+     "Justin - Relaxed, Helpful and Balanced",
+     "male · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/uYkKk3J4lEp7IHQ8CLBi/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiTVRKR1FleU55b1VYSnZPOVBaeWZNTjZ2ZDU4MyIsImZpbGVuYW1lIjoiUGVhajZzemYwY2dZb3BQOGtoNlUubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "24EI9FmmGvJruwUi7TJM",
+     "Lowy - Kind, Warm and Hopeful",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/35EojMw1Tzb8ZhzkfMVTEXODhCB2/voices/24EI9FmmGvJruwUi7TJM/3c8a27f7-2a3b-4f77-8e26-bdfbab5b97e6.mp3"
+    ],
+    [
+     "iEBOK9alpKauGRvBSsFi",
+     "Heisenberg - Polished, and Clear",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/w8lO88ok8DfgaX1qrZryMJbLze32/voices/iEBOK9alpKauGRvBSsFi/jLYK2ErMDiOl3FrGhWl8.mp3"
+    ],
+    [
+     "34lPwSZ54D8fWbX1aHzk",
+     "Guy - Upbeat TV Radio Announcer",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/34lPwSZ54D8fWbX1aHzk/9wUwF51ywe2W4Oxb72dK.mp3"
+    ],
+    [
+     "xZOJqW4KGiIUDbmeUtiQ",
+     "Yucel - Robotic and Synthetic",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/Ezfy6P6hwacK5KU5k2HobHAgGDc2/voices/xZOJqW4KGiIUDbmeUtiQ/ntBmoItlIdip6TstmGjF.mp3"
+    ],
+    [
+     "4JVOFy4SLQs9my0OLhEw",
+     "Luca -  Calm, Soothing and Steady",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/4JVOFy4SLQs9my0OLhEw/zq6AigwWNtCP9qYg6t2N.mp3"
+    ],
+    [
+     "gfRt6Z3Z8aTbpLfexQ7N",
+     "Boyd - Versatile, Fatherly and Natural",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/RLOraG8GqEh8bOOmnG2lO6ENWpN2/voices/gfRt6Z3Z8aTbpLfexQ7N/npnApRbs79hiTvGySmOx.mp3"
+    ],
+    [
+     "ljX1ZrXuDIIRVcmiVSyR",
+     "Michael - Genuine and Approachable",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/4VqpzRE1qwbl6CxCkyp0xKHJru82/voices/ljX1ZrXuDIIRVcmiVSyR/fqP9bUd1RI4SKDK5zNUN.mp3"
+    ],
+    [
+     "f5HLTX707KIM4SzJYzSz",
+     "Brad - Welcoming & Casual",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/f5HLTX707KIM4SzJYzSz/2KB5h80Xjq4fqF7fOv2o.mp3"
+    ],
+    [
+     "Uh6UEmMIUnnL0GOOUghh",
+     "Ray - Thrilling Narrator",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/d82a0ad33af14efdb5c332a746dde6b2/voices/Uh6UEmMIUnnL0GOOUghh/nbzyYQKt3jfrsMjBPoLu.mp3"
+    ],
+    [
+     "TWutjvRaJqAX89preB4e",
+     "Evan - Calm, Grounded & Reflective",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/TWutjvRaJqAX89preB4e/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJiY2Y1MjlkMWI2MGM0YTYwYTFjYmRjYzc1ZGYxNTkwZCIsImZpbGVuYW1lIjoiWUxuM3hOdmVDck81bjRTS21lMWoubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "Fxt4GZnlXkUGMtWSYIcm",
+     "Cal - Deep, Soothing and Calming",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/Fxt4GZnlXkUGMtWSYIcm/fHabwPggd8oEXg3yqDRL.mp3"
+    ],
+    [
+     "6IwYbsNENZgAB1dtBZDp",
+     "Jett - Gritty and Spunky Young Hero",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/6clvUi8d9vVBrcjHtTwgbRCin3w2/voices/6IwYbsNENZgAB1dtBZDp/9d3c0309-7aab-4fb5-bcdc-d7c96ae15575.mp3"
+    ],
+    [
+     "Q2ELiWzbuj5F0eFHXK6S",
+     "Aaron Erikson - Warm, Inviting and Kind",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/Q2ELiWzbuj5F0eFHXK6S/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI1MzY0M2QyZmRlZDI0MTYxOTI5ZWQzMDcyMDllNGMxMCIsImZpbGVuYW1lIjoicUVkMXdsY2ZBd09rbmdMMUYxNTEubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "r4iCyrmUEMCbsi7eGtf8",
+     "The Voice of America",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/381de5c680e94da789aa65b661d9614a/voices/r4iCyrmUEMCbsi7eGtf8/0iC3C2vxKjuJJ4dOa1IO.mp3"
+    ],
+    [
+     "FzF9ACIefsb6wbrYVjf1",
+     "Thomas - Calm, Clear and Informative",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/FzF9ACIefsb6wbrYVjf1/mrcdZzIT5lwGDN4mglas.mp3"
+    ],
+    [
+     "rHWSYoq8UlV0YIBKMryp",
+     "Jerry B - California Surfer Dude",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/ckwIURo2ELSVl0fOTOiU9bdtf143/voices/rHWSYoq8UlV0YIBKMryp/9HasPMoCRXfvlQp2HFS9.mp3"
+    ],
+    [
+     "x70vRnQBMBu4FAYhjJbO",
+     "Nathan - Virtual Radio Host",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/60df5e8e85434c87b586860524fe605c/voices/x70vRnQBMBu4FAYhjJbO/y2IXlumrlebVB2xcfiRR.mp3"
+    ],
+    [
+     "DwwuoY7Uz8AP8zrY5TAo",
+     "Sean - Expressive and Conversational",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/Uhj4qYsNrOcveFhZemBMsEPpsLQ2/voices/DwwuoY7Uz8AP8zrY5TAo/TEZbOjyeKmNCCQnaamud.mp3"
+    ],
+    [
+     "jD4PjnscE4XmlzgsuqY0",
+     "Logan - Genuine, Steady, and Deep",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/IkuBUNlmD3RZ5Q46UvaydX4n1m22/voices/jD4PjnscE4XmlzgsuqY0/XGJ6s7EYUZ6179GkFwfB.mp3"
+    ],
+    [
+     "lXyLz3Gu0YqdG8RfvIyZ",
+     "John - Energetic, Unstoppable and Upbeat",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/QWJ8KfZmDhbRb7pVVzyF0hS9tQG3/voices/lXyLz3Gu0YqdG8RfvIyZ/FujWzZWcKIe1sZhGlX5O.mp3"
+    ],
+    [
+     "ZIGffU92feoE7QFrof7N",
+     "Liam Callahan - Witty Media Person",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/w9mr6KiUNhf3838S5LAgVRfJxin1/voices/ZIGffU92feoE7QFrof7N/f421dbf1-c550-4b32-a04e-db67ac3aa094.mp3"
+    ],
+    [
+     "XTdzBt8oIEvodkwhxeA0",
+     "Bateman - Deep and Seductive",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/s8sNRAj3DjavgW13Zh8I1mmsbwz2/voices/XTdzBt8oIEvodkwhxeA0/h7QiU8fPoQDkdnZ0zsau.mp3"
+    ],
+    [
+     "XAezqB2SuTKEhjCMe7Oy",
+     "Roger - Laid-Back, Casual & Resonant",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/e9f5485839c749cdae7fddf080cda345/voices/XAezqB2SuTKEhjCMe7Oy/ZgwbzKLYCuV09C41IXZn.mp3"
+    ],
+    [
+     "KStQ5J0QpMyuoKkTnbDO",
+     "Bill Oxley - Audiobook",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/KStQ5J0QpMyuoKkTnbDO/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2NDk3MTI5OGJmYzI0MDg2YjY5MDI2OTcwYTIxZjFmOSIsImZpbGVuYW1lIjoiYmx0a3pCbDloenIyWjFHNnFSU20ubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "uh5qBlKfjqFl7XXhFnJi",
+     "James - Calm, Clear and Informative",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/EWDJD2Pbr9a7F5mo7Q3CvzR1kdR2/voices/uh5qBlKfjqFl7XXhFnJi/Ozfc1HiCYqsvsfZyjTRL.mp3"
+    ],
+    [
+     "fBD19tfE58bkETeiwUoC",
+     "Little Dude II - Cartoon Character",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/8f4e1ecd4b3740d1825d6efd97d39972/voices/fBD19tfE58bkETeiwUoC/yvNx9TNrpwXAv13uBKDp.mp3"
+    ],
+    [
+     "MYiFAKeVwcvm4z9VsFAR",
+     "Brad - Eyewitness Bystander",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/MYiFAKeVwcvm4z9VsFAR/nS1rh5Fybd6xZRbs1HdM.mp3"
+    ],
+    [
+     "iB0m5bo5Htdz0t9yE0xq",
+     "Jax Meridian - Rich and Deep Storyteller",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/eoqtemVCJRMIS3LmtYxogNS214G2/voices/iB0m5bo5Htdz0t9yE0xq/2hpNzMs3gjgYgJPVOU6p.mp3"
+    ],
+    [
+     "87tjwokZlpNU7QL3HaLP",
+     "Reverend - Raspy and Convincing Preacher",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/87tjwokZlpNU7QL3HaLP/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoid3JWZmFneVN2TVJMbDg5V1FEVnI3bHprdThxMiIsImZpbGVuYW1lIjoibm5QOTBvbXZUMFdlMWF1UTF3NGsubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "D9Thk1W7FRMgiOhy3zVI",
+     "Aaron - Monotone tech narrator",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/d8b693dd302c476ba895926ef3e60280/voices/D9Thk1W7FRMgiOhy3zVI/YbkLESdcC83jm5WCQFdR.mp3"
+    ],
+    [
+     "KLZOWyG48RjZkAAjuM89",
+     "Poe - Angry and Irritable Villain",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/KLZOWyG48RjZkAAjuM89/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI3YzVjYjdiMGM0MWU0YjM1YWVlYjg4ZWYyMTY2OTQ5YSIsImZpbGVuYW1lIjoiODZESjdvM0JjUTNBRzc0eWNpcmkubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "kdVjFjOXaqExaDvXZECX",
+     "Burt - Calm, Steady and Conversational",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/OgMJiVAehyeaRuNnrBxSovksRX13/voices/kdVjFjOXaqExaDvXZECX/lDFq3oGBLoiv7q4QyPrd.mp3"
+    ],
+    [
+     "3SF4rB1fGBMXU9xRM7pz",
+     "Evil Guy Oxley",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/3SF4rB1fGBMXU9xRM7pz/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2NDk3MTI5OGJmYzI0MDg2YjY5MDI2OTcwYTIxZjFmOSIsImZpbGVuYW1lIjoiMTdSWXY3bWh3NGxaclRFaGhkQVoubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "kHhWB9Fw3aF6ly7JvltC",
+     "Stokes - Relaxing, Casual and Warm",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/KcEOhQH68AScx5Ewu8IAP1yQ9C13/voices/kHhWB9Fw3aF6ly7JvltC/e715c481-fa66-49db-a29e-5c008acae740.mp3"
+    ],
+    [
+     "TABZn6CDfjMNGrsnGzzD",
+     "WikiBrad - Fast & Informative",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/TABZn6CDfjMNGrsnGzzD/O7IMTES7CJ0RGYhOQpDa.mp3"
+    ],
+    [
+     "rTOopItG6FIkKMIVxsl5",
+     "Markmont - Deep, Youthful and Positive",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/f8RFBwQyy6Y2YkwG3yNyvvb1tph2/voices/rTOopItG6FIkKMIVxsl5/CzJ4FXdUKrZue1Pckuar.mp3"
+    ],
+    [
+     "cVQu9bCKpvg5qUDOzQ2M",
+     "Dave - Expressive and Vibrant",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/941b6a70c1b94942bfe660cdf8253878/voices/cVQu9bCKpvg5qUDOzQ2M/WL2WiLrbiJ1kyxizHO3i.mp3"
+    ],
+    [
+     "c4NIULtANlpduSDihsKJ",
+     "John - Energetic, Deep, and Storytelling",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/e5ZHva3AiLPDE4DfwdjLoXm2Wqz2/voices/c4NIULtANlpduSDihsKJ/ef556165-586e-4030-b386-c20663252e9e.mp3"
+    ],
+    [
+     "1fz2mW1imKTf5Ryjk5su",
+     "Kevin - Career and Life Coach",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/DO1s4kPuqLQ4H9GHRR3YFtFdW9I2/voices/1fz2mW1imKTf5Ryjk5su/0fa36a0a-72ff-4172-bebf-e7132611efbe.mp3"
+    ],
+    [
+     "F3hPNAbHQ6mTZdjfgZdb",
+     "Marcus – Powerful Motivational Narrator",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/F3hPNAbHQ6mTZdjfgZdb/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2ZWU3NWEyOWVkOTM0YzljODlmMTg0ZmU2NDAyOTFlYiIsImZpbGVuYW1lIjoid09CMGVZN2pzV0dad2drU1Z3bjkubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "uFIXVu9mmnDZ7dTKCBTX",
+     "Justin Time - Elearning Narration",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/uFIXVu9mmnDZ7dTKCBTX/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiIyNjc3Nzk1YzNiYTY0YWJlYmIxZjdlNGEzN2QxNjlmNSIsImZpbGVuYW1lIjoiZmtpcnZXOGx3a1JKMjVlc3gyWFoubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "9KsetBCT7UMILPg6Ksvu",
+     "Lax",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/9BSPmhBJkheqxBPDvE6kddOa9rF3/voices/9KsetBCT7UMILPg6Ksvu/hDfUU7Sxo6qZxaPnFPWl.mp3"
+    ],
+    [
+     "KRzS7KO2TLlh1BRPgHnB",
+     "Dave - Male Deep Voice - for Media and AI",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/e9048e9ef0124184b76590371cc7e02f/voices/KRzS7KO2TLlh1BRPgHnB/L2TpV63LYTWq8IJHr4zj.mp3"
+    ],
+    [
+     "8s7FhQuwCMptPvCeDnKj",
+     "Mark - Strong, Premium and Polished",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/8s7FhQuwCMptPvCeDnKj/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiTXNjN05wM1pNSmcyaGxUN0x6bmdLRlJYclYzMyIsImZpbGVuYW1lIjoibW9NZ1pRZlgyOHdvR3UzbVVQeDYubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "4zVVKJJRwoOAAeUwtCQ1",
+     "Aiden - The Everyday Guy",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/102a026ff37d4137b15df07c8822af1f/voices/4zVVKJJRwoOAAeUwtCQ1/OdQgaIa2y9dysMDfS9FK.mp3"
+    ],
+    [
+     "Z7RrOqZFTyLpIlzCgfsp",
+     "Toby - Little Mythical Monster",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/Dwe4MuIDgfgjyShvmzGU6G3oTP82/voices/Z7RrOqZFTyLpIlzCgfsp/zyH5D2FkYVAzl55NQ2lL.mp3"
+    ],
+    [
+     "dHd5gvgSOzSfduK4CvEg",
+     "Ed - Late Night Announcer",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/dHd5gvgSOzSfduK4CvEg/EsJ1guwcm6nEhLK5N1Aq.mp3"
+    ],
+    [
+     "jJvIIsFGSxzXLCRjq5Xf",
+     "Deep Lax - Friendly and Motivational",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/jJvIIsFGSxzXLCRjq5Xf/sU1bU7K3IgH5fodyMPiL.mp3"
+    ],
+    [
+     "ktkP7Nsj67dw2zcplQYt",
+     "Lawrence - Bright and Informative",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/ktkP7Nsj67dw2zcplQYt/HLqkY4HmHjsgYkZUS8Fj.mp3"
+    ],
+    [
+     "AiVXo6AkAsMPEX0qNgmP",
+     "Matt Landon - Steady and Cheerful",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/76435cef92554cff9960ad6d249cb8b0/voices/AiVXo6AkAsMPEX0qNgmP/FweWzZCxvwigmcj3ECwB.mp3"
+    ],
+    [
+     "8zu9JdWzG7LvGSTz3uf7",
+     "Jay Johnson - Bubbly, Fun and Positive",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/8zu9JdWzG7LvGSTz3uf7/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiNEV0eHozeFpmWmZFOURmdDI4UTZMakpxVFZBMyIsImZpbGVuYW1lIjoiQTdVb1hVN2tNb2RxZ200cWdwUHMubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "dSByRdUbTGloB7TFA1qD",
+     "Jon - Catalyst",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/dSByRdUbTGloB7TFA1qD/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI3YmRkNjlkOWU1ODE0ODFhOGVhNTIxNjQ5MzI3MWY4MSIsImZpbGVuYW1lIjoiMDJkZGQ3ZjMtOGRjZS00MDQxLThkZWItMjZjYmU4YmU3MjAzLm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "GLSWsaquVBsIPLPPRi2s",
+     "George - War-torn Seargant",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/GLSWsaquVBsIPLPPRi2s/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJhODQ2YWUxZDY2MWQ0YTY0YWZjZmJlM2U0NWU0YjIwOSIsImZpbGVuYW1lIjoiNGYzNGVjMDItZTM1ZS00ZGFhLTllOTItNzIxNjk5YmQ1MDZmLm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "uKGPYP2uuyRQv8SeFre0",
+     "Chris Anthony",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/84bfa28459634f8fb30ca6e5a8643fd4/voices/uKGPYP2uuyRQv8SeFre0/EBOye6u0H92c1l6Nyvb8.mp3"
+    ],
+    [
+     "FLpz0UhC9a7CIfUSBo6S",
+     "Clancy - Viral Long-Form Storyteller",
+     "male · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/FLpz0UhC9a7CIfUSBo6S/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoidXNlcl8xNzAxa2cycmVqYWplcGFhcXcxcmQ2MGZuNjhlIiwiZmlsZW5hbWUiOiJSM2o5YlRMZDRqTDUzUEF5bk5kYS5tcDMiLCJ0aW1lc3RhbXAiOjE3OTM1MTI4MDAwMDAwMDB9"
+    ]
+   ]
+  },
+  {
+   "key": "women",
+   "title": "Women",
+   "note": "200 American female voices, among the most used.",
+   "voices": [
+    [
+     "tnSpp4vdxKPjI9w0GnoV",
+     "Hope - upbeat and clear",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/tnSpp4vdxKPjI9w0GnoV/LiIyxRT1qFJ1QJPr8sWl.mp3"
+    ],
+    [
+     "r1KmysJdVYZjJCm4mL3b",
+     "Jessica - Playful, Bright, Warm",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/3f9696c671d04ff682b1d6019d5b62fe/voices/r1KmysJdVYZjJCm4mL3b/65478cae-a15a-4f7d-88a4-14cbc8745b2b.mp3"
+    ],
+    [
+     "56AoDkrOh6qfVPDXZ7Pt",
+     "Cassidy - Crisp, Direct and Clear",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/56AoDkrOh6qfVPDXZ7Pt/oEgVi6mikkKcpVcTFfj5.mp3"
+    ],
+    [
+     "lxYfHSkYm1EzQzGhdbfc",
+     "Jessica Anne Bogart - A VO Professional; now cloned!",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/fb1bd18708014d8d80e770df5ea11bb7/voices/lxYfHSkYm1EzQzGhdbfc/JZDpsUoP3T2VAnEEmj4l.mp3"
+    ],
+    [
+     "aMSt68OGf4xUZAnLpTU8",
+     "Juniper - Grounded and Professional",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/aMSt68OGf4xUZAnLpTU8/J1MZWsaESdkAy9Offbd7.mp3"
+    ],
+    [
+     "yj30vwTGJxSHezdAGsv9",
+     "Jessa - Easygoing and Effortless",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/yj30vwTGJxSHezdAGsv9/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiNWhkTFRwRURiamVnNFVLMXZsOUR2bEFiSjRJMiIsImZpbGVuYW1lIjoidngzdFNRMUlrb1F5TjRycjZvbGgubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "DODLEQrClDo8wCz460ld",
+     "Lauren - Friendly, Comforting and Soft",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/DODLEQrClDo8wCz460ld/MauqrAicWZU5vhA44xSe.mp3"
+    ],
+    [
+     "flHkNRp1BlvT73UL6gyz",
+     "Jessica Anne Bogart - Eloquent Villain",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/fb1bd18708014d8d80e770df5ea11bb7/voices/flHkNRp1BlvT73UL6gyz/Wi2FL0vNQp7bJAeSrJaz.mp3"
+    ],
+    [
+     "KoVIHoyLDrQyd4pGalbs",
+     "Autumn Veil - Warm and Reflective",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/69d3064e4fe3401dafab9d6d95281003/voices/KoVIHoyLDrQyd4pGalbs/tjml8OPQnxcFs9bUmKAE.mp3"
+    ],
+    [
+     "jqcCZkN6Knx8BJ5TBdYR",
+     "Zara - The Warm, Real-World Conversationalist",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/XKwEw9ihVRMYSZkGwKydUfpES0B3/voices/jqcCZkN6Knx8BJ5TBdYR/JKHbp9CMKBoqcDFfzWIf.mp3"
+    ],
+    [
+     "g6xIsTj2HwM6VR4iXFCw",
+     "Jessica Anne Bogart - Chatty and Friendly",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/g6xIsTj2HwM6VR4iXFCw/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJmYjFiZDE4NzA4MDE0ZDhkODBlNzcwZGY1ZWExMWJiNyIsImZpbGVuYW1lIjoiMU9xazlTZXNReFVNeG9wZmdMYjcubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "EST9Ui6982FZPSi7gCHi",
+     "Elise - Warm, Natural and Engaging",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/EST9Ui6982FZPSi7gCHi/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiOHJiR0R2QXhZc2hnZUtXZEk0T0U2UEhPdFFUMiIsImZpbGVuYW1lIjoiaWlTa3NSRnpuelZ5cDYwdVlGT1oubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "kdmDKE6EkgrWrrykO9Qt",
+     "Alexandra - Conversational and Natural",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1df4b21393b74964b03d3690a173eb80/voices/kdmDKE6EkgrWrrykO9Qt/yJT6XwhJHSWv3Pb05OIk.mp3"
+    ],
+    [
+     "XfNU2rGpBa01ckF309OY",
+     "Nichalia Schwartz - Bright and Friendly",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/XfNU2rGpBa01ckF309OY/kuFJZI5s8GbgYm5f0hMo.mp3"
+    ],
+    [
+     "qSeXEcewz7tA0Q0qk9fH",
+     "Victoria - Warm, Trustworthy, and Relatable",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/228d4047a7e64c3ca68131d246d93ef2/voices/qSeXEcewz7tA0Q0qk9fH/zDds5EkXR72GXolhj81V.mp3"
+    ],
+    [
+     "uYXf8XasLslADfZ2MB4u",
+     "Hope - Bubbly, Gossipy and Girly",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/uYXf8XasLslADfZ2MB4u/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoic0Q5MkhuTUhTOVdaTFhLTlRLeG1uQzhYbUozMiIsImZpbGVuYW1lIjoiTTBVVGZORmlnSW5oejhMTWI0REEubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "XJ2fW4ybq7HouelYYGcL",
+     "Cherry Twinkle - Bubbly and Sweet",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/VmmN7WWjt4PCPQ4mCfKlo3iIzmu2/voices/XJ2fW4ybq7HouelYYGcL/rGK5UpxA8UY19dArqv2o.mp3"
+    ],
+    [
+     "iCrDUkL56s3C8sCRl7wb",
+     "Hope - Poetic, Romantic and Captivating",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/iCrDUkL56s3C8sCRl7wb/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoic0Q5MkhuTUhTOVdaTFhLTlRLeG1uQzhYbUozMiIsImZpbGVuYW1lIjoiQ1l1N0pCTjN5bk9MeXNXMjljbHQubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "uIZsnBL0YK1S5j69bAih",
+     "Samantha - Emotional, Soft and Intimate",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/5hdLTpEDbjeg4UK1vl9DvlAbJ4I2/voices/uIZsnBL0YK1S5j69bAih/SbfzuKmI2eCEznvfivjJ.mp3"
+    ],
+    [
+     "eXpIbVcVbLo8ZJQDlDnl",
+     "Siren - Natural realistic conversational voice",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/cbfaa74d559547979fa92c07eae49b0f/voices/eXpIbVcVbLo8ZJQDlDnl/nvbKCMRoZnwNqgIhVjJE.mp3"
+    ],
+    [
+     "OYTbf65OHHFELVut7v2H",
+     "Hope - Natural, Clear and Calm",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/sD92HnMHS9WZLXKNTKxmnC8XmJ32/voices/OYTbf65OHHFELVut7v2H/kTLS0DfvlR1QTyjUzOiT.mp3"
+    ],
+    [
+     "xctasy8XvGp2cVO9HL9k",
+     "Allison - Energetic, Clear and Bubbly",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/xctasy8XvGp2cVO9HL9k/lsPc4Rdz6UBSdl9vu10A.mp3"
+    ],
+    [
+     "WtA85syCrJwasGeHGH2p",
+     "Ember - Energetic, Confident Protagonist",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/WtA85syCrJwasGeHGH2p/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiTmszSEtrVVo0dU5vajg3ZmRmd3JtaXJWS0lyMSIsImZpbGVuYW1lIjoiTjA2SjRLd0xscnVEWmdoVFV1b3gubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "qBDvhofpxp92JgXJxDjB",
+     "Lily Wolff - Expressive and Kind",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/72bdb9c08cad4d3da50eb849856f35d4/voices/qBDvhofpxp92JgXJxDjB/zCF3eM3r5CLzM3esEn8v.mp3"
+    ],
+    [
+     "BZgkqPqms7Kj9ulSkVzn",
+     "Eve - Authentic, Energetic and Happy",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/2fb5f7f22a174a62b41adac3b2c17856/voices/BZgkqPqms7Kj9ulSkVzn/XVC95XX3UKyM8DIfXORa.mp3"
+    ],
+    [
+     "XW70ikSsadUbinwLMZ5w",
+     "Annie K - Grounded Narrator",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/d919f501def841d688c8fe932a668ff6/voices/XW70ikSsadUbinwLMZ5w/soulfji4KA2lZeeF5t2w.mp3"
+    ],
+    [
+     "i4CzbCVWoqvD0P1QJCUL",
+     "Ivy - Spirited, Lively, Daring",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/i4CzbCVWoqvD0P1QJCUL/sn1oBYRT4QiAmOMgLkoi.mp3"
+    ],
+    [
+     "zGjIP4SZlMnY9m93k97r",
+     "Hope - Clear, Relatable and Charismatic",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/sD92HnMHS9WZLXKNTKxmnC8XmJ32/voices/zGjIP4SZlMnY9m93k97r/Who63aXv5rpUn6OHVgHv.mp3"
+    ],
+    [
+     "4tRn1lSkEn13EVTuqb0g",
+     "Serafina - Sensual Temptress",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/4tRn1lSkEn13EVTuqb0g/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoidFg1ZnhCQjYyMlFVcjNmZTdjbHA5cEdWeGgzMyIsImZpbGVuYW1lIjoiYmNwSzJXanNrQVJTVDVodUtvMGwubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "NDTYOmYEjbDIVCKB35i3",
+     "Paige - Engaging Narrator",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/5dVkyvf9hWQ7Nsxgwk1qbTBVxc63/voices/NDTYOmYEjbDIVCKB35i3/nMSJmS4PAD07h42vKmX0.mp3"
+    ],
+    [
+     "K7W7zLWeGoxU9YqWoB7A",
+     "Rachel - Social Media Narrator",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/ASpWtpoIb8QO6ihmDnPl9KOrd4s1/voices/K7W7zLWeGoxU9YqWoB7A/JyYCTsdVf8ikvvri5CTU.mp3"
+    ],
+    [
+     "4RZ84U1b4WCqpu57LvIq",
+     "Bella -  Chatty Social Media Influencer",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/GJdoyaP8TaZz3yZHCWI2JwuCVsv1/voices/4RZ84U1b4WCqpu57LvIq/whyoJZll1TyY1DNXatiI.mp3"
+    ],
+    [
+     "8DzKSPdgEQPaK5vKG0Rs",
+     "Vanessa - Beach Girl",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/pJj966DxwEg3jXdcUkoTbMzkPsL2/voices/8DzKSPdgEQPaK5vKG0Rs/AeRt8yvbNanY84fSNvRc.mp3"
+    ],
+    [
+     "Qggl4b0xRMiqOwhPtVWT",
+     "Clara - Relaxing, Calm and Soothing",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/waW9Pe5Rj4OtyxqKFSKqrFI9Yu22/voices/Qggl4b0xRMiqOwhPtVWT/nadmzoPR09GCQyNWA8ie.mp3"
+    ],
+    [
+     "Nhs7eitvQWFTQBsf0yiT",
+     "Sarah - Approachable and Informative",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/kGguywYBM6ZDW5j5xFRCvBmzqL92/voices/Nhs7eitvQWFTQBsf0yiT/D6QJtXoAUfIBGei8I0WT.mp3"
+    ],
+    [
+     "tQ4MEZFJOzsahSEEZtHK",
+     "Ivanna - Seductive & Intimate",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/PbKq2iR4OIeherAWi2xD3ELKlfe2/voices/tQ4MEZFJOzsahSEEZtHK/62iX5gJdopY8r63K3CJf.mp3"
+    ],
+    [
+     "ocZQ262SsZb9RIxcQBOj",
+     "Lulu Lolipop - High-Pitched and Bubbly",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/ocZQ262SsZb9RIxcQBOj/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiVm1tTjdXV2p0NFBDUFE0bUNmS2xvM2lJem11MiIsImZpbGVuYW1lIjoicUVnTlRpcFl6N0JnOXQxS3pYRk8ubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "6u6JbqKdaQy89ENzLSju",
+     "Brielle - Podcast girl extremely natural",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/UtY8SzQcynWj6pnllKYZlJLRAaI3/voices/6u6JbqKdaQy89ENzLSju/3xgkujlukdHHhcsdsQsY.mp3"
+    ],
+    [
+     "gJx1vCzNCD1EQHT212Ls",
+     "Ava - Eager, Helpful and Understanding",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/8rbGDvAxYshgeKWdI4OE6PHOtQT2/voices/gJx1vCzNCD1EQHT212Ls/1mP3gBL8hmAjLz1zFn8g.mp3"
+    ],
+    [
+     "eVItLK1UvXctxuaRV2Oq",
+     "Jean - Alluring and Playful Femme Fatale",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/eVItLK1UvXctxuaRV2Oq/CHtqtnSGvzxCBQyDa6m9.mp3"
+    ],
+    [
+     "BuaKXS4Sv1Mccaw3flfU",
+     "Christina - Energetic Commercial American Female Voice",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/BuaKXS4Sv1Mccaw3flfU/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoibEhFQm9LUERSRGdVVkx3MEpLNTN0dHdJa3lYMiIsImZpbGVuYW1lIjoidHFUMUFMNG1HUDJLOGU5MWwwaTgubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "GZ4PpFJV8ikEGUtBrjK7",
+     "Laura - a top narration voice",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/bb3de32d375e4462a5d1aebc77eb7b0a/voices/GZ4PpFJV8ikEGUtBrjK7/m0Qw8keebJxyXnRXBT6n.mp3"
+    ],
+    [
+     "WAhoMTNdLdMoq1j3wf3I",
+     "Hope - Smooth, Engaging and Kind",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/sD92HnMHS9WZLXKNTKxmnC8XmJ32/voices/WAhoMTNdLdMoq1j3wf3I/OdHq2JoogTP6B2rbqeKz.mp3"
+    ],
+    [
+     "WZlYpi1yf6zJhNWXih74",
+     "Hope - Professional, Clear and Natural",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/sD92HnMHS9WZLXKNTKxmnC8XmJ32/voices/WZlYpi1yf6zJhNWXih74/s3SNMV6LwXSMvoHFgP48.mp3"
+    ],
+    [
+     "ZT9u07TYPVl83ejeLakq",
+     "Rachelle - Well-spoken, Wise and Clear",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/ZT9u07TYPVl83ejeLakq/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI4MzExYWUwNTczYTA0NjcyOTFlZjI1Yjc1ZmIzNDA0OCIsImZpbGVuYW1lIjoid2kwTlVFOFdWYWFMaGQwUnhHWjQubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "h2sm0NbeIZXHBzJOMYcQ",
+     "Natasha - Informative, Smooth and Calm",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/h2sm0NbeIZXHBzJOMYcQ/rgEQcXdiFIMXlsOGf4Q9.mp3"
+    ],
+    [
+     "Nggzl2QAXh3OijoXD116",
+     "Candy - Young and Sweet",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/Nggzl2QAXh3OijoXD116/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI0YjhlNjQ0NWVmMzE0OTIwOWMwZGQ1MDgwYzdkNGE1NSIsImZpbGVuYW1lIjoiQ3NEajFYZGJOMDd3R1A3RVo3REQubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "BAdH0bMfq6VleQGLXj38",
+     "Tessa - Influencer Girl",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/BAdH0bMfq6VleQGLXj38/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiTndCSWpTU2FQdllMVVRxMjZnQ1ZrVWpQSVFxMSIsImZpbGVuYW1lIjoiemJTanFvSG1mNjR1RTk3dGt1cDUubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "dfeOmy6Uay63tNhyO99j",
+     "Kristen - Natural, Upbeat and Focused",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/1FPzQokrdIVPAmrepgllCIIW0Xv2/voices/dfeOmy6Uay63tNhyO99j/Jr7HF8izYHjQoDHkOYtD.mp3"
+    ],
+    [
+     "yM93hbw8Qtvdma2wCnJG",
+     "Ivanna - Young, Versatile and Casual",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/yM93hbw8Qtvdma2wCnJG/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiUGJLcTJpUjRPSWVoZXJBV2kyeEQzRUxLbGZlMiIsImZpbGVuYW1lIjoib01UbEJITUlPdURMd2NtN0kxdkoubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "rCuVrCHOUMY3OwyJBJym",
+     "Mia - Clear, Smooth, Professional",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/rCuVrCHOUMY3OwyJBJym/biaJfSai7bnabxf1gVQU.mp3"
+    ],
+    [
+     "l4Coq6695JDX9xtLqXDE",
+     "Lauren - Empathetic and Encouraging",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/l4Coq6695JDX9xtLqXDE/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJlZDliMDVlNjMyNGM0NTc2ODU0OTAzNTJlOWExZWM5MCIsImZpbGVuYW1lIjoielZqY2dVNGF1ZWpYcjZuUFk4UEsubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "54Cze5LrTSyLgbO6Fhlc",
+     "Caty - Droll, Wry and Dry",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/QGJ6kZIcVVcDLrmVSXsU5Sau0ei1/voices/54Cze5LrTSyLgbO6Fhlc/0qOKD9m3RsKKNnf4rpWV.mp3"
+    ],
+    [
+     "cVd39cx0VtXNC13y5Y7z",
+     "Hope - Vibrant, Warm and Innocent",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/sD92HnMHS9WZLXKNTKxmnC8XmJ32/voices/cVd39cx0VtXNC13y5Y7z/ZmGEtFLzESmhA9TkCBUW.mp3"
+    ],
+    [
+     "PoHUWWWMHFrA8z7Q88pu",
+     "Miranda - Sweet, Bubbly and Feminine",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/ZXqeDajThsaYR96DSywtY94M8Dy1/voices/PoHUWWWMHFrA8z7Q88pu/403a094a-c4e4-431f-b96a-7c63ae76508d.mp3"
+    ],
+    [
+     "ROMJ9yK1NAMuu1ggrjDW",
+     "Relaxing Rachel - Calm & Soothing",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/m9nWZUPTkORtCIM1nI82HMwkNbr2/voices/ROMJ9yK1NAMuu1ggrjDW/TlWk9Vn1rzULFEJ5Nyjx.mp3"
+    ],
+    [
+     "ZSNL4hPqCnqoMPaI4jGX",
+     "Hannah - All-American, bright, natural",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/bb3de32d375e4462a5d1aebc77eb7b0a/voices/ZSNL4hPqCnqoMPaI4jGX/7kEAYRkZwQPLx3gakVyu.mp3"
+    ],
+    [
+     "XhNlP8uwiH6XZSFnH1yL",
+     "Elizabeth - Calm Storyteller",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/90ec6852cdbe4f4a9fd60c0f19c7e3b8/voices/XhNlP8uwiH6XZSFnH1yL/TiZVw9Bt2lnBBVR7W0q4.mp3"
+    ],
+    [
+     "DXFkLCBUTmvXpp2QwZjA",
+     "Eryn - Friendly, AI Assistant, Customer Service, American Female Voice",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/DXFkLCBUTmvXpp2QwZjA/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiRGRVdDZsVkZmclVPU2lrSHJDYnMzdGVzTWdFMiIsImZpbGVuYW1lIjoiQlRmbm5VY1h5MHl6Q0xPemZMbngubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "XdflFrQO8wbGpWMNZHFr",
+     "Zoe - Playful and Arrogant Magician",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/XdflFrQO8wbGpWMNZHFr/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoieTFUeGZwSTNscmVuaG52cWFGcnNjVmV5Q3ZVMiIsImZpbGVuYW1lIjoiYVR1Q3J1cElTaWw5YjQ4Rm5iWEQubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "2qfp6zPuviqeCOZIE9RZ",
+     "Trinity - Calm Female Sleep & Affirmation Voice",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/2qfp6zPuviqeCOZIE9RZ/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI4YmM5YjU4YWY4Y2M0N2Q3OTkwMWRhMzczZjIxZGM0YyIsImZpbGVuYW1lIjoiUVVUNTlpNXhyVGluc3pPaWJpWjMubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "pPdl9cQBQq4p6mRkZy2Z",
+     "Emma - Adorable and Upbeat",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/pPdl9cQBQq4p6mRkZy2Z/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoic0Q5MkhuTUhTOVdaTFhLTlRLeG1uQzhYbUozMiIsImZpbGVuYW1lIjoiNVZaMXdkdXhUTjRQeTMyTnpwZWoubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "weA4Q36twV5kwSaTEL0Q",
+     "Eva - Futuristic Robot Helper",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/weA4Q36twV5kwSaTEL0Q/bnjkXRROmsXsHf4UVCt7.mp3"
+    ],
+    [
+     "XcXEQzuLXRU9RcfWzEJt",
+     "Veda Sky - Natural, Mindful and Caring",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/XcXEQzuLXRU9RcfWzEJt/nc3yiwrfwrNGi01JgyXu.mp3"
+    ],
+    [
+     "RGb96Dcl0k5eVje8EBch",
+     "Serena – Gentle Coach and Wellness Guide",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/8rbGDvAxYshgeKWdI4OE6PHOtQT2/voices/RGb96Dcl0k5eVje8EBch/DSgfl2ENF7FodxJhkHNI.mp3"
+    ],
+    [
+     "bMxLr8fP6hzNRRi9nJxU",
+     "Ivanna - Candid, Peppy and Genuine",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/K0hs4IvRfqQ7nGyPpZtGeYa0tXC3/voices/bMxLr8fP6hzNRRi9nJxU/Nn3O8xoC176s5Pe7lFai.mp3"
+    ],
+    [
+     "MClEFoImJXBTgLwdLI5n",
+     "Ivy - Sophisticated and Sassy",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/MClEFoImJXBTgLwdLI5n/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiTUpZOG9wazFEUGM2d1lMZEhjMG1IN0hzR2V0MiIsImZpbGVuYW1lIjoiaTRTN1c4TndzUUNCYjZJUmlrcVgubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "8LVfoRdkh4zgjr8v5ObE",
+     "Clara - Calm, Distinctive, and Narrative",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ba602b42ce4f4a60a2060776e2a9d819/voices/8LVfoRdkh4zgjr8v5ObE/wBO11GlYFzEnRUf9CH86.mp3"
+    ],
+    [
+     "SaqYcK3ZpDKBAImA8AdW",
+     "Jane Doe - Intimate",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/SaqYcK3ZpDKBAImA8AdW/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiIzZTM2MTk3MTE5ZTE0MGIzOWZiYmE2MGZkZDRjZTgzZCIsImZpbGVuYW1lIjoiYjdqRUFaZ2k1bmJkak94dlNGNU0ubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "k9KXsQFJqzAoomTCOrJB",
+     "Clara - Loud, Pushy and Energetic",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/gcxqYt4XDUdmYrXT1Sg9FIBK5T62/voices/k9KXsQFJqzAoomTCOrJB/2rUQx6z8r8ww4GVfoipz.mp3"
+    ],
+    [
+     "bD9maNcCuQQS75DGuteM",
+     "Sadie - Calm, Gritty & Expressive",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/user_8901kdy0fnejfspt0vrk0jq67gwd/voices/bD9maNcCuQQS75DGuteM/wqExfedWRLLhr5LbtaQO.mp3"
+    ],
+    [
+     "vZzlAds9NzvLsFSWp0qk",
+     "Maria Mysh",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/308afa96c6cd45fabf69591962ed99ef/voices/vZzlAds9NzvLsFSWp0qk/8ZUYeEQWrsc28TkwFu3p.mp3"
+    ],
+    [
+     "BlgEcC0TfWpBak7FmvHW",
+     "Fena - Girly, Young and Sassy Hero",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/HWZDXWW0bjNU5NxnGgeNWUB0XYU2/voices/BlgEcC0TfWpBak7FmvHW/DwNItFzDFvBm7URVIBzk.mp3"
+    ],
+    [
+     "vr5WKaGvRWsoaX5LCVax",
+     "Cherie - Smooth, Fluid and Advertisable",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/bb3de32d375e4462a5d1aebc77eb7b0a/voices/vr5WKaGvRWsoaX5LCVax/v2M4HNO1Wu80xN8UnU21.mp3"
+    ],
+    [
+     "tMXujoAjiboschVOhAnk",
+     "Clara - Corporate & Training Trusted Professional",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/tMXujoAjiboschVOhAnk/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI5NjY1ZWYwODZiNGY0NDY3ODc5Y2IxZWVkODQxMWYyNCIsImZpbGVuYW1lIjoiZ2VNTkVMU1VqbjF6eTV2ZmUxcHUubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "8quEMRkSpwEaWBzHvTLv",
+     "Veda Sky - Cozy Late Night Storyteller",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/8quEMRkSpwEaWBzHvTLv/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJlZDliMDVlNjMyNGM0NTc2ODU0OTAzNTJlOWExZWM5MCIsImZpbGVuYW1lIjoieTQ1ZmxNVlRldDhHU2xsNTZNWkEubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "TC0Zp7WVFzhA8zpTlRqV",
+     "Aria - Sultry Villain",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/TC0Zp7WVFzhA8zpTlRqV/tdUrOwJT1qeJz2JMOJFp.mp3"
+    ],
+    [
+     "TbMNBJ27fH2U0VgpSNko",
+     "Lori - Happy, Sweet and Compassionate",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/66f78291e77e465aa11de5b0c0b34b2d/voices/TbMNBJ27fH2U0VgpSNko/cWDvSljlcLDipvaWsmxJ.mp3"
+    ],
+    [
+     "uyfkySFC5J00qZ6iLAdh",
+     "Nanachan - Alluring and Effortless",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/uyfkySFC5J00qZ6iLAdh/5RMpZeYY0YmHbH0QiFSu.mp3"
+    ],
+    [
+     "gE0owC0H9C8SzfDyIUtB",
+     "Ivanna - Sassy, Condescending and Clear",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/gE0owC0H9C8SzfDyIUtB/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiaHNRWWNwU0t3ZVNZZ3hIMVFkWEVqbzB1WEU0MyIsImZpbGVuYW1lIjoidFdpZk4zWnhtQjVLUmNWTXh5SDQubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "l32B8XDoylOsZKiSdfhE",
+     "Carla - Sweet, Soft and Meditative",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/T8SPYoeKVja2zKcS382h5M2WnM73/voices/l32B8XDoylOsZKiSdfhE/dLLJ00me9iR4zeZo3ecS.mp3"
+    ],
+    [
+     "ZqvIIuD5aI9JFejebHiH",
+     "Mira - Calming, Relaxing and Chill",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/KcDnajN2UsWTk5Ysa7SRPEIc5HT2/voices/ZqvIIuD5aI9JFejebHiH/2d964bb8-58e4-440b-82db-e318662a15f1.mp3"
+    ],
+    [
+     "Kx485Z9dUCufrWYpKMSR",
+     "Belinda - clear, American, pleasant",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ec46e8f5aeae45a9a027f9f4d79968b8/voices/Kx485Z9dUCufrWYpKMSR/CutNGB6yuIIsMnt9w0pl.mp3"
+    ],
+    [
+     "cNYrMw9glwJZXR8RwbuR",
+     "Belle – Empathetic Customer Service",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/cNYrMw9glwJZXR8RwbuR/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJlZDliMDVlNjMyNGM0NTc2ODU0OTAzNTJlOWExZWM5MCIsImZpbGVuYW1lIjoiNmpwRksxUzl4OXprZDNlMkFMZ2kubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "fDeOZu1sNd7qahm2fV4k",
+     "Luna - bubbly BFF bright cheery storytime gossip voice for YouTube",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/xnugqBXlkDVEOZpGqs2VuSnyl7A2/voices/fDeOZu1sNd7qahm2fV4k/0ubYAMeAtHe6WT6AmAqv.mp3"
+    ],
+    [
+     "0S5oIfi8zOZixuSj8K6n",
+     "Ivanna - Upbeat and Engaging Narrator",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/EHTvG7athiMx1FUbM1DDq6S7Lm73/voices/0S5oIfi8zOZixuSj8K6n/Dcdu4LkV5HFVF29eXciw.mp3"
+    ],
+    [
+     "LEnmbrrxYsUYS7vsRRwD",
+     "Jessica - Intimate and Sensual",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/J4h991GHbFgiqH3MWFYXECli4hB3/voices/LEnmbrrxYsUYS7vsRRwD/XbuzjwjKc5rprnRx5Tgm.mp3"
+    ],
+    [
+     "1rnYMVDXZksVr6x7pZPX",
+     "Veda Sky - Suspense & Horror Storyteller",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/1rnYMVDXZksVr6x7pZPX/LRxgkUVhvgq3nFfLRPzo.mp3"
+    ],
+    [
+     "G4Wh6MqJNTzYtuAeMqv5",
+     "Eve - Narrative & Audiobooks",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/4bcd6fa81a174091bfc08cc6e7f7f4e6/voices/G4Wh6MqJNTzYtuAeMqv5/ia27iPGez5dwnZeF4ykc.mp3"
+    ],
+    [
+     "Hh0rE70WfnSFN80K8uJC",
+     "Hannah - Neutral, Polished and Helpful",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/Hh0rE70WfnSFN80K8uJC/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiMmNMemF0SGpKa2dPTnpGSVFjenlnaXZkM0dIMyIsImZpbGVuYW1lIjoiR21qZXNJYXZEaFpRRXlzVFhSTmMubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "03vEurziQfq3V8WZhQvn",
+     "Aerisita - Sassy and Comedic",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/03vEurziQfq3V8WZhQvn/buuoaCIA3tuz8RwffiH0.mp3"
+    ],
+    [
+     "n7Wi4g1bhpw4Bs8HK5ph",
+     "Gigi - Cute, Peppy, Energetic",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/n7Wi4g1bhpw4Bs8HK5ph/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJlZTVmZTczYjc2ZTM0Y2JmYTdiMWY5ZjJjNjdhMTVhZSIsImZpbGVuYW1lIjoiRGF6WkZMbGhUSFh1MmlvNGJrU1gubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "m3yAHyFEFKtbCIM5n7GF",
+     "Ash - Conversational, Kind and Bright",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/pLK74sJjoxgXbVNDoNAWjrvCaTc2/voices/m3yAHyFEFKtbCIM5n7GF/fWgo0P6dh6oe0n5t9trX.mp3"
+    ],
+    [
+     "vChnJZ1Cu89g2XXumPfT",
+     "Lara - Natural, Relatable & Engaging",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/66d4b7385fb547d4ac4ac9a74e0088a2/voices/vChnJZ1Cu89g2XXumPfT/5XY4H832Mhg0j83oFGRj.mp3"
+    ],
+    [
+     "FUfBrNit0NNZAwb58KWH",
+     "Angela - Conversational and Friendly",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/FUfBrNit0NNZAwb58KWH/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJmM2QyNGEzM2NjNWI0ZTgxYTU2MWUzMzJkZjI3ZDFmMSIsImZpbGVuYW1lIjoicVI5QmdKYkpnRnQwSW9vQUdEQngubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "eLDc7xhWxG2FElT3kUTj",
+     "Janet - Professional, Clear, and Neutral",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/eLDc7xhWxG2FElT3kUTj/aTInQG648LTH0oRjg54j.mp3"
+    ],
+    [
+     "OOk3INdXVLRmSaQoAX9D",
+     "Alicia Speaks - Unique and Pleasant",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/OOk3INdXVLRmSaQoAX9D/1R1NAsClTQAc18cJwXYK.mp3"
+    ],
+    [
+     "Hybl6rg76ZOcgqZqN5WN",
+     "Tala - Warm, Polished, and Scratchy",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/VIKpTvOOMea8Y02AZHtMFz3ojri1/voices/Hybl6rg76ZOcgqZqN5WN/anqoXemNSdwe7WELrUbW.mp3"
+    ],
+    [
+     "eBvoGh8YGJn1xokno71w",
+     "Halley",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/eBvoGh8YGJn1xokno71w/dMhJD8S144ND8RaDFyAg.mp3"
+    ],
+    [
+     "v8DWAeuEGQSfwxqdH9t2",
+     "Lauren B - Romantic, Polished & Calm",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/v8DWAeuEGQSfwxqdH9t2/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJlZDliMDVlNjMyNGM0NTc2ODU0OTAzNTJlOWExZWM5MCIsImZpbGVuYW1lIjoiZHU3ZTI4SDNIY0pNbHlnZk5vRzkubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "FCdKzv68Ofr4VUDcZXIy",
+     "Alexis - Emotional & Expressive",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/tX5fxBB622QUr3fe7clp9pGVxh33/voices/FCdKzv68Ofr4VUDcZXIy/cA1AIGTo3615F0ai6zmO.mp3"
+    ],
+    [
+     "d3MFdIuCfbAIwiu7jC4a",
+     "Anya",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/4430550a3eb64c68ba173948661a3b15/voices/d3MFdIuCfbAIwiu7jC4a/0B41hjwD7LUAkQdwtJk4.mp3"
+    ],
+    [
+     "2bk7ULW9HfwvcIbMWod0",
+     "Bianca - City girl",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/2bk7ULW9HfwvcIbMWod0/wIaDd6Rf2tjOGD9UbOJF.mp3"
+    ],
+    [
+     "7YaUDeaStRuoYg3FKsmU",
+     "Callie - Playful, Inviting and Friendly",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/4430550a3eb64c68ba173948661a3b15/voices/7YaUDeaStRuoYg3FKsmU/Q1P5AtU8XIR15XqBsxKN.mp3"
+    ],
+    [
+     "kdnRe2koJdOK4Ovxn2DI",
+     "Eryn - Genuine, Friendly and Natural",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/452adc21c9f74693918585d7ef4aa152/voices/kdnRe2koJdOK4Ovxn2DI/PHZPTflbygqpdJbgCqek.mp3"
+    ],
+    [
+     "09AoN6tYyW3VSTQqCo7C",
+     "Jessi - Friendly, Smooth, and Soft",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/09AoN6tYyW3VSTQqCo7C/kcwjIEhj1vqIC05nQ8a3.mp3"
+    ],
+    [
+     "S9NKLs1GeSTKzXd9D0Lf",
+     "Haley Maven - Social Media Bestie",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/rWKQlZ0WUUMlWJcsSkUfZvyTXW02/voices/S9NKLs1GeSTKzXd9D0Lf/KAsJklE9Nwv1hnkTqhAV.mp3"
+    ],
+    [
+     "t4U671CQHG58R11znrVj",
+     "Lily Rose - Conversational and Happy",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/t4U671CQHG58R11znrVj/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiUVkzTVdPbENsR002cHZuc0ZnSmZ2MjQ5ZzI2MyIsImZpbGVuYW1lIjoiTlBVdklOT0dkTzNFVVc0VWg4QWQubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "aFueGIISJUmscc05ZNfD",
+     "Terra",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/85e3b119e3324aa6b7527a954dbedb3f/voices/aFueGIISJUmscc05ZNfD/746bd8ec-0752-4916-9ba3-fa768370573a.mp3"
+    ],
+    [
+     "PStJ2DzQnh8zxG5PDf1s",
+     "Lyan - Female Genuine Casual Ads",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b22c7dcedcaa4c2a885c621de9013f80/voices/PStJ2DzQnh8zxG5PDf1s/OBn8R9abR5qcYevowhyu.mp3"
+    ],
+    [
+     "Awx8TeMHHpDzbm42nIB6",
+     "Kristen - Friendly and Casual BFF",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/mpGg3AngxFS9xEFvwpCG52wfRWu1/voices/Awx8TeMHHpDzbm42nIB6/yaYsfpy7A8g1aSv6m02P.mp3"
+    ],
+    [
+     "bvN2rlvpvH1mT3gPeNUl",
+     "Lila - The Warm & Engaging Conversationalist",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/XKwEw9ihVRMYSZkGwKydUfpES0B3/voices/bvN2rlvpvH1mT3gPeNUl/FPPQQYxGTcrhLKFqcF1t.mp3"
+    ],
+    [
+     "4NejU5DwQjevnR6mh3mb",
+     "Ivanna - Expressive, Articulate and Bold",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/CDKC9mo18EMbWDyG1U3KgWlavjp2/voices/4NejU5DwQjevnR6mh3mb/lZMj1BDrAaZBV3s1XHV8.mp3"
+    ],
+    [
+     "HpyxY047iEZzSG1aUPfx",
+     "Samantha",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/Q1eMIeDEBxZzQK2QXJ8xP5OXJCU2/voices/HpyxY047iEZzSG1aUPfx/a35bb92b-7a10-4f26-9aee-2a47068cc1b4.mp3"
+    ],
+    [
+     "JaagUurP1dmW3WscoJ79",
+     "Dahlia - Vintage Romantic Hollywood Star",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/user_8901kdy0fnejfspt0vrk0jq67gwd/voices/JaagUurP1dmW3WscoJ79/UIu68cjf5eNoFLAuc6av.mp3"
+    ],
+    [
+     "qFjcP4hHD9WIdODvuJOJ",
+     "Jenna - Warm, Soft, and Sultry",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ad791e112f3046fdb38bfd6c11942ec2/voices/qFjcP4hHD9WIdODvuJOJ/eac5aad7-080a-4625-bb48-2acd7939cd88.mp3"
+    ],
+    [
+     "T1LJmO1i3U7y9K38NWAy",
+     "Gigi Noir - Warm, confident & Natural",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/O0lArFqQMXTMXmVUBUzdtaIYLrw2/voices/T1LJmO1i3U7y9K38NWAy/110d1d6b-2590-4c27-9660-57af7d47e28b.mp3"
+    ],
+    [
+     "1wGbFxmAM3Fgw63G1zZJ",
+     "Allison - Calm, Soothing and Meditative",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/0gTtag0Tf8Yid893LAthh8tW1wt2/voices/1wGbFxmAM3Fgw63G1zZJ/86lXSExfVFW3CuYJPGTp.mp3"
+    ],
+    [
+     "XZUXLIpE3dqJ9aCZUj2R",
+     "Kristen - Upbeat social media influencer",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/XZUXLIpE3dqJ9aCZUj2R/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiVXViam9oV1pkT1BGRFJBWWFpa3BFYk5PdHU3MiIsImZpbGVuYW1lIjoiWHlZSHFVa2VzblRRbWVkU0ZwMFkubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "X03mvPuTfprif8QBAVeJ",
+     "Christina - Natural and Conversational",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/X03mvPuTfprif8QBAVeJ/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJlMTU2M2IzYjY1MDQ0NjY1YTEwNDlkZGYwYzExNGViNyIsImZpbGVuYW1lIjoiWFlkTWhRbHN5WEZBOUJwSW1rMGoubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "cfc7wVYq4gw4OpcEEAom",
+     "Nayva - Deep, Intense, Warm, Storyteller Voice",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/fc92ed88c0dd4a80ac439afe6933c1b7/voices/cfc7wVYq4gw4OpcEEAom/QvGK619xkO9g6drfIZEx.mp3"
+    ],
+    [
+     "eppqEXVumQ3CfdndcIBd",
+     "Minnie - High pitch cartoon character",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/ALqfGQvfmpaWu4h31YukjCGTOtE2/voices/eppqEXVumQ3CfdndcIBd/hV8J8hAjjdCfnFyoNGZd.mp3"
+    ],
+    [
+     "Crm8VULvkVs5ZBDa1Ixm",
+     "Andrea Wolff - clear, youthful, evenly paced",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/Crm8VULvkVs5ZBDa1Ixm/96l03fvHTt0ajBeL4Bgb.mp3"
+    ],
+    [
+     "TxGi1N29NQoCaYD4fcU5",
+     "Freya - Valley Girl",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ee5fe73b76e34cbfa7b1f9f2c67a15ae/voices/TxGi1N29NQoCaYD4fcU5/6mX4X4GL4Hdfu6pZ0QRi.mp3"
+    ],
+    [
+     "RXtWW6etvimS8QJ5nhVk",
+     "Fiona - chill, natural & Real",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/TrZfil7i0PWs9iI7Z1iTG4X45CS2/voices/RXtWW6etvimS8QJ5nhVk/naQJ4Frep3Yusy2rfEcc.mp3"
+    ],
+    [
+     "a5zfmqTslZJBP0jutmVY",
+     "Jen Frankie - Entitled & Spoiled",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/Una4hgv9bsP02e2YCrT9uElGJ2C3/voices/a5zfmqTslZJBP0jutmVY/TAuwwyyaw8uPXSjflETS.mp3"
+    ],
+    [
+     "c8GqgOMlDjKmhWVDfhvI",
+     "Kennedy - Expressive Narrator",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/jmRxIqTXEhOg7JeVh81cwYsIWg53/voices/c8GqgOMlDjKmhWVDfhvI/12ac2869-bfe6-43f4-9328-bc4dcb46ba81.mp3"
+    ],
+    [
+     "xFPwxsyzPJFEaL61n2ms",
+     "Ivanna - Gossip Queen",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/NfI1mWWKLocLFCDxjfirxV1AqnQ2/voices/xFPwxsyzPJFEaL61n2ms/NzORN2XiT3pVISHiGLlx.mp3"
+    ],
+    [
+     "2OEeJcYw2f3bWMzzjVMU",
+     "Clara - Children's Storyteller",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/c1qWsvGvVzfKP0sjN2Q21xN2s6Q2/voices/2OEeJcYw2f3bWMzzjVMU/2PiYeHaWBbOJgQ9bfriK.mp3"
+    ],
+    [
+     "45bOcRRMXeR9ihSPLJ11",
+     "Ariel",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/45bOcRRMXeR9ihSPLJ11/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJiYzEyMzFmZTdiOTA0N2M3YTMzOTgwZjhlYmFkZjllMSIsImZpbGVuYW1lIjoiMG1MNXNBMFhzb2haZ0E3a1dYaXgubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "kNie5n4lYl7TrvqBZ4iG",
+     "Cinnamon - Smart & Plucky Narrator",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/kNie5n4lYl7TrvqBZ4iG/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJiZjI0ZjMxNTI5ODI0ZjUxODVlMGZjN2ZlZGMyMjUyNiIsImZpbGVuYW1lIjoiNnFhcllveUNvWm96TFcyWUhacG4ubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "QPBKI85w0cdXVqMSJ6WB",
+     "Maysie",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/7e6ced372d904c7eb94eb034dd9c53f9/voices/QPBKI85w0cdXVqMSJ6WB/8oV3lR2lptgkkBuBDKsh.mp3"
+    ],
+    [
+     "T7eLpgAAhoXHlrNajG8v",
+     "Gracie Valley - Seductive and Sassy",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/T7eLpgAAhoXHlrNajG8v/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJmZjlkZTQxNTcyNzI0MWZjYWQ5ODg5OThlYmUzYzhiYyIsImZpbGVuYW1lIjoiNXlFT0dBMUUzZEpMQUg5V3l6dXcubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "sWsBiVcjjowceAScTnu3",
+     "Kayla",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/sWsBiVcjjowceAScTnu3/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoieXNSbU1GWkNMc1daVTdMT201Y3dmVGRCdjhSMiIsImZpbGVuYW1lIjoiMzhGdTkzRHd0azJNczczTmJmMmEubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "h2dQOVyUfIDqY2whPOMo",
+     "Nayva for Hot Topics Social Media - fun, clear, sarcastic energy",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/fc92ed88c0dd4a80ac439afe6933c1b7/voices/h2dQOVyUfIDqY2whPOMo/vBQZIiIDTpAsUKEbfz57.mp3"
+    ],
+    [
+     "ucgJ8SdlW1CZr9MIm8BP",
+     "Cera - Laid-Back Radio Host",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/ucgJ8SdlW1CZr9MIm8BP/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiNmhKcmZYMVVvc2IyNll2Sk9VVWlTYlphVk9PMiIsImZpbGVuYW1lIjoiM3lWakxkazVzSnk1WTRZdUg5bTQubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "qTRV75fy2dUja4REMifv",
+     "Sia - Energetic, Confident ã Commercial",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/qTRV75fy2dUja4REMifv/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJlNWM4OGY1YmJlOWE0YzBkOWEzNzU0OGI4YTI2OWVlNyIsImZpbGVuYW1lIjoiUmIxc0YxSk5nRHJPN1U5eU5Td2EubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "YgzytRZyVmEux6PCtJYB",
+     "Ivanna -  Sultry, Fun and Captivating",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/YgzytRZyVmEux6PCtJYB/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoibnIyMVVHeTl5dFo5VWhob3owT09raXAxVnVRMiIsImZpbGVuYW1lIjoiWFRSdXlra0d6bHFCdGsxZjdOQ1MubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "0i0eaL5A0pznTa4q5uxk",
+     "Nayva for Social Media, e-Learning, Nonfiction How-To, and Corporate Training",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/fc92ed88c0dd4a80ac439afe6933c1b7/voices/0i0eaL5A0pznTa4q5uxk/75esKLxycvWlRFE0s9AY.mp3"
+    ],
+    [
+     "EIsgvJT3rwoPvRFG6c4n",
+     "Clara - Natural and Convincing",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/jrR31yoCg2gTrsSiovAhocmGTi93/voices/EIsgvJT3rwoPvRFG6c4n/kC6KH8bRXrCUGSoTeB46.mp3"
+    ],
+    [
+     "bIQlQ61Q7WgbyZAL7IWj",
+     "Faith - Gentle, Tender and Sweet",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/bIQlQ61Q7WgbyZAL7IWj/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiTWN2NTBFcktiZWdXM3Iyd0FZcjc0RzZlWmhFMyIsImZpbGVuYW1lIjoiam03aXo2ZVRCNWxwYUdrclRVU0oubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "BHf91PCMVcVwq6r1ku7L",
+     "Ava – Professional Female News & Explainer Voice",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/bbaf8235d443454fbc143b49f837fb38/voices/BHf91PCMVcVwq6r1ku7L/2j1DDh3C4T6QFYLAoQXJ.mp3"
+    ],
+    [
+     "V1sMnmZsNBJuEOA7aVqB",
+     "Rosie - Smoky, Warm, and Subtle",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/Yt1v6yNON1PREl6tRfD7UirCqhk1/voices/V1sMnmZsNBJuEOA7aVqB/0ef74199-cbd8-4e2a-8b01-509f1f99fc73.mp3"
+    ],
+    [
+     "x9leqCOAXOcmC5jtkq65",
+     "Tiffany - Gritty, Articulate and Calm",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/x9leqCOAXOcmC5jtkq65/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiVEd3TTg2SDdWVVYxSWg1UEdNWnN3VGtMNVFkMiIsImZpbGVuYW1lIjoiMmJyQXZTMWpERmNmaUR5Z29GZEUubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "c1uwEpPUcC16tq1udqxk",
+     "Harper - Confident, Clear and Cool",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1df4b21393b74964b03d3690a173eb80/voices/c1uwEpPUcC16tq1udqxk/rCcuZeyPvOdXl35rx9JU.mp3"
+    ],
+    [
+     "OB0Jj6v9DGLLgz8dD57i",
+     "Mariana - Intimacy with Authority",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/OB0Jj6v9DGLLgz8dD57i/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiRTJVc1pUOHYxdWIycU9ITmdTRWdkSWlDUllNMiIsImZpbGVuYW1lIjoiWHhteFoxakV3dHlqQ0dpRmlOVTcubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "ji8lGJ0ZLrpJ5KY4NwOd",
+     "Andrea - pleasant storyteller",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/BZsbqPdKuRO7OdFHyaXYNkRHnLy1/voices/ji8lGJ0ZLrpJ5KY4NwOd/xxsgGx2hUzxbMyWkArnG.mp3"
+    ],
+    [
+     "OZxMHsGaBmV5pjMIDIn0",
+     "Amy - Natural and Sweet",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/36a9d32e3e024c6082021506d811cc95/voices/OZxMHsGaBmV5pjMIDIn0/8um6b2uDzxixhfzDbH0y.mp3"
+    ],
+    [
+     "FLj50PrMa40MhGHappOt",
+     "Beth - Commercial, Upbeat, Engaging",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ee5fe73b76e34cbfa7b1f9f2c67a15ae/voices/FLj50PrMa40MhGHappOt/dxkGpp4FcA8zBBQVgfir.mp3"
+    ],
+    [
+     "eaNNqnkhfRYVtX7U7VLj",
+     "Clara - Emotional, Dramatic and Polished",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/eaNNqnkhfRYVtX7U7VLj/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoidzN4Uk40OGN5dWZPN3NDbFVob1c4bkZoamhwMiIsImZpbGVuYW1lIjoiOXZKSGM1OWZVV2VuaDhGSURsNHAubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "RaFzMbMIfqBcIurH6XF9",
+     "Eryn - Informative, Neutral and Measured",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/DXCrxxc55DZsEPNKieedZbV9YeB3/voices/RaFzMbMIfqBcIurH6XF9/6v6VQ7XdoZ5F7Mg1JIUk.mp3"
+    ],
+    [
+     "7li2FesTkwg1glJviKzT",
+     "Frankie - Friendly Instructor",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/69f9e625046448fd8551a9a4e2d85d43/voices/7li2FesTkwg1glJviKzT/1GgV5HoXKSTasaSwlsJW.mp3"
+    ],
+    [
+     "F7hCTbeEDbm7osolS21j",
+     "Amanda - Warm, Polished and Engaging",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/pz6xtsH51FMXjmJXU0Jau9rgo253/voices/F7hCTbeEDbm7osolS21j/gZIBZuGsvZl2rxSqy3Y5.mp3"
+    ],
+    [
+     "O4NKp88bb2JkAnrCbwQt",
+     "Lauren - Mystery Storytelling Voice",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/O4NKp88bb2JkAnrCbwQt/QtCW3k8RtrEnD7gmB2fw.mp3"
+    ],
+    [
+     "m1Edok6RLyT2Hz3OljNi",
+     "Zoë - Casual millennial woman",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/m1Edok6RLyT2Hz3OljNi/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiemVUREdZd1RNMmhVWlBRaXRsR1pMTDJ3WTVMMiIsImZpbGVuYW1lIjoiTk1YREN6R2pyZHk5S25HempwcUwubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "rv30Fd6w5bnbL0kHzWlr",
+     "Alice - Gentle Storyteller",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/user_1801kg2v51dnezgvtpwqtwwt0t75/voices/rv30Fd6w5bnbL0kHzWlr/iu7MtXbwuG5B2aRLAunT.mp3"
+    ],
+    [
+     "OHbs18UsFunlwffsTLNn",
+     "Lyan - Friendly Female Authentic UGC",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/OHbs18UsFunlwffsTLNn/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJiMjJjN2RjZWRjYWE0YzJhODg1YzYyMWRlOTAxM2Y4MCIsImZpbGVuYW1lIjoibVF2blc0UlZUbGh4VTBRRkZCbDYubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "eYO9Ven76ACQ8Me4zQK4",
+     "Valentyna - Soft, Soothing and Calm",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/eYO9Ven76ACQ8Me4zQK4/QyxxV4snb2SDb5aVitua.mp3"
+    ],
+    [
+     "e0bmllAjevQ9bvU71kzO",
+     "Lisa - Engaging and Conversational",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/3Q68TZURe7hCVT9oZVBaqwOXRnj2/voices/e0bmllAjevQ9bvU71kzO/eebe5238-39a2-4df0-af9f-cabdddae540f.mp3"
+    ],
+    [
+     "NHRgOEwqx5WZNClv5sat",
+     "Chelsea - Conversational and Bright",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/14ddef3ab0724699945591837d38a13f/voices/NHRgOEwqx5WZNClv5sat/L1sWGVhCp2gf1PzyhaAb.mp3"
+    ],
+    [
+     "bxiObU1YDrf7lrFAyV99",
+     "Ashley",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/15682eb6c1c24fbbafbaf263d560dcff/voices/bxiObU1YDrf7lrFAyV99/53MTM7dRlSHo8IsE5F9z.mp3"
+    ],
+    [
+     "L0yTtpRXzdyzQlzALhgD",
+     "Marissa - Dynamic, Engaging and Friendly",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/L0yTtpRXzdyzQlzALhgD/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoia2kzdzlVWFpzdFpqMnZvUUdFYkNVVzV1NkYxMiIsImZpbGVuYW1lIjoiTVZpTzJZQmlobW5VWmNXNkIwWW4ubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "CvD6hF1BJzAFN428j1cO",
+     "Kristen - Warm, Corporate and Steady",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/JoMaSF4HwKgQTUINAtlxCfGCKdH3/voices/CvD6hF1BJzAFN428j1cO/VCQ4ZcfJxxhqYYaj5WvN.mp3"
+    ],
+    [
+     "B4wUDSZmHFnxqY60nxXm",
+     "Claire - Goofy, Youthful, Fun and Girly",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/gDIpL1oegcfKOsdknx3wAl7Q8J93/voices/B4wUDSZmHFnxqY60nxXm/974a2b68-fc75-4987-86c1-4826e6d035cb.mp3"
+    ],
+    [
+     "QtY3JBOUKEB5xzrRfOKc",
+     "Maisie - Friendly Casual Neighbor",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/QtY3JBOUKEB5xzrRfOKc/sxNrxFKYQqJM2twaupIl.mp3"
+    ],
+    [
+     "WyFXw4PzMbRnp8iLMJwY",
+     "Juliet - Customer Care: Professional, Empathic, Warm",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/WyFXw4PzMbRnp8iLMJwY/34maXktpfll7ZwAIJPtl.mp3"
+    ],
+    [
+     "HECTtlQhQlGs92mhlNnU",
+     "Belle B - Soft, Romantic & Soothing Late Night storyteller",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/HECTtlQhQlGs92mhlNnU/1Wnq8YZOXkJdF0SoogA7.mp3"
+    ],
+    [
+     "30Bu3NdpCkBMOF2yyBwC",
+     "Natasha - Upset, Clear and Serious",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/L21hsqO82uYLLTKRbkQ1eP4Ikq23/voices/30Bu3NdpCkBMOF2yyBwC/Fm2gOO89cU57ZIg9mTAn.mp3"
+    ],
+    [
+     "y3UNfL9XC5Bb5htg8B0q",
+     "Beth - Bold and Smooth Narrator",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/zdqz1z7A92hT2wn2RQ0PKQD5bkJ2/voices/y3UNfL9XC5Bb5htg8B0q/9f4ea075-a790-4c36-9ad2-fb38410ac37e.mp3"
+    ],
+    [
+     "hod33eJyEU4TLqiYFttr",
+     "Belle - Interactive E-Learning Bot",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/hod33eJyEU4TLqiYFttr/VIxYyjw8HPvqxMao4FDA.mp3"
+    ],
+    [
+     "Qbw4VpyUrHEG7NigKzty",
+     "Kristen – Cold Evil Queen Villain",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/Qbw4VpyUrHEG7NigKzty/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiZHBzU2ZDNFlzQVJhaGdSZVZZSUpHMG1GZGt1MSIsImZpbGVuYW1lIjoiZjM0MzE0YTAtMTViNy00YWE5LWI4NWYtNTJjYTNhNTJlZDA0Lm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "tnVKC6NjwhdRxoQIfKue",
+     "Lyan",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/tnVKC6NjwhdRxoQIfKue/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJiMjJjN2RjZWRjYWE0YzJhODg1YzYyMWRlOTAxM2Y4MCIsImZpbGVuYW1lIjoiS2J2dDd4QVYzcGdkdlhiSnl0WGMubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "VUGQSU6BSEjkbudnJbOj",
+     "Emily - Confident and Steady",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/D5NwNrXafvOP7TRWBXFvyxN6yYy1/voices/VUGQSU6BSEjkbudnJbOj/70547b95-f248-4ff5-a496-369716e9ad80.mp3"
+    ],
+    [
+     "7jQ3jNk3Fcw65sWUmzun",
+     "Abigail - Educational and Friendly",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/7jQ3jNk3Fcw65sWUmzun/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiIxZGY0YjIxMzkzYjc0OTY0YjAzZDM2OTBhMTczZWI4MCIsImZpbGVuYW1lIjoiRVFyMzNPMDFJZTJIaE1YanYxRkgubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "XoUkt2bf6DlvSzRmvA8X",
+     "Victoria - Calm, Warm and Friendly",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/c493d5bd28494f7a83c2b12866049ce2/voices/XoUkt2bf6DlvSzRmvA8X/4oIdLYajLeXKX1v5vGgB.mp3"
+    ],
+    [
+     "ui0NMIinCTg8KvB4ogeV",
+     "Sanna Hartfield - Rhythmic, Funky Singer",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/ui0NMIinCTg8KvB4ogeV/arNlPqqcsqe2qMOX6Djf.mp3"
+    ],
+    [
+     "wNvqdMNs9MLd1PG6uWuY",
+     "Clara - Whispery and Intimate",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/wNvqdMNs9MLd1PG6uWuY/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI3NTQ3MTk5ZjU2MGY0MGMxYTZiZjc3NjUzOGE2MTNlYSIsImZpbGVuYW1lIjoiTXRFcTYyYkluNlo5dkIyT3pRY04ubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "WxqqAhUiswIRQNTBz2a5",
+     "Raina - Seductive, Soft and Silky",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/XFlW94zsTjgQKR5ONZ4DzKqRz3m2/voices/WxqqAhUiswIRQNTBz2a5/axt6I4VySlXamz39odQg.mp3"
+    ],
+    [
+     "zubqz6JC54rePKNCKZLG",
+     "Sieu Muoi - Clear, Nasal and Friendly",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/IyN5hMP6pWdI0XaGD6GYS9TJYFV2/voices/zubqz6JC54rePKNCKZLG/51247253-ddfb-4fd2-9525-50e246230597.mp3"
+    ],
+    [
+     "4qGY1svUBZLI7l8Ei9WW",
+     "Eliza - Elegant & Lovely",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/4qGY1svUBZLI7l8Ei9WW/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJlNjUxNTQ2MDVhZWU0OGM3YTQ0ZjhlOTQyMjVlOGJjMyIsImZpbGVuYW1lIjoiTWhFNFJnWjZ0aHRCZnBpSDBOQkkubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "UPh4KsZtOX5QeK2POdYy",
+     "Elara - Warm Intellectual",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/UPh4KsZtOX5QeK2POdYy/0072233c-d2ef-471e-8d63-2dc0e70cca41.mp3"
+    ],
+    [
+     "8vf2Pg7VZD0Piv8GA8v9",
+     "Gracie - Shining and Enthusiatic",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ee66bfa4cf4742d2a99f3069c22c3def/voices/8vf2Pg7VZD0Piv8GA8v9/3gKkIS0JLqmFu5Dmp3Xm.mp3"
+    ],
+    [
+     "gIc8QsaPK81pJ73KJ6Oc",
+     "Jessica",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/823a1c39b0cc4ebe8b5831203374e9d3/voices/gIc8QsaPK81pJ73KJ6Oc/627ed90d-45fa-401b-8c18-84036575527d.mp3"
+    ],
+    [
+     "MEJe6hPrI48Kt2lFuVe3",
+     "Yumi - Slow, Robotic and Calm",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/092bbceb6395499ea5e0a516597d81b8/voices/MEJe6hPrI48Kt2lFuVe3/NXBBiECMxifOSvgECt6A.mp3"
+    ],
+    [
+     "iukn3a1vSSNFmdi5NZS4",
+     "Paula Paw - Energetic and Adventurous",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/6PepXtO6L5eOWtYyGObg2TDYJex2/voices/iukn3a1vSSNFmdi5NZS4/04FdSbSiHb7ph0AHKgYs.mp3"
+    ],
+    [
+     "vlS1ohKzOkKzVrkOUAOG",
+     "Holly - Engaging, Cheerful, and Dramatic",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/tX5fxBB622QUr3fe7clp9pGVxh33/voices/vlS1ohKzOkKzVrkOUAOG/hFR1NvXaVsv0TaYfhvXW.mp3"
+    ],
+    [
+     "kC1WIuSSgwH2T8iOV4iJ",
+     "Teacher Ella - Warm, Rhythmic, and Light",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/9canbT6ZoMVBnMrGUKHH28uY6vY2/voices/kC1WIuSSgwH2T8iOV4iJ/BpQozCncyCxMj6eFzGBc.mp3"
+    ],
+    [
+     "vXdn3dxpDdZHARskOYfz",
+     "Matilda - Agent, Professional, Audiobook",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ee5fe73b76e34cbfa7b1f9f2c67a15ae/voices/vXdn3dxpDdZHARskOYfz/pstG6CUNVLf9T5dT3lkp.mp3"
+    ],
+    [
+     "25bLwNw4T14AIILU3SLV",
+     "Kira - Neutral Narrator",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/25bLwNw4T14AIILU3SLV/9Q96pjEbPm5phmMpZvA9.mp3"
+    ],
+    [
+     "4BYplVmdmNPw4bhCsabh",
+     "Karma - Social Media Starlet",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/7EoFG7YYDfQ9NaQl7QhVMMYxQMn1/voices/4BYplVmdmNPw4bhCsabh/5FlpsV3qSTbWRVIOkSBG.mp3"
+    ],
+    [
+     "mHX7OoPk2G45VMAuinIt",
+     "Lola-Soft, Innocent",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/mHX7OoPk2G45VMAuinIt/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoidXNlcl83NzAxa2VqOWR6MmFmemN2emRmOXZicjhkNzhyIiwiZmlsZW5hbWUiOiJKQk1iVm1FU1U3VGVyZnRFSnBLZC5tcDMiLCJ0aW1lc3RhbXAiOjE3OTM1MTI4MDAwMDAwMDB9"
+    ],
+    [
+     "KGZeK6FsnWQdrkDHnDNA",
+     "Kristen - Calm, Comforting, Meditative",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/KGZeK6FsnWQdrkDHnDNA/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiR3hVUjQ5Qm5GelV0UHZFc09BRm91WGp5T2xOMiIsImZpbGVuYW1lIjoiRk5qbzBYQ0ZjUGlhZmVkZmpVenUubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "ztqW7U07ITK9TRp5iDUi",
+     "Sophie - Bright Female Voice",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/BHHX5XJdJYTW37fJ4fsxDASr6Mg1/voices/ztqW7U07ITK9TRp5iDUi/Q455PAdZc1qL7BLNPkyc.mp3"
+    ],
+    [
+     "Bn9xWp6PwkrqKRbq8cX2",
+     "Maya - Intelligent and Approachable",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/5A5vAHilkuOXXmvyI6P9PwZAR9x1/voices/Bn9xWp6PwkrqKRbq8cX2/xOUxkZUUdU7blpCeAX0U.mp3"
+    ],
+    [
+     "0TfZ4rvne3QI7UjDxVkM",
+     "Karla - Youthful, Soft, and Breathy",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/kay32SW2D5aVTtFgig9mKvsHW2h1/voices/0TfZ4rvne3QI7UjDxVkM/zqUpcF5NLplNMvpHer8T.mp3"
+    ],
+    [
+     "dIeHOwebB4fO6l6gNfUK",
+     "Victoria - Vibrant and Fresh",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/c6ffa137173644388fd6c81f1b968a20/voices/dIeHOwebB4fO6l6gNfUK/FGdySVhKZDOdOzBlfxX6.mp3"
+    ],
+    [
+     "6rOxfAnZpbM3VIEhFaeV",
+     "Luna - Calm & Grounded",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1df4b21393b74964b03d3690a173eb80/voices/6rOxfAnZpbM3VIEhFaeV/3Xpm0W15PoRAh3l83lpD.mp3"
+    ],
+    [
+     "Uc7anshoV8mdBhDnEZEX",
+     "Cecily - Clear and Warm",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/O56yZqbQaPMFqlrPAY0OvQJR5xj2/voices/Uc7anshoV8mdBhDnEZEX/c31d488c-1456-4833-a986-b9c5d15b1001.mp3"
+    ],
+    [
+     "ZIlrSGI4jZqobxRKprJz",
+     "Clara - Warm, Professional and Helpful",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/6ahwPSIefHg1kQaMGCN21WiW3HH2/voices/ZIlrSGI4jZqobxRKprJz/qiZRWpZZLIYcQdFcy5o3.mp3"
+    ]
+   ]
+  },
+  {
+   "key": "oldmen",
+   "title": "Older men",
+   "note": "20 American older male voices.",
+   "voices": [
+    [
+     "NOpBlnGInO9m6vDvFkFC",
+     "Spuds Oxley - Grandpa",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/64971298bfc24086b69026970a21f1f9/voices/NOpBlnGInO9m6vDvFkFC/M4xySW4rr1SbAKKwMAtI.mp3"
+    ],
+    [
+     "wAGzRVkxKEs8La0lmdrE",
+     "Sully - Mature, Deep and Intriguing",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/Bo6DtogKR9MFeVzUzR8msFIzsz92/voices/wAGzRVkxKEs8La0lmdrE/694524f9-fac6-4c16-a9de-8bb69e178312.mp3"
+    ],
+    [
+     "qAZH0aMXY8tw1QufPN0D",
+     "Flint - Deep, Raspy, and Warm",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/759170f692da47489ba9c408ca661b39/voices/qAZH0aMXY8tw1QufPN0D/D9e9wQKrJ8hsb549LFpL.mp3"
+    ],
+    [
+     "YXpFCvM1S3JbWEJhoskW",
+     "Wyatt- Wise Rustic Cowboy",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/YXpFCvM1S3JbWEJhoskW/CLHVUhxcz93hum03aUwc.mp3"
+    ],
+    [
+     "cPoqAvGWCPfCfyPMwe4z",
+     "Victor - Deep, Malevolent and Ancient",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/H2fHN4TKljQ16bAflYGeOPXd0qB2/voices/cPoqAvGWCPfCfyPMwe4z/d7b24042-07ce-4fd5-aeff-dcf71edced52.mp3"
+    ],
+    [
+     "ppLqTilh7rH7fbUVlXsf",
+     "David - Documentary",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/e7bdeaca6fbb4a6e929e6c98717040b9/voices/ppLqTilh7rH7fbUVlXsf/9bf0d787-305d-491b-aa57-a5a77ba0309c.mp3"
+    ],
+    [
+     "y2Y5MeVPm6ZQXK64WUui",
+     "The Pharaoh  - Wisdom Bearer",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/f980beb735ca4ecba4541ccf284ae53c/voices/y2Y5MeVPm6ZQXK64WUui/x08T5kv5QPkKG589naPg.mp3"
+    ],
+    [
+     "6EW6z8IiJRtePnNUNPKW",
+     "Bill Oxley - English, Clear & Understandable",
+     "male · old · American",
+     "https://api.us.elevenlabs.io/v1/voices/6EW6z8IiJRtePnNUNPKW/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2NDk3MTI5OGJmYzI0MDg2YjY5MDI2OTcwYTIxZjFmOSIsImZpbGVuYW1lIjoiQTBNTmtkRXNLNm1aakd5dnVISWUubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "V2bPluzT7MuirpucVAKH",
+     "Frank - Wise, Deep and Motivational",
+     "male · old · American",
+     "https://api.us.elevenlabs.io/v1/voices/V2bPluzT7MuirpucVAKH/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI4NjNjNzhmNDhmZWQ0NmE1YWM3YjIxNGQzY2E5NTU0ZSIsImZpbGVuYW1lIjoiZ3haOGlCZWFUY1pKMDZqRjdJalkubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "MKlLqCItoCkvdhrxgtLv",
+     "Grampa Werthers - Old & Cranky",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/b2109416c7514449a5f06540d10f0e73/voices/MKlLqCItoCkvdhrxgtLv/EfkFDCEQ4BNruX2zQISz.mp3"
+    ],
+    [
+     "MDLAMJ0jxkpYkjXbmG4t",
+     "Jerry B - Jolly Santa Claus",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/ckwIURo2ELSVl0fOTOiU9bdtf143/voices/MDLAMJ0jxkpYkjXbmG4t/ZMqtCT5hEkJGti2Z2EXB.mp3"
+    ],
+    [
+     "uDsPstFWFBUXjIBimV7s",
+     "Mr. Claus - The Classic Jolly Santa",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/e25671d19e8b4374b9622d87294a859a/voices/uDsPstFWFBUXjIBimV7s/1IrgraV5GBYJtbVcZ4ph.mp3"
+    ],
+    [
+     "M8UDgnf53212Yi6FEzUr",
+     "Jleg",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/YUwDGuJUX9ZIRsqAhkzC5FIzIW13/voices/M8UDgnf53212Yi6FEzUr/fud0IZsaB0HYJpLWYa4y.mp3"
+    ],
+    [
+     "PerZoH0r6nxBZXCoIPpv",
+     "Michael Moody - Grandfatherly warm and deep",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/ghhxYFSr6DZUXDF4V3gpvN3tGsn1/voices/PerZoH0r6nxBZXCoIPpv/HI04nJ747vsQaRlgDoeB.mp3"
+    ],
+    [
+     "2tTjAGX0n5ajDmazDcWk",
+     "Ezekiel – raspy narrator",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/42eCmLTgIOgCLidvBqcZY0bZj9g2/voices/2tTjAGX0n5ajDmazDcWk/zjbO25LrIrs6dudzUg67.mp3"
+    ],
+    [
+     "ch0vU2DwfJVmFG2iZy89",
+     "Joe Davis - Deep, Clear, and Warm",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/nG5qGu5jn5OPI1W5RPqUBUas4kG2/voices/ch0vU2DwfJVmFG2iZy89/UPZN8RhqQWVptd6BWW1c.mp3"
+    ],
+    [
+     "8wePOEVMsHVU2qfSJbtC",
+     "Lawrence",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/bsn4LI7m2wYdiN73hbkdAc7iskQ2/voices/8wePOEVMsHVU2qfSJbtC/yuxAKyF85RHI6cW9pdgp.mp3"
+    ],
+    [
+     "6Qxy5k2hvoNF2omYzGNz",
+     "Don - Beautiful Voice",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/77021649d3ed446ca92fafcdb021d5d7/voices/6Qxy5k2hvoNF2omYzGNz/31e2d0b0-5b5c-4507-9a00-a1eb9a04d134.mp3"
+    ],
+    [
+     "Av4Fi2idMFuA8kTbVZgv",
+     "Russel - Raw Cowboy",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/DgH5gJrGZcbd8nBJxskdJrMWNr92/voices/Av4Fi2idMFuA8kTbVZgv/UstROLY2yaaqkjxSZUqq.mp3"
+    ],
+    [
+     "3HVqMrtg7gWyWkIQWUAC",
+     "Marv",
+     "male · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/d4125c2836084aac9ac387959911fef7/voices/3HVqMrtg7gWyWkIQWUAC/Pdv4IzoEEZBls49MaFS8.mp3"
+    ]
+   ]
+  },
+  {
+   "key": "oldwomen",
+   "title": "Older women",
+   "note": "The whole library has only 14 American women marked as old: all 14 are here, with 6 mature ones close to them.",
+   "voices": [
+    [
+     "wGcFBfKz5yUQqhqr0mVy",
+     "Maria Moody - Grandmotherly Storykeeper",
+     "female · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/0933a199cad04cb18ac7e32b9e8476a2/voices/wGcFBfKz5yUQqhqr0mVy/hmDeilAcXODFxnSV2olx.mp3"
+    ],
+    [
+     "5u41aNhyCU6hXOcjPPv0",
+     "Carol - Relatable, Real, Likeable Grandma",
+     "female · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/user_0801kdv521s4fe0s61ww7j0apae0/voices/5u41aNhyCU6hXOcjPPv0/uiFOGdNpWUK1TMPqu6iM.mp3"
+    ],
+    [
+     "vFLqXa8bgbofGarf6fZh",
+     "Grandma Oxley",
+     "female · old · American",
+     "https://api.us.elevenlabs.io/v1/voices/vFLqXa8bgbofGarf6fZh/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2NDk3MTI5OGJmYzI0MDg2YjY5MDI2OTcwYTIxZjFmOSIsImZpbGVuYW1lIjoiRXVEVnBPRmRRVzNOVWRySWhEVUgubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "xIzR6egd3S3LJZbVW0c1",
+     "Nana Margaret - Little Old Lady",
+     "female · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/57a2397e6d10405cb8985e6d0d1e0d6e/voices/xIzR6egd3S3LJZbVW0c1/xCY4UtxQn0kHzo2wWqTW.mp3"
+    ],
+    [
+     "q1Hhtkt94vkD6q7p50hW",
+     "Alese Johnston - Southern and Composed",
+     "female · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/MPuHqbywtYaSidBgYkLWAXnKeh52/voices/q1Hhtkt94vkD6q7p50hW/a45ee0b6-3ea4-4ad8-842a-d49af85ba7db.mp3"
+    ],
+    [
+     "8fwYhwfiWkLjR4FKLHSQ",
+     "Elise Hart - Warm, Clear & Engaging",
+     "female · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/bb3de32d375e4462a5d1aebc77eb7b0a/voices/8fwYhwfiWkLjR4FKLHSQ/eT0h07aQSRxJzwk8pT8f.mp3"
+    ],
+    [
+     "MHPwHxLx0nmGIb5Jnbly",
+     "Empress - Smoky, Breathy, and Neutral",
+     "female · old · American",
+     "https://api.us.elevenlabs.io/v1/voices/MHPwHxLx0nmGIb5Jnbly/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiSERMMlh3NUdxVGF0OGZLMk1sRWVKTmJxalE0MyIsImZpbGVuYW1lIjoiZWQ0ZWE5MTctZTkzNS00NzM2LWJmNTQtMjY0YTg3NmVjMjM1Lm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "aIu5oHglU5AHNc2x0AZu",
+     "Jane Hackett",
+     "female · old · American",
+     "https://api.us.elevenlabs.io/v1/voices/aIu5oHglU5AHNc2x0AZu/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiRGxPODh2bjdWck1VdzBzaHF4U3N5a2dIYmRaMiIsImZpbGVuYW1lIjoiODE5ZDBhZTYtNDc0MC00ZWRjLTljNzItOTFjODc4Yzg4NjE5Lm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "YHcCpa6SBWnKDaCPZJQR",
+     "Mora - Gritty and Enigmatic",
+     "female · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/1da06ea679a54975ad96a2221fe6530d/voices/YHcCpa6SBWnKDaCPZJQR/c7a988ce-0eff-4e84-bdd8-cc09c614296b.mp3"
+    ],
+    [
+     "A0g6t0RQc9zkMPsGNEIG",
+     "Grandma Maria",
+     "female · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/6ef2c372a6ad40cbb10eeccaf302aa89/voices/A0g6t0RQc9zkMPsGNEIG/75530602-145e-44cc-8735-640d67328106.mp3"
+    ],
+    [
+     "g12yXXabMWeFoLMzxPrF",
+     "Julie - Warm, Mature",
+     "female · old · American",
+     "https://api.us.elevenlabs.io/v1/voices/g12yXXabMWeFoLMzxPrF/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJiMTcwMDI1ZDM2OTI0MTNmOWIyYjQ2ZGVjMjc1ZTc1NCIsImZpbGVuYW1lIjoiYmExYzc1ZWItNzJkNC00N2VkLThjNDUtZjEyMzM1ZWNhYTAxLm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "lBIlRrTlN5ZTPkQzWrCc",
+     "Jazzy Larroy",
+     "female · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/e55f3508ec9f460a8e61de2bd199b3d0/voices/lBIlRrTlN5ZTPkQzWrCc/12efee72-7230-4f92-950a-c132d79066da.mp3"
+    ],
+    [
+     "pELYl0F9HFykExYZefks",
+     "Angela",
+     "female · old · American",
+     "https://api.us.elevenlabs.io/v1/voices/pELYl0F9HFykExYZefks/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2NWFjNDQwYTNjYzU0OWNhOTIyOWE3MTZlNjBhODI5MyIsImZpbGVuYW1lIjoiMGJhNjk0NzQtOTBiZS00OTNmLThlNzktYTZiMmNkMDkyNTE3Lm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "98dvI6mDdyv5hVpyJA5M",
+     "Cheryl - Older & Polished",
+     "female · old · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/d0e91f70902346ecbd37e6966ea320ce/voices/98dvI6mDdyv5hVpyJA5M/38702c37-1d8b-4492-bf64-1da412229cf9.mp3"
+    ],
+    [
+     "h2sm0NbeIZXHBzJOMYcQ",
+     "Natasha - Informative, Smooth and Calm",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/h2sm0NbeIZXHBzJOMYcQ/rgEQcXdiFIMXlsOGf4Q9.mp3"
+    ],
+    [
+     "2qfp6zPuviqeCOZIE9RZ",
+     "Trinity - Calm Female Sleep & Affirmation Voice",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/2qfp6zPuviqeCOZIE9RZ/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI4YmM5YjU4YWY4Y2M0N2Q3OTkwMWRhMzczZjIxZGM0YyIsImZpbGVuYW1lIjoiUVVUNTlpNXhyVGluc3pPaWJpWjMubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "XZXyuzPdidXaSa10PmVA",
+     "Anna - Conversational, Helpful",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/5115d659917a4e408954bb02f7b5709c/voices/XZXyuzPdidXaSa10PmVA/vx9nQg1RbkR1bhpOCIyU.mp3"
+    ],
+    [
+     "YyRJWuwyhKdMZRRnm464",
+     "Katie - E-Learning & Podcast Host",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/64223686f07a4df0ab7c61e845397458/voices/YyRJWuwyhKdMZRRnm464/f5Zo7uoX5hN7sA8vs7Sb.mp3"
+    ],
+    [
+     "MftN0gvsFPPOYnV3DU0Y",
+     "Celeste - Vintage Hollywood Actress",
+     "female · young · American",
+     "https://api.us.elevenlabs.io/v1/voices/MftN0gvsFPPOYnV3DU0Y/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI2NThlYzk0NTdmYjk0ZmU0OGM0OGE0Njc2NDJjODcxMSIsImZpbGVuYW1lIjoiMGw1TTJOSVFUellHNnNaT2duZWsubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "Oq4wXa71QELRmiDFwbZE",
+     "Abby - Bold Feminine Voice",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/MMbzPo8uBHdPHUlGsFSoIK80uUY2/voices/Oq4wXa71QELRmiDFwbZE/b222ff7a-d561-4051-828b-a00d2ea9d11d.mp3"
+    ]
+   ]
+  },
+  {
+   "key": "monsters",
+   "title": "Monsters & villains",
+   "note": "12 monsters or growly voices and 8 villains. Here the accent may not be American.",
+   "voices": [
+    [
+     "wXvR48IpOq9HACltTmt7",
+     "Dante - Growly and Menacing Monster",
+     "male · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/a94ea654cbe247deb64eef547a0349e8/voices/wXvR48IpOq9HACltTmt7/6fAFloxvmRzqd2PlDH6v.mp3"
+    ],
+    [
+     "Z7RrOqZFTyLpIlzCgfsp",
+     "Toby - Little Mythical Monster",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/Dwe4MuIDgfgjyShvmzGU6G3oTP82/voices/Z7RrOqZFTyLpIlzCgfsp/zyH5D2FkYVAzl55NQ2lL.mp3"
+    ],
+    [
+     "xYWUvKNK6zWCgsdAK7Wi",
+     "Matthew Schmitz - Hissing and Sinister",
+     "male · middle-aged · Arabic accent",
+     "https://api.us.elevenlabs.io/v1/voices/xYWUvKNK6zWCgsdAK7Wi/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJkMzA5ZWEyNTY4M2Q0ZDk3YjkyZTQ0NzcyYTQzMGM3NCIsImZpbGVuYW1lIjoiMG41TXljd0ppNGhJZWxiYzdSZW0ubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "DKSYnVsGaIwlOF31S3sV",
+     "Yash M – Monster Villain Character",
+     "male · young · Indian accent",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/ed9b05e6324c457685490352e9a1ec90/voices/DKSYnVsGaIwlOF31S3sV/uwjXWA0QWaI2g2SjTuHr.mp3"
+    ],
+    [
+     "zauh4pbY6h1ZRErsRiAJ",
+     "Valf - Goblin, Raspy, Fantasy Monster",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/553e0172943049fd80d06c64cd8a1f73/voices/zauh4pbY6h1ZRErsRiAJ/AVFFmY5u8cjIfaSZTvxX.mp3"
+    ],
+    [
+     "HAvvFKatz0uu0Fv55Riy",
+     "Matthew Schmitz - Ancient Sage Dragon Wizard",
+     "male · old · British",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/d309ea25683d4d97b92e44772a430c74/voices/HAvvFKatz0uu0Fv55Riy/0URfQxPlTcFUypsJcO6A.mp3"
+    ],
+    [
+     "j9qIyycr9PcZ7d4yj21f",
+     "Grimble – Twitchy & Sneaky creature",
+     "neutral · old · neutral",
+     "https://api.us.elevenlabs.io/v1/voices/j9qIyycr9PcZ7d4yj21f/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiJiMjhjYzRhOWQwMzg0Y2Y5ODU3ODQwNjQ0YjQyOTI4MSIsImZpbGVuYW1lIjoiYnAyeUtIWVYwVXZLb0dFcW5hZFMubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "0Eut1K2uVqd2FAP2i4XV",
+     "Andrew - Deep, Growly and Casual",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/L0U8aEbB6cfNwSYegDl2JadeZQt1/voices/0Eut1K2uVqd2FAP2i4XV/9aa32b94-7c1c-48e0-be34-83a6d3287092.mp3"
+    ],
+    [
+     "WV1q3LPagg6vb034LpdG",
+     "Matthew - Slow, Growly and Wise",
+     "male · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/DWImkHRnyXhEe6WJBXJ1c6GzSJ93/voices/WV1q3LPagg6vb034LpdG/77bd58f9-b3db-4884-b872-1178b342ea8f.mp3"
+    ],
+    [
+     "CFv3umSzRiJJV5PBmDCF",
+     "Michael Bennett - Growly and Deep",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/XoChM8K9CgSgJhR4OP2vb2WcENK2/voices/CFv3umSzRiJJV5PBmDCF/b4355441-bac7-4f6c-a992-518a5cb8a611.mp3"
+    ],
+    [
+     "8I789rWzI2wWyhLjUy0z",
+     "Dinesh Chawla - Growly and Friendly",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/tGFbdnkhk5fmcLzywEG53v6YfwM2/voices/8I789rWzI2wWyhLjUy0z/0844eb0d-b5bc-4106-9564-746d2c1f7caa.mp3"
+    ],
+    [
+     "6OQjhhF4m5hpkVyLVCNt",
+     "Dragon King",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/3e8c4d6a78874789847f6eafe82c219f/voices/6OQjhhF4m5hpkVyLVCNt/c5b645c9-666c-4044-a190-d5a6f479f0c1.mp3"
+    ],
+    [
+     "flHkNRp1BlvT73UL6gyz",
+     "Jessica Anne Bogart - Eloquent Villain",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/fb1bd18708014d8d80e770df5ea11bb7/voices/flHkNRp1BlvT73UL6gyz/Wi2FL0vNQp7bJAeSrJaz.mp3"
+    ],
+    [
+     "2gPFXx8pN3Avh27Dw5Ma",
+     "Oxley - Evil Character",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/2gPFXx8pN3Avh27Dw5Ma/GcxfxoMG5hz8u6uLX9TP.mp3"
+    ],
+    [
+     "esy0r39YPLQjOczyOib8",
+     "Britney - Calm and Calculative Villain",
+     "female · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/user/glklRmLoFeWZciiTRthKn6JAIwp1/voices/esy0r39YPLQjOczyOib8/HTHkPiNlxYETEllpEhuJ.mp3"
+    ],
+    [
+     "TC0Zp7WVFzhA8zpTlRqV",
+     "Aria - Sultry Villain",
+     "female · young · American",
+     "https://storage.googleapis.com/eleven-public-prod/custom/voices/TC0Zp7WVFzhA8zpTlRqV/tdUrOwJT1qeJz2JMOJFp.mp3"
+    ],
+    [
+     "KLZOWyG48RjZkAAjuM89",
+     "Poe - Angry and Irritable Villain",
+     "male · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/KLZOWyG48RjZkAAjuM89/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ3b3Jrc3BhY2VfaWQiOiI3YzVjYjdiMGM0MWU0YjM1YWVlYjg4ZWYyMTY2OTQ5YSIsImZpbGVuYW1lIjoiODZESjdvM0JjUTNBRzc0eWNpcmkubXAzIiwidGltZXN0YW1wIjoxNzkzNTEyODAwMDAwMDAwfQ%3D%3D"
+    ],
+    [
+     "agL69Vji082CshT65Tcy",
+     "Lance Blackwood - Sinister, Posh & British",
+     "male · middle-aged · British",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/bfad24883ac04636b8b51cc683f75efb/voices/agL69Vji082CshT65Tcy/rK8HnXBV6AZuMjias99Y.mp3"
+    ],
+    [
+     "Qbw4VpyUrHEG7NigKzty",
+     "Kristen – Cold Evil Queen Villain",
+     "female · middle-aged · American",
+     "https://api.us.elevenlabs.io/v1/voices/Qbw4VpyUrHEG7NigKzty/previews/audio?payload=eyJ2b2ljZV9zb3VyY2UiOiJjdXN0b20iLCJ1c2VyX2lkIjoiZHBzU2ZDNFlzQVJhaGdSZVZZSUpHMG1GZGt1MSIsImZpbGVuYW1lIjoiZjM0MzE0YTAtMTViNy00YWE5LWI4NWYtNTJjYTNhNTJlZDA0Lm1wMyIsInRpbWVzdGFtcCI6MTc5MzUxMjgwMDAwMDAwMH0%3D"
+    ],
+    [
+     "Vs5CmVCVJwW4odQS2pVf",
+     "Branok - Evil & Villainous",
+     "male · middle-aged · American",
+     "https://storage.googleapis.com/eleven-public-prod/database/workspace/dff6e810821f4285a99a4660b14c1c1c/voices/Vs5CmVCVJwW4odQS2pVf/OvqmtRfgOykbRhWOwgT0.mp3"
+    ]
+   ]
+  }
+ ],
+ "cast": [
+  {
+   "id": "god",
+   "name": "God",
+   "portrait": "assets/portraits/god.png",
+   "voice": "iUqOXhMfiOIbBejNtfLR"
+  },
+  {
+   "id": "adam",
+   "name": "Adam",
+   "portrait": "assets/portraits/adam.png",
+   "voice": "s3TPKV1kjDlVtZbl4Ksh"
+  },
+  {
+   "id": "eve",
+   "name": "Eve",
+   "portrait": "assets/portraits/eve.png",
+   "voice": "jqcCZkN6Knx8BJ5TBdYR"
+  },
+  {
+   "id": "serpent",
+   "name": "Serpent",
+   "portrait": "assets/portraits/serpent.png",
+   "voice": "xYWUvKNK6zWCgsdAK7Wi"
+  },
+  {
+   "id": "narrator",
+   "name": "Narrator",
+   "portrait": null,
+   "voice": "NOpBlnGInO9m6vDvFkFC"
+  }
+ ],
+ "categories": {
+  "serpent": {
+   "title": "Serpent",
+   "note": "CC0 hisses and crawling sounds (Freesound): any of them fits any serpent slot.",
+   "options": [
+    [
+     "assets/sfx/hiss.mp3",
+     "The game's hiss",
+     "Made here from filtered noise"
+    ],
+    [
+     "assets/sfx/slither.mp3",
+     "The game's crawl",
+     "Dry leaves and noise · CC0, qubodup"
+    ],
+    [
+     "hiss-1",
+     "Hiss 1",
+     "Snake hissing, recording · CC0, schreibsel"
+    ],
+    [
+     "hiss-2",
+     "Hiss 2",
+     "Soft hiss · CC0, xoiziox"
+    ],
+    [
+     "hiss-3",
+     "Hiss 3",
+     "Angry real snake · CC0, JesterWhoo"
+    ],
+    [
+     "hiss-4",
+     "Hiss 4",
+     "King cobra growling in a garden · CC0, florianreichelt"
+    ],
+    [
+     "hiss-5",
+     "Hiss 5",
+     "Snake pit hissing · CC0, Andy19"
+    ],
+    [
+     "hiss-6",
+     "Hiss 6",
+     "An almost otherworldly hiss · CC0, Podcapocalipsi"
+    ],
+    [
+     "hiss-7",
+     "Hiss 7",
+     "Snake spell, magical · CC0, lukabea"
+    ],
+    [
+     "hiss-8",
+     "Hiss 8",
+     "Snake spell, short · CC0, lukabea"
+    ],
+    [
+     "hiss-9",
+     "Hiss 9",
+     "Cartoon snake flicking its tongue · CC0, bowlingballout"
+    ],
+    [
+     "hiss-10",
+     "Hiss 10",
+     "Long continuous hiss · CC0, Yin_Yang_Jake007"
+    ],
+    [
+     "slither-1",
+     "Crawl 1",
+     "Rustling Grass · CC0, alegemaate"
+    ],
+    [
+     "slither-2",
+     "Crawl 2",
+     "grass rustling uncut · CC0, Clusman"
+    ],
+    [
+     "slither-3",
+     "Crawl 3",
+     "Rustling Field of Dried Grass · CC0, Coral_Island_Studios"
+    ],
+    [
+     "slither-4",
+     "Crawl 4",
+     "Paper Pom Pom Dragged Around · CC0, ProductionNow"
+    ],
+    [
+     "slither-5",
+     "Crawl 5",
+     "Dragging/digging at rocks and leaves · CC0, Wigglesworth"
+    ],
+    [
+     "slither-6",
+     "Crawl 6",
+     "Leaves Rustling · CC0, ericnorcross81"
+    ]
+   ]
+  },
+  "land": {
+   "title": "Cherubim",
+   "note": "Thunder and impacts without wings, then mixes with wings (CC0).",
+   "options": [
+    [
+     "assets/sfx/land.mp3",
+     "The game's landing",
+     "Hit, boom and rumble · CC0"
+    ],
+    [
+     "impact-1",
+     "Impact 1",
+     "Deep movie-trailer hit · CC0, rhapsodize"
+    ],
+    [
+     "impact-2",
+     "Thunder 2",
+     "Thunder layered · CC0, DiArchangeli"
+    ],
+    [
+     "impact-3",
+     "Thunder 3",
+     "Real storm lightning, very loud · CC0, foad"
+    ],
+    [
+     "impact-4",
+     "Thunder 4",
+     "Thunder clap · CC0, AyaDrevis"
+    ],
+    [
+     "impact-5",
+     "Thunder 5",
+     "Very close lightning · CC0, loganzsound"
+    ],
+    [
+     "impact-6",
+     "Thunder 6",
+     "Thunder burst · CC0, DaniloSFX"
+    ],
+    [
+     "impact-7",
+     "Impact 7",
+     "Deep impact · CC0, Poligonstudio"
+    ],
+    [
+     "impact-8",
+     "Impact 8",
+     "Hit with echo and atmosphere · CC0, Julien_Matthey"
+    ],
+    [
+     "impact-9",
+     "Impact 9",
+     "Huge impact · CC0, IanStarGem"
+    ],
+    [
+     "impact-10",
+     "Impact 10",
+     "Deep cinematic impact · CC0, zazz.sound.design"
+    ],
+    [
+     "impact-11",
+     "Thunder 11",
+     "Real thunder with a little rain · CC0, kingsrow"
+    ],
+    [
+     "impact-12",
+     "Impact 12",
+     "Very deep underground rumble · CC0, brktkrgll"
+    ],
+    [
+     "land-1",
+     "Wings 1",
+     "Large wings and a heavy fall on earth · CC0"
+    ],
+    [
+     "land-2",
+     "Wings 2",
+     "Huge wings and a big hit · CC0"
+    ],
+    [
+     "land-3",
+     "Hit 3",
+     "Hit with a gust, cinematic · CC0, xkeril"
+    ],
+    [
+     "land-4",
+     "Wings 4",
+     "Wings and a landing on grass · CC0"
+    ],
+    [
+     "land-5",
+     "Wings 5",
+     "Giant wings, hit and a flash · CC0"
+    ],
+    [
+     "land-6",
+     "Wings 6",
+     "Flapping and a heavy fall · CC0"
+    ],
+    [
+     "land-7",
+     "Wings 7",
+     "Flapping, armour hit and a small bell · CC0"
+    ],
+    [
+     "land-8",
+     "Wings 8",
+     "Huge wings and a cinematic impact · CC0"
+    ],
+    [
+     "land-9",
+     "Wings 9",
+     "Flapping, a dry hit and a rumble · CC0"
+    ],
+    [
+     "land-10",
+     "Wings 10",
+     "Wings, fall, small bell and a flash · CC0"
+    ]
+   ]
+  },
+  "river": {
+   "title": "River",
+   "note": "CC0 rivers and streams (9 seconds of each, looped in the game). Without one the game makes a soft murmur of its own.",
+   "options": [
+    [
+     "river-1",
+     "Stream 1",
+     "A stream that loops without a cut · CC0, VKProduktion"
+    ],
+    [
+     "river-2",
+     "River 2",
+     "River and small waves · CC0, kentspublicdom"
+    ],
+    [
+     "river-3",
+     "River 3",
+     "Soft bubbling current · CC0, kyles"
+    ],
+    [
+     "river-4",
+     "Stream 4",
+     "Murmuring stream · CC0, hoshisato"
+    ],
+    [
+     "river-5",
+     "Stream 5",
+     "Stream running close by · CC0, metrostock99"
+    ],
+    [
+     "river-6",
+     "River 6",
+     "Glacier river, close · CC0, Singular_Estudio"
+    ],
+    [
+     "river-7",
+     "River 7",
+     "Forest river in winter · CC0, HowardV"
+    ]
+   ]
+  },
+  "water": {
+   "title": "Water",
+   "note": "Filling and pouring water (CC0).",
+   "options": [
+    [
+     "assets/sfx/fill.mp3",
+     "The game's filling",
+     "Splashing and water · CC0, rubberduck"
+    ],
+    [
+     "assets/sfx/pour.mp3",
+     "The game's pouring",
+     "Bottle pouring · CC0, craigsmith"
+    ],
+    [
+     "fill-1",
+     "Fill 1",
+     "filling a plastic jug with water · CC0, pws1503"
+    ],
+    [
+     "fill-2",
+     "Fill 2",
+     "Plastic jug filling with water · CC0, AGRProductions"
+    ],
+    [
+     "fill-3",
+     "Fill 3",
+     "Plastic water jug filled with water then poured down a sink · CC0, mudflea2"
+    ],
+    [
+     "fill-4",
+     "Fill 4",
+     "Water Slosh in Metal Bottle - various · CC0, twinpix"
+    ],
+    [
+     "pour-1",
+     "Pour 1",
+     "Water Pour · CC0, JohnsonBrandEditing"
+    ],
+    [
+     "pour-2",
+     "Pour 2",
+     "Pouring water into glass · CC0, FillSoko"
+    ],
+    [
+     "pour-3",
+     "Pour 3",
+     "Serving Water Slowly · CC0, rafael45"
+    ],
+    [
+     "pour-4",
+     "Pour 4",
+     "Water To Glass · CC0, Black_River_Phonogram"
+    ],
+    [
+     "pour-5",
+     "Pour 5",
+     "Pouring Water · CC0, runirasmussen"
+    ],
+    [
+     "pour-6",
+     "Pour 6",
+     "Pouring Liquid · CC0, Dvideoguy"
+    ]
+   ]
+  },
+  "step-grass": {
+   "title": "Footsteps on grass",
+   "note": "Single CC0 footsteps cut from walking recordings (Freesound).",
+   "options": [
+    [
+     "assets/sfx/step-1.mp3",
+     "The game's step 1",
+     "Sand and grass steps · CC0, Fantozzi"
+    ],
+    [
+     "assets/sfx/step-2.mp3",
+     "The game's step 2",
+     "Sand and grass steps · CC0, Fantozzi"
+    ],
+    [
+     "assets/sfx/step-3.mp3",
+     "The game's step 3",
+     "Sand and grass steps · CC0, Fantozzi"
+    ],
+    [
+     "assets/sfx/step-4.mp3",
+     "The game's step 4",
+     "Sand and grass steps · CC0, Fantozzi"
+    ],
+    [
+     "assets/sfx/step-5.mp3",
+     "The game's step 5",
+     "Sand and grass steps · CC0, Fantozzi"
+    ],
+    [
+     "assets/sfx/step-6.mp3",
+     "The game's step 6",
+     "Sand and grass steps · CC0, Fantozzi"
+    ],
+    [
+     "step-grass-1",
+     "Grass 1",
+     "footsteps grass · CC0, Yuval"
+    ],
+    [
+     "step-grass-2",
+     "Grass 2",
+     "footsteps grass · CC0, Yuval"
+    ],
+    [
+     "step-grass-3",
+     "Grass 3",
+     "footsteps grass · CC0, Yuval"
+    ],
+    [
+     "step-grass-4",
+     "Grass 4",
+     "Footsteps Grass 1 · CC0, SilentStrikeZ"
+    ],
+    [
+     "step-grass-5",
+     "Grass 5",
+     "Footsteps Grass 1 · CC0, SilentStrikeZ"
+    ],
+    [
+     "step-grass-6",
+     "Grass 6",
+     "Footsteps grass · CC0, jedg"
+    ],
+    [
+     "step-grass-7",
+     "Grass 7",
+     "Footsteps grass · CC0, jedg"
+    ],
+    [
+     "step-grass-8",
+     "Grass 8",
+     "Footsteps grass · CC0, jedg"
+    ],
+    [
+     "step-grass-9",
+     "Grass 9",
+     "Grass Footsteps · CC0, Adielees9"
+    ],
+    [
+     "step-grass-10",
+     "Grass 10",
+     "Grass Footsteps · CC0, Adielees9"
+    ],
+    [
+     "step-grass-11",
+     "Grass 11",
+     "Grass Footsteps · CC0, Adielees9"
+    ],
+    [
+     "step-grass-12",
+     "Grass 12",
+     "FOLEY Footsteps Grass 001 · CC0, conleec"
+    ],
+    [
+     "step-grass-13",
+     "Grass 13",
+     "FOLEY Footsteps Grass 001 · CC0, conleec"
+    ],
+    [
+     "step-grass-14",
+     "Grass 14",
+     "FOLEY Footsteps Grass 001 · CC0, conleec"
+    ],
+    [
+     "step-grass-15",
+     "Grass 15",
+     "Hiking Boot Footsteps on Grass · CC0, Fission9"
+    ],
+    [
+     "step-grass-16",
+     "Grass 16",
+     "Hiking Boot Footsteps on Grass · CC0, Fission9"
+    ],
+    [
+     "step-grass-17",
+     "Grass 17",
+     "Hiking Boot Footsteps on Grass · CC0, Fission9"
+    ]
+   ]
+  },
+  "step-dirt": {
+   "title": "Footsteps on dirt",
+   "note": "Single CC0 footsteps cut from walking recordings (Freesound).",
+   "options": [
+    [
+     "step-dirt-1",
+     "Dirt 1",
+     "Footsteps 6 Dirt shoe · CC0, monte32"
+    ],
+    [
+     "step-dirt-2",
+     "Dirt 2",
+     "Footsteps 6 Dirt shoe · CC0, monte32"
+    ],
+    [
+     "step-dirt-3",
+     "Dirt 3",
+     "Footsteps 6 Dirt shoe · CC0, monte32"
+    ],
+    [
+     "step-dirt-4",
+     "Dirt 4",
+     "Footsteps Dirt 01 · CC0, aglinder"
+    ],
+    [
+     "step-dirt-5",
+     "Dirt 5",
+     "Footsteps Dirt 01 · CC0, aglinder"
+    ],
+    [
+     "step-dirt-6",
+     "Dirt 6",
+     "Footsteps Dirt 01 · CC0, aglinder"
+    ],
+    [
+     "step-dirt-7",
+     "Dirt 7",
+     "Footsteps On Dirt · CC0, lzmraul"
+    ],
+    [
+     "step-dirt-8",
+     "Dirt 8",
+     "Footsteps On Dirt · CC0, lzmraul"
+    ],
+    [
+     "step-dirt-9",
+     "Dirt 9",
+     "Footsteps On Dirt · CC0, lzmraul"
+    ],
+    [
+     "step-dirt-10",
+     "Dirt 10",
+     "bare foot on a summer path · CC0, bruno.auzet"
+    ],
+    [
+     "step-dirt-11",
+     "Dirt 11",
+     "bare foot on a summer path · CC0, bruno.auzet"
+    ],
+    [
+     "step-dirt-12",
+     "Dirt 12",
+     "bare foot on a summer path · CC0, bruno.auzet"
+    ],
+    [
+     "step-dirt-13",
+     "Dirt 13",
+     "14-Man fast walking dirt · CC0, 14GPanskaHonc_Petr"
+    ],
+    [
+     "step-dirt-14",
+     "Dirt 14",
+     "14-Man fast walking dirt · CC0, 14GPanskaHonc_Petr"
+    ],
+    [
+     "step-dirt-15",
+     "Dirt 15",
+     "14-Man fast walking dirt · CC0, 14GPanskaHonc_Petr"
+    ],
+    [
+     "step-dirt-16",
+     "Dirt 16",
+     "Step On Dirt · CC0, LilMati"
+    ]
+   ]
+  },
+  "step-water": {
+   "title": "Footsteps in water",
+   "note": "Single CC0 footsteps cut from walking recordings (Freesound).",
+   "options": [
+    [
+     "step-water-1",
+     "Water 1",
+     "Footsteps Water 01 · CC0, aglinder"
+    ],
+    [
+     "step-water-2",
+     "Water 2",
+     "Footsteps Water 01 · CC0, aglinder"
+    ],
+    [
+     "step-water-3",
+     "Water 3",
+     "Footsteps Water 01 · CC0, aglinder"
+    ],
+    [
+     "step-water-4",
+     "Water 4",
+     "Splashing Footsteps Shallow Water · CC0, ChristopherJngs"
+    ],
+    [
+     "step-water-5",
+     "Water 5",
+     "Splashing Footsteps Shallow Water · CC0, ChristopherJngs"
+    ],
+    [
+     "step-water-6",
+     "Water 6",
+     "Splashing Footsteps Shallow Water · CC0, ChristopherJngs"
+    ],
+    [
+     "step-water-7",
+     "Water 7",
+     "Walking in shallow water · CC0, barryshamir"
+    ],
+    [
+     "step-water-8",
+     "Water 8",
+     "puddlewalk · CC0, j1987"
+    ],
+    [
+     "step-water-9",
+     "Water 9",
+     "puddlewalk · CC0, j1987"
+    ],
+    [
+     "step-water-10",
+     "Water 10",
+     "puddlewalk · CC0, j1987"
+    ],
+    [
+     "step-water-11",
+     "Water 11",
+     "puddle footsteps · CC0, patchytherat"
+    ],
+    [
+     "step-water-12",
+     "Water 12",
+     "puddle footsteps · CC0, patchytherat"
+    ],
+    [
+     "step-water-13",
+     "Water 13",
+     "puddle footsteps · CC0, patchytherat"
+    ],
+    [
+     "step-water-14",
+     "Water 14",
+     "Walking through puddle · CC0, NachtmahrTV"
+    ],
+    [
+     "step-water-15",
+     "Water 15",
+     "Walking through puddle · CC0, NachtmahrTV"
+    ],
+    [
+     "step-water-16",
+     "Water 16",
+     "Walking through puddle · CC0, NachtmahrTV"
+    ]
+   ]
+  },
+  "other": {
+   "title": "Other",
+   "note": "The other sounds of the game.",
+   "options": [
+    [
+     "assets/sfx/bite.mp3",
+     "Bite",
+     "Crunching · CC0, StarNinjas"
+    ],
+    [
+     "assets/sfx/seed.mp3",
+     "Seeds",
+     "Trodden leaves · CC0, TinyWorlds"
+    ],
+    [
+     "assets/sfx/leaf-pick.mp3",
+     "Fig leaf",
+     "Dry leaves · CC0, qubodup"
+    ],
+    [
+     "assets/sfx/sew-leaves.mp3",
+     "Sew leaves",
+     "Leaves and cloth · CC0, qubodup and Kenney"
+    ],
+    [
+     "assets/sfx/drop.mp3",
+     "Drop",
+     "Leather on grass · CC0, Kenney"
+    ]
+   ]
+  }
+ }
+}

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { DRY, FORDS, PATHS, RIVER, TILE, WORLD_H, WORLD_W, ZONES } from '../../data/eden/map';
+import type { Surface } from '../../data/soundSlots';
 import { MANIFEST } from '../manifest';
 import { DEPTH_GROUND } from './Actor';
 import { distToPolyline, distToSegment, rng, wobble } from './geometry';
@@ -47,6 +48,14 @@ export class Terrain {
     let d = Infinity;
     for (const p of PATHS) d = Math.min(d, distToPolyline(x, y, p.points) - p.width / 2);
     return d + wobble(x + 500, y, 10);
+  }
+
+  /** What the feet tread on here, for the footsteps: the river (on the
+   * fords), bare earth (the paths and the dry land outside) or grass. */
+  surfaceAt(x: number, y: number): Surface {
+    if (this.riverDistance(x, y) < 2) return 'water';
+    if (this.pathDistance(x, y) < 0 || x > DRY.x + wobble(x, y + 900, 40)) return 'dirt';
+    return 'grass';
   }
 
   private computeCorners(): void {

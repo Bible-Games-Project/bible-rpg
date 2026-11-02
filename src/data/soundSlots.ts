@@ -1,0 +1,60 @@
+/**
+ * The game's recorded sounds as "slots" (the maintainer's word): each slot is
+ * one moment of the game that plays a recording, with the recording it plays
+ * by default. The maintainer's voice and sound library (src/ui/DevLibrary.ts)
+ * lists, for the slot chosen, the options of its category and can put another
+ * one in it (src/core/devSounds.ts).
+ *
+ * A sound is a path under public/ ("assets/sfx/hiss.mp3") or the id of an
+ * option in the library's pack ("hiss-3", public/assets/dev/library.json).
+ */
+
+export type Surface = 'grass' | 'dirt' | 'water';
+export const SURFACES: Surface[] = ['grass', 'dirt', 'water'];
+
+/** Footstep slots per surface: walking picks one of the filled ones at random. */
+export const STEP_SLOTS = 5;
+
+export type SlotGroup = 'serpent' | 'cherubim' | 'water' | 'steps' | 'other';
+
+export interface SoundSlot {
+  id: string;
+  group: SlotGroup;
+  /** the library category whose options fit this slot */
+  category: string;
+  /** what plays until the maintainer chooses another (null: nothing, or the synthesized sound) */
+  sound: string | null;
+  /** level next to the synthesized sounds */
+  gain: number;
+  surface?: Surface;
+}
+
+const sfx = (f: string) => `assets/sfx/${f}.mp3`;
+
+function steps(surface: Surface, defaults: (string | null)[]): SoundSlot[] {
+  const cat = `step-${surface}`;
+  return Array.from({ length: STEP_SLOTS }, (_, i) => ({ id: `${cat}-${i + 1}`, group: 'steps' as const, category: cat, sound: defaults[i] ?? null, gain: 0.2, surface }));
+}
+
+export const SOUND_SLOTS: SoundSlot[] = [
+  // the serpent: it appears on the branch (Genesis 3:1), hisses before it
+  // speaks to God (Genesis 3:14) and crawls (the maintainer wanted these apart)
+  { id: 'serpentAppear', group: 'serpent', category: 'serpent', sound: sfx('hiss'), gain: 0.6 },
+  { id: 'hiss', group: 'serpent', category: 'serpent', sound: sfx('hiss'), gain: 0.6 },
+  { id: 'slither', group: 'serpent', category: 'serpent', sound: sfx('slither'), gain: 0.5 },
+  { id: 'land', group: 'cherubim', category: 'land', sound: sfx('land'), gain: 0.85 },
+  // the river's murmur near the water (synthesized until a recording is chosen)
+  { id: 'river', group: 'water', category: 'river', sound: null, gain: 1 },
+  { id: 'fill', group: 'water', category: 'water', sound: sfx('fill'), gain: 0.5 },
+  { id: 'pour', group: 'water', category: 'water', sound: sfx('pour'), gain: 0.5 },
+  ...steps('grass', [1, 2, 3, 4, 5].map((i) => sfx(`step-${i}`))),
+  ...steps('dirt', []),
+  ...steps('water', []),
+  { id: 'bite', group: 'other', category: 'other', sound: sfx('bite'), gain: 0.55 },
+  { id: 'seed', group: 'other', category: 'other', sound: sfx('seed'), gain: 0.5 },
+  { id: 'leafPick', group: 'other', category: 'other', sound: sfx('leaf-pick'), gain: 0.45 },
+  { id: 'leaves', group: 'other', category: 'other', sound: sfx('sew-leaves'), gain: 0.5 },
+  { id: 'drop', group: 'other', category: 'other', sound: sfx('drop'), gain: 0.45 },
+];
+
+export const SLOT = Object.fromEntries(SOUND_SLOTS.map((s) => [s.id, s])) as Record<string, SoundSlot>;

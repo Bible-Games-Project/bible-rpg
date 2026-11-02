@@ -226,7 +226,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
    * cinematic): darkness and the first verse of Genesis, light breaking out
    * until it fills the screen, the whole garden seen from high above, then
    * the camera comes down to Adam, who is formed and appears in the light
-   * (Genesis 2:7). Any key or tap skips it.
+   * (Genesis 2:7). It cannot be skipped (the maintainer: a stray key or tap
+   * skipped it); its input layer holds every key meanwhile.
    */
   creationIntro(): Promise<void> {
     return new Promise((resolve) => {
@@ -248,8 +249,6 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
         done = true;
         said?.stop();
         timers.forEach((id) => window.clearTimeout(id));
-        window.removeEventListener('keydown', skip, true);
-        window.removeEventListener('pointerdown', skip, true);
         input.remove(layer);
         this.tweens.killTweensOf(view);
         this.tweens.killTweensOf(parts);
@@ -260,17 +259,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
         hud.show(true);
         resolve();
       };
-      // a tap or key left over from the screens before must not skip it
-      const begun = performance.now();
-      const skip = (e: Event) => {
-        e.preventDefault();
-        if (performance.now() - begun < 1500) return;
-        finish();
-      };
       const layer: InputLayer = { modal: true, allowMovement: false, captureKeys: true, onAction: () => true };
       input.push(layer);
-      window.addEventListener('keydown', skip, true);
-      window.addEventListener('pointerdown', skip, true);
       hud.show(false);
       void hud.fade(0, 0);
       parts.forEach((o) => o.setAlpha(0));
@@ -1225,7 +1215,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       if (p.moving) {
         this.stepTimer -= dt;
         if (this.stepTimer <= 0) {
-          audio.play('step', { pitch: (this.terrain.pathDistance(p.x, p.y) < 0 ? 0.92 : 1.04) * (0.96 + Math.random() * 0.08), volume: 0.6 });
+          audio.step(this.terrain.surfaceAt(p.x, p.y), { pitch: 0.96 + Math.random() * 0.08, volume: 0.6 });
           this.stepTimer = 0.27 / (p.pace / CHARACTERS[this.active].speed); // two steps per walk cycle (8 frames at 15 fps)
         }
       }

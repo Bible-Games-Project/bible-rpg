@@ -1,10 +1,13 @@
+import { SLOT, SOUND_SLOTS, type Surface } from '../data/soundSlots';
+import { devSounds } from './devSounds';
 import { settings } from './settings';
 
 /**
- * Sound is synthesised at runtime with the Web Audio API, except a few
- * recorded effects (SAMPLES): CC0 recordings (public domain, credited in
- * art/sfx/CREDITS.md) mixed by tools/audio/build_sfx.py. Until a recording
- * has loaded, or if it cannot, its synthesised version plays instead.
+ * Sound is synthesised at runtime with the Web Audio API, except the recorded
+ * effects of the sound slots (src/data/soundSlots.ts): CC0 recordings (public
+ * domain, credited in art/sfx/CREDITS.md) mixed by tools/audio/build_sfx.py.
+ * Until a recording has loaded, or if it cannot, its synthesised version
+ * plays instead.
  *
  * Buses: master -> (music, sfx). Ambience (wind, birds, water) goes through
  * the sfx bus. Everything respects the volume settings and the game remains
@@ -34,6 +37,7 @@ export const SFX = [
   'leaves',
   'land',
   'hiss',
+  'serpentAppear',
   'slither',
   'seed',
   'fill',
@@ -47,22 +51,29 @@ export type Sfx = (typeof SFX)[number];
 export type Mood = 'none' | 'peaceful' | 'wonder' | 'solemn' | 'tension' | 'sorrow';
 export type Ambience = 'none' | 'garden' | 'evening' | 'outside';
 
-/** Recorded effects (public/assets/sfx) and their level next to the
- * synthesised ones (the maintainer wanted real sounds for these). */
-const SAMPLES: Partial<Record<Sfx, { files: string[]; gain: number }>> = {
-  bite: { files: ['assets/sfx/bite.mp3'], gain: 0.55 },
-  leaves: { files: ['assets/sfx/sew-leaves.mp3'], gain: 0.5 },
-  land: { files: ['assets/sfx/land.mp3'], gain: 0.85 },
-  // footsteps on grass, a different one each step
-  step: { files: [1, 2, 3, 4, 5, 6].map((i) => `assets/sfx/step-${i}.mp3`), gain: 0.2 },
-  seed: { files: ['assets/sfx/seed.mp3'], gain: 0.5 },
-  fill: { files: ['assets/sfx/fill.mp3'], gain: 0.5 },
-  pour: { files: ['assets/sfx/pour.mp3'], gain: 0.5 },
-  leafPick: { files: ['assets/sfx/leaf-pick.mp3'], gain: 0.45 },
-  hiss: { files: ['assets/sfx/hiss.mp3'], gain: 0.6 },
-  slither: { files: ['assets/sfx/slither.mp3'], gain: 0.5 },
-  drop: { files: ['assets/sfx/drop.mp3'], gain: 0.45 },
-};
+/** Level of a recorded river (looped) at full closeness, and of the
+ * synthesised one it replaces. */
+const RIVER_LEVEL = 0.35;
+const NOISE_RIVER_LEVEL = 0.05;
+/** Footsteps on a surface without recordings borrow the grass ones, tuned. */
+const BORROWED_STEP_PITCH: Record<Surface, number> = { grass: 1, dirt: 0.92, water: 0.85 };
+
+/** A recording made to loop without a seam: its end crossfaded into its start. */
+function loopable(ctx: AudioContext, buf: AudioBuffer, fade = 0.6): AudioBuffer {
+  const f = Math.min(Math.floor(fade * buf.sampleRate), Math.floor(buf.length / 3));
+  const len = buf.length - f;
+  const out = ctx.createBuffer(buf.numberOfChannels, len, buf.sampleRate);
+  for (let c = 0; c < buf.numberOfChannels; c++) {
+    const x = buf.getChannelData(c);
+    const y = out.getChannelData(c);
+    y.set(x.subarray(0, len));
+    for (let i = 0; i < f; i++) {
+      const k = i / f;
+      y[i] = x[i] * Math.sqrt(k) + x[len + i] * Math.sqrt(1 - k);
+    }
+  }
+  return out;
+}
 
 const PENTA_MAJOR = [0, 2, 4, 7, 9];
 const PENTA_MINOR = [0, 3, 5, 7, 10];
@@ -83,7 +94,12 @@ class AudioManager {
   private waterGain: GainNode | null = null;
   private birdTimer: number | null = null;
   private unlocked = false;
-  private samples = new Map<Sfx, AudioBuffer[]>();
+  /** recordings of the sound slots, by slot id */
+  private samples = new Map<string, AudioBuffer>();
+  private loading = new Map<string, number>();
+  private waterNodes: AudioNode[] = [];
+  private waterScale = NOISE_RIVER_LEVEL;
+  private waterLevel = 0;
 
   constructor() {
     const unlock = () => {
@@ -94,6 +110,10 @@ class AudioManager {
     window.addEventListener('pointerdown', unlock);
     window.addEventListener('keydown', unlock);
     settings.on('change', () => this.applyVolumes());
+    // a sound the maintainer puts in a slot plays from then on
+    devSounds.onChange((slot) => {
+      if (this.ctx) void this.loadSlot(slot);
+    });
   }
 
   private ensure(): AudioContext | null {
@@ -114,7 +134,7 @@ class AudioManager {
     this.sfx.connect(this.master);
     this.voices.connect(this.master);
     this.master.connect(ctx.destination);
-    this.loadSamples(ctx);
+    this.loadSamples();
     const len = ctx.sampleRate * 2;
     this.noise = ctx.createBuffer(1, len, ctx.sampleRate);
     const d = this.noise.getChannelData(0);
@@ -231,20 +251,99 @@ class AudioManager {
     src.stop(t + dur + 0.05);
   }
 
-  private loadSamples(ctx: AudioContext): void {
-    for (const [name, s] of Object.entries(SAMPLES) as [Sfx, { files: string[] }][]) {
-      Promise.all(
-        s.files.map((file) =>
-          fetch(`${import.meta.env.BASE_URL}${file}`)
-            .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(r.statusText))))
-            .then((data) => ctx.decodeAudioData(data)),
-        ),
-      )
-        .then((bufs) => this.samples.set(name, bufs))
-        .catch(() => {
-          /* the synthesised sound stays */
-        });
+  private loadSamples(): void {
+    for (const s of SOUND_SLOTS) void this.loadSlot(s.id);
+  }
+
+  /** (Re)load the recording a slot plays; without one, its synthesised sound stays. */
+  private async loadSlot(id: string): Promise<void> {
+    const slot = SLOT[id];
+    if (!slot || !this.ctx) return;
+    const ticket = (this.loading.get(id) ?? 0) + 1;
+    this.loading.set(id, ticket);
+    const sound = devSounds.soundOf(slot);
+    const bytes = sound ? await devSounds.bytes(sound) : null;
+    const buf = bytes ? await this.decodeBytes(bytes) : null;
+    if (this.loading.get(id) !== ticket) return; // chosen again meanwhile
+    if (buf) this.samples.set(id, id === 'river' ? loopable(this.ctx, buf) : buf);
+    else this.samples.delete(id);
+    if (id === 'river') this.startWater();
+  }
+
+  /** Decode a recording; null without sound or if it is not one. */
+  async decodeBytes(bytes: ArrayBuffer): Promise<AudioBuffer | null> {
+    const ctx = this.ensure();
+    if (!ctx) return null;
+    try {
+      return await ctx.decodeAudioData(bytes);
+    } catch {
+      return null;
     }
+  }
+
+  private playBuffer(buf: AudioBuffer, gain: number, pitch: number): void {
+    const ctx = this.ctx!;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.playbackRate.value = pitch;
+    const g = ctx.createGain();
+    g.gain.value = gain;
+    src.connect(g).connect(this.sfx);
+    src.start(ctx.currentTime + 0.005);
+  }
+
+  /**
+   * A footstep on a surface: one of its filled slots at random, never the
+   * same twice in a row when there are more (the maintainer: five slots per
+   * surface, alternating so it does not sound monotonous; with only one or
+   * two filled, those). A surface with none borrows the grass steps, tuned,
+   * so walking is never silent.
+   */
+  step(surface: Surface, opts: { pitch?: number; volume?: number } = {}): void {
+    const ctx = this.unlocked ? this.ensure() : null;
+    if (!ctx || ctx.state !== 'running') return;
+    const pick = (s: Surface) => SOUND_SLOTS.filter((x) => x.surface === s && this.samples.has(x.id));
+    let slots = pick(surface);
+    let pitch = opts.pitch ?? 1;
+    if (!slots.length) {
+      slots = pick('grass');
+      pitch *= BORROWED_STEP_PITCH[surface];
+    }
+    if (!slots.length) {
+      this.play('step', opts);
+      return;
+    }
+    const others = slots.length > 1 ? slots.filter((x) => x.id !== this.lastStep) : slots;
+    const slot = others[Math.floor(Math.random() * others.length)];
+    this.lastStep = slot.id;
+    this.playBuffer(this.samples.get(slot.id)!, slot.gain * (opts.volume ?? 1), pitch);
+  }
+
+  private lastStep = '';
+
+  /** A recording for the maintainer's library, at full level (not the game's
+   * volumes); elapsed() runs from 0 to 1. */
+  preview(buf: AudioBuffer): { ended: Promise<void>; stop(): void; elapsed(): number } | null {
+    const ctx = this.ensure();
+    if (!ctx) return null;
+    if (ctx.state === 'suspended') void ctx.resume();
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    const t0 = ctx.currentTime;
+    const ended = new Promise<void>((resolve) => (src.onended = () => resolve()));
+    src.start();
+    return {
+      ended,
+      stop: () => {
+        try {
+          src.stop();
+        } catch {
+          /* already over */
+        }
+      },
+      elapsed: () => Math.min(1, (ctx.currentTime - t0) / buf.duration),
+    };
   }
 
   play(name: Sfx, opts: { pitch?: number; volume?: number } = {}): void {
@@ -254,14 +353,8 @@ class AudioManager {
     const v = opts.volume ?? 1;
     const p = opts.pitch ?? 1;
     const recorded = this.samples.get(name);
-    if (recorded) {
-      const src = ctx.createBufferSource();
-      src.buffer = recorded[Math.floor(Math.random() * recorded.length)];
-      src.playbackRate.value = p;
-      const g = ctx.createGain();
-      g.gain.value = (SAMPLES[name]?.gain ?? 1) * v;
-      src.connect(g).connect(this.sfx);
-      src.start(t);
+    if (recorded && SLOT[name]) {
+      this.playBuffer(recorded, SLOT[name].gain * v, p);
       return;
     }
     switch (name) {
@@ -371,6 +464,7 @@ class AudioManager {
         this.crackle(t + 0.25, 1.1, 0.18 * v, 90, 5200, 0.7, 2);
         break;
       case 'hiss':
+      case 'serpentAppear':
         // the serpent: a long hiss, then a shorter one
         this.hissOnce(t, 1.1, 0.2 * v);
         this.hissOnce(t + 1.35, 0.7, 0.13 * v);
@@ -504,6 +598,8 @@ class AudioManager {
       n.disconnect();
     }
     this.ambNodes = [];
+    this.ambGain = null;
+    this.startWater(); // stops the river of the last ambience
     if (this.birdTimer !== null) window.clearTimeout(this.birdTimer);
     this.birdTimer = null;
     if (!this.ctx || a === 'none') return;
@@ -516,10 +612,7 @@ class AudioManager {
     // wind / leaves
     const wind = this.loopNoise('lowpass', a === 'outside' ? 500 : 900, a === 'outside' ? 0.05 : 0.025, 0.07);
     this.ambNodes.push(...wind);
-    // water, level set by the world depending on distance to the river
-    const water = this.loopNoise('bandpass', 1400, 0, 0.3);
-    this.waterGain = water[water.length - 1] as GainNode;
-    this.ambNodes.push(...water);
+    this.startWater();
     if (a === 'garden') this.scheduleBirds();
     if (a === 'evening') this.scheduleCrickets();
   }
@@ -546,10 +639,44 @@ class AudioManager {
     return [src, lfo, lfoGain, f, g];
   }
 
+  /** The river's murmur, its level set by the world depending on distance to
+   * the river: a recording chosen for the river slot, looped, or filtered noise. */
+  private startWater(): void {
+    for (const n of this.waterNodes) {
+      try {
+        (n as AudioScheduledSourceNode).stop?.();
+      } catch {
+        /* never started */
+      }
+      n.disconnect();
+    }
+    this.waterNodes = [];
+    this.waterGain = null;
+    if (!this.ctx || !this.ambGain || this.ambience === 'none') return;
+    const rec = this.samples.get('river');
+    if (rec) {
+      const src = this.ctx.createBufferSource();
+      src.buffer = rec;
+      src.loop = true;
+      const g = this.ctx.createGain();
+      g.gain.value = 0;
+      src.connect(g).connect(this.ambGain);
+      src.start(0, Math.random() * rec.duration);
+      this.waterNodes = [src, g];
+      this.waterScale = RIVER_LEVEL;
+    } else {
+      this.waterNodes = this.loopNoise('bandpass', 1400, 0, 0.3);
+      this.waterScale = NOISE_RIVER_LEVEL;
+    }
+    this.waterGain = this.waterNodes[this.waterNodes.length - 1] as GainNode;
+    this.setWaterLevel(this.waterLevel);
+  }
+
   /** 0..1, how close the listener is to running water. */
   setWaterLevel(level: number): void {
+    this.waterLevel = Math.max(0, Math.min(1, level));
     if (!this.ctx || !this.waterGain) return;
-    this.waterGain.gain.setTargetAtTime(Math.max(0, Math.min(1, level)) * 0.05, this.ctx.currentTime, 0.4);
+    this.waterGain.gain.setTargetAtTime(this.waterLevel * this.waterScale, this.ctx.currentTime, 0.4);
   }
 
   private scheduleBirds(): void {

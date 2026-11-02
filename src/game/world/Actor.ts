@@ -12,6 +12,9 @@ export const DEPTH_OVERLAY = 1000000;
  * rate: the player's walking speed. Slower or faster walks play it slower or
  * faster, so the feet keep pace with the ground. */
 export const WALK_PACE = 170;
+/** How far below the bottom of the fist a held thing ends (world px): the
+ * fist closes around its lower part. */
+const HELD_BELOW_FIST = 3;
 
 export interface ActorOptions {
   id: string;
@@ -89,6 +92,8 @@ export class Actor {
       // the shadow moves with the legs, arms and wings: one cell per frame
       this.sprite.on(Phaser.Animations.Events.ANIMATION_UPDATE, () => this.syncShadow());
     }
+    // what the hand holds swings with the arm, frame by frame
+    this.sprite.on(Phaser.Animations.Events.ANIMATION_UPDATE, () => this.placeHeld());
     this.refresh(true);
   }
 
@@ -256,12 +261,6 @@ export class Actor {
     this.sprite.setPosition(x, y - this.lift);
     this.sprite.setDepth(y + this.depthBias);
     this.emoteSprite?.setPosition(x, this.topY() - 6);
-    if (this.heldSprite) {
-      // in the hand, at hand height; seen from behind, the body hides it
-      const arms = this.grip === 'arms';
-      const dx = (arms ? { left: -9, right: 9, down: 0, up: 0 } : { left: -7, right: 7, down: -12, up: 12 })[this.facing];
-      this.heldSprite.setPosition(x + dx, y - (arms ? 22 : 36)).setDepth(this.facing === 'up' ? y - 1 : y + 1);
-    }
     const tex = this.textureFor(this.facing);
     if (this.sprite.texture.key !== tex) {
       this.sprite.setTexture(tex);
@@ -290,6 +289,38 @@ export class Actor {
     }
     // each character's walk matches its own usual speed (God walks slower, with shorter steps)
     if (this.charId) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / (CHARACTERS[this.charId]?.speed || WALK_PACE), 0.55, 1.75) : 1;
+    this.placeHeld();
+  }
+
+  /**
+   * What the character holds: in the hand at hand height, or in front with
+   * both arms; seen from behind, the body hides it. From the side it stays
+   * in the fist as the arm swings (the frame's hand point from the art
+   * pipeline: the maintainer saw held things hang still while the arm moved).
+   */
+  private placeHeld(): void {
+    if (!this.heldSprite) return;
+    const x = Math.round(this.feet.x);
+    const y = Math.round(this.feet.y);
+    const arms = this.grip === 'arms';
+    let dx = (arms ? { left: -9, right: 9, down: 0, up: 0 } : { left: -7, right: 7, down: -12, up: 12 })[this.facing];
+    let dy = arms ? -22 : -36;
+    const fist = arms ? null : this.fist();
+    if (fist) [dx, dy] = [fist[0], fist[1] + HELD_BELOW_FIST];
+    this.heldSprite.setPosition(x + dx, y + dy).setDepth(this.facing === 'up' ? y - 1 : y + 1);
+  }
+
+  /** The bottom of the near fist in the current frame (world px from the
+   * feet), when the sheet records it (side views of Adam and Eve). */
+  private fist(): [number, number] | null {
+    const parts = this.sprite.texture.key.split(':');
+    if (parts[0] !== 'char') return null;
+    const a = MANIFEST.characters[parts[1]]?.[parts[2]]?.[parts[3] as Direction];
+    const p = a?.hands?.[Number(this.sprite.frame.name) || 0];
+    if (!a || !p) return null;
+    const s = a.scale ?? 1;
+    const dx = (p[0] - a.anchorX) * s;
+    return [this.sprite.flipX ? -dx : dx, (p[1] - a.anchorY - 1) * s];
   }
 
   /** The shadow cell of the sprite's current frame, flipped like it. */

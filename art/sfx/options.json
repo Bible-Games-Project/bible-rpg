@@ -1,5 +1,5 @@
 {
- "about": "Sound options offered to the maintainer (voice bank page, Sounds tab): CC0 Freesound previews, cut and mixed by recipe. parts = [freesound id, start s, length s, delay s, gain].",
+ "about": "Sound options offered to the maintainer (the voice and sound library in the game, Sounds): CC0 Freesound previews, cut and mixed by recipe. parts = [freesound id, start s, length s, delay s, gain]. Footsteps (step-<surface>-<n>) are single steps found by onset detection in walking recordings, each peak-normalised; slither, pour and fill options are the loudest window of their recording. All are packed for the library by tools/audio/pack_dev_library.py.",
  "sources": {
   "212541": {
    "user": "misstickle",
@@ -358,6 +358,286 @@
    "user": "HowardV",
    "title": "Large stream or small river",
    "url": "https://freesound.org/people/HowardV/sounds/777116/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "206030": {
+   "user": "Yuval",
+   "title": "footsteps grass.wav",
+   "url": "https://freesound.org/people/Yuval/sounds/206030/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "389625": {
+   "user": "SilentStrikeZ",
+   "title": "Footsteps_Grass_1.wav",
+   "url": "https://freesound.org/people/SilentStrikeZ/sounds/389625/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "505833": {
+   "user": "jedg",
+   "title": "Footsteps grass.wav",
+   "url": "https://freesound.org/people/jedg/sounds/505833/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "331167": {
+   "user": "Adielees9",
+   "title": "Grass_Footsteps.wav",
+   "url": "https://freesound.org/people/Adielees9/sounds/331167/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "149233": {
+   "user": "conleec",
+   "title": "FOLEY_Footsteps_Grass_001.wav",
+   "url": "https://freesound.org/people/conleec/sounds/149233/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "521587": {
+   "user": "Fission9",
+   "title": "Hiking Boot Footsteps on Grass",
+   "url": "https://freesound.org/people/Fission9/sounds/521587/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "353799": {
+   "user": "monte32",
+   "title": "Footsteps_6_Dirt_shoe.wav",
+   "url": "https://freesound.org/people/monte32/sounds/353799/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "264469": {
+   "user": "aglinder",
+   "title": "Footsteps Dirt 01",
+   "url": "https://freesound.org/people/aglinder/sounds/264469/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "389454": {
+   "user": "lzmraul",
+   "title": "Footsteps_On_Dirt.wav",
+   "url": "https://freesound.org/people/lzmraul/sounds/389454/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "720441": {
+   "user": "bruno.auzet",
+   "title": "bare foot on a summer path",
+   "url": "https://freesound.org/people/bruno.auzet/sounds/720441/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "419181": {
+   "user": "14GPanskaHonc_Petr",
+   "title": "14-Man fast walking dirt.wav",
+   "url": "https://freesound.org/people/14GPanskaHonc_Petr/sounds/419181/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "370367": {
+   "user": "LilMati",
+   "title": "Step On Dirt",
+   "url": "https://freesound.org/people/LilMati/sounds/370367/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "265582": {
+   "user": "aglinder",
+   "title": "Footsteps Water 01",
+   "url": "https://freesound.org/people/aglinder/sounds/265582/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "861369": {
+   "user": "ChristopherJngs",
+   "title": "Splashing Footsteps Shallow Water",
+   "url": "https://freesound.org/people/ChristopherJngs/sounds/861369/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "849543": {
+   "user": "barryshamir",
+   "title": "Walking in shallow water",
+   "url": "https://freesound.org/people/barryshamir/sounds/849543/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "106395": {
+   "user": "j1987",
+   "title": "puddlewalk.wav",
+   "url": "https://freesound.org/people/j1987/sounds/106395/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "531566": {
+   "user": "patchytherat",
+   "title": "puddle footsteps.wav",
+   "url": "https://freesound.org/people/patchytherat/sounds/531566/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "553238": {
+   "user": "NachtmahrTV",
+   "title": "Walking through puddle",
+   "url": "https://freesound.org/people/NachtmahrTV/sounds/553238/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "553159": {
+   "user": "nickcase",
+   "title": "Footsteps in shallow beach water",
+   "url": "https://freesound.org/people/nickcase/sounds/553159/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "364712": {
+   "user": "alegemaate",
+   "title": "Rustling Grass",
+   "url": "https://freesound.org/people/alegemaate/sounds/364712/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "543508": {
+   "user": "Clusman",
+   "title": "grass_rustling_uncut.wav",
+   "url": "https://freesound.org/people/Clusman/sounds/543508/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "387338": {
+   "user": "Coral_Island_Studios",
+   "title": "Rustling Field of Dried Grass.wav",
+   "url": "https://freesound.org/people/Coral_Island_Studios/sounds/387338/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "425828": {
+   "user": "ProductionNow",
+   "title": "Paper Pom Pom Dragged Around",
+   "url": "https://freesound.org/people/ProductionNow/sounds/425828/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "830148": {
+   "user": "Wigglesworth",
+   "title": "Dragging/digging at rocks and leaves",
+   "url": "https://freesound.org/people/Wigglesworth/sounds/830148/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "570759": {
+   "user": "ericnorcross81",
+   "title": "Leaves Rustling",
+   "url": "https://freesound.org/people/ericnorcross81/sounds/570759/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "173930": {
+   "user": "JohnsonBrandEditing",
+   "title": "Water Pour",
+   "url": "https://freesound.org/people/JohnsonBrandEditing/sounds/173930/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "257957": {
+   "user": "FillSoko",
+   "title": "Pouring water into glass",
+   "url": "https://freesound.org/people/FillSoko/sounds/257957/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "241880": {
+   "user": "rafael45",
+   "title": "Serving Water Slowly.wav",
+   "url": "https://freesound.org/people/rafael45/sounds/241880/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "414077": {
+   "user": "Black_River_Phonogram",
+   "title": "Water To Glass",
+   "url": "https://freesound.org/people/Black_River_Phonogram/sounds/414077/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "172377": {
+   "user": "runirasmussen",
+   "title": "Pouring Water",
+   "url": "https://freesound.org/people/runirasmussen/sounds/172377/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "207781": {
+   "user": "Dvideoguy",
+   "title": "Pouring Liquid.wav",
+   "url": "https://freesound.org/people/Dvideoguy/sounds/207781/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "507310": {
+   "user": "pws1503",
+   "title": "filling a plastic jug with water.mp3",
+   "url": "https://freesound.org/people/pws1503/sounds/507310/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "850461": {
+   "user": "AGRProductions",
+   "title": "Plastic jug filling with water",
+   "url": "https://freesound.org/people/AGRProductions/sounds/850461/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "705275": {
+   "user": "mudflea2",
+   "title": "Plastic water jug filled with water then poured down a sink",
+   "url": "https://freesound.org/people/mudflea2/sounds/705275/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "536953": {
+   "user": "twinpix",
+   "title": "Water Slosh in Metal Bottle - various.mp3",
+   "url": "https://freesound.org/people/twinpix/sounds/536953/",
    "licenses": [
     "Creative Commons 0"
    ]
@@ -936,6 +1216,835 @@
     ]
    ],
    "length": 9.0
+  },
+  "step-grass-1": {
+   "parts": [
+    [
+     "206030",
+     18.256,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-2": {
+   "parts": [
+    [
+     "206030",
+     29.268,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-3": {
+   "parts": [
+    [
+     "206030",
+     28.281,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-4": {
+   "parts": [
+    [
+     "389625",
+     7.493,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-5": {
+   "parts": [
+    [
+     "389625",
+     11.934,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-6": {
+   "parts": [
+    [
+     "505833",
+     3.453,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-7": {
+   "parts": [
+    [
+     "505833",
+     1.845,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-8": {
+   "parts": [
+    [
+     "505833",
+     5.264,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-9": {
+   "parts": [
+    [
+     "331167",
+     9.908,
+     0.503,
+     0,
+     1
+    ]
+   ],
+   "length": 0.503,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-10": {
+   "parts": [
+    [
+     "331167",
+     14.384,
+     0.498,
+     0,
+     1
+    ]
+   ],
+   "length": 0.498,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-11": {
+   "parts": [
+    [
+     "331167",
+     7.853,
+     0.538,
+     0,
+     1
+    ]
+   ],
+   "length": 0.538,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-12": {
+   "parts": [
+    [
+     "149233",
+     33.0,
+     0.503,
+     0,
+     1
+    ]
+   ],
+   "length": 0.503,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-13": {
+   "parts": [
+    [
+     "149233",
+     28.24,
+     0.457,
+     0,
+     1
+    ]
+   ],
+   "length": 0.457,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-14": {
+   "parts": [
+    [
+     "149233",
+     30.899,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-15": {
+   "parts": [
+    [
+     "521587",
+     3.0,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-16": {
+   "parts": [
+    [
+     "521587",
+     0.045,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-grass-17": {
+   "parts": [
+    [
+     "521587",
+     2.222,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-1": {
+   "parts": [
+    [
+     "353799",
+     2.228,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-2": {
+   "parts": [
+    [
+     "353799",
+     5.061,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-3": {
+   "parts": [
+    [
+     "353799",
+     3.14,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-4": {
+   "parts": [
+    [
+     "264469",
+     13.089,
+     0.271,
+     0,
+     1
+    ]
+   ],
+   "length": 0.271,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-5": {
+   "parts": [
+    [
+     "264469",
+     8.561,
+     0.538,
+     0,
+     1
+    ]
+   ],
+   "length": 0.538,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-6": {
+   "parts": [
+    [
+     "264469",
+     11.772,
+     0.318,
+     0,
+     1
+    ]
+   ],
+   "length": 0.318,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-7": {
+   "parts": [
+    [
+     "389454",
+     5.09,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-8": {
+   "parts": [
+    [
+     "389454",
+     1.723,
+     0.567,
+     0,
+     1
+    ]
+   ],
+   "length": 0.567,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-9": {
+   "parts": [
+    [
+     "389454",
+     0.707,
+     0.527,
+     0,
+     1
+    ]
+   ],
+   "length": 0.527,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-10": {
+   "parts": [
+    [
+     "720441",
+     119.727,
+     0.393,
+     0,
+     1
+    ]
+   ],
+   "length": 0.393,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-11": {
+   "parts": [
+    [
+     "720441",
+     63.244,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-12": {
+   "parts": [
+    [
+     "720441",
+     68.486,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-13": {
+   "parts": [
+    [
+     "419181",
+     3.668,
+     0.283,
+     0,
+     1
+    ]
+   ],
+   "length": 0.283,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-14": {
+   "parts": [
+    [
+     "419181",
+     1.543,
+     0.567,
+     0,
+     1
+    ]
+   ],
+   "length": 0.567,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-15": {
+   "parts": [
+    [
+     "419181",
+     9.421,
+     0.312,
+     0,
+     1
+    ]
+   ],
+   "length": 0.312,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-dirt-16": {
+   "parts": [
+    [
+     "370367",
+     0.045,
+     0.222,
+     0,
+     1
+    ]
+   ],
+   "length": 0.222,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-1": {
+   "parts": [
+    [
+     "265582",
+     48.813,
+     0.376,
+     0,
+     1
+    ]
+   ],
+   "length": 0.376,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-2": {
+   "parts": [
+    [
+     "265582",
+     49.858,
+     0.352,
+     0,
+     1
+    ]
+   ],
+   "length": 0.352,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-3": {
+   "parts": [
+    [
+     "265582",
+     45.11,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-4": {
+   "parts": [
+    [
+     "861369",
+     3.372,
+     0.561,
+     0,
+     1
+    ]
+   ],
+   "length": 0.561,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-5": {
+   "parts": [
+    [
+     "861369",
+     0.928,
+     0.393,
+     0,
+     1
+    ]
+   ],
+   "length": 0.393,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-6": {
+   "parts": [
+    [
+     "861369",
+     5.612,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-7": {
+   "parts": [
+    [
+     "849543",
+     9.63,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-8": {
+   "parts": [
+    [
+     "106395",
+     2.931,
+     0.561,
+     0,
+     1
+    ]
+   ],
+   "length": 0.561,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-9": {
+   "parts": [
+    [
+     "106395",
+     1.224,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-10": {
+   "parts": [
+    [
+     "106395",
+     2.338,
+     0.318,
+     0,
+     1
+    ]
+   ],
+   "length": 0.318,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-11": {
+   "parts": [
+    [
+     "531566",
+     7.273,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-12": {
+   "parts": [
+    [
+     "531566",
+     7.998,
+     0.26,
+     0,
+     1
+    ]
+   ],
+   "length": 0.26,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-13": {
+   "parts": [
+    [
+     "531566",
+     6.466,
+     0.306,
+     0,
+     1
+    ]
+   ],
+   "length": 0.306,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-14": {
+   "parts": [
+    [
+     "553238",
+     5.955,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-15": {
+   "parts": [
+    [
+     "553238",
+     10.947,
+     0.254,
+     0,
+     1
+    ]
+   ],
+   "length": 0.254,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "step-water-16": {
+   "parts": [
+    [
+     "553238",
+     2.507,
+     0.6,
+     0,
+     1
+    ]
+   ],
+   "length": 0.6,
+   "cut": "single step, peak-normalised to -3 dB (cut_steps)"
+  },
+  "slither-1": {
+   "parts": [
+    [
+     "364712",
+     2.872154195011338,
+     2.6,
+     0,
+     1
+    ]
+   ],
+   "length": 2.6
+  },
+  "slither-2": {
+   "parts": [
+    [
+     "543508",
+     5.054829931972789,
+     2.6,
+     0,
+     1
+    ]
+   ],
+   "length": 2.6
+  },
+  "slither-3": {
+   "parts": [
+    [
+     "387338",
+     7.353605442176871,
+     2.6,
+     0,
+     1
+    ]
+   ],
+   "length": 2.6
+  },
+  "slither-4": {
+   "parts": [
+    [
+     "425828",
+     71.4871201814059,
+     2.6,
+     0,
+     1
+    ]
+   ],
+   "length": 2.6
+  },
+  "slither-5": {
+   "parts": [
+    [
+     "830148",
+     15.991428571428573,
+     2.6,
+     0,
+     1
+    ]
+   ],
+   "length": 2.6
+  },
+  "slither-6": {
+   "parts": [
+    [
+     "570759",
+     29.807301587301588,
+     2.6,
+     0,
+     1
+    ]
+   ],
+   "length": 2.6
+  },
+  "pour-1": {
+   "parts": [
+    [
+     "173930",
+     1.409297052154195,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "pour-2": {
+   "parts": [
+    [
+     "257957",
+     19.822721088435372,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "pour-3": {
+   "parts": [
+    [
+     "241880",
+     11.788616780045352,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "pour-4": {
+   "parts": [
+    [
+     "414077",
+     2.1755555555555555,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "pour-5": {
+   "parts": [
+    [
+     "172377",
+     4.706530612244898,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "pour-6": {
+   "parts": [
+    [
+     "207781",
+     0.0,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "fill-1": {
+   "parts": [
+    [
+     "507310",
+     3.661632653061224,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "fill-2": {
+   "parts": [
+    [
+     "850461",
+     0.5269387755102041,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "fill-3": {
+   "parts": [
+    [
+     "705275",
+     9.280861678004536,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
+  },
+  "fill-4": {
+   "parts": [
+    [
+     "536953",
+     12.485215419501134,
+     3.0,
+     0,
+     1
+    ]
+   ],
+   "length": 3.0
   }
  }
 }

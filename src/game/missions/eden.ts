@@ -596,8 +596,8 @@ const m06: MissionDef = {
     w.face(w.eve, 'up');
     w.face(w.adam, w.eve);
     await w.cameraTo([POINTS.serpentBranch[0], POINTS.serpentBranch[1] + 60], 900);
-    // it hisses first, then speaks (the maintainer: not all at once)
-    w.sfx('hiss');
+    // it is heard first, then speaks (the maintainer: not all at once)
+    w.sfx('serpentAppear');
     w.eve.emote('question');
     await w.wait(2200);
     await w.say('m06_serpent');

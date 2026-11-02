@@ -204,7 +204,13 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   A side arm is found by its hand (non-green pixels at hand height); bare
   arms over a tunic of the same colour use `SIDE_ARMS` boxes measured on
   the current sheets (measure again if they are regenerated); the place the
-  arm leaves is filled by mirroring the texture beside it. God's robe shows
+  arm leaves is filled by mirroring the texture beside it. The pipeline
+  turns the fist (bottom of the arm box) with the arm and records it per
+  frame as the sheet's `hands`; what Adam or Eve hold from the side sits in
+  that fist and swings with it (`Actor.placeHeld`; the maintainer saw held
+  things hang still while the arm moved). `build_characters` can be run on
+  its own (it is part of the `from_generated` group) and gives
+  byte-identical sheets. God's robe shows
   no legs: his side walk is short steps of the feet under the hem with the
   lower robe swaying (the generated strides looked "horrible"). Generated
   walk strips flickered (a different drawing per frame).
@@ -303,10 +309,9 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   Holding Shift runs at `RUN` times the walking speed. A new chapter then
   opens with a creation cinematic (`EdenScene.creationIntro`): darkness and
   Genesis 1:1, light breaking out, the garden from high above, the camera
-  down to Adam appearing in the light; any key or tap skips it, except in
-  its first 1.5 s (a tap left over from the screens before skipped it). It
-  plays only when the chapter starts from the beginning, not when a saved
-  game continues.
+  down to Adam appearing in the light. It cannot be skipped (stray keys and
+  taps skipped it; the maintainer wants it always seen). It plays only when
+  the chapter starts from the beginning, not when a saved game continues.
 - The interface scales with the screen (`applyUiScale` in `main.ts` sets
   `--ui-scale` from the tighter of width/1180 and height/700, between 0.75
   and 1.4, times 1.25 for large text): with fixed sizes it was huge or cut
@@ -393,8 +398,9 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   on him until "Where are you?", and glides back; they are not held still.
   His light when he comes and goes is a burst of rays
   (`tools/art/holy_burst.py`, `fx('holy')`): an expanding disc looked like
-  circles. The serpent hisses when it shows (`sfx('hiss')`), and rustles
-  through the grass as it crawls (`sfx('slither')`). The hiss is made from
+  circles. The serpent is heard when it shows (`sfx('serpentAppear')`),
+  hisses before it speaks in mission 9 (`sfx('hiss')`), and rustles through
+  the grass as it crawls (`sfx('slither')`). The hiss is made from
   shaped noise in `build_sfx.py` (`lavfi:` sources): the recorded one was a
   person imitating a snake, and Freesound now answers this server with 403
   (do not work around it). Side-view sheets (the serpent, animals) only
@@ -404,15 +410,32 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
 - The maintainer's Voices button (top left of the main menu) only shows in
   a browser that opened the game once with `#dev` at the end of its address
   (`#nodev` hides it again, `src/core/dev.ts`); players never see it. It
-  opens the voice and sound library (`VOICE_LIBRARY`, a private Claude
-  artifact) with two tabs: Voices (the characters on top, ElevenLabs
-  library voices below to assign) and Sounds (the game's sound slots on
-  top: serpent, crawling, cherubim, river, footsteps…; CC0 options below
-  to assign, any to any slot). The maintainer copies the choice into the
-  chat. It stays outside the game on purpose: its tens of megabytes of
-  samples (and ElevenLabs' previews, which are not ours to host) must not
-  ship with the published game. Free Kokoro and Piper voices are on a
-  second page linked from it.
+  opens the voice and sound library inside the game (`src/ui/DevLibrary.ts`;
+  it was a separate artifact page, and the maintainer wanted to stay in the
+  game). Voices: the characters on top, ElevenLabs Voice Library voices
+  below; a choice is only noted (the maintainer copies the list into the
+  chat, then `build_voices.py` voices the lines again). The previews play
+  from ElevenLabs' own links (some, from `api.us.elevenlabs.io`, may not
+  play outside the artifact); they are not ours to ship, so only the Claude
+  artifact's build packs them (`--voices`, the artifact's page cannot load
+  other sites). Sounds: the game's sound slots on top
+  (`src/data/soundSlots.ts`: the serpent appears, hisses, crawls; the
+  cherubim land; the river, filling, pouring; five footstep slots each for
+  grass, dirt and water; others), and a slot lists only the options of its
+  own category (the maintainer: the serpent shows serpent sounds, footsteps
+  only footsteps). A sound chosen there plays in the game at once, in that
+  browser and only in dev mode (`src/core/devSounds.ts`); to keep it for
+  everyone, put its file in `public/assets/sfx` and in the slot's `sound`.
+  Walking plays one filled slot of the surface underfoot at random, never
+  the same twice in a row (`audio.step`, `Terrain.surfaceAt`: the fords are
+  water, paths and the dry land dirt); a surface with none borrows the
+  grass steps, so walking is never silent. A recorded river is looped with
+  its end crossfaded into its start. The options are in `art/sfx/library.json`
+  (English names) and packed back to back into `public/assets/dev/sounds.mp3`
+  by `tools/audio/pack_dev_library.py` (one file: the artifact holds at most
+  511 files, of standard web types); their sources and cuts are in
+  `art/sfx/options.json`. Free Kokoro and Piper voices are on a separate
+  artifact page (https://claude.ai/artifact/W9HHYeatyBLRJcgwjpzYwg).
 - The story map painting fades in over a second once loaded (it showed up
   late). The passing cloud's shadow was made clearer (alpha 0.4) and
   clouds come more often: the maintainer missed it.

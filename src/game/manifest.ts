@@ -34,6 +34,8 @@ export interface SheetAsset {
   shadow?: ShadowAsset;
   /** the cherub's flaming blade, in frame pixels */
   flame?: [number, number];
+  /** side views: the bottom of the near fist in each frame, in frame pixels */
+  hands?: [number, number][];
 }
 
 export interface TreeAsset {

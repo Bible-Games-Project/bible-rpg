@@ -522,6 +522,21 @@ SIDE_ARMS = {
 }
 
 
+# Where the near hand is in each frame of a side view (filled by side_frames,
+# keyed by (char, outfit)): the bottom of the fist, in the frame's own
+# pixels. The game puts what the character holds there, so it swings with
+# the arm (the maintainer saw held things hang still while the arm moved).
+SIDE_HANDS: dict[tuple[str, str], list[tuple[float, float]]] = {}
+
+
+def turn_point(p: tuple[float, float], angle: float, pivot: tuple[float, float]) -> tuple[float, float]:
+    """Where point p goes when a layer is turned by rotate_part (PIL: angle
+    in degrees, counter-clockwise on screen, y down)."""
+    a = np.radians(angle)
+    dx, dy = p[0] - pivot[0], p[1] - pivot[1]
+    return (pivot[0] + dx * np.cos(a) + dy * np.sin(a), pivot[1] - dx * np.sin(a) + dy * np.cos(a))
+
+
 def side_arm_band(stand: np.ndarray, char: str, outfit: str) -> tuple[int, int, int, int] | None:
     """The near arm of a side view, from the shoulder to the hand. Sleeves
     are the colour of the clothes, so the hand finds it: the largest patch of
@@ -608,6 +623,8 @@ def side_frames(stand: np.ndarray, char: str = '', outfit: str = '') -> tuple[li
     shoulder = ((band[0] + band[1]) / 2 + pad, band[2] + 2 + ROOM) if band else hip
     ground = h - 1 + ROOM
     frames = [grow(stand), grow(breathe(stand))]
+    fist = ((band[0] + band[1]) / 2 + pad, band[3] + ROOM) if band else None
+    hands = [fist, fist]
     for angle in SIDE_CYCLE:
         swing = -angle * ARM_SWING
         out = np.zeros_like(body)
@@ -617,7 +634,12 @@ def side_frames(stand: np.ndarray, char: str = '', outfit: str = '') -> tuple[li
             out = np.where(layer[:, :, 3:4] > 0, layer, out)
         low = int(np.nonzero(out[:, :, 3].any(axis=1))[0].max())
         frames.append(np.roll(out, ground - low, axis=0))
+        if fist:
+            hx, hy = turn_point(fist, swing, shoulder)
+            hands.append((hx, hy + ground - low))
     used = np.nonzero(np.any([f[:, :, 3].any(axis=0) for f in frames], axis=0))[0]
+    if fist:
+        SIDE_HANDS[(char, outfit)] = [(x - used.min(), y) for x, y in hands]
     return [f[:, used.min():used.max() + 1] for f in frames], ground
 
 
@@ -718,6 +740,10 @@ def build_characters(m: dict, save, strip, sheet_entry) -> np.ndarray:
                 c = torso_center(fs[0][:base + 1])
                 cells = [place(f[:base + 3], w, h, w // 2, h - 1, c) for f in fs]
                 extra = {'idle': [0, 1], 'walk': list(range(2, len(fs))), 'walkFps': WALK_FPS_FRONT if char != 'god' else WALK_FPS}
+                if d == 'right' and (char, outfit) in SIDE_HANDS:
+                    # the same shift as place(): centre column on w // 2, row base + 2 on h - 1
+                    ox, oy = round(w // 2 - c), h - min(fs[0].shape[0], base + 3)
+                    extra['hands'] = [[round(float(x + ox), 1), round(float(y + oy), 1)] for x, y in SIDE_HANDS[(char, outfit)]]
             else:
                 cells = [place(f, w, h, w // 2, h - 3, torso_center(f)) for f in fr]
                 extra = {'idle': [0, 1], 'walk': [2, 3, 4, 5]}
