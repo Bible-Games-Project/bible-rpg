@@ -506,12 +506,15 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   `while read` loop, give ffmpeg `-nostdin` (it eats the loop's input).
 - Thorns (`thorns(true)`) are grown once: asking again keeps them (mission
   10's setup asked again and they vanished and grew back).
-- Publishing: `docs/agents/working-style.md` (shared by all the project's
-  games) says to push every change to `main`, which deploys the Cloudflare
-  preview (https://bgp-bible-rpg.pages.dev, `preview-deploy.yml`). A cloud
-  session may instead be told to push only to its own `claude/…` branch:
-  then nothing reaches the preview. Say so at once and ask the maintainer
-  before pushing to `main`; the Claude artifact was used meanwhile.
+- Publishing: push every change to `main` (the maintainer confirmed it, as
+  `docs/agents/working-style.md` says), which deploys the Cloudflare preview
+  (https://bgp-bible-rpg.pages.dev, `preview-deploy.yml`); a session on its
+  own `claude/…` branch merges it into `main` and pushes both. Also keep
+  publishing the Claude artifact of the game
+  (https://claude.ai/artifact/Mn7a4AqNYjxh9dkE6CEKec) beside it, always in
+  addition to `main`, never instead. An artifact cannot frame the Cloudflare
+  URL (artifacts refuse other sites in iframes), so it carries its own
+  build: only the changed files are republished.
 - Headless Chromium in the cloud container renders with SwiftShader at only
   ~4 fps, and Phaser's clock advances at most one capped step per frame, so
   `wait(900)` can take 10+ real seconds there: a mission that seems stuck
