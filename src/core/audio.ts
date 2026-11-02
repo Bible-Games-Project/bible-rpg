@@ -11,7 +11,7 @@ import { settings } from './settings';
  * fully playable with audio muted or unavailable.
  */
 
-/** Every sound effect by name (the maintainer's voices screen lists them). */
+/** Every sound effect by name. */
 export const SFX = [
   'uiMove',
   'uiSelect',
@@ -376,11 +376,6 @@ class AudioManager {
         this.hissOnce(t + 1.35, 0.7, 0.13 * v);
         break;
     }
-  }
-
-  /** Whether a sound plays a recording (else it is synthesized). */
-  recorded(name: Sfx): boolean {
-    return !!SAMPLES[name];
   }
 
   /** Decodes a recorded file (a spoken line); null without sound or file. */

@@ -13,8 +13,8 @@ export interface MenuActions {
   fun(): void;
   moreGames(): void;
   settings(): void;
-  /** the maintainer's voices screen; no button when absent (src/core/dev.ts) */
-  voices?(): void;
+  /** the maintainer's voice and sound library; no button when absent (src/core/dev.ts) */
+  voicesUrl?: string;
 }
 
 export function mainMenuScreen(a: MenuActions): HTMLElement {
@@ -34,7 +34,7 @@ export function mainMenuScreen(a: MenuActions): HTMLElement {
       h('button', { class: 'btn', onclick: a.settings }, t('menu.settings')),
     ),
     h('div', { class: 'menu-footer' }, t('app.studio')),
-    a.voices ? h('button', { class: 'btn small dev-voices', onclick: a.voices }, t('dev.voices')) : null,
+    a.voicesUrl ? h('a', { class: 'btn small dev-voices', href: a.voicesUrl, target: '_blank', rel: 'noopener' }, t('dev.voices')) : null,
   );
   wireButtonSounds(el);
   arrowNav(el.querySelector('nav')!);

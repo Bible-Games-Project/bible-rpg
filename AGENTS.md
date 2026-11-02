@@ -401,13 +401,18 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   face left or right, or the serpent crawled backwards going up or down;
   its shadow is nudged 2 px down and right (`shadowOffset`). In mission 9
   it crawls back behind the oak below (`serpentFrom`) to hide.
-- The maintainer's Voices screen (`src/ui/VoicesPanel.ts`: every recorded
-  line by character and voice, every sound effect) has a button at the top
-  left of the main menu that only shows in a browser that opened the game
-  once with `#dev` at the end of its address (`#nodev` hides it again,
-  `src/core/dev.ts`). It is for the maintainer, not players. It links to
-  the voice bank pages (private Claude artifacts, `BANKS`) where voices and
-  sounds are chosen for each character.
+- The maintainer's Voices button (top left of the main menu) only shows in
+  a browser that opened the game once with `#dev` at the end of its address
+  (`#nodev` hides it again, `src/core/dev.ts`); players never see it. It
+  opens the voice and sound library (`VOICE_LIBRARY`, a private Claude
+  artifact) with two tabs: Voices (the characters on top, ElevenLabs
+  library voices below to assign) and Sounds (the game's sound slots on
+  top: serpent, crawling, cherubim, river, footsteps…; CC0 options below
+  to assign, any to any slot). The maintainer copies the choice into the
+  chat. It stays outside the game on purpose: its tens of megabytes of
+  samples (and ElevenLabs' previews, which are not ours to host) must not
+  ship with the published game. Free Kokoro and Piper voices are on a
+  second page linked from it.
 - The story map painting fades in over a second once loaded (it showed up
   late). The passing cloud's shadow was made clearer (alpha 0.4) and
   clouds come more often: the maintainer missed it.

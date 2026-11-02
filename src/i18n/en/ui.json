@@ -34,23 +34,74 @@
     "cancel": "Cancel"
   },
   "stories": {
-    "eden": { "title": "The Garden of Eden", "summary": "Adam and Eve in the garden God planted, the command about the tree, the serpent, and the way out of Eden." },
-    "cain-abel": { "title": "Cain and Abel", "summary": "The first brothers, their offerings, and the question “Where is your brother?”" },
-    "noah": { "title": "Noah and the Flood", "summary": "Noah builds the ark, and God sets the rainbow as a sign of His promise." },
-    "babel": { "title": "The Tower of Babel", "summary": "People build a tower to make a name for themselves, and God scatters the languages." },
-    "abraham": { "title": "The Call of Abraham", "summary": "God calls Abram to a new land and promises him descendants as many as the stars." },
-    "lot": { "title": "Lot and Sodom", "summary": "Angels lead Lot and his family out of Sodom before the city is destroyed." },
-    "isaac": { "title": "Isaac and Rebekah", "summary": "At the well, Abraham's servant meets Rebekah, who becomes Isaac's wife." },
-    "jacob": { "title": "Jacob", "summary": "Jacob dreams of a ladder reaching to heaven, and God keeps His promise to him." },
-    "joseph": { "title": "Joseph and His Brothers", "summary": "From the pit to the palace: Joseph forgives his brothers." },
-    "nativity": { "title": "The Birth of Jesus", "summary": "Shepherds hear the good news in the fields near Bethlehem." },
-    "baptism": { "title": "The Baptism of Jesus", "summary": "Jesus is baptised by John in the Jordan." },
-    "disciples": { "title": "The Calling of the Disciples", "summary": "“Follow me, and I will make you fishers of men.”" },
-    "cana": { "title": "The Wedding at Cana", "summary": "Jesus turns water into wine." },
-    "sermon": { "title": "The Sermon on the Mount", "summary": "Jesus teaches the crowds on the mountainside." },
-    "five-thousand": { "title": "Feeding the Five Thousand", "summary": "Five loaves and two fish feed a great crowd." },
-    "samaritan": { "title": "The Good Samaritan", "summary": "Who is my neighbour?" },
-    "prodigal": { "title": "The Prodigal Son", "summary": "A father runs to welcome his son home." }
+    "eden": {
+      "title": "The Garden of Eden",
+      "summary": "Adam and Eve in the garden God planted, the command about the tree, the serpent, and the way out of Eden."
+    },
+    "cain-abel": {
+      "title": "Cain and Abel",
+      "summary": "The first brothers, their offerings, and the question “Where is your brother?”"
+    },
+    "noah": {
+      "title": "Noah and the Flood",
+      "summary": "Noah builds the ark, and God sets the rainbow as a sign of His promise."
+    },
+    "babel": {
+      "title": "The Tower of Babel",
+      "summary": "People build a tower to make a name for themselves, and God scatters the languages."
+    },
+    "abraham": {
+      "title": "The Call of Abraham",
+      "summary": "God calls Abram to a new land and promises him descendants as many as the stars."
+    },
+    "lot": {
+      "title": "Lot and Sodom",
+      "summary": "Angels lead Lot and his family out of Sodom before the city is destroyed."
+    },
+    "isaac": {
+      "title": "Isaac and Rebekah",
+      "summary": "At the well, Abraham's servant meets Rebekah, who becomes Isaac's wife."
+    },
+    "jacob": {
+      "title": "Jacob",
+      "summary": "Jacob dreams of a ladder reaching to heaven, and God keeps His promise to him."
+    },
+    "joseph": {
+      "title": "Joseph and His Brothers",
+      "summary": "From the pit to the palace: Joseph forgives his brothers."
+    },
+    "nativity": {
+      "title": "The Birth of Jesus",
+      "summary": "Shepherds hear the good news in the fields near Bethlehem."
+    },
+    "baptism": {
+      "title": "The Baptism of Jesus",
+      "summary": "Jesus is baptised by John in the Jordan."
+    },
+    "disciples": {
+      "title": "The Calling of the Disciples",
+      "summary": "“Follow me, and I will make you fishers of men.”"
+    },
+    "cana": {
+      "title": "The Wedding at Cana",
+      "summary": "Jesus turns water into wine."
+    },
+    "sermon": {
+      "title": "The Sermon on the Mount",
+      "summary": "Jesus teaches the crowds on the mountainside."
+    },
+    "five-thousand": {
+      "title": "Feeding the Five Thousand",
+      "summary": "Five loaves and two fish feed a great crowd."
+    },
+    "samaritan": {
+      "title": "The Good Samaritan",
+      "summary": "Who is my neighbour?"
+    },
+    "prodigal": {
+      "title": "The Prodigal Son",
+      "summary": "A father runs to welcome his son home."
+    }
   },
   "fun": {
     "title": "Fun",
@@ -149,18 +200,7 @@
     "hide": "Hide"
   },
   "dev": {
-    "voices": "Voices",
-    "title": "Voices and sounds",
-    "bank": "Voice bank",
-    "bankHint": "Choose voices for each character, and the sounds, on these pages; then copy your choice and send it to Claude.",
-    "bankLibrary": "ElevenLabs library and sounds",
-    "bankFree": "Free voices, variations and monsters",
-    "lines": "Voice lines",
-    "sounds": "Sound effects",
-    "recorded": "recording",
-    "synth": "synthesized",
-    "none": "No recorded voices for this language.",
-    "narrator": "Narrator"
+    "voices": "Voices"
   },
   "dialogue": {
     "next": "Next",

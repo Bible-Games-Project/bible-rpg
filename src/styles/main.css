@@ -1953,52 +1953,10 @@ select:focus-visible {
   }
 }
 
-/* the maintainer's voices screen (src/ui/VoicesPanel.ts) */
+/* the maintainer's button to the voice and sound library (src/core/dev.ts) */
 .dev-voices {
   position: absolute;
   left: calc(12px + var(--safe-l));
   top: calc(12px + var(--safe-t));
   z-index: 2;
-}
-
-.dev-voices-panel {
-  max-height: calc(100vh - 40px);
-  overflow-y: auto;
-}
-
-.dev-voices-panel h3 {
-  margin: 14px 0 6px;
-  color: var(--gold);
-}
-
-.dev-group h4 {
-  margin: 10px 0 4px;
-  color: var(--gold-bright);
-  font-size: var(--fs-s);
-}
-
-.dev-line {
-  display: flex;
-  gap: 8px;
-  align-items: baseline;
-  margin: 3px 0;
-  font-size: var(--fs-s);
-}
-
-.dev-banks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.dev-sounds {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.dev-kind {
-  margin-left: 6px;
-  font-size: var(--fs-xs);
-  color: var(--ivory-dim);
 }

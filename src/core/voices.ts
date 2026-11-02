@@ -8,7 +8,7 @@ import { settings } from './settings';
  * still the line's text: an edited line falls silent until it is voiced
  * again, and a language without voices simply has none.
  */
-type Manifest = Record<string, { text: string; voice?: string }>;
+type Manifest = Record<string, { text: string }>;
 
 const BASE = `${import.meta.env.BASE_URL}assets/voice/`;
 const manifests = new Map<string, Promise<Manifest>>();
@@ -39,11 +39,6 @@ export const voices = {
   /** Whether this line is voiced (false until the list has loaded). */
   has(key: string, text: string): boolean {
     return loaded.get(settings.get().language)?.[key]?.text === text;
-  },
-
-  /** Every recorded line of the current language (the voices screen). */
-  list(): Promise<Manifest> {
-    return manifest(settings.get().language);
   },
 
   /** The line's sound, decoded and kept; null when it has none. */

@@ -209,6 +209,158 @@
    "licenses": [
     "Creative Commons 0"
    ]
+  },
+  "255111": {
+   "user": "rhapsodize",
+   "title": "Cinematic_Boom_Rhapsodize.wav",
+   "url": "https://freesound.org/people/rhapsodize/sounds/255111/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "128307": {
+   "user": "DiArchangeli",
+   "title": "Thunder.wav",
+   "url": "https://freesound.org/people/DiArchangeli/sounds/128307/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "243614": {
+   "user": "foad",
+   "title": "Thunderstorm lightning strike",
+   "url": "https://freesound.org/people/foad/sounds/243614/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "652690": {
+   "user": "AyaDrevis",
+   "title": "Thunder strike",
+   "url": "https://freesound.org/people/AyaDrevis/sounds/652690/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "840628": {
+   "user": "loganzsound",
+   "title": "Closeup Thunder Strike 01",
+   "url": "https://freesound.org/people/loganzsound/sounds/840628/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "672776": {
+   "user": "DaniloSFX",
+   "title": "Thunder Clap",
+   "url": "https://freesound.org/people/DaniloSFX/sounds/672776/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "441593": {
+   "user": "Poligonstudio",
+   "title": "Deep Impact",
+   "url": "https://freesound.org/people/Poligonstudio/sounds/441593/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "201571": {
+   "user": "Julien_Matthey",
+   "title": "JM_FX_Boom 01a.wav",
+   "url": "https://freesound.org/people/Julien_Matthey/sounds/201571/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "273918": {
+   "user": "IanStarGem",
+   "title": "Huge Impact #2",
+   "url": "https://freesound.org/people/IanStarGem/sounds/273918/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "754422": {
+   "user": "zazz.sound.design",
+   "title": "DSGNImpt_Deep Cinematic Impact 3_ZAZZ",
+   "url": "https://freesound.org/people/zazz.sound.design/sounds/754422/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "361772": {
+   "user": "kingsrow",
+   "title": "2016-10-06 Thunder Crack.wav",
+   "url": "https://freesound.org/people/kingsrow/sounds/361772/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "856174": {
+   "user": "brktkrgll",
+   "title": "Subterranean Deep Sub-Bass Rumble Drop",
+   "url": "https://freesound.org/people/brktkrgll/sounds/856174/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "231536": {
+   "user": "VKProduktion",
+   "title": "Creek 06 (loop)",
+   "url": "https://freesound.org/people/VKProduktion/sounds/231536/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "325182": {
+   "user": "kentspublicdomain",
+   "title": "River, stream, creek, sound of waves, moving water",
+   "url": "https://freesound.org/people/kentspublicdomain/sounds/325182/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "450628": {
+   "user": "kyles",
+   "title": "river or stream thick soft flow bubbly2.flac",
+   "url": "https://freesound.org/people/kyles/sounds/450628/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "853672": {
+   "user": "hoshisato",
+   "title": "The sound of a babbling brook",
+   "url": "https://freesound.org/people/hoshisato/sounds/853672/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "345104": {
+   "user": "metrostock99",
+   "title": "RUNNING BROOK WATER 50 SECONDS.wav",
+   "url": "https://freesound.org/people/metrostock99/sounds/345104/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "510233": {
+   "user": "Singular_Estudio",
+   "title": "River Stream_Stereo_From Lake Of Glacier_Closewav.wav",
+   "url": "https://freesound.org/people/Singular_Estudio/sounds/510233/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
+  },
+  "777116": {
+   "user": "HowardV",
+   "title": "Large stream or small river",
+   "url": "https://freesound.org/people/HowardV/sounds/777116/",
+   "licenses": [
+    "Creative Commons 0"
+   ]
   }
  },
  "options": {
@@ -556,6 +708,234 @@
     ]
    ],
    "length": 4.0
+  },
+  "impact-1": {
+   "parts": [
+    [
+     "255111",
+     0.0,
+     4.0,
+     0,
+     1
+    ]
+   ],
+   "length": 4.0
+  },
+  "impact-2": {
+   "parts": [
+    [
+     "128307",
+     0.0,
+     4.0,
+     0,
+     1
+    ]
+   ],
+   "length": 4.0
+  },
+  "impact-3": {
+   "parts": [
+    [
+     "243614",
+     7.226825396825397,
+     4.5,
+     0,
+     1
+    ]
+   ],
+   "length": 4.5
+  },
+  "impact-4": {
+   "parts": [
+    [
+     "652690",
+     2.141655328798186,
+     4.0,
+     0,
+     1
+    ]
+   ],
+   "length": 4.0
+  },
+  "impact-5": {
+   "parts": [
+    [
+     "840628",
+     0.33049886621315194,
+     4.0,
+     0,
+     1
+    ]
+   ],
+   "length": 4.0
+  },
+  "impact-6": {
+   "parts": [
+    [
+     "672776",
+     0.0,
+     4.0,
+     0,
+     1
+    ]
+   ],
+   "length": 4.0
+  },
+  "impact-7": {
+   "parts": [
+    [
+     "441593",
+     0.0,
+     4.0,
+     0,
+     1
+    ]
+   ],
+   "length": 4.0
+  },
+  "impact-8": {
+   "parts": [
+    [
+     "201571",
+     0.0,
+     4.0,
+     0,
+     1
+    ]
+   ],
+   "length": 4.0
+  },
+  "impact-9": {
+   "parts": [
+    [
+     "273918",
+     0.0,
+     4.0,
+     0,
+     1
+    ]
+   ],
+   "length": 4.0
+  },
+  "impact-10": {
+   "parts": [
+    [
+     "754422",
+     0.0,
+     4.0,
+     0,
+     1
+    ]
+   ],
+   "length": 4.0
+  },
+  "impact-11": {
+   "parts": [
+    [
+     "361772",
+     13.519433106575963,
+     4.0,
+     0,
+     1
+    ]
+   ],
+   "length": 4.0
+  },
+  "impact-12": {
+   "parts": [
+    [
+     "856174",
+     0.0,
+     4.0,
+     0,
+     1
+    ]
+   ],
+   "length": 4.0
+  },
+  "river-1": {
+   "parts": [
+    [
+     "231536",
+     8.997732426303855,
+     9.0,
+     0,
+     1
+    ]
+   ],
+   "length": 9.0
+  },
+  "river-2": {
+   "parts": [
+    [
+     "325182",
+     7.637896825396825,
+     9.0,
+     0,
+     1
+    ]
+   ],
+   "length": 9.0
+  },
+  "river-3": {
+   "parts": [
+    [
+     "450628",
+     20.583066893424036,
+     9.0,
+     0,
+     1
+    ]
+   ],
+   "length": 9.0
+  },
+  "river-4": {
+   "parts": [
+    [
+     "853672",
+     7.873996598639456,
+     9.0,
+     0,
+     1
+    ]
+   ],
+   "length": 9.0
+  },
+  "river-5": {
+   "parts": [
+    [
+     "345104",
+     12.931196145124716,
+     9.0,
+     0,
+     1
+    ]
+   ],
+   "length": 9.0
+  },
+  "river-6": {
+   "parts": [
+    [
+     "510233",
+     10.946927437641722,
+     9.0,
+     0,
+     1
+    ]
+   ],
+   "length": 9.0
+  },
+  "river-7": {
+   "parts": [
+    [
+     "777116",
+     8.408395691609977,
+     9.0,
+     0,
+     1
+    ]
+   ],
+   "length": 9.0
   }
  }
 }
