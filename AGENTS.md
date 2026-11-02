@@ -308,8 +308,9 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   screens), then the game (`App.preGame`, the maintainer's request).
   Holding Shift runs at `RUN` times the walking speed. A new chapter then
   opens with a creation cinematic (`EdenScene.creationIntro`): darkness and
-  Genesis 1:1, light breaking out, the garden from high above, the camera
-  down to Adam appearing in the light. It cannot be skipped (stray keys and
+  Genesis 1:1, light breaking out, then the camera, already close (0.8 of
+  the play zoom; from high above was "too far"), glides from the right
+  across the garden to Adam appearing in the light. It cannot be skipped (stray keys and
   taps skipped it; the maintainer wants it always seen). It plays only when
   the chapter starts from the beginning, not when a saved game continues.
 - The interface scales with the screen (`applyUiScale` in `main.ts` sets
@@ -321,9 +322,14 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
 - Missions start and end in the mission panel itself, without pop-up boxes
   (the maintainer found them too much text): on completion it turns green
   with a tick and "Progress saved" (`hud.completeMission`), then slides out
-  and back in with the next mission, which a band of light crosses.
+  and back in with the next mission, which a band of light crosses. The
+  panel is not open all the time (the maintainer): a Missions button at the
+  top left, the size of the Menu button, opens it until pressed again; a
+  new mission, a new step of one (not a count going up) or a completed
+  mission opens it for a few seconds, and it closes softly by itself.
   Notices ("Eve picks the fruit!", "Got: …") sit under it in the same left
-  column (`.hud-left`), not at the top centre (the maintainer).
+  column (`.hud-left`), not at the top centre (the maintainer); the same
+  notice never shows twice at once (pressing again stacked copies).
 - A narrator line that has a recorded voice does not hold the player
   (`DialogueBox.narrate`, chosen in `EdenScene.lines`): it is shown and
   spoken while they walk, closes itself once said, and nothing can be used
@@ -340,7 +346,15 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   (`putDown`, `dropProp`). Seeds are gathered one press at a time. Adam
   sets the full basket down after the fruit is shared (`basketFull`); it
   stays there in the later missions, and so do the stick and the gourd
-  (a resumed game lays them beside the plot).
+  (a resumed game lays them beside the plot). The gourd starts above the
+  three plots, a little right, where God appears later (`POINTS.gourd`).
+- The garden's edges read as impassable (the maintainer): after the seeded
+  decoration, `thickenEdges` (its own random sequence, so the rest keeps
+  its layout) adds boulders on the line of the invisible walls and a
+  denser fourth row of trees with overlapping crowns. The boulders are the
+  rock drawings built again bigger (`BIGGER` in `from_generated.py`), so
+  their pixels match; `build_props` can be run alone and leaves the other
+  props byte-identical.
 - The naming puzzle uses the meadow's green in light and dark steps (the
   maintainer found its old green foreign to the game).
 - New art comes from the OpenAI Image API (maintainer's decision), with a
@@ -398,9 +412,12 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   on him until "Where are you?", and glides back; they are not held still.
   His light when he comes and goes is a burst of rays
   (`tools/art/holy_burst.py`, `fx('holy')`): an expanding disc looked like
-  circles. The serpent is heard when it shows (`sfx('serpentAppear')`),
-  hisses before it speaks in mission 9 (`sfx('hiss')`), and rustles through
-  the grass as it crawls (`sfx('slither')`). The hiss is made from
+  circles. The serpent makes two sounds only (the maintainer): a hiss just
+  before it speaks to the woman (`sfx('hiss')`, mission 6) and its crawl,
+  coming and going (`sfx('slither')`, mission 9). Both, the cherubim's
+  thunder (11 s rolling away: cut at 4 s it stopped dead), the river and
+  the dirt and water footsteps are the maintainer's picks from the library
+  (`art/sfx/CREDITS.md`). The earlier hiss was made from
   shaped noise in `build_sfx.py` (`lavfi:` sources): the recorded one was a
   person imitating a snake, and Freesound now answers this server with 403
   (do not work around it). Side-view sheets (the serpent, animals) only
@@ -425,7 +442,9 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   own category (the maintainer: the serpent shows serpent sounds, footsteps
   only footsteps). A sound chosen there plays in the game at once, in that
   browser and only in dev mode (`src/core/devSounds.ts`); to keep it for
-  everyone, put its file in `public/assets/sfx` and in the slot's `sound`.
+  everyone, put its file in `public/assets/sfx` and in the slot's `sound`,
+  then bump the picks' storage key (`PICKS` in `devSounds.ts`) so the
+  maintainer's old choices stop overriding the new defaults.
   Walking plays one filled slot of the surface underfoot at random, never
   the same twice in a row (`audio.step`, `Terrain.surfaceAt`: the fords are
   water, paths and the dry land dirt); a surface with none borrows the
@@ -436,8 +455,11 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   511 files, of standard web types); their sources and cuts are in
   `art/sfx/options.json`. Free Kokoro and Piper voices are on a separate
   artifact page (https://claude.ai/artifact/W9HHYeatyBLRJcgwjpzYwg).
-- The story map painting fades in over a second once loaded (it showed up
-  late). The passing cloud's shadow was made clearer (alpha 0.4) and
+- The story path opens from black over a second once its painting has
+  loaded (it showed up late), and a story's pin goes straight in (continue
+  where it was left, or start), without the Continue / New game step; the
+  panel under the map keeps those buttons for the story shown there, and a
+  finished story still asks before it is replayed. The passing cloud's shadow was made clearer (alpha 0.4) and
   clouds come more often: the maintainer missed it.
 
 ### Code conventions
@@ -488,7 +510,7 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   the reveal's blips, the portrait talks until the voice ends, the next press
   cuts it off, the music dips under it, and it has its own volume
   (`voiceVolume`). Voices (Voice Library, chosen by the maintainer after
-  several rounds on a listening page): W. Storytime Oxley (God), Adam "Engaging, Friendly and Bright"
+  several rounds on a listening page): W. Storytime Oxley (God), Josh
   (Adam), Zara (Eve), Matthew Schmitz "Hissing and Sinister" (the serpent),
   Spuds Oxley (the narrator: gold verses, the creation verse, the short
   narrations); all at stability 0.3 and the voice's own speed (`SETTINGS`).

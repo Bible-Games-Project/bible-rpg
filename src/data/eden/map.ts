@@ -74,7 +74,8 @@ export const POINTS: Record<string, Pt> = {
   adamStart: [900, 1190],
   stick: [1090, 990],
   grain: [960, 1520],
-  gourd: [1760, 1190],
+  // above the three plots, a little right: where God appears afterwards (the maintainer)
+  gourd: [1600, 1108],
   riverFill: [1790, 1235],
   godAppear: [1620, 1110],
   godPlot: [1560, 1180],
@@ -155,7 +156,7 @@ export const PLACEMENTS: Placement[] = [
   { kind: 'grain-plant', x: 930, y: 1512, id: 'grain' },
   { kind: 'grain-plant', x: 990, y: 1530 },
   { kind: 'grain-plant', x: 1040, y: 1508 },
-  { kind: 'gourd', x: 1760, y: 1192, id: 'gourd' },
+  { kind: 'gourd', x: 1600, y: 1110, id: 'gourd' },
   { kind: 'oak-large-a', x: 760, y: 980 },
   { kind: 'oak-medium-a', x: 1260, y: 1050 },
   { kind: 'blossom', x: 620, y: 1420 },

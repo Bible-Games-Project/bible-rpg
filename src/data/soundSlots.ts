@@ -37,19 +37,19 @@ function steps(surface: Surface, defaults: (string | null)[]): SoundSlot[] {
 }
 
 export const SOUND_SLOTS: SoundSlot[] = [
-  // the serpent: it appears on the branch (Genesis 3:1), hisses before it
-  // speaks to God (Genesis 3:14) and crawls (the maintainer wanted these apart)
-  { id: 'serpentAppear', group: 'serpent', category: 'serpent', sound: sfx('hiss'), gain: 0.6 },
-  { id: 'hiss', group: 'serpent', category: 'serpent', sound: sfx('hiss'), gain: 0.6 },
-  { id: 'slither', group: 'serpent', category: 'serpent', sound: sfx('slither'), gain: 0.5 },
-  { id: 'land', group: 'cherubim', category: 'land', sound: sfx('land'), gain: 0.85 },
-  // the river's murmur near the water (synthesized until a recording is chosen)
-  { id: 'river', group: 'water', category: 'river', sound: null, gain: 1 },
+  // the serpent makes two sounds only (the maintainer): a hiss just before it
+  // speaks to the woman (Genesis 3:1), and its crawl, coming and going
+  { id: 'hiss', group: 'serpent', category: 'serpent', sound: sfx('serpent-hiss'), gain: 0.6 },
+  { id: 'slither', group: 'serpent', category: 'serpent', sound: sfx('serpent-crawl'), gain: 0.5 },
+  // thunder that rolls away (cut at 4 s it stopped dead)
+  { id: 'land', group: 'cherubim', category: 'land', sound: sfx('cherubim-land'), gain: 0.85 },
+  // the river's murmur near the water, looped (synthesized without one)
+  { id: 'river', group: 'water', category: 'river', sound: sfx('river'), gain: 1 },
   { id: 'fill', group: 'water', category: 'water', sound: sfx('fill'), gain: 0.5 },
   { id: 'pour', group: 'water', category: 'water', sound: sfx('pour'), gain: 0.5 },
   ...steps('grass', [1, 2, 3, 4, 5].map((i) => sfx(`step-${i}`))),
-  ...steps('dirt', []),
-  ...steps('water', []),
+  ...steps('dirt', [1, 2].map((i) => sfx(`step-dirt-${i}`))),
+  ...steps('water', [1, 2, 3].map((i) => sfx(`step-water-${i}`))),
   { id: 'bite', group: 'other', category: 'other', sound: sfx('bite'), gain: 0.55 },
   { id: 'seed', group: 'other', category: 'other', sound: sfx('seed'), gain: 0.5 },
   { id: 'leafPick', group: 'other', category: 'other', sound: sfx('leaf-pick'), gain: 0.45 },

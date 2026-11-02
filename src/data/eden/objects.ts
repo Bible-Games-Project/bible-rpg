@@ -67,6 +67,10 @@ export const OBJECTS: Record<string, ObjectKind> = {
   'rock-medium': { sprite: 'rock-medium', layer: 'ysort', collider: { w: 34, h: 12 }, shadow: 'shadow-medium' },
   'rock-large': { sprite: 'rock-large', layer: 'ysort', collider: { w: 62, h: 18 }, shadow: 'shadow-large' },
   'rock-mossy': { sprite: 'rock-mossy', layer: 'ysort', collider: { w: 46, h: 14 }, shadow: 'shadow-medium', cover: 26 },
+  // the garden's edges (the same drawings, bigger)
+  'boulder-a': { sprite: 'boulder-a', layer: 'ysort', collider: { w: 92, h: 24 }, shadow: 'shadow-large', cover: 46 },
+  'boulder-b': { sprite: 'boulder-b', layer: 'ysort', collider: { w: 78, h: 20 }, shadow: 'shadow-large', cover: 40 },
+  'boulder-c': { sprite: 'boulder-c', layer: 'ysort', collider: { w: 58, h: 16 }, shadow: 'shadow-medium', cover: 32 },
   log: { sprite: 'log', layer: 'ysort', collider: { w: 76, h: 12 }, shadow: 'shadow-large', cover: 30 },
   'flat-stone': { sprite: 'flat-stone', layer: 'ysort', collider: { w: 40, h: 10 } },
   'digging-stick': { sprite: 'digging-stick', layer: 'ground' },

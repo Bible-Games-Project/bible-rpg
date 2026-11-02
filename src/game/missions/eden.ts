@@ -596,8 +596,8 @@ const m06: MissionDef = {
     w.face(w.eve, 'up');
     w.face(w.adam, w.eve);
     await w.cameraTo([POINTS.serpentBranch[0], POINTS.serpentBranch[1] + 60], 900);
-    // it is heard first, then speaks (the maintainer: not all at once)
-    w.sfx('serpentAppear');
+    // it hisses just before it speaks to the woman (the maintainer: not all at once)
+    w.sfx('hiss');
     w.eve.emote('question');
     await w.wait(2200);
     await w.say('m06_serpent');
@@ -763,8 +763,8 @@ const m09: MissionDef = {
     await w.cameraTo([POINTS.godGrove[0] + 60, POINTS.godGrove[1] + 80], 700);
     await w.walk(w.serpent, [POINTS.serpentBend, POINTS.serpentGround], 45);
     w.serpent.face('left');
-    w.sfx('hiss');
-    await w.wait(1600);
+    // no hiss here: the serpent only hisses before speaking to the woman
+    await w.wait(500);
     w.face(w.god, w.serpent);
     await w.say('m09_serpent');
     // it crawls back the way it came and out of sight behind the oak below

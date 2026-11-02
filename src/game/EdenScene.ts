@@ -224,9 +224,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   /**
    * The opening of the chapter (the maintainer asked for a creation
    * cinematic): darkness and the first verse of Genesis, light breaking out
-   * until it fills the screen, the whole garden seen from high above, then
-   * the camera comes down to Adam, who is formed and appears in the light
-   * (Genesis 2:7). It cannot be skipped (the maintainer: a stray key or tap
+   * until it fills the screen, then the camera glides from the right across
+   * the garden, coming closer, to Adam, who is formed and appears in the
+   * light (Genesis 2:7). It cannot be skipped (the maintainer: a stray key or tap
    * skipped it); its input layer holds every key meanwhile.
    */
   creationIntro(): Promise<void> {
@@ -237,9 +237,11 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       const parts = [adam.sprite, adam.shadow].filter((o): o is NonNullable<typeof o> => !!o);
       const overlay = new CreationOverlay(document.getElementById('ui')!, t('eden.creation.verse'), t('eden.creation.ref'));
       const near = this.viewZoom();
-      // from high above, the garden fills the screen
-      const far = Math.max(this.scale.width / WORLD_W, this.scale.height / WORLD_H) * 1.15;
-      const view = { z: far, x: WORLD_W * 0.5, y: WORLD_H * 0.48 };
+      // close over the garden to the right of Adam, out of sight (the
+      // maintainer: it began too far away), then gliding left to him
+      const far = near * 0.8;
+      const half = this.scale.width / far / 2;
+      const view = { z: far, x: Math.min(WORLD_W - half, adam.x + half * 1.45), y: adam.y - 60 };
       const timers: number[] = [];
       const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
       let done = false;
@@ -288,20 +290,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
         });
         at(5800 + d, () => {
           overlay.clear();
-          // drifting over the garden toward where Adam is
-          this.tweens.add({ targets: view, x: (WORLD_W * 0.5 + adam.x) / 2, y: (WORLD_H * 0.48 + adam.y) / 2, duration: 4200, ease: 'Sine.easeInOut', onUpdate: place });
-        });
-        at(10000 + d, () => {
-          // down to him
-          this.tweens.add({
-            targets: view,
-            z: near,
-            x: adam.x,
-            y: adam.y - 40,
-            duration: 3400,
-            ease: 'Sine.easeInOut',
-            onUpdate: place,
-          });
+          // from right to left across the garden, coming closer, to him
+          this.tweens.add({ targets: view, z: near, x: adam.x, y: adam.y - 40, duration: 6800, ease: 'Sine.easeInOut', onUpdate: place });
         });
         at(12600 + d, () => {
           this.fx('sparkle', [adam.x, adam.y]);

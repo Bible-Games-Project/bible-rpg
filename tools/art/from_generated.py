@@ -1697,10 +1697,14 @@ PROPS = {
         [('plant-young', 22), ('plant-grown', 32), ('thorns', 22), ('thistle', 32), ('stepping-stone', 14)],
     ],
 }
+# bigger copies of some subjects, drawn again from the same source at a
+# larger size (so their pixels match the rest): boulders for the garden's
+# edges, where the maintainer wanted it plain that one cannot pass
+BIGGER = {'rock-large': [('boulder-a', 84)], 'rock-mossy': [('boulder-b', 66)], 'rock-medium': [('boulder-c', 54)]}
 # drawn centred on their position instead of standing on it
 CENTERED = {'lily-pad', 'stepping-stone', 'soil-marked', 'soil-tilled', 'soil-seeded', 'soil-watered'}
 # props lying on the ground rather than standing up (see cast_shadow)
-LYING = {'log', 'rock-large', 'rock-medium', 'rock-small', 'rock-mossy', 'flat-stone', 'mushrooms', 'seeds', 'digging-stick', 'fig-leaf'}
+LYING = {'log', 'rock-large', 'rock-medium', 'rock-small', 'rock-mossy', 'boulder-a', 'boulder-b', 'boulder-c', 'flat-stone', 'mushrooms', 'seeds', 'digging-stick', 'fig-leaf'}
 
 
 def build_props(m, save, sheet_entry) -> None:
@@ -1708,7 +1712,9 @@ def build_props(m, save, sheet_entry) -> None:
         img = cutout(job)
         found = rows_of_subjects(img, [len(r) for r in rows])
         for want, got in zip(rows, found):
-            for (key, height), box in zip(want, got):
+            subjects = list(zip(want, got))
+            subjects += [((big, bh), box) for (key, _), box in subjects for big, bh in BIGGER.get(key, [])]
+            for (key, height), box in subjects:
                 sp = fit(img, box, px(height))
                 h, w = sp.shape[:2]
                 if key.startswith('fruit-'):

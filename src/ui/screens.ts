@@ -118,11 +118,13 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
 
   function renderPainted(list: ChapterDef[], art: { file: string; width: number; height: number }) {
     mapInner.style.background = '';
-    // it takes a moment to load: it fades in over a second once it has (the maintainer)
+    // it takes a moment to load: the screen comes out of black once it has
     const img = h('img', { class: 'map-art', src: `${BASE}${art.file}`, alt: '', draggable: 'false' }) as HTMLImageElement;
-    const shown = () => img.classList.add('loaded');
-    if (img.complete && img.naturalWidth) requestAnimationFrame(shown);
-    else img.addEventListener('load', shown, { once: true });
+    if (img.complete && img.naturalWidth) reveal();
+    else {
+      img.addEventListener('load', reveal, { once: true });
+      img.addEventListener('error', reveal, { once: true });
+    }
     mapInner.append(img);
     list.forEach((c, i) => {
       const st = chapterStatus(c);
@@ -140,7 +142,7 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
         h('img', { class: 'marker', src: `${BASE}assets/ui/map-node-${look}.png`, alt: '', draggable: 'false' }),
         h('span', { class: 'label' }, t(`stories.${c.id}.title`)),
       );
-      node.addEventListener('click', () => select(c.id, node));
+      node.addEventListener('click', () => (select(c.id, node), enter(c)));
       mapInner.append(node);
     });
     fit();
@@ -201,9 +203,10 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
         h('span', { class: 'medallion' }, st === 'locked' || st === 'soon' ? '🔒︎' : String(i + 1)),
         h('span', { class: 'label' }, t(`stories.${c.id}.title`)),
       );
-      node.addEventListener('click', () => select(c.id, node));
+      node.addEventListener('click', () => (select(c.id, node), enter(c)));
       mapInner.append(node);
     });
+    reveal();
   }
 
   function statusLabel(c: ChapterDef, st: ReturnType<typeof chapterStatus>): string {
@@ -256,6 +259,18 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
     actions.querySelector<HTMLButtonElement>('button')?.focus({ preventScroll: true });
   }
 
+  /** A story's pin goes straight in (the maintainer: no Continue / New game
+   * step): on where it was left, or from the start. A finished one still asks
+   * before it is played again, as that clears its progress. */
+  function enter(c: ChapterDef) {
+    if (!c.playable || !save.isUnlocked(c.id)) return;
+    if (c.testament === 'nt' && !newTestamentOpen((id) => !!save.chapter(id)?.completed)) return;
+    const st = chapterStatus(c);
+    if (st === 'progress') a.start(c.id, 'continue');
+    else if (st === 'completed') void newGame(c);
+    else a.start(c.id, 'new');
+  }
+
   async function newGame(c: ChapterDef) {
     if (save.hasProgress(c.id) || save.chapter(c.id)?.completed) {
       const ok = await confirmDialog({
@@ -269,7 +284,18 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
     a.start(c.id, 'new');
   }
 
-  const el = h('div', { class: 'page' }, pageHeader(t('map.title'), a.back, tabs), map, detail);
+  // the screen opens from black over a second (the maintainer), once the map is there
+  const cover = h('div', { class: 'screen-cover', 'aria-hidden': 'true' });
+  let revealed = false;
+  function reveal() {
+    if (revealed) return;
+    revealed = true;
+    requestAnimationFrame(() => requestAnimationFrame(() => cover.classList.add('gone')));
+    window.setTimeout(() => cover.remove(), 1300);
+  }
+  window.setTimeout(reveal, 2500); // a slow painting does not keep the screen black
+
+  const el = h('div', { class: 'page' }, pageHeader(t('map.title'), a.back, tabs), map, detail, cover);
   wireButtonSounds(el);
   render();
   return el;

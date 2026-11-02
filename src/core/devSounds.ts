@@ -49,7 +49,8 @@ export interface LibraryData {
 }
 
 const BASE = `${import.meta.env.BASE_URL}assets/dev/`;
-const PICKS = 'bible-rpg.dev.sounds';
+// v2: the choices of the first list are now the game's own sounds
+const PICKS = 'bible-rpg.dev.sounds.v2';
 
 let library: Promise<LibraryData | null> | null = null;
 /** dev mode, read once (it changes only with a reload: #dev / #nodev) */

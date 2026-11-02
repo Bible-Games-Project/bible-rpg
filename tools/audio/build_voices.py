@@ -36,7 +36,7 @@ SETTINGS = {'stability': 0.3, 'similarity_boost': 0.75, 'speed': 1.0}
 Voice = tuple[str, str, dict | None]
 VOICES: dict[str, Voice] = {
     'god': ('W. Storytime Oxley', 'iUqOXhMfiOIbBejNtfLR', SETTINGS),
-    'adam': ('Adam', 's3TPKV1kjDlVtZbl4Ksh', SETTINGS),
+    'adam': ('Josh', 'nzFihrBIvB34imQBuxub', SETTINGS),
     'eve': ('Zara', 'jqcCZkN6Knx8BJ5TBdYR', SETTINGS),
     'serpent': ('Matthew Schmitz', 'xYWUvKNK6zWCgsdAK7Wi', SETTINGS),
 }

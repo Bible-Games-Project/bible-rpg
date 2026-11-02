@@ -37,7 +37,6 @@ export const SFX = [
   'leaves',
   'land',
   'hiss',
-  'serpentAppear',
   'slither',
   'seed',
   'fill',
@@ -464,7 +463,6 @@ class AudioManager {
         this.crackle(t + 0.25, 1.1, 0.18 * v, 90, 5200, 0.7, 2);
         break;
       case 'hiss':
-      case 'serpentAppear':
         // the serpent: a long hiss, then a shorter one
         this.hissOnce(t, 1.1, 0.2 * v);
         this.hissOnce(t + 1.35, 0.7, 0.13 * v);

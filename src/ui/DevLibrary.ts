@@ -34,7 +34,7 @@ export function devLibraryScreen(back: () => void): HTMLElement {
   const view = storage.read<{ mode?: Mode; who?: string; slot?: string; tab?: string }>(VIEW) ?? {};
   let mode: Mode = view.mode === 'sounds' ? 'sounds' : 'voices';
   let who = view.who ?? 'god';
-  let slot = view.slot && SLOT[view.slot] ? view.slot : 'serpentAppear';
+  let slot = view.slot && SLOT[view.slot] ? view.slot : 'hiss';
   let tab = view.tab ?? 'men';
   let voicePicks = storage.read<Record<string, string>>(VOICE_PICKS) ?? {};
   let stars = storage.read<string[]>(STARS) ?? [];

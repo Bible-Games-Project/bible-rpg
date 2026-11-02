@@ -667,12 +667,20 @@ select:focus-visible {
   height: 100%;
   pointer-events: none;
   user-select: none;
-  opacity: 0;
+}
+
+/* a screen that opens from black (the story path) */
+.screen-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: #000;
+  pointer-events: none;
   transition: opacity 1s ease-out;
 }
 
-.story-map .map-art.loaded {
-  opacity: 1;
+.screen-cover.gone {
+  opacity: 0;
 }
 
 .story-node.painted {
@@ -824,9 +832,19 @@ select:focus-visible {
   pointer-events: none;
 }
 
+/* the Missions button (top left, like the Menu button on the right) */
+.hud-left .hud-missions {
+  pointer-events: auto;
+}
+
+.mission-panel.closed {
+  display: none;
+}
+
 .mission-panel {
   position: relative;
   max-width: 100%;
+  transform-origin: top left;
   padding: calc(10px * var(--ui-scale)) calc(14px * var(--ui-scale)) calc(12px * var(--ui-scale));
   pointer-events: none;
 }

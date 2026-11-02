@@ -2355,6 +2355,57 @@
     "frameHeight": 29,
     "frames": 10
    }
+  },
+  "boulder-a": {
+   "file": "assets/props/boulder-a.png",
+   "frameWidth": 156,
+   "frameHeight": 121,
+   "frames": 1,
+   "anchorX": 78,
+   "anchorY": 120,
+   "scale": 0.694444,
+   "shadow": {
+    "file": "assets/shadows/boulder-a.png",
+    "anchorX": 86,
+    "anchorY": 39,
+    "frameWidth": 184,
+    "frameHeight": 62,
+    "frames": 1
+   }
+  },
+  "boulder-b": {
+   "file": "assets/props/boulder-b.png",
+   "frameWidth": 137,
+   "frameHeight": 95,
+   "frames": 1,
+   "anchorX": 68,
+   "anchorY": 94,
+   "scale": 0.694444,
+   "shadow": {
+    "file": "assets/shadows/boulder-b.png",
+    "anchorX": 77,
+    "anchorY": 26,
+    "frameWidth": 161,
+    "frameHeight": 46,
+    "frames": 1
+   }
+  },
+  "boulder-c": {
+   "file": "assets/props/boulder-c.png",
+   "frameWidth": 103,
+   "frameHeight": 78,
+   "frames": 1,
+   "anchorX": 51,
+   "anchorY": 77,
+   "scale": 0.694444,
+   "shadow": {
+    "file": "assets/shadows/boulder-c.png",
+    "anchorX": 60,
+    "anchorY": 22,
+    "frameWidth": 126,
+    "frameHeight": 40,
+    "frames": 1
+   }
   }
  },
  "trees": {

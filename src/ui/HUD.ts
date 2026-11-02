@@ -31,6 +31,16 @@ export interface InventoryChip {
   count?: number;
 }
 
+/** How long the mission panel stays open by itself: a new mission, a new
+ * step of one, a mission completed. */
+const NEW_MISSION_MS = 6000;
+const NEW_STEP_MS = 4000;
+const COMPLETE_MS = 4000;
+
+function still(): boolean {
+  return document.documentElement.dataset.reduceMotion === 'true' || !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+}
+
 /** Heads-up display (DOM): mission, objective, prompts, toasts, arrow. */
 export class HUD {
   readonly root: HTMLElement;
@@ -51,6 +61,15 @@ export class HUD {
   private fader: HTMLElement;
   private banners: HTMLElement;
   private switchBtn: HTMLButtonElement;
+  private missionsBtn: HTMLButtonElement;
+  /** the mission panel opens on the Missions button, or for a moment when
+   * there is something new to read (the maintainer did not want it open all
+   * the time) */
+  private panelOpen = false;
+  private pinned = false;
+  private hasMission = false;
+  private closeTimer = 0;
+  private panelAnim: Animation | null = null;
 
   constructor(host: HTMLElement, actions: { pause(): void; switchCharacter(): void }) {
     this.mNum = h('div', { class: 'mission-number' });
@@ -58,7 +77,12 @@ export class HUD {
     this.mObj = h('div', { class: 'objective' });
     this.mSource = h('div', { class: 'source' });
     this.mSaved = h('div', { class: 'saved' });
-    this.mission = h('div', { class: 'mission-panel panel', 'aria-live': 'polite' }, this.mNum, this.mTitle, this.mObj, this.mSaved, this.mSource);
+    this.mission = h('div', { class: 'mission-panel panel closed', id: 'hud-mission', 'aria-live': 'polite' }, this.mNum, this.mTitle, this.mObj, this.mSaved, this.mSource);
+    this.missionsBtn = h(
+      'button',
+      { class: 'btn small hud-missions', 'aria-expanded': 'false', 'aria-controls': 'hud-mission', hidden: true, onclick: () => this.toggleMission() },
+      `◆ ${t('hud.missions')}`,
+    ) as HTMLButtonElement;
     this.prompt = h('div', { class: 'prompt panel', hidden: true });
     this.toasts = h('div', { class: 'toast-stack' });
     this.inventory = h('div', { class: 'inventory-bar' });
@@ -74,8 +98,8 @@ export class HUD {
     this.fader = h('div', { class: 'fader' });
     this.banners = h('div', { class: 'hud-banners', 'aria-live': 'assertive' });
     const buttons = h('div', { class: 'hud-buttons' }, h('button', { class: 'btn small', onclick: actions.pause, 'aria-label': t('hud.pause') }, `☰ ${t('hud.pause')}`));
-    // notices go under the mission, in the left column (the maintainer)
-    const left = h('div', { class: 'hud-left' }, this.mission, this.toasts);
+    // the Missions button, the mission under it, and notices below (the maintainer)
+    const left = h('div', { class: 'hud-left' }, this.missionsBtn, this.mission, this.toasts);
     this.root = h('div', { class: 'hud', hidden: true }, left, buttons, this.inventory, this.charChip, this.prompt, this.timer, this.arrow, this.banners, this.fader);
     wireButtonSounds(this.root);
     host.append(this.root);
@@ -91,38 +115,104 @@ export class HUD {
    * found a separate "new mission" box too much text).
    */
   setMission(info: MissionInfo | null): void {
+    this.hasMission = !!info;
+    this.missionsBtn.hidden = !info;
     const fill = () => {
       this.mission.classList.remove('complete');
-      this.mission.hidden = !info;
-      if (!info) return;
+      if (!info) {
+        this.closeMission(true);
+        return;
+      }
       this.mNum.textContent = t('hud.mission', { n: String(info.number).padStart(2, '0') });
       this.mTitle.textContent = info.title;
       this.mObj.textContent = info.objective;
       this.mSource.replaceChildren(h('span', { class: 'kind' }, info.kind === 'scripture' ? t('hud.story', { ref: info.reference }) : t('hud.inspired', { ref: info.reference })));
       this.shine();
     };
-    const still = document.documentElement.dataset.reduceMotion === 'true' || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (!info || this.mission.hidden || !this.mission.classList.contains('complete') || still || !this.mission.animate) {
+    if (!info || !this.panelOpen || !this.mission.classList.contains('complete') || still() || !this.mission.animate) {
       fill();
+      if (info) this.openMission(NEW_MISSION_MS);
       return;
     }
+    window.clearTimeout(this.closeTimer);
     const away = [{ transform: 'none', opacity: 1 }, { transform: 'translateX(-30px)', opacity: 0 }];
     const out = this.mission.animate(away, { duration: 280, easing: 'ease-in', fill: 'forwards' });
     out.onfinish = () => {
       fill();
       out.cancel();
       this.mission.animate([...away].reverse(), { duration: 420, easing: 'ease-out' });
+      this.openMission(NEW_MISSION_MS);
     };
+  }
+
+  /** Open the mission panel; with a time, it closes again by itself (unless
+   * the player opened it with the button). */
+  private openMission(ms = 0): void {
+    if (!this.hasMission) return;
+    window.clearTimeout(this.closeTimer);
+    if (ms && !this.pinned) this.closeTimer = window.setTimeout(() => this.closeMission(), ms);
+    this.missionsBtn.setAttribute('aria-expanded', 'true');
+    if (this.panelOpen) return;
+    this.panelOpen = true;
+    this.panelAnim?.cancel();
+    this.mission.classList.remove('closed');
+    if (!still() && this.mission.animate) {
+      this.panelAnim = this.mission.animate(
+        [
+          { opacity: 0, transform: 'translateY(-10px) scaleY(0.92)' },
+          { opacity: 1, transform: 'none' },
+        ],
+        { duration: 320, easing: 'ease-out' },
+      );
+    }
+  }
+
+  /** Close it softly (the maintainer: not all at once). */
+  private closeMission(now = false): void {
+    window.clearTimeout(this.closeTimer);
+    this.missionsBtn.setAttribute('aria-expanded', 'false');
+    if (!this.panelOpen) return;
+    this.panelOpen = false;
+    this.pinned = false;
+    this.panelAnim?.cancel();
+    if (now || still() || !this.mission.animate) {
+      this.mission.classList.add('closed');
+      return;
+    }
+    const a = this.mission.animate(
+      [
+        { opacity: 1, transform: 'none' },
+        { opacity: 0, transform: 'translateY(-10px) scaleY(0.92)' },
+      ],
+      { duration: 450, easing: 'ease-in', fill: 'forwards' },
+    );
+    this.panelAnim = a;
+    a.onfinish = () => {
+      if (this.panelAnim !== a) return;
+      this.mission.classList.add('closed');
+      a.cancel();
+    };
+  }
+
+  /** The Missions button: open it until pressed again, or close it. */
+  private toggleMission(): void {
+    if (this.panelOpen) {
+      this.closeMission();
+      return;
+    }
+    this.pinned = true;
+    this.openMission();
   }
 
   /** The panel's own "mission complete": a green tick and a glow, with the
    * note that progress is saved, until the next mission takes its place. */
   completeMission(): void {
-    if (this.mission.hidden) return;
+    if (!this.hasMission) return;
     this.mObj.textContent = t('hud.missionComplete');
     this.mSaved.textContent = t('hud.saved');
     this.mission.classList.remove('fresh');
     this.mission.classList.add('complete');
+    this.openMission(COMPLETE_MS);
   }
 
   private shine(): void {
@@ -134,9 +224,13 @@ export class HUD {
   setObjective(text: string): void {
     // the completed mission stays on show until the next one replaces it
     if (this.mission.classList.contains('complete') && !text) return;
-    if (this.mObj.textContent === text) return;
+    const was = this.mObj.textContent ?? '';
+    if (was === text) return;
     this.mObj.textContent = text;
     this.mObj.animate?.([{ opacity: 0.3 }, { opacity: 1 }], { duration: 400 });
+    // a new step opens the panel for a moment; a count going up ("3/6") does not
+    const digitless = (s: string) => s.replace(/\d+/g, '#');
+    if (text && digitless(text) !== digitless(was)) this.openMission(NEW_STEP_MS);
   }
 
   setPrompt(text: string | null, key: string = KEY_LABELS.interact): void {
@@ -148,14 +242,31 @@ export class HUD {
     this.prompt.replaceChildren(h('kbd', {}, key), h('span', {}, text));
   }
 
+  /** A notice under the mission. The same notice is never shown twice at
+   * once (the maintainer could stack "Switch to Adam" by pressing again): it
+   * stays up a little longer instead. */
   toast(text: string, big = false, ms = 2600): void {
+    const same = this.shown.get(text);
+    if (same) {
+      window.clearTimeout(same.timer);
+      same.timer = window.setTimeout(same.end, ms);
+      return;
+    }
     const el = h('div', { class: `toast panel ${big ? 'big' : ''}` }, text);
     this.toasts.append(el);
-    window.setTimeout(() => {
-      el.animate?.([{ opacity: 1 }, { opacity: 0 }], { duration: 300 });
-      window.setTimeout(() => el.remove(), 290);
-    }, ms);
+    const entry = {
+      timer: 0,
+      end: () => {
+        this.shown.delete(text);
+        el.animate?.([{ opacity: 1 }, { opacity: 0 }], { duration: 300 });
+        window.setTimeout(() => el.remove(), 290);
+      },
+    };
+    entry.timer = window.setTimeout(entry.end, ms);
+    this.shown.set(text, entry);
   }
+
+  private shown = new Map<string, { timer: number; end: () => void }>();
 
   setInventory(items: InventoryChip[]): void {
     this.inventory.replaceChildren(

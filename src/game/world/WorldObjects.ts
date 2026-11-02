@@ -79,6 +79,7 @@ export class WorldObjects {
     for (const p of PLACEMENTS) this.place(p);
     this.fords();
     this.scatter();
+    this.thickenEdges();
     this.boundaries();
   }
 
@@ -304,6 +305,50 @@ export class WorldObjects {
           const ly = y + (r() - 0.5) * 18;
           if (this.terrain.riverDistance(lx, ly) < -16) this.place({ kind: 'lily-pad', x: lx, y: ly, flip: r() < 0.5 });
         }
+      }
+    }
+  }
+
+  /**
+   * The garden's edges made plainly impassable (the maintainer): a fourth,
+   * denser row of trees filling the gaps of the belts, and boulders along
+   * the line where the invisible walls stand. Its own random sequence, so the
+   * rest of the garden keeps its layout.
+   */
+  private thickenEdges(): void {
+    const r = rng(23);
+    const blocked = (x: number, y: number, margin: number) =>
+      this.nearRiver(x, y, margin) || this.terrain.pathDistance(x, y) < margin || this.inKeyZone(x, y, 40);
+    const nearExit = (y: number) => y > EXIT_GAP.top - 160 && y < EXIT_GAP.bottom + 100;
+    // boulders on the edge line, in front of the trees' trunks
+    const boulders = ['boulder-a', 'boulder-b', 'boulder-c', 'boulder-a', 'rock-large', 'boulder-b'];
+    const boulder = (x: number, y: number) => {
+      if (blocked(x, y, 70) || !this.free(x, y, -30)) return;
+      this.place({ kind: pick(r, boulders), x, y, flip: r() < 0.5 });
+    };
+    for (let x = BOUNDS.left + 60; x < BOUNDS.right - 40; x += 130 + r() * 140) {
+      boulder(x, BOUNDS.top + 16 + r() * 12);
+      boulder(x + 50 + r() * 60, BOUNDS.bottom + 22 + r() * 12);
+    }
+    for (let y = BOUNDS.top + 110; y < BOUNDS.bottom - 60; y += 130 + r() * 140) {
+      boulder(BOUNDS.left + 18 + r() * 12, y);
+      if (!nearExit(y)) boulder(BOUNDS.right + 8 + r() * 12, y + 60);
+    }
+    // trees filling the gaps of the belts, their crowns overlapping
+    const belt = ['oak-large-a', 'oak-large-b', 'oak-medium-a', 'oak-medium-b', 'cypress-a', 'cypress-b', 'olive-a'];
+    const tree = (x: number, y: number) => {
+      if (x < 30 || x > WORLD_W - 30 || y < 70 || y > WORLD_H + 60) return;
+      if (blocked(x, y, 40) || !this.free(x, y, -22)) return;
+      this.place({ kind: pick(r, belt), x, y, flip: r() < 0.5 });
+    };
+    for (let row = 0; row < 4; row++) {
+      for (let x = 40; x < WORLD_W - 40; x += 58) {
+        tree(x + r() * 26, BOUNDS.top - 6 - row * 50 + r() * 14);
+        tree(x + r() * 26, BOUNDS.bottom + 70 + row * 50 + r() * 14);
+      }
+      for (let y = 140; y < WORLD_H - 40; y += 58) {
+        tree(BOUNDS.left - 16 - row * 48 + r() * 14, y + r() * 26);
+        if (!nearExit(y)) tree(BOUNDS.right + 46 + row * 44 + r() * 14, y + r() * 26);
       }
     }
   }

@@ -23,6 +23,21 @@ no author; `slither.mp3` adds such noise to slowed rustles credited below.
 | `water-poured-from-bottle.mp3` | craigsmith | [Water Poured from Bottle](https://freesound.org/people/craigsmith/sounds/482857/) (Freesound, CC0) | `pour.mp3` (the seeds watered) |
 | `kenney-dropLeather.ogg` | Kenney (www.kenney.nl) | [50 RPG sound effects](https://opengameart.org/content/50-rpg-sound-effects) | `drop.mp3` (a tool set down) |
 
+## Chosen in the maintainer's library
+
+These were picked by the maintainer among the library's options (below) and
+copied into `public/assets/sfx`; their cuts are the recipes of the same
+option names in `options.json` (all CC0, from Freesound).
+
+| File | Option | Author | Page | Used in |
+| --- | --- | --- | --- | --- |
+| `serpent-hiss.mp3` | `hiss-1` | schreibsel | [Snake hissing](https://freesound.org/people/schreibsel/sounds/540162/) | the serpent hisses before speaking to the woman |
+| `serpent-crawl.mp3` | `hiss-5` | Andy19 | [Snake Pit](https://freesound.org/people/Andy19/sounds/252042/) | the serpent crawls (coming and going) |
+| `cherubim-land.mp3` | `impact-2`, 11 s with a 7 s fade | DiArchangeli | [Thunder](https://freesound.org/people/DiArchangeli/sounds/128307/) | the cherubim land |
+| `river.mp3` | `river-1`, 20 s from 9 s in | VKProduktion | [Creek 06 (loop)](https://freesound.org/people/VKProduktion/sounds/231536/) | the river, looped |
+| `step-dirt-1.mp3`, `step-dirt-2.mp3` | `step-dirt-2`, `step-dirt-3` | monte32 | [Footsteps_6_Dirt_shoe](https://freesound.org/people/monte32/sounds/353799/) | footsteps on dirt |
+| `step-water-1.mp3` … `step-water-3.mp3` | `step-water-1` … `step-water-3` | aglinder | [Footsteps Water 01](https://freesound.org/people/aglinder/sounds/265582/) | footsteps in water (the fords) |
+
 ## Options in the maintainer's library
 
 `public/assets/dev/sounds.mp3` holds the sound options the maintainer can
@@ -38,7 +53,7 @@ above.
 The spoken lines in `public/assets/voice/` are made with
 [ElevenLabs](https://elevenlabs.io) text to speech by
 `tools/audio/build_voices.py`, with Voice Library voices: W. Storytime Oxley
-(the LORD God), Adam (Adam), Zara (Eve), Matthew Schmitz (the serpent) and
+(the LORD God), Josh (Adam), Zara (Eve), Matthew Schmitz (the serpent) and
 Spuds Oxley (the narrator, who reads the gold verses). They were generated
 on a paid plan, which per ElevenLabs gives a commercial licence that lasts
 after the subscription ends; they are not CC0. The settings screen still
