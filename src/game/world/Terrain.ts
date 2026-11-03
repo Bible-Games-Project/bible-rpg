@@ -182,7 +182,7 @@ export class Terrain {
  * with linear filtering, which would otherwise blend in the neighbouring
  * tile of the sheet and show thin lines between tiles.
  */
-function extrudedTiles(scene: Phaser.Scene): string {
+export function extrudedTiles(scene: Phaser.Scene): string {
   const key = 'tiles-extruded';
   if (scene.textures.exists(key)) return key;
   const src = scene.textures.get('tiles').getSourceImage() as HTMLImageElement | HTMLCanvasElement;

@@ -31,8 +31,12 @@ export interface SaveData {
 
 const KEY = 'bible-rpg.save.v1';
 
+/** Chapters open from the start. Cain and Abel is open too while it is being
+ * built, so the maintainer can play it without finishing Eden first. */
+const OPEN = ['eden', 'cain-abel'];
+
 function fresh(): SaveData {
-  return { version: 1, chapters: {}, unlocked: ['eden'], updatedAt: Date.now() };
+  return { version: 1, chapters: {}, unlocked: [...OPEN], updatedAt: Date.now() };
 }
 
 function isValid(d: unknown): d is SaveData {
@@ -50,7 +54,7 @@ class SaveStore {
       this.data = fresh();
     } else if (isValid(raw)) {
       this.data = raw;
-      if (!this.data.unlocked.includes('eden')) this.data.unlocked.unshift('eden');
+      for (const id of OPEN) if (!this.data.unlocked.includes(id)) this.data.unlocked.push(id);
     } else {
       // Keep the unreadable save aside instead of silently erasing it.
       storage.write(`${KEY}.unreadable-${Date.now()}`, raw);

@@ -3,6 +3,10 @@ import { save } from '../core/save';
 import { CHAPTERS, MAP_ART, MAP_HEIGHT, chaptersOf, newTestamentOpen, previousChapter, type ChapterDef, type Testament } from '../data/chapters';
 import { MORE_GAMES } from '../data/moreGames';
 import { EDEN_MISSION_IDS } from '../data/eden/missionOrder';
+import { CAIN_MISSION_IDS } from '../data/cain/missionOrder';
+
+/** How many missions each playable chapter has. */
+const MISSION_COUNT: Record<string, number> = { eden: EDEN_MISSION_IDS.length, 'cain-abel': CAIN_MISSION_IDS.length };
 import { h, arrowNav } from './dom';
 import { wireButtonSounds, confirmDialog } from './overlays';
 
@@ -213,7 +217,7 @@ export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLEl
     if (st === 'completed') return t('map.completed');
     if (st === 'progress') {
       const prog = save.chapter(c.id)!;
-      return t('map.inProgress', { n: prog.completedMissions.length + 1, total: EDEN_MISSION_IDS.length });
+      return t('map.inProgress', { n: prog.completedMissions.length + 1, total: MISSION_COUNT[c.id] ?? 1 });
     }
     if (st === 'soon') return t('map.comingSoon');
     if (st === 'locked') return t('map.locked');

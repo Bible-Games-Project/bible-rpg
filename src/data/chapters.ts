@@ -30,7 +30,7 @@ export const CHAPTERS: ChapterDef[] = [
   // the tower, Abraham's tent under the stars, Sodom burning, the well where
   // Rebekah meets Abraham's servant, Jacob's ladder, Egypt.
   { id: 'eden', testament: 'ot', reference: 'Genesis 2–3', playable: true, pos: { x: 95, y: 462 } },
-  { id: 'cain-abel', testament: 'ot', reference: 'Genesis 4', playable: false, pos: { x: 430, y: 492 } },
+  { id: 'cain-abel', testament: 'ot', reference: 'Genesis 4', playable: true, pos: { x: 430, y: 492 } },
   { id: 'noah', testament: 'ot', reference: 'Genesis 6–9', playable: false, pos: { x: 595, y: 392 } },
   { id: 'babel', testament: 'ot', reference: 'Genesis 11', playable: false, pos: { x: 760, y: 382 } },
   { id: 'abraham', testament: 'ot', reference: 'Genesis 12–15', playable: false, pos: { x: 880, y: 462 } },

@@ -1,0 +1,152 @@
+{
+  "chapter": { "title": "Cain and Abel", "reference": "Genesis 4" },
+  "missions": {
+    "m01": {
+      "title": "The Fruit of the Ground",
+      "desc": "Cain was a tiller of the ground. He brings of its fruit as an offering.",
+      "steps": {
+        "gather": "Gather the fruit of your field ({n}/{total})",
+        "altar": "Bring your offering to the altar"
+      }
+    },
+    "m02": {
+      "title": "The Firstlings of the Flock",
+      "desc": "Abel was a keeper of sheep. He brings the firstlings of his flock and their fat.",
+      "steps": {
+        "lambs": "Offer lambs of your flock ({n}/{total})",
+        "fat": "Take the fat ({n}/{total})",
+        "altar": "Bring the fat to the altar"
+      }
+    },
+    "m03": {
+      "title": "The Two Offerings",
+      "desc": "The LORD looks on the two offerings."
+    },
+    "m04": {
+      "title": "In the Field",
+      "desc": "Cain talks with Abel his brother, and they go out to the field.",
+      "steps": {
+        "field": "Go out to your field with Abel",
+        "jawbone": "Take the jawbone lying in the field",
+        "chase": "Catch Abel before he reaches his father and mother"
+      }
+    },
+    "m05": {
+      "title": "Where Is Your Brother?",
+      "desc": "The LORD speaks to Cain.",
+      "steps": {
+        "east": "Go away east, out of the land"
+      }
+    }
+  },
+  "scripture": {
+    "born": {
+      "ref": "Genesis 4:1",
+      "text": "And Adam knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man from the LORD."
+    },
+    "keeper": {
+      "ref": "Genesis 4:2",
+      "text": "And she again bare his brother Abel. And Abel was a keeper of sheep, but Cain was a tiller of the ground."
+    },
+    "firstlings": {
+      "ref": "Genesis 4:4",
+      "text": "And Abel, he also brought of the firstlings of his flock and of the fat thereof."
+    },
+    "respect": {
+      "ref": "Genesis 4:4–5",
+      "text": "And the LORD had respect unto Abel and to his offering: but unto Cain and to his offering he had not respect."
+    },
+    "wroth": {
+      "ref": "Genesis 4:5",
+      "text": "And Cain was very wroth, and his countenance fell."
+    },
+    "slew": {
+      "ref": "Genesis 4:8",
+      "text": "And it came to pass, when they were in the field, that Cain rose up against Abel his brother, and slew him."
+    },
+    "mark": {
+      "ref": "Genesis 4:15",
+      "text": "And the LORD set a mark upon Cain, lest any finding him should kill him."
+    },
+    "nod": {
+      "ref": "Genesis 4:16",
+      "text": "And Cain went out from the presence of the LORD, and dwelt in the land of Nod, on the east of Eden."
+    }
+  },
+  "dialogue": {
+    "command": [
+      { "s": "god", "t": "Cain, Abel. Bring me an offering, each of you, from the work of your hands.", "ref": "Genesis 4:3–4 (inspired)" },
+      { "s": "cain", "t": "I will bring the fruit of my field." },
+      { "s": "abel", "t": "And I, the firstlings of my flock." }
+    ],
+    "rebuke": [
+      { "s": "god", "t": "Why are you angry? Why has your face fallen?", "ref": "Genesis 4:6" },
+      { "s": "god", "t": "If you do well, will you not be accepted? If not, sin lies at the door. It wants you, but you must rule over it.", "ref": "Genesis 4:7" }
+    ],
+    "field": [
+      { "s": "cain", "t": "Abel. Come with me, let us go out to the field.", "ref": "Genesis 4:8" },
+      { "s": "abel", "t": "I'll come, brother." }
+    ],
+    "fear": [
+      { "s": "abel", "t": "Cain? What are you doing with that?" }
+    ],
+    "where": [
+      { "s": "god", "t": "Where is Abel your brother?", "ref": "Genesis 4:9" },
+      { "s": "cain", "t": "I do not know. Am I my brother's keeper?", "ref": "Genesis 4:9" },
+      { "s": "god", "t": "What have you done? The voice of your brother's blood cries to me from the ground.", "ref": "Genesis 4:10" },
+      { "s": "god", "t": "When you till the ground, it will no longer give you its strength. You will be a fugitive and a wanderer on the earth.", "ref": "Genesis 4:11–12" },
+      { "s": "cain", "t": "My punishment is greater than I can bear. Whoever finds me will kill me.", "ref": "Genesis 4:13–14" },
+      { "s": "god", "t": "Not so. Whoever kills Cain, vengeance will be taken on him sevenfold.", "ref": "Genesis 4:15" }
+    ]
+  },
+  "npc": {
+    "adam": {
+      "before": [
+        "I worked the ground by the sweat of my brow. Now my sons work it with me.",
+        "Bring the LORD your best, my son.",
+        "We could not go back to the garden. But the LORD has not left us.",
+        "Cain keeps the field, Abel keeps the sheep. Each has his work."
+      ],
+      "after": [
+        "The LORD looked on your brother's offering. Do not let your heart grow dark.",
+        "Anger is a heavy thing to carry, son. Put it down.",
+        "Where is your brother? He should be home before the evening."
+      ]
+    },
+    "eve": {
+      "before": [
+        "I have gotten a man from the LORD. And then another. My two sons.",
+        "The pot is almost ready. Go on, do your work first.",
+        "Take care of your brother, Cain.",
+        "The tunics the LORD made us still keep us warm."
+      ],
+      "after": [
+        "Your face has fallen, Cain. What is it?",
+        "Make peace with your brother before the sun goes down.",
+        "Is Abel with you? I have kept his bread warm."
+      ]
+    }
+  },
+  "items": {
+    "produce": "Fruit of the ground",
+    "fat": "Fat of the lambs",
+    "jawbone": "Jawbone"
+  },
+  "prompts": {
+    "offer": "Lay the offering on the altar",
+    "lamb": "Offer the lamb",
+    "strike": "Strike"
+  },
+  "toasts": {
+    "basket": "Your basket is full."
+  },
+  "chase": {
+    "banner": "Abel runs for home!",
+    "escaped": "Abel reached his father and mother. Try again."
+  },
+  "complete": {
+    "chapter": "Cain and Abel",
+    "body": "Cain went out from the presence of the LORD to the land of Nod. But Abel's offering was not forgotten: by faith he offered a more excellent sacrifice (Hebrews 11:4).",
+    "next": "Next on the path: Noah and the Flood."
+  }
+}

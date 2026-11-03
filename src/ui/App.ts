@@ -6,6 +6,11 @@ import { NAMEABLE, ANIMALS } from '../data/animals';
 import { BootScene } from '../game/BootScene';
 import { setUiBridge } from '../game/bridge';
 import { EdenScene, type EdenStartData } from '../game/EdenScene';
+import { CainScene } from '../game/cain/CainScene';
+import { buildCainPortraits } from '../game/cain/art';
+
+/** The scene that plays each chapter; its key is also its i18n namespace. */
+const CHAPTER_SCENES: Record<string, 'eden' | 'cain'> = { eden: 'eden', 'cain-abel': 'cain' };
 import { DialogueBox } from './DialogueBox';
 import { h } from './dom';
 import { HUD } from './HUD';
@@ -32,11 +37,13 @@ export class App {
   private assetsReady: Promise<void>;
   private pause: OverlayHandle | null = null;
   private playing = false;
+  /** the scene of the chapter being played */
+  private sceneKey: 'eden' | 'cain' = 'eden';
 
   constructor(private host: HTMLElement) {
     this.hud = new HUD(host, {
       pause: () => this.openPause(),
-      switchCharacter: () => this.eden()?.switchCharacter(),
+      switchCharacter: () => this.chapterScene()?.switchCharacter(),
     });
     this.dialogue = new DialogueBox(host, () => this.openPause());
     this.touch = new TouchControls(host);
@@ -63,7 +70,7 @@ export class App {
       physics: { default: 'arcade', arcade: { debug: false, fixedStep: false } },
       input: { keyboard: false },
       audio: { noAudio: true },
-      scene: [BootScene, EdenScene],
+      scene: [BootScene, EdenScene, CainScene],
     });
     this.assetsReady = new Promise((resolve) => this.game.events.once('assets-ready', () => resolve()));
     const fit = () => {
@@ -79,10 +86,11 @@ export class App {
     this.showMenu();
   }
 
-  private eden(): EdenScene | null {
+  private chapterScene(): EdenScene | CainScene | null {
     const m = this.game.scene;
-    if (!m.isActive('eden') && !m.isPaused('eden')) return null;
-    return m.getScene('eden') as EdenScene;
+    const key = this.sceneKey;
+    if (!m.isActive(key) && !m.isPaused(key)) return null;
+    return m.getScene(key) as EdenScene | CainScene;
   }
 
   // ---------------------------------------------------------------- screens
@@ -125,17 +133,20 @@ export class App {
   // ------------------------------------------------------------------ game
 
   private async startChapter(id: string, mode: 'continue' | 'new'): Promise<void> {
-    if (id !== 'eden') return;
+    const key = CHAPTER_SCENES[id];
+    if (!key) return;
     const loading = h('div', { class: 'loading', role: 'status' }, t('app.loading'));
     this.setScreen(loading);
     await this.assetsReady;
+    if (key === 'cain') await buildCainPortraits();
+    this.sceneKey = key;
     this.setScreen(null);
     await this.preGame();
     this.playing = true;
     this.touch.setActive(true);
     this.hud.show(true);
     const data: EdenStartData = { mode };
-    this.game.scene.start('eden', data);
+    this.game.scene.start(key, data);
   }
 
   /**
@@ -181,7 +192,7 @@ export class App {
                 legend('move', 'W A S D', t('pregame.move')),
                 legend('run', 'Shift', t('pregame.run')),
                 legend('use', 'E', t('pregame.interact')),
-                legend('switch', 'Tab', t('pregame.switch')),
+                this.sceneKey === 'eden' ? legend('switch', 'Tab', t('pregame.switch')) : null,
                 legend('menu', 'Esc', t('pregame.menu')),
               ),
             ),
@@ -233,10 +244,10 @@ export class App {
   }
 
   private stopScene(): void {
-    const s = this.eden();
+    const s = this.chapterScene();
     s?.halt();
     this.dialogue.dismiss();
-    if (s) this.game.scene.stop('eden');
+    if (s) this.game.scene.stop(this.sceneKey);
     input.releaseAll();
   }
 
@@ -252,19 +263,19 @@ export class App {
   private restartMission(): void {
     this.stopScene();
     this.resetHud();
-    this.game.scene.start('eden', { mode: 'continue' } satisfies EdenStartData);
+    this.game.scene.start(this.sceneKey, { mode: 'continue' } satisfies EdenStartData);
   }
 
   // ------------------------------------------------------------------ pause
 
   private openPause(): void {
     if (!this.playing || this.pause) return;
-    this.game.scene.pause('eden');
+    this.game.scene.pause(this.sceneKey);
     input.releaseAll();
     const close = () => {
       this.pause?.close();
       this.pause = null;
-      if (this.playing) this.game.scene.resume('eden');
+      if (this.playing) this.game.scene.resume(this.sceneKey);
     };
     const panel = h(
       'div',
@@ -333,13 +344,15 @@ export class App {
         resolve();
       } }, t('map.start'));
       const c = this.card(
-        [h('h1', {}, t('eden.chapter.title')), h('h2', {}, t('eden.chapter.reference'))],
+        [h('h1', {}, t(`${this.sceneKey}.chapter.title`)), h('h2', {}, t(`${this.sceneKey}.chapter.reference`))],
         [begin],
       );
     });
   }
 
   private chapterComplete(): void {
+    // Eden's card texts are at the root of ui.json; later chapters keep theirs in their namespace
+    const p = this.sceneKey === 'eden' ? 'complete' : `${this.sceneKey}.complete`;
     this.hud.setMission(null);
     this.touch.setActive(false);
     const done = (to: 'map' | 'menu') => {
@@ -347,7 +360,7 @@ export class App {
       this.leaveGame(to);
     };
     const c = this.card(
-      [h('h1', {}, t('complete.title')), h('h2', {}, t('complete.chapter')), h('p', {}, t('complete.body')), h('p', { class: 'next' }, t('complete.next'))],
+      [h('h1', {}, t('complete.title')), h('h2', {}, t(`${p}.chapter`)), h('p', {}, t(`${p}.body`)), h('p', { class: 'next' }, t(`${p}.next`))],
       [
         h('button', { class: 'btn primary', onclick: () => done('map') }, t('complete.toMap')),
         h('button', { class: 'btn', onclick: () => done('menu') }, t('complete.toMenu')),

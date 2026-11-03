@@ -286,7 +286,7 @@
     "title": "Chapter Complete",
     "chapter": "The Garden of Eden",
     "body": "Adam and Eve left the garden. Cherubim guard the way to the tree of life. The story continues.",
-    "next": "Next on the path: Cain and Abel — coming soon.",
+    "next": "Next on the path: Cain and Abel.",
     "toMap": "Return to the story path",
     "toMenu": "Main menu"
   },
@@ -297,6 +297,8 @@
     "god": "The LORD God",
     "serpent": "The serpent",
     "narrator": "",
-    "cherubim": "Cherubim"
+    "cherubim": "Cherubim",
+    "cain": "Cain",
+    "abel": "Abel"
   }
 }

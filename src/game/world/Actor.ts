@@ -217,13 +217,15 @@ export class Actor {
   }
 
   /** Show an item in the hand (e.g. the fruit in Genesis 3:6), or carried
-   * in front with both arms (`arms`, e.g. the basket). */
-  hold(key: string | null, grip: 'hand' | 'arms' = 'hand'): void {
+   * in front with both arms (`arms`, e.g. the basket). `origin` is the
+   * point of the image held (default: its bottom centre; a staff is held
+   * halfway up). */
+  hold(key: string | null, grip: 'hand' | 'arms' = 'hand', origin: [number, number] = [0.5, 1]): void {
     this.heldSprite?.destroy();
     this.heldSprite = null;
     this.grip = grip;
     if (!key) return;
-    this.heldSprite = sized(this.scene.add.image(this.x, this.y - 36, key).setOrigin(0.5, 1).setDepth(this.y + 1));
+    this.heldSprite = sized(this.scene.add.image(this.x, this.y - 36, key).setOrigin(origin[0], origin[1]).setDepth(this.y + 1));
     this.refresh();
   }
 

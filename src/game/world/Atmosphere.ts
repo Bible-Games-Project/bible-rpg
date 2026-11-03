@@ -28,11 +28,16 @@ export class Atmosphere {
   private sun = 1;
   private time = 0;
 
-  constructor(private scene: Phaser.Scene, private still: boolean) {
+  constructor(
+    private scene: Phaser.Scene,
+    private still: boolean,
+    /** the world's size (Eden's unless given) */
+    private world = { w: WORLD_W, h: WORLD_H },
+  ) {
     makeTextures(scene);
     const rnd = new Phaser.Math.RandomDataGenerator(['eden-sky']);
     for (let i = 0; i < CLOUDS; i++) {
-      const c = scene.add.image(rnd.between(0, WORLD_W), rnd.between(0, WORLD_H), 'fx-cloud-shadow');
+      const c = scene.add.image(rnd.between(0, this.world.w), rnd.between(0, this.world.h), 'fx-cloud-shadow');
       c.setDepth(DEPTH_OVERLAY - 300).setAlpha(CLOUD_ALPHA).setScale(rnd.realInRange(1.4, 2.2), rnd.realInRange(1.1, 1.6));
       c.setAngle(rnd.between(-20, 20)).setFlipX(rnd.frac() < 0.5);
       this.clouds.push(c);
@@ -68,8 +73,8 @@ export class Atmosphere {
         c.y += WIND.y * dt;
         const mx = c.displayWidth / 2;
         const my = c.displayHeight / 2;
-        if (c.x - mx > WORLD_W) c.x = -mx;
-        if (c.y - my > WORLD_H) c.y = -my;
+        if (c.x - mx > this.world.w) c.x = -mx;
+        if (c.y - my > this.world.h) c.y = -my;
       }
     }
     // the texture is laid on the world: its offset is the world point at the

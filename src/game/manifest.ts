@@ -91,8 +91,10 @@ export interface Manifest {
 
 export const MANIFEST = raw as unknown as Manifest;
 
-/** Absolute URL of an asset path from the manifest. */
+/** Absolute URL of an asset path from the manifest (art drawn at runtime
+ * is listed with a data: URL). */
 export function assetUrl(file: string): string {
+  if (file.startsWith('data:')) return file;
   return `${import.meta.env.BASE_URL}${file}`;
 }
 
