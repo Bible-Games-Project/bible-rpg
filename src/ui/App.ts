@@ -57,7 +57,10 @@ export class App {
       roundPixels: true,
       // drawn at the screen's real resolution and shown at CSS size (see display.ts)
       scale: { mode: Phaser.Scale.NONE, width: Math.round(window.innerWidth * pixelRatio()), height: Math.round(window.innerHeight * pixelRatio()), zoom: 1 / pixelRatio() },
-      physics: { default: 'arcade', arcade: { debug: false } },
+      // physics moves bodies by each frame's real time: the default fixed 60 Hz
+      // step moved the player 0 or 2 steps in some frames (and only every other
+      // frame on 120 Hz screens), which showed as a jerky walk
+      physics: { default: 'arcade', arcade: { debug: false, fixedStep: false } },
       input: { keyboard: false },
       audio: { noAudio: true },
       scene: [BootScene, EdenScene],

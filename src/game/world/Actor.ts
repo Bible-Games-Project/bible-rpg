@@ -15,6 +15,9 @@ export const WALK_PACE = 170;
 /** How far below the bottom of the fist a held thing ends (world px): the
  * fist closes around its lower part. */
 const HELD_BELOW_FIST = 3;
+/** How much one axis must outweigh the other before a walker turns from a
+ * side view to a front/back view or back (see faceVector). */
+const FACING_HOLD = 1.3;
 
 export interface ActorOptions {
   id: string;
@@ -148,8 +151,14 @@ export class Actor {
       if (Math.abs(vx) > 0.5) this.facing = vx < 0 ? 'left' : 'right';
       return;
     }
-    if (Math.abs(vx) > Math.abs(vy) * 1.05) this.facing = vx < 0 ? 'left' : 'right';
-    else if (Math.abs(vy) > 0.01) this.facing = vy < 0 ? 'up' : 'down';
+    // near a diagonal the facing keeps its axis until the other one clearly
+    // wins: a stick held at 45° flipped side/front views every few frames,
+    // restarting the walk each time
+    const ax = Math.abs(vx);
+    const ay = Math.abs(vy);
+    const side = this.facing === 'left' || this.facing === 'right';
+    if (side ? ax * FACING_HOLD >= ay : ax > ay * FACING_HOLD) this.facing = vx < 0 ? 'left' : 'right';
+    else if (ay > 0.01) this.facing = vy < 0 ? 'up' : 'down';
   }
 
   face(target: Facing | Actor | { x: number; y: number }): void {
@@ -256,8 +265,10 @@ export class Actor {
 
   /** Sync sprite with the feet and pick the right animation. */
   refresh(force = false): void {
-    const x = Math.round(this.feet.x);
-    const y = Math.round(this.feet.y);
+    // not rounded to whole world px: the camera follows smoothly, and a
+    // sprite snapped to world px (about 3 screen px) shook against it
+    const x = this.feet.x;
+    const y = this.feet.y;
     this.sprite.setPosition(x, y - this.lift);
     this.sprite.setDepth(y + this.depthBias);
     this.emoteSprite?.setPosition(x, this.topY() - 6);
@@ -300,8 +311,8 @@ export class Actor {
    */
   private placeHeld(): void {
     if (!this.heldSprite) return;
-    const x = Math.round(this.feet.x);
-    const y = Math.round(this.feet.y);
+    const x = this.feet.x;
+    const y = this.feet.y;
     const arms = this.grip === 'arms';
     let dx = (arms ? { left: -9, right: 9, down: 0, up: 0 } : { left: -7, right: 7, down: -12, up: 12 })[this.facing];
     let dy = arms ? -22 : -36;
@@ -338,8 +349,8 @@ export class Actor {
    */
   private placeShadow(): void {
     if (!this.shadow) return;
-    const x = Math.round(this.feet.x) + this.shadowOffset[0];
-    const y = Math.round(this.feet.y) + this.shadowOffset[1];
+    const x = this.feet.x + this.shadowOffset[0];
+    const y = this.feet.y + this.shadowOffset[1];
     const up = Math.max(0, this.lift);
     this.shadow.setPosition(x + up * 0.45, y + up * 0.11);
     if (!this.castShadow) return;

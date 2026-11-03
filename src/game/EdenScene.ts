@@ -144,7 +144,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     // camera
     const cam = this.cameras.main;
     cam.setBounds(0, 0, WORLD_W, WORLD_H);
-    cam.setRoundPixels(true);
+    cam.setRoundPixels(false);
     cam.setBackgroundColor('#1d3c1a');
     this.applyZoom();
     this.scale.on('resize', () => this.applyZoom());
@@ -550,7 +550,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     const { scrollX, scrollY } = cam;
     // someone else is followed more gently (the camera glides over to them)
     const lerp = actor ? 0.05 : 0.12;
-    cam.startFollow((actor ?? this.player()).sprite, true, lerp, lerp, 0, 40);
+    cam.startFollow((actor ?? this.player()).sprite, false, lerp, lerp, 0, 40);
     cam.setScroll(scrollX, scrollY);
   }
 
@@ -558,7 +558,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   cameraSnap(): void {
     const p = this.player();
     const cam = this.cameras.main;
-    cam.startFollow(p.sprite, true, 0.12, 0.12, 0, 40);
+    cam.startFollow(p.sprite, false, 0.12, 0.12, 0, 40);
     cam.centerOn(p.x, p.y - 40);
   }
 

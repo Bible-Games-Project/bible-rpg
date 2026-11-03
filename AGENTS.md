@@ -467,6 +467,13 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
 - Camera: `cameraFollow()` glides to the player (Phaser's `startFollow`
   jumps, which showed as a jolt at the end of missions); `cameraSnap()`
   jumps and is only for moments when the screen is faded out.
+- Smooth walking (the maintainer saw the player move "a golpes"): Arcade
+  runs with `fixedStep: false`, the camera has `roundPixels` off (with a
+  follow lerp Phaser floors the scroll every frame, so it moved in uneven
+  whole-px jumps) and `Actor` does not round sprite positions. Integer art
+  scale with nearest filtering stays sharp at sub-pixel positions, so do
+  not bring the rounding back. Facing has hysteresis (`FACING_HOLD`) so a
+  stick near 45° does not flip views and restart the walk.
 - Missions (`src/game/missions/`) are scripts written only against
   `WorldApi`; `stageEden()` must rebuild the world for any mission so a save
   can resume there. Progress is committed at the end of each mission only.
