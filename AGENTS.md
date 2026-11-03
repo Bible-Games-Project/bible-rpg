@@ -320,16 +320,20 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   `.touch-ui` on the root while the touch pad shows; on narrow screens the
   prompt sits above the pad.
 - Missions start and end in the mission panel itself, without pop-up boxes
-  (the maintainer found them too much text): on completion it turns green
-  with a tick and "Progress saved" (`hud.completeMission`), then slides out
-  and back in with the next mission, which a band of light crosses. The
-  panel is not open all the time (the maintainer): a Missions button at the
-  top left, the size of the Menu button, opens it until pressed again; a
-  new mission, a new step of one (not a count going up) or a completed
-  mission opens it for a few seconds, and it closes softly by itself.
-  Notices ("Eve picks the fruit!", "Got: …") sit under it in the same left
-  column (`.hud-left`), not at the top centre (the maintainer); the same
-  notice never shows twice at once (pressing again stacked copies).
+  (the maintainer found them too much text). The panel is one line: the
+  current step and the Bible reference, "Go to the Lord God (Genesis
+  2:16)"; no mission number, title, description or "Story event" label (the
+  maintainer: too much text; the title shows only while a mission has no
+  step). On completion it turns green with a tick and "Mission complete ·
+  Progress saved" (`hud.completeMission`); the next mission's first step
+  opens it with a band of light. The panel is not open all the time: a
+  Missions button at the top left, the size of the Menu button, opens it
+  until pressed again; a new step (not a count going up) or a completed
+  mission opens it for a few seconds, and it closes softly by itself. The
+  mission line and the notices ("Eve picks the fruit!", "Got: …") sit to
+  the right of the Missions button (`.hud-notes`), notices under the
+  mission line; only dialogue and narration stay at the bottom centre (the
+  maintainer). The same notice never shows twice at once.
 - A narrator line that has a recorded voice does not hold the player
   (`DialogueBox.narrate`, chosen in `EdenScene.lines`): it is shown and
   spoken while they walk, closes itself once said, and nothing can be used

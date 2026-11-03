@@ -172,14 +172,11 @@
     "startTouch": "Tap to start"
   },
   "hud": {
-    "mission": "Mission {n}",
     "pause": "Menu",
     "missions": "Missions",
     "switch": "Switch",
     "playingAs": "Playing as {name}",
     "switchTo": "Switch to {name}",
-    "story": "Story event · {ref}",
-    "inspired": "Gameplay activity · inspired by {ref}",
     "saved": "Progress saved",
     "missionComplete": "Mission complete",
     "newObjective": "New objective"

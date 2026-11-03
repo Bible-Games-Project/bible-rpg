@@ -45,10 +45,9 @@ function still(): boolean {
 export class HUD {
   readonly root: HTMLElement;
   private mission: HTMLElement;
-  private mNum: HTMLElement;
-  private mTitle: HTMLElement;
   private mObj: HTMLElement;
-  private mSource: HTMLElement;
+  private mText: HTMLElement;
+  private mRef: HTMLElement;
   private mSaved: HTMLElement;
   private prompt: HTMLElement;
   private toasts: HTMLElement;
@@ -68,16 +67,24 @@ export class HUD {
   private panelOpen = false;
   private pinned = false;
   private hasMission = false;
+  /** the mission's title, shown when it has no step to show */
+  private missionTitle = '';
+  /** the current step ("Go to the Lord God"), without the reference */
+  private objective = '';
+  /** the next step shown is the mission's first: it shines */
+  private freshMission = false;
   private closeTimer = 0;
   private panelAnim: Animation | null = null;
 
   constructor(host: HTMLElement, actions: { pause(): void; switchCharacter(): void }) {
-    this.mNum = h('div', { class: 'mission-number' });
-    this.mTitle = h('div', { class: 'mission-title' });
-    this.mObj = h('div', { class: 'objective' });
-    this.mSource = h('div', { class: 'source' });
-    this.mSaved = h('div', { class: 'saved' });
-    this.mission = h('div', { class: 'mission-panel panel closed', id: 'hud-mission', 'aria-live': 'polite' }, this.mNum, this.mTitle, this.mObj, this.mSaved, this.mSource);
+    // one line: what to do and the Bible reference ("Go to the Lord God
+    // (Genesis 2:15)"); the maintainer found the mission number, title and
+    // "Story event" label too much text on screen
+    this.mText = h('span', { class: 'objective-text' });
+    this.mRef = h('span', { class: 'ref' });
+    this.mSaved = h('span', { class: 'saved' });
+    this.mObj = h('div', { class: 'objective' }, h('span', {}, this.mText, this.mRef, this.mSaved));
+    this.mission = h('div', { class: 'mission-panel panel closed', id: 'hud-mission', 'aria-live': 'polite' }, this.mObj);
     this.missionsBtn = h(
       'button',
       { class: 'btn small hud-missions', 'aria-expanded': 'false', 'aria-controls': 'hud-mission', hidden: true, onclick: () => this.toggleMission() },
@@ -98,8 +105,8 @@ export class HUD {
     this.fader = h('div', { class: 'fader' });
     this.banners = h('div', { class: 'hud-banners', 'aria-live': 'assertive' });
     const buttons = h('div', { class: 'hud-buttons' }, h('button', { class: 'btn small', onclick: actions.pause, 'aria-label': t('hud.pause') }, `☰ ${t('hud.pause')}`));
-    // the Missions button, the mission under it, and notices below (the maintainer)
-    const left = h('div', { class: 'hud-left' }, this.missionsBtn, this.mission, this.toasts);
+    // the Missions button, with the mission and the notices to its right (the maintainer)
+    const left = h('div', { class: 'hud-left' }, this.missionsBtn, h('div', { class: 'hud-notes' }, this.mission, this.toasts));
     this.root = h('div', { class: 'hud', hidden: true }, left, buttons, this.inventory, this.charChip, this.prompt, this.timer, this.arrow, this.banners, this.fader);
     wireButtonSounds(this.root);
     host.append(this.root);
@@ -110,39 +117,27 @@ export class HUD {
   }
 
   /**
-   * The mission panel shows the new mission. Coming from a completed one it
-   * slides out and back in with the new mission, then shines (the maintainer
-   * found a separate "new mission" box too much text).
+   * A new mission. The panel opens with its first step, which then shines
+   * (the maintainer found a separate "new mission" box, and the mission's
+   * number, title and description, too much text); a completed mission
+   * still on show closes softly first.
    */
   setMission(info: MissionInfo | null): void {
     this.hasMission = !!info;
     this.missionsBtn.hidden = !info;
-    const fill = () => {
+    if (!info) {
       this.mission.classList.remove('complete');
-      if (!info) {
-        this.closeMission(true);
-        return;
-      }
-      this.mNum.textContent = t('hud.mission', { n: String(info.number).padStart(2, '0') });
-      this.mTitle.textContent = info.title;
-      this.mObj.textContent = info.objective;
-      this.mSource.replaceChildren(h('span', { class: 'kind' }, info.kind === 'scripture' ? t('hud.story', { ref: info.reference }) : t('hud.inspired', { ref: info.reference })));
-      this.shine();
-    };
-    if (!info || !this.panelOpen || !this.mission.classList.contains('complete') || still() || !this.mission.animate) {
-      fill();
-      if (info) this.openMission(NEW_MISSION_MS);
+      this.closeMission(true);
       return;
     }
-    window.clearTimeout(this.closeTimer);
-    const away = [{ transform: 'none', opacity: 1 }, { transform: 'translateX(-30px)', opacity: 0 }];
-    const out = this.mission.animate(away, { duration: 280, easing: 'ease-in', fill: 'forwards' });
-    out.onfinish = () => {
-      fill();
-      out.cancel();
-      this.mission.animate([...away].reverse(), { duration: 420, easing: 'ease-out' });
-      this.openMission(NEW_MISSION_MS);
-    };
+    if (this.mission.classList.contains('complete')) this.closeMission();
+    this.mission.classList.remove('complete');
+    this.missionTitle = info.title;
+    this.objective = '';
+    this.freshMission = true;
+    this.mText.textContent = info.title;
+    this.mRef.textContent = info.reference ? ` (${info.reference})` : '';
+    this.mSaved.textContent = '';
   }
 
   /** Open the mission panel; with a time, it closes again by itself (unless
@@ -159,7 +154,7 @@ export class HUD {
     if (!still() && this.mission.animate) {
       this.panelAnim = this.mission.animate(
         [
-          { opacity: 0, transform: 'translateY(-10px) scaleY(0.92)' },
+          { opacity: 0, transform: 'translateX(-10px)' },
           { opacity: 1, transform: 'none' },
         ],
         { duration: 320, easing: 'ease-out' },
@@ -182,7 +177,7 @@ export class HUD {
     const a = this.mission.animate(
       [
         { opacity: 1, transform: 'none' },
-        { opacity: 0, transform: 'translateY(-10px) scaleY(0.92)' },
+        { opacity: 0, transform: 'translateX(-10px)' },
       ],
       { duration: 450, easing: 'ease-in', fill: 'forwards' },
     );
@@ -208,8 +203,9 @@ export class HUD {
    * note that progress is saved, until the next mission takes its place. */
   completeMission(): void {
     if (!this.hasMission) return;
-    this.mObj.textContent = t('hud.missionComplete');
-    this.mSaved.textContent = t('hud.saved');
+    this.mText.textContent = t('hud.missionComplete');
+    this.mRef.textContent = '';
+    this.mSaved.textContent = ` · ${t('hud.saved')}`;
     this.mission.classList.remove('fresh');
     this.mission.classList.add('complete');
     this.openMission(COMPLETE_MS);
@@ -224,13 +220,19 @@ export class HUD {
   setObjective(text: string): void {
     // the completed mission stays on show until the next one replaces it
     if (this.mission.classList.contains('complete') && !text) return;
-    const was = this.mObj.textContent ?? '';
+    const was = this.objective;
     if (was === text) return;
-    this.mObj.textContent = text;
+    this.objective = text;
+    // with no step yet (or between steps) the line names the mission
+    this.mText.textContent = text || this.missionTitle;
     this.mObj.animate?.([{ opacity: 0.3 }, { opacity: 1 }], { duration: 400 });
     // a new step opens the panel for a moment; a count going up ("3/6") does not
     const digitless = (s: string) => s.replace(/\d+/g, '#');
-    if (text && digitless(text) !== digitless(was)) this.openMission(NEW_STEP_MS);
+    if (text && digitless(text) !== digitless(was)) {
+      this.openMission(this.freshMission ? NEW_MISSION_MS : NEW_STEP_MS);
+      if (this.freshMission) this.shine();
+      this.freshMission = false;
+    }
   }
 
   setPrompt(text: string | null, key: string = KEY_LABELS.interact): void {

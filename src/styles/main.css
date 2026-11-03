@@ -824,12 +824,25 @@ select:focus-visible {
   position: absolute;
   left: calc(12px + var(--safe-l));
   top: calc(12px + var(--safe-t));
-  max-width: min(calc(420px * var(--ui-scale)), calc(100vw - 120px));
+  max-width: min(calc(600px * var(--ui-scale)), calc(100vw - 140px));
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: calc(10px * var(--ui-scale));
+  pointer-events: none;
+}
+
+/* the mission line and the notices, to the right of the Missions button */
+.hud-notes {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: calc(8px * var(--ui-scale));
-  pointer-events: none;
+  gap: calc(6px * var(--ui-scale));
+}
+
+.hud-left .hud-missions {
+  flex: none;
 }
 
 /* the Missions button (top left, like the Menu button on the right) */
@@ -845,26 +858,11 @@ select:focus-visible {
   position: relative;
   max-width: 100%;
   transform-origin: top left;
-  padding: calc(10px * var(--ui-scale)) calc(14px * var(--ui-scale)) calc(12px * var(--ui-scale));
+  padding: calc(7px * var(--ui-scale)) calc(12px * var(--ui-scale));
   pointer-events: none;
 }
 
-.mission-panel .mission-number {
-  font-size: var(--fs-xs);
-  color: var(--gold);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.mission-panel .mission-title {
-  font-size: var(--fs-m);
-  color: var(--ivory);
-  font-weight: 600;
-  margin-top: 2px;
-}
-
 .mission-panel .objective {
-  margin-top: 6px;
   font-size: var(--fs-s);
   color: var(--ivory);
   display: flex;
@@ -882,21 +880,17 @@ select:focus-visible {
   transform: translateY(-1px) rotate(45deg);
 }
 
-.mission-panel .source {
-  margin-top: 6px;
-  font-size: var(--fs-xs);
+.mission-panel .ref {
   color: var(--ivory-dim);
 }
 
-.mission-panel .source .kind {
-  color: var(--sunset);
+.mission-panel .objective-text:empty + .ref {
+  display: none;
 }
 
 .mission-panel .saved {
-  display: none;
-  margin-top: 4px;
-  font-size: var(--fs-xs);
   color: var(--ivory-dim);
+  font-weight: 400;
 }
 
 /* a mission just completed: a green tick and a glow, until the next one */
@@ -918,10 +912,6 @@ select:focus-visible {
   box-shadow: none;
   transform: none;
   color: #8fd16a;
-}
-
-.mission-panel.complete .saved {
-  display: block;
 }
 
 @keyframes mission-done {
@@ -951,23 +941,12 @@ select:focus-visible {
   pointer-events: none;
 }
 
-.mission-panel.fresh .mission-number {
-  animation: mission-number 1.6s ease-out;
-}
-
 @keyframes mission-shine {
   to {
     transform: translateX(100%);
   }
 }
 
-@keyframes mission-number {
-  0%,
-  40% {
-    color: #fff3c4;
-    text-shadow: 0 0 8px rgba(255, 226, 150, 0.9);
-  }
-}
 
 .hud-buttons {
   position: absolute;
