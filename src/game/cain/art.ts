@@ -230,26 +230,45 @@ function buildLamb(scene: Phaser.Scene): void {
  * (breathing), like his idle.
  */
 function buildSittingAdam(scene: Phaser.Scene): void {
-  const a = MANIFEST.characters.adam?.tunic?.down;
+  // Adam seen from the side, sitting, made from his side idle frames: the
+  // body down to the hem as it is, the thigh (the upper leg turned to lie
+  // forward) and the shin and foot hanging down from the knee.
+  const a = MANIFEST.characters.adam?.tunic?.right;
   if (!a) return;
-  const img = scene.textures.get(charKey('adam', 'tunic', 'down')).getSourceImage() as HTMLImageElement;
-  const hem = 110;
-  const knee = 124;
-  const foot = a.anchorY + 1;
-  const h = hem + (foot - knee);
+  const img = scene.textures.get(charKey('adam', 'tunic', 'right')).getSourceImage() as HTMLImageElement;
+  const fw = a.frameWidth;
+  const W = fw + 22;
+  const HEM = 107;
+  const LEG_X = 21;
+  const LEG_W = 12;
+  const KNEE = 126;
+  const FOOT = a.anchorY + 1;
+  const SEAT = HEM - 1;
+  const shin = FOOT - KNEE;
+  const H = SEAT + shin;
   const key = 'cain-adam-sitting';
-  const tex = scene.textures.createCanvas(key, a.frameWidth * 2, h)!;
+  const tex = scene.textures.createCanvas(key, W * 2, H)!;
   const ctx = tex.getContext();
+  ctx.imageSmoothingEnabled = false;
   for (let f = 0; f < 2; f++) {
-    const fx = a.idle?.[f] ?? f;
-    const sx = fx * a.frameWidth;
-    const dx = f * a.frameWidth;
-    ctx.drawImage(img, sx, knee, a.frameWidth, foot - knee, dx, hem, a.frameWidth, foot - knee);
-    ctx.drawImage(img, sx, 0, a.frameWidth, hem, dx, 0, a.frameWidth, hem);
-    tex.add(f, 0, dx, 0, a.frameWidth, h);
+    const sx = (a.idle?.[f] ?? f) * fw;
+    const dx = f * W;
+    // the shin and foot, hanging from the knee in front of the seat
+    const kneeX = dx + LEG_X + 25;
+    ctx.drawImage(img, sx + LEG_X - 1, KNEE, fw - LEG_X, shin, kneeX - 1, SEAT, fw - LEG_X, shin);
+    // the thigh, lying forward from the hip to the knee
+    ctx.save();
+    ctx.translate(dx + LEG_X + 2, SEAT - LEG_W);
+    ctx.rotate(-Math.PI / 2);
+    ctx.drawImage(img, sx + LEG_X, HEM, LEG_W, KNEE - HEM, -LEG_W + 1, 0, LEG_W, 30);
+    ctx.restore();
+    // the body, down to the hem of the tunic
+    ctx.drawImage(img, sx, 0, fw, HEM, dx, 0, fw, HEM);
+    tex.add(f, 0, dx, 0, W, H);
   }
   tex.refresh();
-  MANIFEST.sprites[key] = { file: '', frameWidth: a.frameWidth, frameHeight: h, frames: 2, anchorX: a.anchorX, anchorY: h - 1, scale: a.scale, idle: [0, 1], idleFps: 1.4 };
+  // the anchor is under the seat (the top of the log)
+  MANIFEST.sprites[key] = { file: '', frameWidth: W, frameHeight: H, frames: 2, anchorX: LEG_X + 6, anchorY: H - 1, scale: a.scale, idle: [0, 1], idleFps: 1.4 };
   scene.anims.create({ key: `${key}:idle`, frames: scene.anims.generateFrameNumbers(key, { frames: [0, 1] }), frameRate: 1.4, repeat: -1 });
 }
 

@@ -184,12 +184,13 @@ export class CainWorld {
     this.taken.push([hx, hy - 40]);
     // the log Adam sits on
     const [lx, ly] = POINTS.adamLog;
-    this.place('log', lx, ly - 2);
-    this.solid(lx, ly - 8, 48, 14);
+    // a low log, so that Adam's seat (the top of it) is at the height of his hem
+    this.place('log', lx - 12, ly - 4).setScale(ART * 0.9, ART * 0.6);
+    this.solid(lx, ly - 8, 40, 12);
     // the fire Eve cooks on, with the pot
     const [fx, fy] = POINTS.fire;
-    s.add.sprite(fx, fy, 'cain-fire').setOrigin(MANIFEST.sprites['cain-fire'].anchorX / MANIFEST.sprites['cain-fire'].frameWidth, 1).setScale(ART).setDepth(fy).play('cain-fire:loop');
-    this.place('cain-pot', fx + 2, fy - 3, fy + 1);
+    s.add.sprite(fx, fy, 'cain-fire').setOrigin(MANIFEST.sprites['cain-fire'].anchorX / MANIFEST.sprites['cain-fire'].frameWidth, 1).setScale(ART * 1.25).setDepth(fy).play('cain-fire:loop');
+    this.place('cain-pot', fx + 1, fy - 17, fy + 1);
     this.solid(fx, fy - 6, 34, 14);
     // a basket and some wood by the house
     this.place('basket', hx + 74, hy + 22);

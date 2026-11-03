@@ -124,7 +124,7 @@ export class CainScene extends Phaser.Scene {
     this.eve = new Actor(this, { id: 'eve', x: POINTS.eve[0], y: POINTS.eve[1], charId: 'eve', outfit: 'tunic', body: { w: 22, h: 10 }, solid: true, facing: 'left' });
     const sit = MANIFEST.sprites['cain-adam-sitting'];
     const [lx, ly] = POINTS.adamLog;
-    this.adamSitting = sized(this.add.sprite(lx, ly + 4, 'cain-adam-sitting').setOrigin(sit.anchorX / sit.frameWidth, 1).setDepth(ly + 5));
+    this.adamSitting = sized(this.add.sprite(lx - 4, ly - 2, 'cain-adam-sitting').setOrigin(sit.anchorX / sit.frameWidth, 1).setDepth(ly + 5));
     this.adamSitting.play('cain-adam-sitting:idle');
     this.add.image(lx + 2, ly + 4, 'shadow-small').setDepth(-50000).setAlpha(0.6);
     this.holy = new GodLight(this, settings.get().reduceMotion);

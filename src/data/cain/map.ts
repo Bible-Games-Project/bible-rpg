@@ -54,8 +54,8 @@ export const POINTS: Record<string, Pt> = {
   altarCain: [2160, 1890],
   altarAbel: [2340, 1890],
   godAltars: [2250, 1760],
-  cainAltar: [2160, 1950],
-  abelAltar: [2340, 1950],
+  cainAltar: [2150, 2010],
+  abelAltar: [2350, 2010],
   // Abel among his flock (mission 2)
   abelFlock: [1500, 1060],
   // the field (mission 4): the gate where they come in, and the jawbone
