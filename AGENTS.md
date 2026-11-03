@@ -585,3 +585,19 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   solid where the cell's centre is in the river (fords excepted). Row boxes
   over mostly-water tiles left the banks' half-water tiles walkable, and
   walking diagonally slid the player along inside the river.
+- In the BGP Console build chat, an interrupted session is reset to
+  `origin/main`: uncommitted work (and `/tmp`) is lost. Commit checkpoints
+  to `main` as you go on long changes. The console container has no
+  Playwright, Python or image API; for headless screenshots install
+  `puppeteer-core` and `@sparticuz/chromium` from npm in a scratch dir,
+  unpack its `al2023.tar.br` libs and run with `LD_LIBRARY_PATH` pointing
+  at them. Enter (not Space) advances the pregame and dialogue there.
+- Chapters: `CHAPTER_SCENES` in `src/ui/App.ts` maps a chapter id to its
+  Phaser scene key, and that key is also the chapter's i18n namespace
+  (`eden.json`, `cain.json`: `<key>.chapter.*`, `<key>.complete.*`).
+  Cain and Abel (`src/game/cain/`, `src/data/cain/`) has its own scene,
+  world and `CainRunner` (5 missions); its art is procedural or rebuilt at
+  runtime from Adam's frames (`art.ts`), and the monochrome palette the
+  maintainer chose (#012340 #024059 #027368 #D6F272 #A97D5E) is a camera
+  PostFX (`palette.ts`). `OPEN` in `src/core/save.ts` unlocks it for
+  preview; take it out of `OPEN` to lock it behind Eden again.
