@@ -199,6 +199,8 @@
   },
   "dev": {
     "voices": "Voices",
+    "debug": "Game Dev Debug",
+    "debugHelp": "Testing only: every chapter can be played on the story map, unlocked or not.",
     "title": "Voices & sounds",
     "modeVoices": "Voices",
     "modeSounds": "Sounds",

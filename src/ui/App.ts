@@ -16,7 +16,7 @@ import { h } from './dom';
 import { HUD } from './HUD';
 import { openNamingPuzzle } from './NamingPuzzle';
 import { confirmDialog, openOverlay, wireButtonSounds, type OverlayHandle } from './overlays';
-import { devMode } from '../core/dev';
+import { devMode, debugUnlockAll, setDebugUnlockAll } from '../core/dev';
 import { devLibraryScreen } from './DevLibrary';
 import { funScreen, mainMenuScreen, moreGamesScreen, storyMapScreen } from './screens';
 import { openSettings } from './SettingsPanel';
@@ -109,7 +109,9 @@ export class App {
         fun: () => this.showFun(),
         moreGames: () => this.setScreen(moreGamesScreen(() => this.showMenu())),
         settings: () => openSettings(),
-        library: devMode() ? () => this.setScreen(devLibraryScreen(() => this.showMenu())) : undefined,
+        dev: devMode()
+          ? { library: () => this.setScreen(devLibraryScreen(() => this.showMenu())), debug: debugUnlockAll(), setDebug: setDebugUnlockAll }
+          : undefined,
       }),
     );
   }

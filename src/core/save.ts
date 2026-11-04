@@ -1,4 +1,5 @@
 import { storage } from './storage';
+import { debugUnlockAll } from './dev';
 
 /**
  * Persistent progress. Progress is committed when a mission is completed:
@@ -31,9 +32,9 @@ export interface SaveData {
 
 const KEY = 'bible-rpg.save.v1';
 
-/** Chapters open from the start. Cain and Abel is open too while it is being
- * built, so the maintainer can play it without finishing Eden first. */
-const OPEN = ['eden', 'cain-abel'];
+/** Chapters open from the start. (To try a locked chapter, turn on "Game Dev
+ * Debug" on the main menu: src/core/dev.ts.) */
+const OPEN = ['eden'];
 
 function fresh(): SaveData {
   return { version: 1, chapters: {}, unlocked: [...OPEN], updatedAt: Date.now() };
@@ -55,6 +56,9 @@ class SaveStore {
     } else if (isValid(raw)) {
       this.data = raw;
       for (const id of OPEN) if (!this.data.unlocked.includes(id)) this.data.unlocked.push(id);
+      // Cain and Abel was open to everyone while it was being built; it opens
+      // again by finishing Eden (or with Game Dev Debug).
+      if (!this.data.chapters.eden?.completed) this.data.unlocked = this.data.unlocked.filter((id) => id !== 'cain-abel');
     } else {
       // Keep the unreadable save aside instead of silently erasing it.
       storage.write(`${KEY}.unreadable-${Date.now()}`, raw);
@@ -76,7 +80,7 @@ class SaveStore {
   }
 
   isUnlocked(id: string): boolean {
-    return this.data.unlocked.includes(id);
+    return debugUnlockAll() || this.data.unlocked.includes(id);
   }
 
   startChapter(id: string, firstMission: string, activeCharacter: string): ChapterProgress {

@@ -17,8 +17,14 @@ export interface MenuActions {
   fun(): void;
   moreGames(): void;
   settings(): void;
-  /** the maintainer's voice and sound library; no button when absent (src/core/dev.ts) */
-  library?: () => void;
+  /** the maintainer's tools (src/core/dev.ts); absent for players */
+  dev?: {
+    /** opens the voice and sound library */
+    library(): void;
+    /** "Game Dev Debug": every chapter playable on the story map */
+    debug: boolean;
+    setDebug(on: boolean): void;
+  };
 }
 
 export function mainMenuScreen(a: MenuActions): HTMLElement {
@@ -38,12 +44,33 @@ export function mainMenuScreen(a: MenuActions): HTMLElement {
       h('button', { class: 'btn', onclick: a.settings }, t('menu.settings')),
     ),
     h('div', { class: 'menu-footer' }, t('app.studio')),
-    a.library ? h('button', { class: 'btn small dev-voices', onclick: a.library }, t('dev.voices')) : null,
+    a.dev ? devTools(a.dev) : null,
   );
   wireButtonSounds(el);
   arrowNav(el.querySelector('nav')!);
   requestAnimationFrame(() => play.focus({ preventScroll: true }));
   return el;
+}
+
+/** Top left of the main menu, in development only: Voices and Game Dev Debug. */
+function devTools(d: NonNullable<MenuActions['dev']>): HTMLElement {
+  const debug = h(
+    'button',
+    {
+      class: 'btn small dev-debug',
+      role: 'switch',
+      'aria-checked': String(d.debug),
+      title: t('dev.debugHelp'),
+      onclick: () => {
+        const on = debug.getAttribute('aria-checked') !== 'true';
+        debug.setAttribute('aria-checked', String(on));
+        d.setDebug(on);
+      },
+    },
+    h('span', { class: 'dev-debug-knob', 'aria-hidden': 'true' }),
+    t('dev.debug'),
+  );
+  return h('div', { class: 'dev-tools' }, h('button', { class: 'btn small', onclick: d.library }, t('dev.voices')), debug);
 }
 
 function pageHeader(title: string, onBack: () => void, extra?: HTMLElement): HTMLElement {
