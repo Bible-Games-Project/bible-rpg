@@ -599,5 +599,8 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   world and `CainRunner` (5 missions); its art is procedural or rebuilt at
   runtime from Adam's frames (`art.ts`), and the monochrome palette the
   maintainer chose (#012340 #024059 #027368 #D6F272 #A97D5E) is a camera
-  PostFX (`palette.ts`). `OPEN` in `src/core/save.ts` unlocks it for
-  preview; take it out of `OPEN` to lock it behind Eden again.
+  PostFX (`palette.ts`). It opens by finishing Eden.
+- Dev tools (`src/core/dev.ts`): the main menu shows Voices and a "Game Dev
+  Debug" switch (every playable chapter opens on the story map) on
+  `*.pages.dev`, in `bun run dev` and after `#dev`; never in the published
+  app. The maintainer asked that they never reach players.
