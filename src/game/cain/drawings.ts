@@ -542,7 +542,7 @@ export function drawFat(): Drawing {
 /** Abel's shepherd's staff, with a crook at the top. */
 export function drawStaff(): Drawing {
   const w = 16;
-  const h = 96;
+  const h = 128;
   const p = new Pixels(w, h);
   limb(p, 6, h - 2, 6, 14, 3, 3, (x, y, a) => tone(BARK, 0.7 - a * 0.4 + (vnoise(x, y / 6, 2) - 0.5) * 0.2, x, y));
   for (let i = 0; i <= 12; i++) {

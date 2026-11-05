@@ -62,7 +62,7 @@ export class Actor {
   private heldSprite: Phaser.GameObjects.Image | null = null;
   private anchorY = 1;
   private lastAnim = '';
-  private grip: 'hand' | 'arms' | 'carry' = 'hand';
+  private grip: 'hand' | 'arms' | 'carry' | 'staff' = 'hand';
   /** offset the sprite vertically (e.g. a dove hopping or flying) */
   lift = 0;
   private shadowOffset: [number, number];
@@ -220,7 +220,7 @@ export class Actor {
    * in front with both arms (`arms`, e.g. the basket). `origin` is the
    * point of the image held (default: its bottom centre; a staff is held
    * halfway up). */
-  hold(key: string | null, grip: 'hand' | 'arms' | 'carry' = 'hand', origin: [number, number] = [0.5, 1]): void {
+  hold(key: string | null, grip: 'hand' | 'arms' | 'carry' | 'staff' = 'hand', origin: [number, number] = [0.5, 1]): void {
     this.heldSprite?.destroy();
     this.heldSprite = null;
     this.grip = grip;
@@ -316,12 +316,40 @@ export class Actor {
     const x = this.feet.x;
     const y = this.feet.y;
     if (this.grip === 'carry') return this.placeCarried(x, y);
+    if (this.grip === 'staff') return this.placeStaff(x, y);
     const arms = this.grip === 'arms';
     let dx = (arms ? { left: -9, right: 9, down: 0, up: 0 } : { left: -7, right: 7, down: -12, up: 12 })[this.facing];
     let dy = arms ? -22 : -36;
     const fist = arms ? null : this.fist();
     if (fist) [dx, dy] = [fist[0], fist[1] + HELD_BELOW_FIST];
-    this.heldSprite.setPosition(x + dx, y + dy).setDepth(this.facing === 'up' ? y - 1 : y + 1);
+    this.heldSprite.setPosition(x + dx, y + dy).setRotation(0).setDepth(this.facing === 'up' ? y - 1 : y + 1);
+  }
+
+  /**
+   * `staff` (Abel's crook): its foot planted on the ground beside the feet
+   * (a little ahead, from the side), leaning so the shaft passes through the
+   * hand; from the side it rocks with the arm instead of floating with it
+   * (the maintainer: the staff looked badly anchored). `origin` is its foot.
+   */
+  private placeStaff(x: number, y: number): void {
+    const s = this.heldSprite!;
+    const side = this.facing === 'left' ? -1 : this.facing === 'right' ? 1 : 0;
+    const fist = this.fist();
+    let foot: [number, number];
+    let hand: [number, number];
+    if (side) {
+      foot = [side * 3, 1];
+      hand = fist ?? [side * 7, -34];
+    } else {
+      const k = this.facing === 'down' ? -1 : 1;
+      foot = [k * 13, this.facing === 'down' ? 2 : -2];
+      hand = [k * 12, -34];
+    }
+    const lean = Phaser.Math.Clamp(0.7 * Math.atan2(hand[0] - foot[0], foot[1] - hand[1]), -0.2, 0.2);
+    // the crook faces the way they look
+    const flip = this.facing === 'left';
+    if (s.flipX !== flip) s.setFlipX(flip).setOrigin(1 - s.originX, s.originY);
+    s.setPosition(x + foot[0], y + foot[1]).setRotation(lean).setDepth(this.facing === 'up' ? y - 1 : y + 1);
   }
 
   /**

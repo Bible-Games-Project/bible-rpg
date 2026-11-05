@@ -23,7 +23,7 @@ export const CHAPTER = 'cain-abel';
 const step = (m: string, s: string, p?: Record<string, string | number>) => t(`cain.missions.${m}.steps.${s}`, p);
 const C = (key: string, p?: Record<string, string | number>) => t(`cain.${key}`, p);
 
-const STAFF: [string, 'hand', [number, number]] = ['cain-staff', 'hand', [0.4, 0.5]];
+const STAFF: [string, 'staff', [number, number]] = ['cain-staff', 'staff', [0.375, 0.98]];
 const LAMBS_TO_OFFER = 3;
 
 interface CainMission {
