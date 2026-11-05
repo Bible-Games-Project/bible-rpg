@@ -2330,5 +2330,49 @@
    "total_tokens": 3597
   },
   "at": "20261105-163535"
+ },
+ {
+  "job": "cain-homestead",
+  "chapter": "cain",
+  "file": "art/generated/cain-homestead/20261105-163558-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0311,
+  "usage": {
+   "input_tokens": 3451,
+   "input_tokens_details": {
+    "image_tokens": 3026,
+    "text_tokens": 425
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 3609
+  },
+  "at": "20261105-163558"
+ },
+ {
+  "job": "cain-trees",
+  "chapter": "cain",
+  "file": "art/generated/cain-trees/20261105-163611-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0186,
+  "usage": {
+   "input_tokens": 1859,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 351
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 2017
+  },
+  "at": "20261105-163611"
  }
 ]
