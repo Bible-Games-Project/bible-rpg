@@ -597,16 +597,33 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   (`eden.json`, `cain.json`: `<key>.chapter.*`, `<key>.complete.*`).
   Cain and Abel (`src/game/cain/`, `src/data/cain/`) has its own scene,
   world and `CainRunner` (5 missions); its art is procedural or rebuilt at
-  runtime from Adam's frames (`art.ts`). Its colours are a sunset taken
-  from a dusk reference the maintainer sent (`palette.ts`): only world
-  textures are recoloured when built (`sunsetTiles`, `sunsetSprite`,
-  `addSheet` unless `natural`); characters, animals, portraits and fire
-  keep their own colours. The maintainer rejected a full-screen filter.
-  Never touch Eden's look when working on this chapter. It opens by
-  finishing Eden.
-- The console can't reach OpenAI (or any image API): only Claude and npm.
+  runtime from Adam's frames (`art.ts`). It is night, in the maintainer's
+  five colours (#F8B195 #F67280 #C06C84 #6C5B7B #355C7D, `palette.ts`):
+  only world textures are recoloured when built (`nightTiles`,
+  `nightSprite`, `addSheet` unless `natural`); characters, animals and
+  the dog keep their colours with `NIGHT_TINT`, fire stays natural.
+  Torches (`TORCHES` in the map) throw ADD-blend light pools. Shadows are
+  faint and fall lower left: `setShadowLight(mirrored, strength)` in
+  `world/shadows.ts`, set by each scene in `create` (Eden: false, 1).
+  The maintainer rejected a full-screen filter. Never touch Eden's look
+  when working on this chapter. It opens by finishing Eden.
+- Phaser reuses a Scene object between games: field initialisers run once.
+  Reset every list and state in `create` (stale destroyed actors gave a
+  black screen on "Erase and start again").
+- Mission 2 is a herding game (the maintainer): the flock starts in the
+  meadow east of the fold, the dog runs `DOG_AHEAD` px ahead of Abel the
+  way he walks, sheep flee it and flock (`updateHerd` in CainScene); Abel's
+  staff uses the `staff` grip in Actor (planted, leaning through the hand).
+  The dog is drawn in code (`drawDog`) until generated art replaces it.
+- Images: `node tools/art/gen_images.mjs run <jobs> --jobs art/prompts/cain.json
+  --quality low` (gpt-image-2, ledger with `chapter`; `spent --chapter cain`).
+  Node's fetch ignores the proxy: it uses undici@6 `ProxyAgent` (undici 7
+  crashes on Node 22). On 2026-11-05 the OpenAI account had no credit (429
+  `credit_balance_exhausted`); nothing was spent on Cain and Abel yet.
   Eden can't run in the console's headless Chromium (memory cap); Cain and
-  Abel can.
+  Abel can (open `/?debug` on `vite preview` of a fresh build for
+  `window.bibleRpg`). Never add `sourcemap: true` to vite.config (the
+  build core-dumps).
 - Dev tools (`src/core/dev.ts`): the main menu shows Voices and a "Game Dev
   Debug" switch (every playable chapter opens on the story map) on
   `*.pages.dev`, in `bun run dev` and after `#dev`; never in the published
