@@ -187,7 +187,7 @@ export class CainWorld {
     const s = this.scene;
     const [hx, hy] = POINTS.hut;
     this.place('cain-hut', hx, hy);
-    this.solid(hx, hy - 18, 160, 40);
+    this.solid(hx, hy - 20, 190, 44);
     this.taken.push([hx, hy - 40]);
     // the log Adam sits on
     const [lx, ly] = POINTS.adamLog;

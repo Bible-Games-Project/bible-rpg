@@ -24,11 +24,11 @@ const DEBUG = process.argv.includes('--debug');
  */
 const SHEETS = {
   'cain-homestead': [
-    { name: 'hut', h: 180 },
+    { name: 'hut', h: 210 },
     { name: 'hearth', w: 64 },
     { name: 'torch', h: 72 },
-    { name: 'altar', w: 84 },
-    { name: 'altar-b', w: 72 },
+    { name: 'altar', w: 100 },
+    { name: 'altar-b', w: 86 },
     { name: 'wall-0', w: 50 },
     { name: 'wall-1', w: 52 },
     { name: 'wall-2', w: 50 },
