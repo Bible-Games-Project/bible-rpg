@@ -202,7 +202,7 @@ function resample(img, box, tw, th) {
 }
 
 /** Drops the pink fringe left on the edges (no subject is purple). */
-function defringe(png) {
+function defringe(png, leafy = false) {
   const { width: w, height: h, data } = png;
   for (let pass = 0; pass < 3; pass++) {
     const drop = [];
@@ -211,7 +211,10 @@ function defringe(png) {
       if (!data[i + 3]) continue;
       const edge = x === 0 || y === 0 || x === w - 1 || y === h - 1 || !data[i - 1] || !data[i + 7] || !data[i - w * 4 + 3] || !data[i + w * 4 + 3];
       const [r, g, b] = [data[i], data[i + 1], data[i + 2]];
-      if (edge && ((Math.min(r, b) - g > 8) || (r > g + 15 && b > g - 5))) drop.push(i);
+      if (!edge) continue;
+      if (Math.min(r, b) - g > 8 || (r > g + 15 && b > g - 5)) drop.push(i);
+      // on foliage the fringe comes out orange: an orange edge pixel next to leaves
+      else if (leafy && r > g + 20 && [i - 4, i + 4, i - w * 4, i + w * 4].some((j) => j >= 0 && data[j + 3] && data[j + 1] > data[j])) drop.push(i);
     }
     for (const i of drop) data[i + 3] = 0;
   }
@@ -244,7 +247,7 @@ for (const [job, items] of Object.entries(SHEETS)) {
     const sw = b.x1 - b.x0 + 1, sh = b.y1 - b.y0 + 1;
     const k = it.h ? it.h / sh : it.w / sw;
     const tw = Math.max(1, Math.round(sw * k)), th = Math.max(1, Math.round(sh * k));
-    const png = defringe(resample(img, b, tw, th));
+    const png = defringe(resample(img, b, tw, th), job === 'cain-trees');
     const { ax, ay } = base(png);
     fs.writeFileSync(path.join(OUT, `${it.name}.png`), PNG.sync.write(png));
     manifest[it.name] = { w: tw, h: th, ax, ay };
