@@ -2308,5 +2308,27 @@
    "total_tokens": 3166
   },
   "at": "20261029-074211"
+ },
+ {
+  "job": "cain-field",
+  "chapter": "cain",
+  "file": "art/generated/cain-field/20261105-163535-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.031,
+  "usage": {
+   "input_tokens": 3439,
+   "input_tokens_details": {
+    "image_tokens": 3026,
+    "text_tokens": 413
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 3597
+  },
+  "at": "20261105-163535"
  }
 ]
