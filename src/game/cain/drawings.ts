@@ -604,12 +604,12 @@ export function drawDog(): Drawing {
     const ph = walking ? ((f - 2) / 4) * Math.PI * 2 : 0;
     const bob = walking ? -Math.abs(Math.sin(ph)) * 1.2 : f === 1 ? 0.6 : 0;
     const wag = walking ? Math.sin(ph * 2) * 2 : f === 1 ? 3 : -2;
-    const by = 27 + bob;
+    const by = 31 + bob;
     const leg = (x: number, swing: number, far: boolean) => {
-      const knee = by + 9;
+      const knee = by + 7;
       const fx = x + swing;
-      limb(p, x, by + 2, x + swing * 0.5, knee, 2.6, 2.2, (px, py) => tone(FUR, far ? 0.18 : 0.38, px, py));
-      limb(p, x + swing * 0.5, knee, fx, AY - 1, 2.1, 1.7, (px, py) => tone(FUR, far ? 0.16 : 0.34, px, py));
+      limb(p, x, by + 2, x + swing * 0.5, knee, 3.4, 2.6, (px, py) => tone(FUR, far ? 0.18 : 0.38, px, py));
+      limb(p, x + swing * 0.5, knee, fx, AY - 1, 2.4, 2, (px, py) => tone(FUR, far ? 0.16 : 0.34, px, py));
       limb(p, fx, AY - 1, fx + 1.6, AY - 1, 1.6, 1.5, (px, py) => tone(CREAM, far ? 0.35 : 0.6, px, py));
     };
     const s = walking ? Math.sin(ph) * 4 : 0;
@@ -617,23 +617,26 @@ export function drawDog(): Drawing {
     leg(25, -s, true);
     leg(47, s, true);
     // tail, behind the body
-    limb(p, 21, by - 4, 13, by - 9 + wag, 2.6, 1.8, (px, py) => tone(FUR, 0.4, px, py));
-    limb(p, 13, by - 9 + wag, 9, by - 14 + wag * 1.3, 1.8, 1.2, (px, py) => tone(CREAM, 0.7, px, py));
+    limb(p, 21, by - 4, 13, by - 7 + wag, 3.6, 3, (px, py) => tone(FUR, 0.4, px, py));
+    limb(p, 13, by - 7 + wag, 8, by - 11 + wag * 1.3, 3, 1.8, (px, py) => tone(CREAM, 0.7, px, py));
     // body and chest
-    ellipse(p, 34, by, 15, 7.5, lit(FUR, 0.42));
-    ellipse(p, 45, by + 1, 6, 7, lit(CREAM, 0.6));
+    ellipse(p, 34, by - 1, 16, 9, lit(FUR, 0.42));
+    ellipse(p, 46, by + 1, 7, 8, lit(CREAM, 0.6));
     // near legs
     leg(28, s, false);
     leg(44, -s, false);
     // neck and head
-    limb(p, 44, by - 2, 51, by - 11, 5, 4, (px, py) => tone(FUR, 0.45, px, py));
-    ellipse(p, 54, by - 14, 6, 5, lit(FUR, 0.48));
-    limb(p, 57, by - 12, 63, by - 10.5, 2.6, 1.8, (px, py) => tone(CREAM, 0.62, px, py));
-    p.set(64, by - 11, FUR[0]);
+    limb(p, 44, by - 3, 50, by - 10, 6.5, 5.5, (px, py) => tone(FUR, 0.45, px, py));
+    ellipse(p, 53, by - 13, 7.5, 6.5, lit(FUR, 0.48));
+    limb(p, 57, by - 12, 62.5, by - 10.5, 3.4, 2.6, (px, py, across) => tone(across > 0.3 ? CREAM : FUR, across > 0.3 ? 0.55 : 0.5, px, py));
     p.set(63, by - 11, FUR[0]);
-    // the ear, pricked
-    limb(p, 52, by - 17, 50.5, by - 22, 2.2, 0.8, (px, py) => tone(FUR, 0.3, px, py));
+    p.set(64, by - 11, FUR[0]);
+    p.set(63, by - 12, FUR[0]);
+    // the ears, folded at the tips
+    limb(p, 50, by - 18, 48, by - 23, 3, 1.4, (px, py) => tone(FUR, 0.3, px, py));
+    limb(p, 48, by - 23, 46.5, by - 21.5, 1.4, 1, (px, py) => tone(FUR, 0.22, px, py));
     // the eye
+    p.set(56, by - 14, [24, 16, 10]);
     p.set(56, by - 15, [24, 16, 10]);
     p.outline(FUR[0]);
     frames.push(p);

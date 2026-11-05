@@ -229,7 +229,8 @@ export class CainWorld {
       const x = FOLD.x + Math.cos(a) * FOLD.r;
       const y = FOLD.y + Math.sin(a) * FOLD.r * 0.75;
       this.place(`cain-wall-${Math.floor(r() * 3)}`, x, y + 8);
-      this.solid(x, y, 30, 16);
+      // tall enough that the boxes overlap on the steep sides: no gaps for a sheep
+      this.solid(x, y, 34, 30);
     }
   }
 

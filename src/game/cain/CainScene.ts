@@ -56,7 +56,7 @@ const DOG_AHEAD = 95;
 const DOG_SPEED = 230;
 const DOG_FEAR = 175;
 const ABEL_FEAR = 95;
-const HERD_SPEED = 92;
+const HERD_SPEED = 150;
 const GRAZE_SPEED = 16;
 
 const ITEM_ICONS: Record<string, string> = {
@@ -1030,7 +1030,17 @@ export class CainScene extends Phaser.Scene {
     const dist = Math.hypot(dx, dy);
     if (dist > 700) d.setPosition(to[0], to[1]);
     if (dist > 10) {
-      const sp = Math.min(DOG_SPEED, 40 + dist * 3);
+      let sp = Math.min(DOG_SPEED, 40 + dist * 3);
+      // it presses on the flock rather than running through it
+      if (this.herd) {
+        for (const g of [...this.sheep, ...this.lambs]) {
+          if (g.penned || !g.actor.visible) continue;
+          const ex = g.actor.x - d.x;
+          const ey = g.actor.y - d.y;
+          const e = Math.hypot(ex, ey);
+          if (e < 80 && (ex * dx + ey * dy) / (e * dist || 1) > 0.3) sp = Math.min(sp, 30 + e);
+        }
+      }
       d.move((dx / dist) * sp, (dy / dist) * sp);
     } else {
       d.stop();
@@ -1070,12 +1080,51 @@ export class CainScene extends Phaser.Scene {
       };
       away(dog.x, dog.y, DOG_FEAR, 2.4);
       away(abel.x, abel.y, ABEL_FEAR, 1.1);
-      for (const o of out) if (o !== g) away(o.actor.x, o.actor.y, 34, 0.9);
-      // keep together
-      const tx = cx - a.x;
-      const ty = cy - a.y;
+      const fear = alarm;
+      // go the way the sheep near it go (a flock moves as one)
+      let ax = 0;
+      let ay = 0;
+      for (const o of out) {
+        if (o === g) continue;
+        const d = Math.hypot(o.actor.x - a.x, o.actor.y - a.y);
+        if (d < 34) away(o.actor.x, o.actor.y, 34, 0.9);
+        if (d < 130) {
+          ax += o.vx;
+          ay += o.vy;
+        }
+      }
+      const al = Math.hypot(ax, ay);
+      if (al > 1) {
+        const k = Math.min(1, al / (HERD_SPEED * 3)) * 0.8;
+        fx += (ax / al) * k;
+        fy += (ay / al) * k;
+        alarm = Math.max(alarm, Math.min(0.5, al / (HERD_SPEED * 4)));
+      }
+      // keep together, closer when afraid: toward the sheep around it (those
+      // already in the fold too), or the nearest one when it is alone
+      let lx = 0;
+      let ly = 0;
+      let ln = 0;
+      let near: Grazer | null = null;
+      let nearD = Infinity;
+      for (const o of all) {
+        if (o === g) continue;
+        const d = Math.hypot(o.actor.x - a.x, o.actor.y - a.y);
+        if (d < 260) {
+          lx += o.actor.x;
+          ly += o.actor.y;
+          ln++;
+        }
+        if (d < nearD) {
+          nearD = d;
+          near = o;
+        }
+      }
+      const [ox, oy] = ln ? [lx / ln, ly / ln] : near ? [near.actor.x, near.actor.y] : [cx, cy];
+      const tx = ox - a.x;
+      const ty = oy - a.y;
       const td = Math.hypot(tx, ty) || 1;
-      const pull = Phaser.Math.Clamp((td - 50) / 220, 0, 1) * 0.7;
+      const pull = Phaser.Math.Clamp((td - 45) / 200, 0, 1) * (0.6 + fear * 1.2);
       fx += (tx / td) * pull;
       fy += (ty / td) * pull;
       // near the gate, drawn in through it
@@ -1107,10 +1156,11 @@ export class CainScene extends Phaser.Scene {
       // in the fold: it stays and grazes there
       if (((a.x - FOLD.x) / inner) ** 2 + ((a.y - FOLD.y) / (inner * 0.75)) ** 2 < 1 && a.y < gateY - 24) {
         g.penned = true;
-        g.home = [a.x, Math.min(a.y, FOLD.y + 60)];
-        g.range = 60;
-        g.target = null;
-        g.wait = 1 + Math.random() * 2;
+        // it walks on in, clearing the gate for the next
+        g.home = PENNED[[...this.sheep, ...this.lambs].indexOf(g) % PENNED.length];
+        g.range = 40;
+        g.target = g.home;
+        g.wait = 0;
         g.vx = g.vy = 0;
         a.stop();
         audio.play('pickup');

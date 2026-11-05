@@ -71,7 +71,7 @@ export const POINTS: Record<string, Pt> = {
   abelFlock: [1890, 1170],
   // the fold's gate, a little outside, and where the dog waits
   foldGate: [1500, 950],
-  dogRest: [1600, 975],
+  dogRest: [1665, 955],
   // the field (mission 4): the gate where they come in, and the jawbone
   fieldGate: [1270, 3200],
   jawbone: [760, 4010],
