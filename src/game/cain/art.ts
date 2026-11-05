@@ -19,7 +19,7 @@ import {
   type Drawing,
   type TreeKind,
 } from './drawings';
-import { paletteCanvas } from './palette';
+import { sunsetPixels } from './palette';
 
 /**
  * Builds the Cain and Abel chapter's textures at runtime: the new trees and
@@ -70,8 +70,10 @@ function canvasOf(p: Pixels): HTMLCanvasElement {
   return c;
 }
 
-/** A texture from frames of the same size, side by side, with its manifest entry. */
-function addSheet(scene: Phaser.Scene, key: string, frames: Pixels[], ax: number, ay: number, scale = ART, icon = false): void {
+/** A texture from frames of the same size, side by side, with its manifest
+ * entry; in the chapter's sunset palette unless `natural` (fire, emotes). */
+function addSheet(scene: Phaser.Scene, key: string, frames: Pixels[], ax: number, ay: number, scale = ART, icon = false, natural = false): void {
+  if (!natural) for (const f of frames) sunsetPixels(f.data);
   const w = frames[0].w;
   const h = frames[0].h;
   const tex = scene.textures.createCanvas(key, w * frames.length, h)!;
@@ -84,8 +86,8 @@ function addSheet(scene: Phaser.Scene, key: string, frames: Pixels[], ax: number
   MANIFEST.sprites[key] = { file, frameWidth: w, frameHeight: h, frames: frames.length, anchorX: ax, anchorY: ay, scale };
 }
 
-function addDrawing(scene: Phaser.Scene, key: string, d: Drawing, icon = false): void {
-  addSheet(scene, key, d.frames, Math.round(d.ax), Math.round(d.ay) - 1, ART, icon);
+function addDrawing(scene: Phaser.Scene, key: string, d: Drawing, icon = false, natural = false): void {
+  addSheet(scene, key, d.frames, Math.round(d.ax), Math.round(d.ay) - 1, ART, icon, natural);
 }
 
 function loop(scene: Phaser.Scene, key: string, fps: number): void {
@@ -116,8 +118,8 @@ export function buildCainArt(scene: Phaser.Scene): void {
   addDrawing(scene, 'cain-altar', drawStones(80, 54, 3, 1, true));
   addDrawing(scene, 'cain-altar-b', drawStones(80, 54, 3, 4, true));
   for (let i = 0; i < 3; i++) addDrawing(scene, `cain-wall-${i}`, drawStones(46, 30, 2, 10 + i));
-  addDrawing(scene, 'cain-fire', drawFire(4));
-  addDrawing(scene, 'cain-fire-big', drawFire(2, true));
+  addDrawing(scene, 'cain-fire', drawFire(4), false, true);
+  addDrawing(scene, 'cain-fire-big', drawFire(2, true), false, true);
   loop(scene, 'cain-fire', 8);
   loop(scene, 'cain-fire-big', 7);
   addDrawing(scene, 'cain-pot', drawPot());
@@ -134,7 +136,7 @@ export function buildCainArt(scene: Phaser.Scene): void {
   addDrawing(scene, 'cain-staff', drawStaff());
   addSheet(scene, 'cain-shadow', [drawShadow(60, 20)], 30, 10);
   // the anger over Cain's head is drawn at world size, like the other emotes
-  addSheet(scene, 'emote-anger', [drawAnger()], 9, 19, 1);
+  addSheet(scene, 'emote-anger', [drawAnger()], 9, 19, 1, false, true);
   buildBrothers(scene);
   buildLamb(scene);
   buildSittingAdam(scene);
@@ -301,7 +303,6 @@ async function portraitCopy(fromId: string, toId: string, opts: { mirror?: boole
     }
     ctx.drawImage(im, 0, 0);
     opts.adjust?.(c);
-    paletteCanvas(c);
     return c.toDataURL();
   };
   const patches = async (list: PortraitAsset['mouth']) =>
@@ -333,7 +334,7 @@ function brother(who: 'cain' | 'abel'): Adjust {
 
 let portraits: Promise<void> | null = null;
 
-/** The portraits of the chapter, in its palette (ids cain-adam, cain-eve, cain-god, cain, abel). */
+/** The portraits of the chapter (ids cain-adam, cain-eve, cain-god, cain, abel). */
 export function buildCainPortraits(): Promise<void> {
   portraits ??= Promise.all([
     portraitCopy('adam-tunic', 'cain-adam'),

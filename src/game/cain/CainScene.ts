@@ -20,7 +20,7 @@ import type { InteractSpec, ObjectiveOptions, ObjectiveTarget } from '../WorldAp
 import { ART, buildCainArt, buildCainPortraits } from './art';
 import { CainWorld } from './CainWorld';
 import { CainRunner } from './missions';
-import { usePalette } from './palette';
+import { SUNSET_BACKGROUND } from './palette';
 
 export interface CainStartData {
   mode: 'continue' | 'new';
@@ -143,12 +143,11 @@ export class CainScene extends Phaser.Scene {
     for (const g of [...this.sheep, ...this.lambs]) this.physics.add.collider(g.actor.feet, this.world.colliders);
     this.atmosphere = new Atmosphere(this, settings.get().reduceMotion, { w: WORLD_W, h: WORLD_H });
     this.steamRising();
-    // camera, in the chapter's palette
+    // camera
     const cam = this.cameras.main;
     cam.setBounds(0, 0, WORLD_W, WORLD_H);
     cam.setRoundPixels(false);
-    cam.setBackgroundColor('#0d2a22');
-    usePalette(this, cam);
+    cam.setBackgroundColor(SUNSET_BACKGROUND);
     this.applyZoom();
     this.scale.on('resize', this.applyZoom, this);
     this.cameraFollow();
@@ -189,10 +188,11 @@ export class CainScene extends Phaser.Scene {
   }
 
   private applyZoom(): void {
+    if (!this.cameras?.main) return; // the scene has stopped
     const z = this.viewZoom();
     for (const key of this.textures.getTextureKeys()) {
       const perPixel = z * textureScale(key);
-      const smooth = key.startsWith('fx-') || key === 'tiles-extruded';
+      const smooth = key.startsWith('fx-') || key === 'tiles-extruded' || key === 'cain-tiles-extruded';
       const crisp = key === 'ui-arrows' || (!smooth && perPixel >= 0.98 && Math.abs(perPixel - Math.round(perPixel)) < 0.02);
       this.textures.get(key).setFilter(crisp ? Phaser.Textures.FilterMode.NEAREST : Phaser.Textures.FilterMode.LINEAR);
     }

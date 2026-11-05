@@ -8,6 +8,7 @@ import { distToPolyline, rng, wobble } from '../world/geometry';
 import { extrudedTiles } from '../world/Terrain';
 import { addShadow } from '../world/shadows';
 import { ART, TREES } from './art';
+import { sunsetSprite, sunsetTiles } from './palette';
 
 export interface CainTree {
   x: number;
@@ -103,7 +104,7 @@ export class CainWorld {
     }
     const corner = (g: Uint8Array, tx: number, ty: number) => g[ci(tx, ty)] + g[ci(tx + 1, ty)] * 2 + g[ci(tx, ty + 1)] * 4 + g[ci(tx + 1, ty + 1)] * 8;
     const map = this.scene.make.tilemap({ tileWidth: TILE, tileHeight: TILE, width: this.cols, height: this.rows });
-    const tileset = map.addTilesetImage('tiles', extrudedTiles(this.scene), TILE, TILE, 1, 2)!;
+    const tileset = map.addTilesetImage('tiles', sunsetTiles(this.scene, extrudedTiles(this.scene)), TILE, TILE, 1, 2)!;
     const ground = map.createBlankLayer('ground', tileset)!.setDepth(DEPTH_GROUND - 1000);
     const dryL = map.createBlankLayer('dry', tileset)!.setDepth(DEPTH_GROUND - 990);
     const pathL = map.createBlankLayer('path', tileset)!.setDepth(DEPTH_GROUND - 980);
@@ -313,8 +314,9 @@ export class CainWorld {
       const x = 60 + r() * (WORLD_W - 120);
       const y = 120 + r() * (WORLD_H - 160);
       if (this.pathDistance(x, y) < 6 || fieldDistance(x, y) < 10 || this.yardDistance(x, y) < 0) continue;
-      const key = keys[Math.floor(r() * keys.length)];
-      if (!MANIFEST.sprites[key]) continue;
+      const shared = keys[Math.floor(r() * keys.length)];
+      if (!MANIFEST.sprites[shared]) continue;
+      const key = sunsetSprite(this.scene, shared);
       const a = MANIFEST.sprites[key];
       sized(this.scene.add.image(x, y, key).setOrigin(a.anchorX / a.frameWidth, 1).setDepth(key.startsWith('rock') ? y : DEPTH_GROUND + 20 + y * 0.0001)).setFlipX(r() < 0.5);
     }
@@ -328,7 +330,9 @@ export class CainWorld {
   // -------------------------------------------------------------- helpers
 
   /** A sprite standing on the ground at its base point, sorted by it. */
-  place(key: string, x: number, y: number, depth = y): Phaser.GameObjects.Image {
+  place(shared: string, x: number, y: number, depth = y): Phaser.GameObjects.Image {
+    // the chapter's own art is drawn in its palette; Eden's sprites are copied into it
+    const key = shared.startsWith('cain-') ? shared : sunsetSprite(this.scene, shared);
     const a = MANIFEST.sprites[key];
     const img = sized(this.scene.add.image(x, y, key).setOrigin(a ? a.anchorX / a.frameWidth : 0.5, a ? (a.anchorY + 1) / a.frameHeight : 1).setDepth(depth));
     addShadow(this.scene, x, y, key);

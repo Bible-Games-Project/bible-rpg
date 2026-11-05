@@ -147,7 +147,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     cam.setRoundPixels(false);
     cam.setBackgroundColor('#1d3c1a');
     this.applyZoom();
-    this.scale.on('resize', () => this.applyZoom());
+    this.scale.on('resize', this.applyZoom, this);
     this.cameraFollow();
     // input
     this.layer = {
@@ -184,6 +184,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
 
   private teardown(): void {
     input.remove(this.layer);
+    // a resize after the scene has stopped would throw (no camera) and stop the game loop: black screen
+    this.scale.off('resize', this.applyZoom, this);
     audio.setAmbience('none');
     audio.setMood('none');
     this.runner?.stop();
@@ -196,6 +198,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
    * sharp; otherwise the art is scaled smoothly (linear filtering).
    */
   private applyZoom(): void {
+    if (!this.cameras?.main) return; // the scene has stopped
     const z = this.viewZoom();
     this.applyFilters(z);
     this.setView(z);
