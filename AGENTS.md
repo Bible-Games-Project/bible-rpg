@@ -614,12 +614,19 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   meadow east of the fold, the dog runs `DOG_AHEAD` px ahead of Abel the
   way he walks, sheep flee it and flock (`updateHerd` in CainScene); Abel's
   staff uses the `staff` grip in Actor (planted, leaning through the hand).
-  The dog is drawn in code (`drawDog`) until generated art replaces it.
 - Images: `node tools/art/gen_images.mjs run <jobs> --jobs art/prompts/cain.json
   --quality low` (gpt-image-2, ledger with `chapter`; `spent --chapter cain`).
   Node's fetch ignores the proxy: it uses undici@6 `ProxyAgent` (undici 7
-  crashes on Node 22). On 2026-11-05 the OpenAI account had no credit (429
-  `credit_balance_exhausted`); nothing was spent on Cain and Abel yet.
+  crashes on Node 22). The maintainer topped up the credit on 2026-11-05.
+- The chapter's world art (house, hearth, altars, fold walls, torch, log,
+  trees, bushes, crops, jawbone, staff, dog) comes from the sheets in
+  `art/generated/cain-*`: `node tools/art/cain_ingest.mjs` (no Python in the
+  console) keys out the magenta, cuts the subjects in reading order, scales
+  them to the sizes in its `SHEETS` and writes `public/assets/cain/` and
+  `src/data/cain/generatedArt.json`. CainScene's `preload` loads them and
+  `art.ts` recolours them to the night (`TREE_ART` maps the world's tree ids;
+  trees are split trunk/crown at the lowest leafy row). If a sheet is
+  regenerated, check that the subject count and order still match.
   Eden can't run in the console's headless Chromium (memory cap); Cain and
   Abel can (open `/?debug` on `vite preview` of a fresh build for
   `window.bibleRpg`). Never add `sourcemap: true` to vite.config (the
