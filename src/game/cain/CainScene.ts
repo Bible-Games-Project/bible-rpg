@@ -111,6 +111,30 @@ export class CainScene extends Phaser.Scene {
   }
 
   create(data: CainStartData): void {
+    // Phaser keeps the scene object between games: everything left from the
+    // last one goes (the old, destroyed lambs stayed first in the list and
+    // stopped a new game on a black screen)
+    this.sheep = [];
+    this.lambs = [];
+    this.active = 'cain';
+    this.following = false;
+    this.control = true;
+    this.busy = false;
+    this.interactions = [];
+    this.currentInteract = null;
+    this.objectiveTarget = null;
+    this.objectiveAll = false;
+    this.godLit = false;
+    this.inventory = {};
+    this.flags = {};
+    this.stepTimer = 0;
+    this.followStuck = 0;
+    this.brotherColliders = { cain: [], abel: [] };
+    this.altarThings = [];
+    this.altarFire = null;
+    this.smoke = null;
+    this.npcsTalk = true;
+    this.chaseState = null;
     buildCainArt(this);
     void buildCainPortraits();
     this.physics.world.setBounds(BOUNDS.left, BOUNDS.top, BOUNDS.right - BOUNDS.left, BOUNDS.bottom - BOUNDS.top);

@@ -105,6 +105,29 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   }
 
   create(data: EdenStartData): void {
+    // Phaser keeps the scene object between games: nothing from the last one
+    // may stay (destroyed sprites left in these lists stopped a new game)
+    this.active = 'adam';
+    this.canSwitch = false;
+    this.following = false;
+    this.control = true;
+    this.busy = false;
+    this.interactions = [];
+    this.currentInteract = null;
+    this.objectiveTarget = null;
+    this.objectiveAll = false;
+    this.ambience = null;
+    this.tintTween = null;
+    this.godLit = false;
+    this.inventory = {};
+    this.flags = {};
+    this.plots = [];
+    this.thornSprites = [];
+    this.cherubSprites = [];
+    this.fireflies = [];
+    this.stepTimer = 0;
+    this.followStuck = 0;
+    this.followGap = 46;
     this.physics.world.setBounds(0, 0, WORLD_W, WORLD_H);
     this.terrain = new Terrain(this);
     this.objects = new WorldObjects(this, this.terrain);
