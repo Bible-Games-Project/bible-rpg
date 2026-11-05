@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { CHARACTERS } from '../../data/characters';
 import { MANIFEST, charKey, shadowOf, sized, textureScale, type Direction } from '../manifest';
-import { addShadow, fitShadow } from './shadows';
+import { addShadow, fitShadow, shadowStrength, shadowsMirrored } from './shadows';
 
 export type Facing = 'down' | 'up' | 'left' | 'right';
 
@@ -90,7 +90,7 @@ export class Actor {
     if (o.shadow !== null) {
       // the sprite's own cast shadow when it has one, else a soft round one
       this.roundShadow = o.shadow ?? 'shadow-small';
-      this.shadow = addShadow(scene, o.x, o.y, key) ?? scene.add.image(o.x, o.y, this.roundShadow).setDepth(DEPTH_SHADOW).setAlpha(0.9);
+      this.shadow = addShadow(scene, o.x, o.y, key) ?? scene.add.image(o.x, o.y, this.roundShadow).setDepth(DEPTH_SHADOW).setAlpha(0.9 * shadowStrength());
       this.castShadow = this.shadow.texture.key.startsWith('shadow:');
       // the shadow moves with the legs, arms and wings: one cell per frame
       this.sprite.on(Phaser.Animations.Events.ANIMATION_UPDATE, () => this.syncShadow());
@@ -282,7 +282,7 @@ export class Actor {
       if (this.shadow && shadowOf(tex)) this.castShadow = true;
       else if (this.shadow && this.castShadow) {
         this.castShadow = false;
-        this.shadow.setTexture(this.roundShadow).setOrigin(0.5).setScale(1).setAlpha(0.9);
+        this.shadow.setTexture(this.roundShadow).setOrigin(0.5).setScale(1).setFlipX(false).setAlpha(0.9 * shadowStrength());
       }
       force = true;
     }
@@ -380,10 +380,10 @@ export class Actor {
     const x = this.feet.x + this.shadowOffset[0];
     const y = this.feet.y + this.shadowOffset[1];
     const up = Math.max(0, this.lift);
-    this.shadow.setPosition(x + up * 0.45, y + up * 0.11);
+    this.shadow.setPosition(x + up * 0.45 * (shadowsMirrored() ? -1 : 1), y + up * 0.11);
     if (!this.castShadow) return;
     const k = 1 / (1 + up / 60);
-    this.shadow.setScale(textureScale(this.sprite.texture.key) * k).setAlpha(0.35 + 0.65 * k);
+    this.shadow.setScale(textureScale(this.sprite.texture.key) * k).setAlpha((0.35 + 0.65 * k) * shadowStrength());
   }
 
   destroy(): void {

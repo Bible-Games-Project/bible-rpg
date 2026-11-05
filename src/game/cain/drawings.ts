@@ -3,7 +3,7 @@ import { Pixels, clamp01, clump, ellipse, hash2, limb, mixRGB, ramp, seeded, ton
 /**
  * The Cain and Abel chapter's art, painted in code at the characters' art
  * resolution (one pixel here is one pixel of Adam's sprite). Colours are
- * natural (greens, browns, straw): the chapter's sunset palette
+ * natural (greens, browns, straw): the chapter's night palette
  * (palette.ts) recolours the world's textures when they are built.
  * The light comes from the upper left, like the rest of the game's art.
  */
@@ -369,7 +369,7 @@ export function drawStones(w: number, h: number, rows: number, seed: number, fla
 }
 
 /** A ring of stones with a small fire; `frames` flames, flickering. */
-export function drawFire(frames: number, big = false): Drawing {
+export function drawFire(frames: number, big = false, hearth = !big): Drawing {
   const w = big ? 44 : 34;
   const h = big ? 64 : 44;
   const out: Pixels[] = [];
@@ -377,7 +377,7 @@ export function drawFire(frames: number, big = false): Drawing {
   const ay = h - 4;
   for (let f = 0; f < frames; f++) {
     const p = new Pixels(w, h);
-    if (!big) {
+    if (hearth) {
       // the stones of the hearth
       for (let i = 0; i < 7; i++) {
         const a = (i / 7) * Math.PI * 2;
@@ -407,6 +407,18 @@ export function drawFire(frames: number, big = false): Drawing {
     out.push(p);
   }
   return { frames: out, ax, ay };
+}
+
+/** A torch: a pole with a bundle of reeds bound at the top (its flame is
+ * a separate sprite, cain-flame). */
+export function drawTorch(): Drawing {
+  const w = 14;
+  const h = 70;
+  const p = new Pixels(w, h);
+  limb(p, 7, h - 2, 7, 16, 3, 2.5, (x, y, a) => tone(BARK, 0.62 - a * 0.4 + (vnoise(x, y / 5, 4) - 0.5) * 0.2, x, y));
+  ellipse(p, 7, 11, 4.5, 8, (x, y, nx, ny) => tone(STRAW, 0.5 - nx * 0.35 - ny * 0.2 + (vnoise(x * 2, y, 6) - 0.5) * 0.25, x, y));
+  for (const cy of [6, 15]) for (let x = 3; x <= 11; x++) if (p.alpha(x, cy)) p.set(x, cy, BARK[1]);
+  return { frames: [p], ax: 7, ay: h - 2 };
 }
 
 /** A clay pot on its three stones, over Eve's fire. */

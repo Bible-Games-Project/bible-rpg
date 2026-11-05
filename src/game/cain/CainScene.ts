@@ -20,7 +20,8 @@ import type { InteractSpec, ObjectiveOptions, ObjectiveTarget } from '../WorldAp
 import { ART, buildCainArt, buildCainPortraits } from './art';
 import { CainWorld } from './CainWorld';
 import { CainRunner } from './missions';
-import { SUNSET_BACKGROUND } from './palette';
+import { NIGHT_BACKGROUND, NIGHT_SHADOW, NIGHT_TINT } from './palette';
+import { setShadowLight } from '../world/shadows';
 
 export interface CainStartData {
   mode: 'continue' | 'new';
@@ -135,6 +136,8 @@ export class CainScene extends Phaser.Scene {
     this.smoke = null;
     this.npcsTalk = true;
     this.chaseState = null;
+    // night: faint shadows falling toward the lower left (the maintainer)
+    setShadowLight(true, NIGHT_SHADOW);
     buildCainArt(this);
     void buildCainPortraits();
     this.physics.world.setBounds(BOUNDS.left, BOUNDS.top, BOUNDS.right - BOUNDS.left, BOUNDS.bottom - BOUNDS.top);
@@ -150,7 +153,7 @@ export class CainScene extends Phaser.Scene {
     const [lx, ly] = POINTS.adamLog;
     this.adamSitting = sized(this.add.sprite(lx - 4, ly - 2, 'cain-adam-sitting').setOrigin(sit.anchorX / sit.frameWidth, 1).setDepth(ly + 5));
     this.adamSitting.play('cain-adam-sitting:idle');
-    this.add.image(lx + 2, ly + 4, 'shadow-small').setDepth(-50000).setAlpha(0.6);
+    this.add.image(lx + 2, ly + 4, 'shadow-small').setDepth(-50000).setAlpha(0.6 * NIGHT_SHADOW);
     this.holy = new GodLight(this, settings.get().reduceMotion);
     this.markers = new ObjectiveMarkers(this);
     this.healthBar = this.add.graphics().setDepth(DEPTH_OVERLAY - 20).setVisible(false);
@@ -166,12 +169,15 @@ export class CainScene extends Phaser.Scene {
     }
     for (const g of [...this.sheep, ...this.lambs]) this.physics.add.collider(g.actor.feet, this.world.colliders);
     this.atmosphere = new Atmosphere(this, settings.get().reduceMotion, { w: WORLD_W, h: WORLD_H });
+    // night: no sunbeams or sun glow, the cloud shadows barely there
+    this.atmosphere.setTime('evening');
+    this.nightLight();
     this.steamRising();
     // camera
     const cam = this.cameras.main;
     cam.setBounds(0, 0, WORLD_W, WORLD_H);
     cam.setRoundPixels(false);
-    cam.setBackgroundColor(SUNSET_BACKGROUND);
+    cam.setBackgroundColor(NIGHT_BACKGROUND);
     this.applyZoom();
     this.scale.on('resize', this.applyZoom, this);
     this.cameraFollow();
@@ -640,6 +646,17 @@ export class CainScene extends Phaser.Scene {
     this.world.jawbone.setVisible(on);
   }
 
+  /**
+   * The people and animals keep their own colours (the maintainer), only
+   * dimmed and cooled a little by the night; near a torch its added light
+   * warms them again. God's light is His own.
+   */
+  private nightLight(): void {
+    const actors = [this.cain, this.abel, this.eve, ...this.sheep.map((g) => g.actor), ...this.lambs.map((g) => g.actor)];
+    for (const a of actors) a.sprite.setTint(NIGHT_TINT);
+    this.adamSitting.setTint(NIGHT_TINT);
+  }
+
   /** The flock: the ewes graze, the lambs keep close to them. */
   private flock(): void {
     const grazer = (id: string, sheet: string, at: Pt, range: number, speed: number) => {
@@ -854,6 +871,7 @@ export class CainScene extends Phaser.Scene {
     const cam = this.cameras.main;
     this.atmosphere.update(delta, cam);
     this.world.updateCanopies(p.x, p.y, cam.worldView, delta);
+    this.world.updateLights(time, cam.worldView, settings.get().reduceMotion);
     if (!settings.get().reduceMotion) this.world.updateWind(time, cam.worldView);
     if (this.godLit && this.god.visible) this.holy.update(time, this.god.x, this.god.y, this.god.sprite.displayHeight, this.god.moving);
     this.updateInteractPrompt();

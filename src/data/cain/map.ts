@@ -32,6 +32,17 @@ export const PATHS: { points: Pt[]; width: number }[] = [
   { width: 46, points: [[2120, 3500], [2460, 3470], [2944, 3440]] },
 ];
 
+/** Torches lighting the night (the maintainer): at the house, the altars,
+ * the fold's gate, the field's gate and along the paths. */
+export const TORCHES: Pt[] = [
+  [1300, 2235], [1505, 2240], [1700, 2390], [1250, 2420],
+  [2075, 1960], [2425, 1960], [2250, 1830],
+  [1395, 1010], [1600, 1010], [1440, 1420], [1500, 1760],
+  [1200, 3200], [1340, 3240], [1360, 2800],
+  [600, 2240], [1000, 2245], [1860, 2190],
+  [900, 3500], [1700, 3600], [2200, 3540], [2600, 3400], [1100, 3950], [1900, 4000],
+];
+
 /** Cain's tilled field: rows of crops on brown earth. */
 export const FIELD = { x: 470, y: 3180, w: 1880, h: 960 };
 

@@ -2,37 +2,46 @@ import Phaser from 'phaser';
 import { MANIFEST, shadowKey } from '../manifest';
 
 /**
- * The Cain and Abel chapter's colours: a sunset (the maintainer sent a dusk
- * scene as a palette reference: plum shadows, mauve and rose, peach and
- * cream lights, with warm orange as the complement). Only the world is
- * recoloured, texture by texture, when it is built: the ground, trees,
- * stones and props. The characters (Cain, Abel, Adam, Eve, God), the
- * animals and the portraits keep their own colours, like in Eden (the
- * maintainer turned down an earlier filter over the whole screen).
+ * The Cain and Abel chapter's colours: night, in the five colours the
+ * maintainer chose (#F8B195 peach, #F67280 coral, #C06C84 mauve, #6C5B7B
+ * purple grey, #355C7D blue), their darker and lighter steps, and the warm
+ * end as the complement for small things (fruit, flowers, grain) and for
+ * the torchlight. Only the world is recoloured, texture by texture, when it
+ * is built: the ground, trees, stones and props. The characters, animals
+ * and portraits keep their own colours (only dimmed a little at night, in
+ * CainScene), like in Eden; the maintainer turned down a filter over the
+ * whole screen.
  *
- * Every colour is put on one of five ramps by its kind and then on the ramp
+ * Every colour is put on one of the ramps by its kind and then on the ramp
  * by its brightness, so the art keeps its shading:
- *   leaves and grass  plum, mauve, rose (the ground's grass duskier)
- *   earth and wood    maroon, terracotta, peach, cream
- *   stone             lilac greys
- *   bright colours    the complement: red, orange, gold (fruit, flowers)
- *   blues             violet
+ *   grass on the ground  night blue (#355C7D)
+ *   leaves               indigo, between the blue and the purple grey
+ *   earth on the ground  purple grey (#6C5B7B): paths and the field
+ *   wood, thatch, clay   mauve to peach (#C06C84, #F8B195)
+ *   stone                cool lilac greys
+ *   bright colours       coral and peach (#F67280, #F8B195)
  */
 
 type V3 = [number, number, number];
 const hex = (h: string): V3 => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)) as V3;
 const ramp = (...c: string[]): V3[] => c.map(hex);
 
-const LEAVES = ramp('#1a0a22', '#2c1030', '#43183a', '#5e2443', '#7d334f', '#9f4a5e', '#c26a72', '#e3958a');
-// the ground's grass: dusky mauve, darker and quieter than the trees
-const GRASS = ramp('#24101f', '#34172a', '#462033', '#5a2b3b', '#6e3843', '#83474c', '#985a56', '#ad6f60');
-const EARTH = ramp('#2a1020', '#4a1f2e', '#6e3438', '#94503f', '#b8714c', '#d69563', '#ecba84', '#f9dcaa');
-const STONE = ramp('#1f1226', '#352238', '#4e344b', '#6a4a5f', '#876378', '#a68192', '#c5a3ae', '#e2c7c8');
-const ACCENT = ramp('#3d0f1e', '#7a1f28', '#b8392f', '#e0663a', '#f3954a', '#fbc46a', '#fde6a4');
-const BLUE = ramp('#1d1430', '#2f2150', '#4a3570', '#6a4f8e', '#8f73ad', '#b59cc9', '#dcc8e3');
+const GRASS = ramp('#121b2e', '#18243b', '#1e2d48', '#253755', '#2c4262', '#344e70', '#3d5b7e', '#4c6a8c');
+const LEAVES = ramp('#10121f', '#171a2c', '#1f2339', '#292d48', '#343857', '#414466', '#535475', '#6c6b8c');
+const EARTH_GROUND = ramp('#1c1a2b', '#252337', '#2f2c43', '#3a3650', '#46415e', '#524c6b', '#5f5878', '#6e6787');
+const EARTH = ramp('#22131e', '#36192b', '#4d2239', '#672e4b', '#843d5f', '#a35472', '#c27486', '#de9c9a');
+const STONE = ramp('#181826', '#222234', '#2e2d42', '#3b3950', '#4a465f', '#5b5570', '#706883', '#8a8199');
+const ACCENT = ramp('#3a1424', '#6e2338', '#a33a50', '#d8586b', '#F67280', '#F8B195', '#fbd3bd');
+const BLUE = ramp('#121b2e', '#1b2a45', '#253a5b', '#2f4a6d', '#355C7D', '#4d7393', '#6a8ba8');
+
+/** How dark shadows are at night (Eden's are 1): very faint (the maintainer). */
+export const NIGHT_SHADOW = 0.4;
+
+/** People and animals at night: their own colours, a little dimmer and cooler. */
+export const NIGHT_TINT = 0xc4c6e0;
 
 /** The camera's background (beyond the world's edge). */
-export const SUNSET_BACKGROUND = '#2c1030';
+export const NIGHT_BACKGROUND = '#121a2b';
 
 function onRamp(stops: V3[], t: number, out: V3, w: number): void {
   const n = stops.length - 1;
@@ -61,9 +70,9 @@ const band = (h: number, c: number, w: number) => 1 - smooth(w * 0.6, w, hueGap(
 
 const out: V3 = [0, 0, 0];
 
-/** One colour (0–255 channels) in the sunset palette. `ground`: a ground
- * tile (grass on the dusky GRASS ramp, earth darker, no bright accents). */
-export function sunset(r: number, g: number, b: number, ground = false): V3 {
+/** One colour (0–255 channels) in the night palette. `ground`: a ground
+ * tile (grass and earth on their own ramps, no bright accents). */
+export function night(r: number, g: number, b: number, ground = false): V3 {
   const mx = Math.max(r, g, b);
   const mn = Math.min(r, g, b);
   const sat = mx ? (mx - mn) / mx : 0;
@@ -95,7 +104,7 @@ export function sunset(r: number, g: number, b: number, ground = false): V3 {
   const t = Math.pow(lum, 0.92);
   out[0] = out[1] = out[2] = 0;
   if (wLeaves) onRamp(ground ? GRASS : LEAVES, t, out, wLeaves);
-  if (wEarth) onRamp(EARTH, ground ? t * 0.78 : t, out, wEarth);
+  if (wEarth) onRamp(ground ? EARTH_GROUND : EARTH, ground ? t : t * 0.92, out, wEarth);
   if (wAccent) onRamp(ACCENT, t, out, wAccent);
   if (wBlue) onRamp(BLUE, t, out, wBlue);
   if (grey) onRamp(STONE, t, out, grey);
@@ -103,20 +112,20 @@ export function sunset(r: number, g: number, b: number, ground = false): V3 {
 }
 
 /** Recolour RGBA pixels in place. */
-export function sunsetPixels(d: Uint8ClampedArray | Uint8Array | number[], ground = false): void {
+export function nightPixels(d: Uint8ClampedArray | Uint8Array | number[], ground = false): void {
   for (let i = 0; i < d.length; i += 4) {
     if (!d[i + 3]) continue;
-    const c = sunset(d[i], d[i + 1], d[i + 2], ground);
+    const c = night(d[i], d[i + 1], d[i + 2], ground);
     d[i] = c[0];
     d[i + 1] = c[1];
     d[i + 2] = c[2];
   }
 }
 
-function sunsetCanvas(c: HTMLCanvasElement, ground = false): void {
+function nightCanvas(c: HTMLCanvasElement, ground = false): void {
   const ctx = c.getContext('2d')!;
   const img = ctx.getImageData(0, 0, c.width, c.height);
-  sunsetPixels(img.data, ground);
+  nightPixels(img.data, ground);
   ctx.putImageData(img, 0, 0);
 }
 
@@ -130,21 +139,21 @@ function copyCanvas(src: CanvasImageSource & { width: number; height: number }):
   return c;
 }
 
-/** Key of the chapter's copy of a shared sprite (`sunsetSprite`). */
-export const sun = (key: string) => `cain-sun-${key}`;
+/** Key of the chapter's copy of a shared sprite (`nightSprite`). */
+export const sun = (key: string) => `cain-night-${key}`;
 
 /**
- * A copy of a shared sprite (Eden's rocks, ferns, the log…) in the sunset
+ * A copy of a shared sprite (Eden's rocks, ferns, the log…) in the night
  * palette, under `sun(key)`, with the same frames, size and shadow. Eden's
  * own texture is left as it is.
  */
-export function sunsetSprite(scene: Phaser.Scene, key: string): string {
+export function nightSprite(scene: Phaser.Scene, key: string): string {
   const to = sun(key);
   if (scene.textures.exists(to)) return to;
   const a = MANIFEST.sprites[key];
   if (!a || !scene.textures.exists(key)) return key;
   const c = copyCanvas(scene.textures.get(key).getSourceImage() as HTMLImageElement);
-  sunsetCanvas(c);
+  nightCanvas(c);
   scene.textures.addSpriteSheet(to, c as unknown as HTMLImageElement, { frameWidth: a.frameWidth, frameHeight: a.frameHeight });
   MANIFEST.sprites[to] = { ...a };
   const sk = shadowKey(key);
@@ -155,12 +164,12 @@ export function sunsetSprite(scene: Phaser.Scene, key: string): string {
   return to;
 }
 
-/** The ground tiles (already extruded, see Terrain.extrudedTiles) in the sunset palette. */
-export function sunsetTiles(scene: Phaser.Scene, extruded: string): string {
+/** The ground tiles (already extruded, see Terrain.extrudedTiles) in the night palette. */
+export function nightTiles(scene: Phaser.Scene, extruded: string): string {
   const to = 'cain-tiles-extruded';
   if (scene.textures.exists(to)) return to;
   const c = copyCanvas(scene.textures.get(extruded).getSourceImage() as HTMLCanvasElement);
-  sunsetCanvas(c, true);
+  nightCanvas(c, true);
   scene.textures.addCanvas(to, c);
   return to;
 }

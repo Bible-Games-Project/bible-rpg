@@ -14,12 +14,13 @@ import {
   drawShadow,
   drawStaff,
   drawStones,
+  drawTorch,
   drawTree,
   drawWheat,
   type Drawing,
   type TreeKind,
 } from './drawings';
-import { sunsetPixels } from './palette';
+import { nightPixels } from './palette';
 
 /**
  * Builds the Cain and Abel chapter's textures at runtime: the new trees and
@@ -71,9 +72,9 @@ function canvasOf(p: Pixels): HTMLCanvasElement {
 }
 
 /** A texture from frames of the same size, side by side, with its manifest
- * entry; in the chapter's sunset palette unless `natural` (fire, emotes). */
+ * entry; in the chapter's night palette unless `natural` (fire, emotes). */
 function addSheet(scene: Phaser.Scene, key: string, frames: Pixels[], ax: number, ay: number, scale = ART, icon = false, natural = false): void {
-  if (!natural) for (const f of frames) sunsetPixels(f.data);
+  if (!natural) for (const f of frames) nightPixels(f.data);
   const w = frames[0].w;
   const h = frames[0].h;
   const tex = scene.textures.createCanvas(key, w * frames.length, h)!;
@@ -120,7 +121,11 @@ export function buildCainArt(scene: Phaser.Scene): void {
   for (let i = 0; i < 3; i++) addDrawing(scene, `cain-wall-${i}`, drawStones(46, 30, 2, 10 + i));
   addDrawing(scene, 'cain-fire', drawFire(4), false, true);
   addDrawing(scene, 'cain-fire-big', drawFire(2, true), false, true);
+  addDrawing(scene, 'cain-flame', drawFire(4, false, false), false, true);
+  addDrawing(scene, 'cain-torch', drawTorch());
+  torchLight(scene);
   loop(scene, 'cain-fire', 8);
+  loop(scene, 'cain-flame', 9);
   loop(scene, 'cain-fire-big', 7);
   addDrawing(scene, 'cain-pot', drawPot());
   for (let i = 0; i < 3; i++) addSheet(scene, `cain-furrow-${i}`, [drawFurrow(i + 1)], 64, 7);
@@ -140,6 +145,25 @@ export function buildCainArt(scene: Phaser.Scene): void {
   buildBrothers(scene);
   buildLamb(scene);
   buildSittingAdam(scene);
+}
+
+/** The warm pool of light around a torch (added over the world). */
+function torchLight(scene: Phaser.Scene): void {
+  const s = 420;
+  const tex = scene.textures.createCanvas('cain-torch-light', s, s)!;
+  const ctx = tex.getContext();
+  const g = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+  // warm (much more red than blue), so that added over the night blue it
+  // reads as firelight and not as a pale fog
+  g.addColorStop(0, 'rgba(255,150,80,0.4)');
+  g.addColorStop(0.2, 'rgba(252,128,84,0.26)');
+  g.addColorStop(0.5, 'rgba(246,104,96,0.09)');
+  g.addColorStop(0.8, 'rgba(200,90,110,0.02)');
+  g.addColorStop(1, 'rgba(200,90,110,0)');
+  ctx.fillStyle = g;
+  // flattened like the ground seen from above at an angle
+  ctx.fillRect(0, 0, s, s);
+  tex.refresh();
 }
 
 // ------------------------------------------------------------ characters

@@ -1,14 +1,17 @@
 import Phaser from 'phaser';
-import { BOUNDS, CLEAR, ESCAPE, FIELD, FOLD, GROVES, PATHS, POINTS, PRODUCE, TILE, WORLD_H, WORLD_W } from '../../data/cain/map';
+import { BOUNDS, CLEAR, ESCAPE, FIELD, FOLD, GROVES, PATHS, POINTS, PRODUCE, TILE, TORCHES, WORLD_H, WORLD_W } from '../../data/cain/map';
 import type { Pt } from '../../data/eden/map';
 import type { Surface } from '../../data/soundSlots';
 import { MANIFEST, sized } from '../manifest';
-import { DEPTH_GROUND, DEPTH_SHADOW } from '../world/Actor';
+import { DEPTH_GROUND, DEPTH_OVERLAY, DEPTH_SHADOW } from '../world/Actor';
+
+/** The torches' light lies over the world, under the overlays. */
+const DEPTH_LIGHT = DEPTH_OVERLAY - 400;
 import { distToPolyline, rng, wobble } from '../world/geometry';
 import { extrudedTiles } from '../world/Terrain';
 import { addShadow } from '../world/shadows';
 import { ART, TREES } from './art';
-import { sunsetSprite, sunsetTiles } from './palette';
+import { NIGHT_SHADOW, nightSprite, nightTiles } from './palette';
 
 export interface CainTree {
   x: number;
@@ -57,6 +60,8 @@ export class CainWorld {
   /** the jawbone of an ass lying in the field (mission 4) */
   jawbone!: Phaser.GameObjects.Image;
   private taken: Pt[] = [];
+  /** the torches' light, flickering */
+  private lights: { img: Phaser.GameObjects.Image; flame: Phaser.GameObjects.Sprite; scale: number; phase: number }[] = [];
 
   constructor(private scene: Phaser.Scene) {
     this.colliders = scene.physics.add.staticGroup();
@@ -65,6 +70,7 @@ export class CainWorld {
     this.house();
     this.altars();
     this.fold();
+    this.torches();
     this.woods();
     this.decor();
   }
@@ -104,7 +110,7 @@ export class CainWorld {
     }
     const corner = (g: Uint8Array, tx: number, ty: number) => g[ci(tx, ty)] + g[ci(tx + 1, ty)] * 2 + g[ci(tx, ty + 1)] * 4 + g[ci(tx + 1, ty + 1)] * 8;
     const map = this.scene.make.tilemap({ tileWidth: TILE, tileHeight: TILE, width: this.cols, height: this.rows });
-    const tileset = map.addTilesetImage('tiles', sunsetTiles(this.scene, extrudedTiles(this.scene)), TILE, TILE, 1, 2)!;
+    const tileset = map.addTilesetImage('tiles', nightTiles(this.scene, extrudedTiles(this.scene)), TILE, TILE, 1, 2)!;
     const ground = map.createBlankLayer('ground', tileset)!.setDepth(DEPTH_GROUND - 1000);
     const dryL = map.createBlankLayer('dry', tileset)!.setDepth(DEPTH_GROUND - 990);
     const pathL = map.createBlankLayer('path', tileset)!.setDepth(DEPTH_GROUND - 980);
@@ -227,6 +233,43 @@ export class CainWorld {
     }
   }
 
+  // ------------------------------------------------------------- torches
+
+  /**
+   * Torches on poles (the maintainer: the night lit by torches, yet all of
+   * the screen easy to see). Each throws a soft warm pool of light around
+   * it (added light, so it brightens what it falls on) that flickers. The
+   * hearth by the house gets one too.
+   */
+  private torches(): void {
+    const s = this.scene;
+    const pool = (x: number, y: number, scale: number) => {
+      return s.add.image(x, y, 'cain-torch-light').setDepth(DEPTH_LIGHT).setBlendMode(Phaser.BlendModes.ADD).setScale(scale, scale * 0.8);
+    };
+    for (const [x, y] of TORCHES) {
+      this.place('cain-torch', x, y);
+      this.solid(x, y - 3, 10, 6);
+      this.taken.push([x, y]);
+      const a = MANIFEST.sprites['cain-torch'];
+      const top = y - (a.anchorY + 1) * (a.scale ?? ART) + 4;
+      const flame = sized(s.add.sprite(x, top, 'cain-flame').setOrigin(0.5, 0.92).setDepth(y + 0.5)).setScale(ART * 0.6).play({ key: 'cain-flame:loop', startFrame: Math.floor(Math.random() * 4) });
+      this.lights.push({ img: pool(x, top + 20, 1), flame, scale: 1, phase: Math.random() * 10 });
+    }
+    const [fx, fy] = POINTS.fire;
+    this.lights.push({ img: pool(fx, fy - 10, 1.25), flame: null!, scale: 1.25, phase: 3.1 });
+  }
+
+  /** The torches flicker (slowly and gently with reduced motion). */
+  updateLights(time: number, view: Phaser.Geom.Rectangle, still: boolean): void {
+    const s = time / 1000;
+    for (const l of this.lights) {
+      if (!view.contains(l.img.x, l.img.y) && Math.abs(l.img.x - view.centerX) > view.width) continue;
+      const f = still ? 0 : Math.sin(s * 7.3 + l.phase) * 0.5 + Math.sin(s * 12.9 + l.phase * 2.1) * 0.3 + Math.sin(s * 3.1 + l.phase) * 0.2;
+      const k = l.scale * (1 + f * 0.035);
+      l.img.setScale(k, k * 0.8).setAlpha(0.92 + f * 0.08);
+    }
+  }
+
   // --------------------------------------------------------------- trees
 
   private free(x: number, y: number, d: number): boolean {
@@ -245,7 +288,7 @@ export class CainWorld {
     const part = (key: string, depth: number) => this.scene.add.image(x, y, key).setOrigin(ox, oy).setDepth(depth).setScale(ART).setFlipX(flip);
     const trunk = part(art.trunk, y);
     const crown = part(art.crown, y + 0.1);
-    const shadow = this.scene.add.image(x + 14, y - 2, art.shadow).setScale(ART).setDepth(DEPTH_SHADOW).setAlpha(0.32);
+    const shadow = this.scene.add.image(x - 14, y - 2, art.shadow).setScale(ART).setDepth(DEPTH_SHADOW).setAlpha(0.32 * NIGHT_SHADOW);
     this.solid(x, y - art.foot.h * ART * 0.5, art.foot.w * ART, art.foot.h * ART);
     const cb = art.crownBox;
     const left = flip ? x - (cb.x + cb.w - art.ax) * ART : x + (cb.x - art.ax) * ART;
@@ -316,7 +359,7 @@ export class CainWorld {
       if (this.pathDistance(x, y) < 6 || fieldDistance(x, y) < 10 || this.yardDistance(x, y) < 0) continue;
       const shared = keys[Math.floor(r() * keys.length)];
       if (!MANIFEST.sprites[shared]) continue;
-      const key = sunsetSprite(this.scene, shared);
+      const key = nightSprite(this.scene, shared);
       const a = MANIFEST.sprites[key];
       sized(this.scene.add.image(x, y, key).setOrigin(a.anchorX / a.frameWidth, 1).setDepth(key.startsWith('rock') ? y : DEPTH_GROUND + 20 + y * 0.0001)).setFlipX(r() < 0.5);
     }
@@ -332,7 +375,7 @@ export class CainWorld {
   /** A sprite standing on the ground at its base point, sorted by it. */
   place(shared: string, x: number, y: number, depth = y): Phaser.GameObjects.Image {
     // the chapter's own art is drawn in its palette; Eden's sprites are copied into it
-    const key = shared.startsWith('cain-') ? shared : sunsetSprite(this.scene, shared);
+    const key = shared.startsWith('cain-') ? shared : nightSprite(this.scene, shared);
     const a = MANIFEST.sprites[key];
     const img = sized(this.scene.add.image(x, y, key).setOrigin(a ? a.anchorX / a.frameWidth : 0.5, a ? (a.anchorY + 1) / a.frameHeight : 1).setDepth(depth));
     addShadow(this.scene, x, y, key);

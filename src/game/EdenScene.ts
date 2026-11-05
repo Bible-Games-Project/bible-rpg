@@ -17,7 +17,7 @@ import { Actor, DEPTH_GROUND, DEPTH_OVERLAY, type Facing } from './world/Actor';
 import { Animals } from './world/Animals';
 import { Ambience } from './world/Ambience';
 import { Atmosphere } from './world/Atmosphere';
-import { addShadow } from './world/shadows';
+import { addShadow, setShadowLight } from './world/shadows';
 import { GodLight } from './world/GodLight';
 import { crackTexture } from './world/GroundCrack';
 import { ObjectiveMarkers } from './world/ObjectiveMarkers';
@@ -128,6 +128,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.stepTimer = 0;
     this.followStuck = 0;
     this.followGap = 46;
+    setShadowLight(false, 1);
     this.physics.world.setBounds(0, 0, WORLD_W, WORLD_H);
     this.terrain = new Terrain(this);
     this.objects = new WorldObjects(this, this.terrain);
