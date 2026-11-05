@@ -17,7 +17,7 @@ import { Atmosphere } from '../world/Atmosphere';
 import { GodLight } from '../world/GodLight';
 import { ObjectiveMarkers } from '../world/ObjectiveMarkers';
 import type { InteractSpec, ObjectiveOptions, ObjectiveTarget } from '../WorldApi';
-import { ART, buildCainArt, buildCainPortraits } from './art';
+import { ART, buildCainArt, buildCainPortraits, loadCainArt } from './art';
 import { CainWorld } from './CainWorld';
 import { CainRunner } from './missions';
 import { NIGHT_BACKGROUND, NIGHT_SHADOW, NIGHT_TINT } from './palette';
@@ -129,6 +129,10 @@ export class CainScene extends Phaser.Scene {
 
   constructor() {
     super('cain');
+  }
+
+  preload(): void {
+    loadCainArt(this);
   }
 
   create(data: CainStartData): void {

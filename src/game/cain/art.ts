@@ -1,27 +1,9 @@
 import Phaser from 'phaser';
 import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAsset, type SheetAsset } from '../manifest';
 import { Pixels } from './pixels';
-import {
-  drawAnger,
-  drawFat,
-  drawFire,
-  drawFurrow,
-  drawGourds,
-  drawGreens,
-  drawHut,
-  drawJawbone,
-  drawPot,
-  drawShadow,
-  drawStaff,
-  drawDog,
-  drawStones,
-  drawTorch,
-  drawTree,
-  drawWheat,
-  type Drawing,
-  type TreeKind,
-} from './drawings';
+import { drawAnger, drawFat, drawFire, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
+import GEN from '../../data/cain/generatedArt.json';
 
 /**
  * Builds the Cain and Abel chapter's textures at runtime: the new trees and
@@ -36,15 +18,168 @@ import { nightPixels } from './palette';
 /** World pixels per art pixel (the characters' art scale). */
 export const ART = 0.694444;
 
-/** Variants of each tree kind drawn (seeds). */
-export const TREE_SEEDS: Record<TreeKind, number[]> = {
-  oak: [1, 2, 9],
-  oakSmall: [3, 11],
-  umbrella: [4],
-  cypress: [5, 12],
-  fruit: [6],
-  bush: [7, 8, 13],
+type GenName = keyof typeof GEN;
+
+/**
+ * The world's trees and props come from the generated sheets
+ * (art/generated/cain-*, cut by tools/art/cain_ingest.mjs into
+ * public/assets/cain/): the tree ids the world places, and the sprite each
+ * one is.
+ */
+const TREE_ART: Record<string, GenName> = {
+  'oak-1': 'tree-oak-1',
+  'oak-2': 'tree-oak-2',
+  'oak-9': 'tree-olive',
+  'oakSmall-3': 'tree-young',
+  'oakSmall-11': 'tree-oak-small',
+  'cypress-5': 'tree-cypress',
+  'cypress-12': 'tree-cypress-small',
+  'umbrella-4': 'tree-umbrella',
+  'fruit-6': 'tree-fruit',
+  'bush-7': 'bush-0',
+  'bush-8': 'bush-1',
+  'bush-13': 'bush-2',
 };
+
+/** Loads the generated sprites (from the scene's preload). */
+export function loadCainArt(scene: Phaser.Scene): void {
+  for (const name of Object.keys(GEN)) {
+    const key = `cain-gen:${name}`;
+    if (!scene.textures.exists(key)) scene.load.image(key, assetUrl(`assets/cain/${name}.png`));
+  }
+}
+
+/** A generated sprite's pixels (a fresh copy), mirrored if asked. */
+function gen(scene: Phaser.Scene, name: GenName, mirror = false): Pixels {
+  const img = scene.textures.get(`cain-gen:${name}`).getSourceImage() as HTMLImageElement;
+  const c = document.createElement('canvas');
+  c.width = img.width;
+  c.height = img.height;
+  const ctx = c.getContext('2d')!;
+  if (mirror) ctx.setTransform(-1, 0, 0, 1, img.width, 0);
+  ctx.drawImage(img, 0, 0);
+  const p = new Pixels(img.width, img.height);
+  p.data.set(ctx.getImageData(0, 0, img.width, img.height).data);
+  return p;
+}
+
+/** A generated prop with its base point (sunk `sink` px into the ground). */
+function addGen(scene: Phaser.Scene, key: string, name: GenName, o: { mirror?: boolean; icon?: boolean; sink?: number; centre?: boolean } = {}): void {
+  const g = GEN[name];
+  const p = gen(scene, name, o.mirror);
+  const ax = o.mirror ? g.w - 1 - g.ax : g.ax;
+  addSheet(scene, key, [p], o.centre ? g.w / 2 : ax, o.centre ? g.h / 2 : g.ay - (o.sink ?? 1), ART, o.icon);
+}
+
+const leafy = (d: Uint8ClampedArray, i: number) => d[i + 3] > 0 && d[i + 1] > d[i] + 2 && d[i + 1] >= d[i + 2];
+const fruity = (d: Uint8ClampedArray, i: number) => d[i + 3] > 0 && d[i] > d[i + 1] + 50 && d[i] > d[i + 2] + 40;
+
+/**
+ * A generated tree split at the lowest row of its crown (the crown keeps two
+ * trunk rows so no seam shows), so that the crown can fade when someone is
+ * behind it. A fruit tree also gets its crown without the fruit (picked).
+ */
+function genTree(scene: Phaser.Scene, id: string, name: GenName): void {
+  const g = GEN[name];
+  const src = gen(scene, name);
+  const { w, h, data } = src;
+  const bush = id.startsWith('bush');
+  let cut = h - 1;
+  if (!bush) {
+    for (let y = h - 1; y >= 0; y--) {
+      let n = 0;
+      for (let x = 0; x < w; x++) if (leafy(data, (y * w + x) * 4)) n++;
+      if (n >= Math.max(4, w * 0.05)) {
+        cut = y;
+        break;
+      }
+    }
+  }
+  const trunk = new Pixels(w, h);
+  const crown = new Pixels(w, h);
+  let x0 = w, y0 = h, x1 = 0, y1 = 0;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4;
+      if (!data[i + 3]) continue;
+      if (y > cut) trunk.data.set(data.subarray(i, i + 4), i);
+      if (y <= cut + 2) {
+        crown.data.set(data.subarray(i, i + 4), i);
+        x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+      }
+    }
+  }
+  let bare: Pixels | undefined;
+  if (id.startsWith('fruit')) {
+    bare = new Pixels(w, h);
+    bare.data.set(crown.data);
+    // the fruit painted out with the leaves around it
+    const d = bare.data;
+    for (let pass = 0; pass < 12; pass++) {
+      const fill: [number, number][] = [];
+      for (let i = 0; i < d.length; i += 4) {
+        if (!fruity(d, i)) continue;
+        for (const j of [i - 4, i + 4, i - w * 4, i + w * 4, i - w * 4 - 4, i + w * 4 + 4]) {
+          if (j >= 0 && j < d.length && d[j + 3] && !fruity(d, j)) {
+            fill.push([i, j]);
+            break;
+          }
+        }
+      }
+      for (const [i, j] of fill) d.copyWithin(i, j, j + 4);
+    }
+    for (let i = 0; i < d.length; i += 4) if (fruity(d, i)) d.set([60, 110, 40], i);
+  }
+  // the trunk's width a little above the roots: the collider
+  let span = 0;
+  const fy = Math.max(0, g.ay - 12);
+  for (let x = 0; x < w; x++) if (data[(fy * w + x) * 4 + 3]) span++;
+  const foot = bush ? { w: Math.round(w * 0.4), h: 10 } : { w: Math.max(10, Math.min(30, Math.round(span * 0.8))), h: 9 };
+  const base = `cain-tree-${id}`;
+  const ay = g.ay - 2;
+  addSheet(scene, `${base}-trunk`, [trunk], g.ax, ay);
+  addSheet(scene, `${base}-crown`, [crown], g.ax, ay);
+  if (bare) addSheet(scene, `${base}-bare`, [bare], g.ax, ay);
+  const crownBox = { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+  const sw = Math.round(crownBox.w * 0.8);
+  const sh = Math.max(14, Math.round(sw * 0.32));
+  addSheet(scene, `${base}-shadow`, [drawShadow(sw, sh)], sw / 2, sh / 2);
+  TREES[id] = { trunk: `${base}-trunk`, crown: `${base}-crown`, bare: bare ? `${base}-bare` : undefined, shadow: `${base}-shadow`, w, h, ax: g.ax, ay, crownBox, foot };
+}
+
+/**
+ * Abel's sheepdog from its two generated poses (standing, trotting), on
+ * frames of one size with the feet on the same row. Frames: 0–1 idle (the
+ * second breathing: the body a pixel higher), 2–5 a trot (trotting and
+ * standing poses in turn, bobbing).
+ */
+function genDog(scene: Phaser.Scene): void {
+  const poses = (['dog-0', 'dog-1'] as const).map((n) => ({ p: gen(scene, n), g: GEN[n] }));
+  const W = Math.max(...poses.map((q) => q.g.w)) + 2;
+  const AY = Math.max(...poses.map((q) => q.g.ay)) + 2;
+  const H = AY + 2;
+  const AX = Math.round(W / 2);
+  const frame = (k: number, lift: number, liftAbove = 0) => {
+    const { p, g } = poses[k];
+    const f = new Pixels(W, H);
+    const ox = AX - g.ax;
+    const oy = AY - g.ay;
+    for (let y = 0; y < p.h; y++) {
+      const dy = y < liftAbove * p.h ? lift : liftAbove ? 0 : lift;
+      for (let x = 0; x < p.w; x++) {
+        const i = (y * p.w + x) * 4;
+        if (!p.data[i + 3]) continue;
+        const tx = x + ox;
+        const ty = y + oy - dy;
+        if (tx < 0 || ty < 0 || tx >= W || ty >= H) continue;
+        f.data.set(p.data.subarray(i, i + 4), (ty * W + tx) * 4);
+      }
+    }
+    return f;
+  };
+  const frames = [frame(0, 0), frame(0, 1, 0.55), frame(1, 0), frame(0, 1), frame(1, 1), frame(0, 0)];
+  addSheet(scene, 'cain-dog', frames, AX, AY - 1, ART, false, true);
+}
 
 export interface TreeArt {
   trunk: string;
@@ -100,56 +235,55 @@ function loop(scene: Phaser.Scene, key: string, fps: number): void {
 export function buildCainArt(scene: Phaser.Scene): void {
   if (built) return;
   built = true;
-  // trees
-  for (const [kind, seeds] of Object.entries(TREE_SEEDS) as [TreeKind, number[]][]) {
-    for (const seed of seeds) {
-      const t = drawTree(kind, seed);
-      const id = `${kind}-${seed}`;
-      const base = `cain-tree-${id}`;
-      addSheet(scene, `${base}-trunk`, [t.trunk], t.ax, t.ay);
-      addSheet(scene, `${base}-crown`, [t.crown], t.ax, t.ay);
-      if (t.bare) addSheet(scene, `${base}-bare`, [t.bare], t.ax, t.ay);
-      const sw = Math.round(t.crownBox.w * 0.8);
-      const sh = Math.max(14, Math.round(sw * 0.32));
-      addSheet(scene, `${base}-shadow`, [drawShadow(sw, sh)], sw / 2, sh / 2);
-      TREES[id] = { trunk: `${base}-trunk`, crown: `${base}-crown`, bare: t.bare ? `${base}-bare` : undefined, shadow: `${base}-shadow`, w: t.trunk.w, h: t.trunk.h, ax: t.ax, ay: t.ay, crownBox: t.crownBox, foot: t.foot };
-    }
-  }
-  // props
-  addDrawing(scene, 'cain-hut', drawHut());
-  addDrawing(scene, 'cain-altar', drawStones(80, 54, 3, 1, true));
-  addDrawing(scene, 'cain-altar-b', drawStones(80, 54, 3, 4, true));
-  for (let i = 0; i < 3; i++) addDrawing(scene, `cain-wall-${i}`, drawStones(46, 30, 2, 10 + i));
+  // trees and props: the generated art
+  for (const [id, name] of Object.entries(TREE_ART)) genTree(scene, id, name);
+  addGen(scene, 'cain-hut', 'hut', { sink: 3 });
+  addGen(scene, 'cain-altar', 'altar', { sink: 2 });
+  addGen(scene, 'cain-altar-b', 'altar-b', { sink: 2 });
+  for (let i = 0; i < 3; i++) addGen(scene, `cain-wall-${i}`, `wall-${i}` as GenName, { sink: 2 });
+  addGen(scene, 'cain-log', 'log', { sink: 2 });
+  addHearth(scene);
   addDrawing(scene, 'cain-fire', drawFire(4), false, true);
   addDrawing(scene, 'cain-fire-big', drawFire(2, true), false, true);
   addDrawing(scene, 'cain-flame', drawFire(4, false, false), false, true);
-  addDrawing(scene, 'cain-torch', drawTorch());
+  addGen(scene, 'cain-torch', 'torch');
   torchLight(scene);
   loop(scene, 'cain-fire', 8);
   loop(scene, 'cain-flame', 9);
   loop(scene, 'cain-fire-big', 7);
-  addDrawing(scene, 'cain-pot', drawPot());
-  for (let i = 0; i < 3; i++) addSheet(scene, `cain-furrow-${i}`, [drawFurrow(i + 1)], 64, 7);
+  for (let i = 0; i < 3; i++) addGen(scene, `cain-furrow-${i}`, 'furrow', { mirror: i === 1, centre: true });
   for (let i = 0; i < 3; i++) {
-    addDrawing(scene, `cain-wheat-${i}`, drawWheat(i + 1));
-    addDrawing(scene, `cain-wheat-${i}-reaped`, drawWheat(i + 1, true));
-    addDrawing(scene, `cain-greens-${i}`, drawGreens(i + 1));
+    addGen(scene, `cain-wheat-${i}`, i === 1 ? 'wheat-1' : 'wheat-0', { mirror: i === 2 });
+    addGen(scene, `cain-wheat-${i}-reaped`, 'stubble', { mirror: i === 1 });
+    addGen(scene, `cain-greens-${i}`, `greens-${i}` as GenName);
   }
-  addDrawing(scene, 'cain-gourds', drawGourds(1));
-  addDrawing(scene, 'cain-gourds-picked', drawGourds(1, true));
-  addDrawing(scene, 'cain-jawbone', drawJawbone(), true);
+  addGen(scene, 'cain-gourds', 'gourds', { sink: 2 });
+  addGen(scene, 'cain-gourds-picked', 'gourds-picked', { sink: 2 });
+  addGen(scene, 'cain-jawbone', 'jawbone', { icon: true, sink: 2 });
   addDrawing(scene, 'cain-fat', drawFat(), true);
-  addDrawing(scene, 'cain-staff', drawStaff());
+  addGen(scene, 'cain-staff', 'staff');
   // Abel's sheepdog: its own colours, like the sheep (dimmed at night in CainScene)
-  addDrawing(scene, 'cain-dog', drawDog(), false, true);
+  genDog(scene);
   scene.anims.create({ key: 'cain-dog:idle', frames: scene.anims.generateFrameNumbers('cain-dog', { frames: [0, 1] }), frameRate: 2.2, repeat: -1 });
-  scene.anims.create({ key: 'cain-dog:walk', frames: scene.anims.generateFrameNumbers('cain-dog', { frames: [2, 3, 4, 5] }), frameRate: 11, repeat: -1 });
+  scene.anims.create({ key: 'cain-dog:walk', frames: scene.anims.generateFrameNumbers('cain-dog', { frames: [2, 3, 4, 5] }), frameRate: 9, repeat: -1 });
   addSheet(scene, 'cain-shadow', [drawShadow(60, 20)], 30, 10);
   // the anger over Cain's head is drawn at world size, like the other emotes
   addSheet(scene, 'emote-anger', [drawAnger()], 9, 19, 1, false, true);
   buildBrothers(scene);
   buildLamb(scene);
   buildSittingAdam(scene);
+}
+
+/** The hearth: its stones and pot in the night colours, the embers glowing as they are. */
+function addHearth(scene: Phaser.Scene): void {
+  const g = GEN.hearth;
+  const p = gen(scene, 'hearth');
+  const glow = new Map<number, number[]>();
+  const d = p.data;
+  for (let i = 0; i < d.length; i += 4) if (d[i + 3] && d[i] > 170 && d[i] > d[i + 1] + 50 && d[i + 2] < 120) glow.set(i, [d[i], d[i + 1], d[i + 2]]);
+  nightPixels(d);
+  for (const [i, c] of glow) d.set(c, i);
+  addSheet(scene, 'cain-hearth', [p], g.ax, g.ay - 2, ART, false, true);
 }
 
 /** The warm pool of light around a torch (added over the world). */

@@ -7,6 +7,7 @@ import type { Pt } from '../../data/eden/map';
 import type { InteractSpec } from '../WorldApi';
 import { ui } from '../bridge';
 import type { Brother, CainScene } from './CainScene';
+import GEN from '../../data/cain/generatedArt.json';
 
 /*
  * The five missions of Cain and Abel (Genesis 4).
@@ -23,7 +24,8 @@ export const CHAPTER = 'cain-abel';
 const step = (m: string, s: string, p?: Record<string, string | number>) => t(`cain.missions.${m}.steps.${s}`, p);
 const C = (key: string, p?: Record<string, string | number>) => t(`cain.${key}`, p);
 
-const STAFF: [string, 'staff', [number, number]] = ['cain-staff', 'staff', [0.375, 0.98]];
+// held at the foot of the stick (the crook curls to one side)
+const STAFF: [string, 'staff', [number, number]] = ['cain-staff', 'staff', [(GEN.staff.ax + 0.5) / GEN.staff.w, (GEN.staff.ay - 0.5) / GEN.staff.h]];
 const LAMBS_TO_OFFER = 3;
 
 interface CainMission {
