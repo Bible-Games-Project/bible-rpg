@@ -143,7 +143,8 @@ export class App {
     if (key === 'cain') await buildCainPortraits();
     this.sceneKey = key;
     this.setScreen(null);
-    await this.preGame();
+    // the headphones note and the controls open the first chapter only
+    if (key === 'eden') await this.preGame();
     this.playing = true;
     this.touch.setActive(true);
     this.hud.show(true);

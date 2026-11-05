@@ -62,7 +62,7 @@ export class Actor {
   private heldSprite: Phaser.GameObjects.Image | null = null;
   private anchorY = 1;
   private lastAnim = '';
-  private grip: 'hand' | 'arms' = 'hand';
+  private grip: 'hand' | 'arms' | 'carry' = 'hand';
   /** offset the sprite vertically (e.g. a dove hopping or flying) */
   lift = 0;
   private shadowOffset: [number, number];
@@ -220,7 +220,7 @@ export class Actor {
    * in front with both arms (`arms`, e.g. the basket). `origin` is the
    * point of the image held (default: its bottom centre; a staff is held
    * halfway up). */
-  hold(key: string | null, grip: 'hand' | 'arms' = 'hand', origin: [number, number] = [0.5, 1]): void {
+  hold(key: string | null, grip: 'hand' | 'arms' | 'carry' = 'hand', origin: [number, number] = [0.5, 1]): void {
     this.heldSprite?.destroy();
     this.heldSprite = null;
     this.grip = grip;
@@ -315,12 +315,38 @@ export class Actor {
     if (!this.heldSprite) return;
     const x = this.feet.x;
     const y = this.feet.y;
+    if (this.grip === 'carry') return this.placeCarried(x, y);
     const arms = this.grip === 'arms';
     let dx = (arms ? { left: -9, right: 9, down: 0, up: 0 } : { left: -7, right: 7, down: -12, up: 12 })[this.facing];
     let dy = arms ? -22 : -36;
     const fist = arms ? null : this.fist();
     if (fist) [dx, dy] = [fist[0], fist[1] + HELD_BELOW_FIST];
     this.heldSprite.setPosition(x + dx, y + dy).setDepth(this.facing === 'up' ? y - 1 : y + 1);
+  }
+
+  /**
+   * `carry` (Cain and Abel): carried in front with both hands, moving with
+   * them. From the side it hangs from the fists of the current frame (pulled
+   * a little toward the chest, both arms hold it); from the front it rides
+   * up and down with each step.
+   */
+  private placeCarried(x: number, y: number): void {
+    const s = this.heldSprite!;
+    const fist = this.fist();
+    let dx: number;
+    let dy: number;
+    if (fist) {
+      dx = fist[0] * 0.75;
+      dy = fist[1] + 7;
+    } else {
+      const a = this.sprite.anims;
+      const n = a.currentAnim?.frames.length ?? 1;
+      const i = a.currentFrame?.index ?? 0;
+      const step = this.moving ? Math.sin((i / n) * Math.PI * 4) : 0;
+      dx = this.moving ? Math.sin((i / n) * Math.PI * 2) * 1.2 : 0;
+      dy = -20 + step * 1.6;
+    }
+    s.setPosition(x + dx, y + dy).setDepth(this.facing === 'up' ? y - 1 : y + 1);
   }
 
   /** The bottom of the near fist in the current frame (world px from the

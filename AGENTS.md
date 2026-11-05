@@ -75,7 +75,7 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
 
 <!-- BGP-ADMIN:END -->
 
-## Bible RPG — project notes
+## Eden to Heaven (repo: bible-rpg) — project notes
 
 ### Stack and commands
 

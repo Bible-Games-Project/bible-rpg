@@ -140,7 +140,7 @@ const MISSIONS: CainMission[] = [
       });
       w.clearInteractions();
       w.toast(C('toasts.basket'));
-      w.cain.hold('basket-full', 'arms');
+      w.cain.hold('basket-full', 'carry');
       w.objective(step('m01', 'altar'), POINTS.cainAltar);
       await useOnce(w, {
         id: 'altar',
@@ -408,13 +408,16 @@ export class CainRunner {
     const hud = ui().hud;
     w.clearInteractions();
     w.objective('', null);
-    stage(w, m.number, fromSave);
+    // the turn passes to the other brother: the world is set again behind black
+    const relocate = !fromSave && m.number > 1 && m.active !== MISSIONS[m.number - 2].active;
+    if (relocate) await w.fade(1, 600);
+    stage(w, m.number, fromSave || relocate);
     hud.setMission({ number: m.number, title: t(`cain.missions.${m.key}.title`), objective: t(`cain.missions.${m.key}.desc`), kind: m.kind, reference: m.reference });
     if (chapterStart) {
       await ui().chapterIntro();
       await m.intro?.(w);
     }
-    if (fromSave) await w.fade(0, 900);
+    if (fromSave || relocate) await w.fade(0, 900);
     audio.play('missionStart');
     await w.wait(900);
 
