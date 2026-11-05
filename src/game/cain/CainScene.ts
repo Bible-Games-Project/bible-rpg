@@ -831,7 +831,7 @@ export class CainScene extends Phaser.Scene {
     const d = Math.max(1, Math.hypot(dx, dy));
     a.setPosition(a.x + (dx / d) * 14, a.y + (dy / d) * 14);
     a.sprite.setTintFill(0xffffff);
-    this.time.delayedCall(110, () => a.sprite.clearTint());
+    this.time.delayedCall(110, () => a.sprite.setTint(NIGHT_TINT));
     if (s.hits >= HITS) {
       s.mode = 'down';
       a.stop();
