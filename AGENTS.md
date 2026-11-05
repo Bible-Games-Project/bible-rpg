@@ -597,9 +597,16 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   (`eden.json`, `cain.json`: `<key>.chapter.*`, `<key>.complete.*`).
   Cain and Abel (`src/game/cain/`, `src/data/cain/`) has its own scene,
   world and `CainRunner` (5 missions); its art is procedural or rebuilt at
-  runtime from Adam's frames (`art.ts`), and the monochrome palette the
-  maintainer chose (#012340 #024059 #027368 #D6F272 #A97D5E) is a camera
-  PostFX (`palette.ts`). It opens by finishing Eden.
+  runtime from Adam's frames (`art.ts`). Its colours are a sunset taken
+  from a dusk reference the maintainer sent (`palette.ts`): only world
+  textures are recoloured when built (`sunsetTiles`, `sunsetSprite`,
+  `addSheet` unless `natural`); characters, animals, portraits and fire
+  keep their own colours. The maintainer rejected a full-screen filter.
+  Never touch Eden's look when working on this chapter. It opens by
+  finishing Eden.
+- The console can't reach OpenAI (or any image API): only Claude and npm.
+  Eden can't run in the console's headless Chromium (memory cap); Cain and
+  Abel can.
 - Dev tools (`src/core/dev.ts`): the main menu shows Voices and a "Game Dev
   Debug" switch (every playable chapter opens on the story map) on
   `*.pages.dev`, in `bun run dev` and after `#dev`; never in the published

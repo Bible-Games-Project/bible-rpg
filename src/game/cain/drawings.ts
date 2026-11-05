@@ -3,8 +3,8 @@ import { Pixels, clamp01, clump, ellipse, hash2, limb, mixRGB, ramp, seeded, ton
 /**
  * The Cain and Abel chapter's art, painted in code at the characters' art
  * resolution (one pixel here is one pixel of Adam's sprite). Colours are
- * natural (greens, browns, straw): the chapter's palette filter turns
- * everything on screen into the maintainer's few colours, by brightness.
+ * natural (greens, browns, straw): the chapter's sunset palette
+ * (palette.ts) recolours the world's textures when they are built.
  * The light comes from the upper left, like the rest of the game's art.
  */
 

@@ -12,7 +12,7 @@ import { MANIFEST, shadowKey } from '../manifest';
  *
  * Every colour is put on one of five ramps by its kind and then on the ramp
  * by its brightness, so the art keeps its shading:
- *   leaves and grass  plum, mauve, rose
+ *   leaves and grass  plum, mauve, rose (the ground's grass duskier)
  *   earth and wood    maroon, terracotta, peach, cream
  *   stone             lilac greys
  *   bright colours    the complement: red, orange, gold (fruit, flowers)
@@ -24,6 +24,8 @@ const hex = (h: string): V3 => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 
 const ramp = (...c: string[]): V3[] => c.map(hex);
 
 const LEAVES = ramp('#1a0a22', '#2c1030', '#43183a', '#5e2443', '#7d334f', '#9f4a5e', '#c26a72', '#e3958a');
+// the ground's grass: dusky mauve, darker and quieter than the trees
+const GRASS = ramp('#24101f', '#34172a', '#462033', '#5a2b3b', '#6e3843', '#83474c', '#985a56', '#ad6f60');
 const EARTH = ramp('#2a1020', '#4a1f2e', '#6e3438', '#94503f', '#b8714c', '#d69563', '#ecba84', '#f9dcaa');
 const STONE = ramp('#1f1226', '#352238', '#4e344b', '#6a4a5f', '#876378', '#a68192', '#c5a3ae', '#e2c7c8');
 const ACCENT = ramp('#3d0f1e', '#7a1f28', '#b8392f', '#e0663a', '#f3954a', '#fbc46a', '#fde6a4');
@@ -59,8 +61,9 @@ const band = (h: number, c: number, w: number) => 1 - smooth(w * 0.6, w, hueGap(
 
 const out: V3 = [0, 0, 0];
 
-/** One colour (0–255 channels) in the sunset palette. */
-export function sunset(r: number, g: number, b: number): V3 {
+/** One colour (0–255 channels) in the sunset palette. `ground`: a ground
+ * tile (grass on the dusky GRASS ramp, earth darker, no bright accents). */
+export function sunset(r: number, g: number, b: number, ground = false): V3 {
   const mx = Math.max(r, g, b);
   const mn = Math.min(r, g, b);
   const sat = mx ? (mx - mn) / mx : 0;
@@ -79,7 +82,7 @@ export function sunset(r: number, g: number, b: number): V3 {
   const warm = band(h, 32, 32);
   const red = Math.max(band(h, 0, 22), band(h, 330, 30));
   // saturated warm colours (fruit, flowers, fire) take the complement
-  const bright = smooth(0.5, 0.75, sat) * smooth(0.25, 0.45, lum);
+  const bright = ground ? 0 : smooth(0.5, 0.75, sat) * smooth(0.25, 0.45, lum);
   let wLeaves = leaves;
   let wEarth = warm * (1 - bright);
   let wAccent = red + warm * bright;
@@ -91,8 +94,8 @@ export function sunset(r: number, g: number, b: number): V3 {
   wBlue = (wBlue / coloured) * (1 - grey);
   const t = Math.pow(lum, 0.92);
   out[0] = out[1] = out[2] = 0;
-  if (wLeaves) onRamp(LEAVES, t, out, wLeaves);
-  if (wEarth) onRamp(EARTH, t, out, wEarth);
+  if (wLeaves) onRamp(ground ? GRASS : LEAVES, t, out, wLeaves);
+  if (wEarth) onRamp(EARTH, ground ? t * 0.78 : t, out, wEarth);
   if (wAccent) onRamp(ACCENT, t, out, wAccent);
   if (wBlue) onRamp(BLUE, t, out, wBlue);
   if (grey) onRamp(STONE, t, out, grey);
@@ -100,20 +103,20 @@ export function sunset(r: number, g: number, b: number): V3 {
 }
 
 /** Recolour RGBA pixels in place. */
-export function sunsetPixels(d: Uint8ClampedArray | Uint8Array | number[]): void {
+export function sunsetPixels(d: Uint8ClampedArray | Uint8Array | number[], ground = false): void {
   for (let i = 0; i < d.length; i += 4) {
     if (!d[i + 3]) continue;
-    const c = sunset(d[i], d[i + 1], d[i + 2]);
+    const c = sunset(d[i], d[i + 1], d[i + 2], ground);
     d[i] = c[0];
     d[i + 1] = c[1];
     d[i + 2] = c[2];
   }
 }
 
-function sunsetCanvas(c: HTMLCanvasElement): void {
+function sunsetCanvas(c: HTMLCanvasElement, ground = false): void {
   const ctx = c.getContext('2d')!;
   const img = ctx.getImageData(0, 0, c.width, c.height);
-  sunsetPixels(img.data);
+  sunsetPixels(img.data, ground);
   ctx.putImageData(img, 0, 0);
 }
 
@@ -157,7 +160,7 @@ export function sunsetTiles(scene: Phaser.Scene, extruded: string): string {
   const to = 'cain-tiles-extruded';
   if (scene.textures.exists(to)) return to;
   const c = copyCanvas(scene.textures.get(extruded).getSourceImage() as HTMLCanvasElement);
-  sunsetCanvas(c);
+  sunsetCanvas(c, true);
   scene.textures.addCanvas(to, c);
   return to;
 }
