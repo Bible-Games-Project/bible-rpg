@@ -13,6 +13,8 @@
       "title": "The Firstlings of the Flock",
       "desc": "Abel was a keeper of sheep. He brings the firstlings of his flock and their fat.",
       "steps": {
+        "flock": "Go to your flock",
+        "fold": "Bring the flock into the fold ({n}/{total})",
         "lambs": "Offer lambs of your flock ({n}/{total})",
         "fat": "Take the fat ({n}/{total})",
         "altar": "Bring the fat to the altar"
@@ -79,6 +81,12 @@
       { "s": "cain", "t": "I will bring the fruit of my field." },
       { "s": "abel", "t": "And I, the firstlings of my flock." }
     ],
+    "herd": [
+      { "s": "abel", "t": "Come, boy! Bring them in to the fold." }
+    ],
+    "penned": [
+      { "s": "abel", "t": "All in. Now, the firstlings." }
+    ],
     "rebuke": [
       { "s": "god", "t": "Why are you angry? Why has your face fallen?", "ref": "Genesis 4:6" },
       { "s": "god", "t": "If you do well, will you not be accepted? If not, sin lies at the door. It wants you, but you must rule over it.", "ref": "Genesis 4:7" }
@@ -131,6 +139,9 @@
     "produce": "Fruit of the ground",
     "fat": "Fat of the lambs",
     "jawbone": "Jawbone"
+  },
+  "hints": {
+    "herd": "Your dog runs ahead of you. Walk round behind the sheep to drive them through the gate."
   },
   "prompts": {
     "offer": "Lay the offering on the altar",

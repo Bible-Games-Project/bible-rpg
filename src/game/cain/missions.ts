@@ -61,6 +61,7 @@ function stage(w: CainScene, n: number, place: boolean): void {
   w.world.produce.forEach((_, i) => w.setPicked(i, n >= 2));
   w.setAltars({ cain: n >= 2, abel: n >= 3, fire: n >= 4 ? 'embers' : 'none' });
   LAMBS.forEach((_, i) => w.setLamb(i, n < 3 || i >= LAMBS_TO_OFFER));
+  w.penFlock(n >= 3);
   w.showJawbone(n <= 4);
   w.flag('offered', n >= 4);
   w.npcs(true);
@@ -171,6 +172,21 @@ const MISSIONS: CainMission[] = [
       w.cameraSnap();
       await w.scripture('firstlings');
       w.cutscene(false);
+      // the flock is out in the meadow: Abel and his dog bring it into the
+      // fold (the maintainer), and there he offers the firstlings
+      w.objective(step('m02', 'flock'), () => [w.flockCentre()]);
+      await w.until(() => Math.hypot(w.abel.x - w.flockCentre()[0], w.abel.y - w.flockCentre()[1]) < 300);
+      await w.say('herd');
+      w.toast(C('hints.herd'));
+      const count = () => {
+        const c = w.pennedCount();
+        w.objective(step('m02', 'fold', c), POINTS.foldGate);
+      };
+      count();
+      await w.herdIntoFold(count);
+      w.objective('');
+      await w.wait(500);
+      await w.say('penned');
       let offered = 0;
       let fat = 0;
       const lambs = () => w.lambs.slice(0, LAMBS.length).filter((l) => l.actor.visible && !l.frozen).map((l) => l.actor);

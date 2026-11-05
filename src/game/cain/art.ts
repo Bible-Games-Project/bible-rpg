@@ -13,6 +13,7 @@ import {
   drawPot,
   drawShadow,
   drawStaff,
+  drawDog,
   drawStones,
   drawTorch,
   drawTree,
@@ -139,6 +140,10 @@ export function buildCainArt(scene: Phaser.Scene): void {
   addDrawing(scene, 'cain-jawbone', drawJawbone(), true);
   addDrawing(scene, 'cain-fat', drawFat(), true);
   addDrawing(scene, 'cain-staff', drawStaff());
+  // Abel's sheepdog: its own colours, like the sheep (dimmed at night in CainScene)
+  addDrawing(scene, 'cain-dog', drawDog(), false, true);
+  scene.anims.create({ key: 'cain-dog:idle', frames: scene.anims.generateFrameNumbers('cain-dog', { frames: [0, 1] }), frameRate: 2.2, repeat: -1 });
+  scene.anims.create({ key: 'cain-dog:walk', frames: scene.anims.generateFrameNumbers('cain-dog', { frames: [2, 3, 4, 5] }), frameRate: 11, repeat: -1 });
   addSheet(scene, 'cain-shadow', [drawShadow(60, 20)], 30, 10);
   // the anger over Cain's head is drawn at world size, like the other emotes
   addSheet(scene, 'emote-anger', [drawAnger()], 9, 19, 1, false, true);

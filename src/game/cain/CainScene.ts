@@ -6,7 +6,7 @@ import { settings } from '../../core/settings';
 import { voices } from '../../core/voices';
 import type { FlagValue } from '../../core/save';
 import { CHARACTERS } from '../../data/characters';
-import { BOUNDS, ESCAPE, LAMBS, POINTS, SAFE, SHEEP, WORLD_H, WORLD_W, ZONES } from '../../data/cain/map';
+import { BOUNDS, ESCAPE, FOLD, LAMBS, PENNED, POINTS, SAFE, SHEEP, WORLD_H, WORLD_W, ZONES } from '../../data/cain/map';
 import type { Pt } from '../../data/eden/map';
 import type { Line } from '../../ui/DialogueBox';
 import { ui } from '../bridge';
@@ -46,6 +46,19 @@ const STAGGER = 0.3;
 const DASH = 0.65;
 const DASH_SPEED = 215;
 
+/**
+ * Herding (mission 2, the maintainer): the dog runs ahead of Abel the way
+ * he walks; the sheep shy away from it (and a little from Abel), keep
+ * together and spread apart a little. How far ahead the dog runs, how far
+ * the sheep feel it and Abel, and their speeds.
+ */
+const DOG_AHEAD = 95;
+const DOG_SPEED = 230;
+const DOG_FEAR = 175;
+const ABEL_FEAR = 95;
+const HERD_SPEED = 92;
+const GRAZE_SPEED = 16;
+
 const ITEM_ICONS: Record<string, string> = {
   produce: 'basket-full',
   fat: 'cain-fat',
@@ -63,6 +76,10 @@ interface Grazer {
   target: Pt | null;
   wait: number;
   frozen: boolean;
+  /** herding: its current speed, and whether it is in the fold */
+  vx: number;
+  vy: number;
+  penned: boolean;
 }
 
 /**
@@ -80,6 +97,9 @@ export class CainScene extends Phaser.Scene {
   private adamSitting!: Phaser.GameObjects.Sprite;
   sheep: Grazer[] = [];
   lambs: Grazer[] = [];
+  dog!: Actor;
+  /** the flock being brought into the fold (mission 2) */
+  private herd: { done: () => void; dir: Pt; last: Pt } | null = null;
   private active: Brother = 'cain';
   private following = false;
   private control = true;
@@ -117,6 +137,7 @@ export class CainScene extends Phaser.Scene {
     // stopped a new game on a black screen)
     this.sheep = [];
     this.lambs = [];
+    this.herd = null;
     this.active = 'cain';
     this.following = false;
     this.control = true;
@@ -168,6 +189,7 @@ export class CainScene extends Phaser.Scene {
       ];
     }
     for (const g of [...this.sheep, ...this.lambs]) this.physics.add.collider(g.actor.feet, this.world.colliders);
+    this.physics.add.collider(this.dog.feet, this.world.colliders);
     this.atmosphere = new Atmosphere(this, settings.get().reduceMotion, { w: WORLD_W, h: WORLD_H });
     // night: no sunbeams or sun glow, the cloud shadows barely there
     this.atmosphere.setTime('evening');
@@ -652,7 +674,7 @@ export class CainScene extends Phaser.Scene {
    * warms them again. God's light is His own.
    */
   private nightLight(): void {
-    const actors = [this.cain, this.abel, this.eve, ...this.sheep.map((g) => g.actor), ...this.lambs.map((g) => g.actor)];
+    const actors = [this.cain, this.abel, this.eve, this.dog, ...this.sheep.map((g) => g.actor), ...this.lambs.map((g) => g.actor)];
     for (const a of actors) a.sprite.setTint(NIGHT_TINT);
     this.adamSitting.setTint(NIGHT_TINT);
   }
@@ -661,11 +683,67 @@ export class CainScene extends Phaser.Scene {
   private flock(): void {
     const grazer = (id: string, sheet: string, at: Pt, range: number, speed: number) => {
       const actor = new Actor(this, { id, x: at[0], y: at[1], sheet, body: { w: 22, h: 10 }, facing: Math.random() < 0.5 ? 'left' : 'right' });
-      return { actor, home: at, range, speed, target: null, wait: Math.random() * 3, frozen: false };
+      return { actor, home: at, range, speed, target: null, wait: Math.random() * 3, frozen: false, vx: 0, vy: 0, penned: false };
     };
-    SHEEP.forEach((p, i) => this.sheep.push(grazer(`sheep${i}`, 'animal-sheep', p, 150, 26)));
-    LAMBS.forEach((p, i) => this.lambs.push(grazer(`lamb${i}`, 'cain-lamb', p, 90, 34)));
+    SHEEP.forEach((p, i) => this.sheep.push(grazer(`sheep${i}`, 'animal-sheep', p, 45, GRAZE_SPEED + 6)));
+    LAMBS.forEach((p, i) => this.lambs.push(grazer(`lamb${i}`, 'cain-lamb', p, 35, GRAZE_SPEED + 12)));
+    const [dx, dy] = POINTS.dogRest;
+    this.dog = new Actor(this, { id: 'dog', x: dx, y: dy, sheet: 'cain-dog', body: { w: 20, h: 9 }, facing: 'left' });
   }
+
+  /**
+   * The flock in its meadow, scattered but together (before mission 2 is
+   * done), or in the fold (after). The dog waits by the fold's gate.
+   */
+  penFlock(inside: boolean): void {
+    [...this.sheep, ...this.lambs].forEach((g, i) => {
+      const start = i < SHEEP.length ? SHEEP[i] : LAMBS[i - SHEEP.length];
+      g.penned = inside;
+      g.home = inside ? PENNED[i % PENNED.length] : start;
+      g.range = inside ? 40 : i < SHEEP.length ? 45 : 35;
+      g.target = null;
+      g.vx = g.vy = 0;
+      g.actor.stop();
+      if (!g.frozen) g.actor.setPosition(g.home[0], g.home[1]);
+    });
+    this.herd = null;
+    this.dog.stop();
+    this.dog.setPosition(POINTS.dogRest[0], POINTS.dogRest[1]);
+    this.dog.face('left');
+  }
+
+  /** Where the flock is (the middle of those still out of the fold). */
+  flockCentre(): Pt {
+    const out = [...this.sheep, ...this.lambs].filter((g) => g.actor.visible && !g.penned);
+    if (!out.length) return [FOLD.x, FOLD.y];
+    return [out.reduce((a, g) => a + g.actor.x, 0) / out.length, out.reduce((a, g) => a + g.actor.y, 0) / out.length];
+  }
+
+  /** How many of the flock are in the fold, out of how many. */
+  pennedCount(): { n: number; total: number } {
+    const all = [...this.sheep, ...this.lambs].filter((g) => g.actor.visible);
+    return { n: all.filter((g) => g.penned).length, total: all.length };
+  }
+
+  /**
+   * Abel and his dog bring the flock into the fold (the maintainer). Ends
+   * when every sheep and lamb is in; `progress` is told each time one goes in.
+   */
+  herdIntoFold(progress: () => void): Promise<void> {
+    return new Promise((resolve) => {
+      const a = this.abel;
+      this.herd = {
+        done: () => {
+          this.herd = null;
+          resolve();
+        },
+        dir: [0, -1],
+        last: [a.x, a.y],
+      };
+      this.herdProgress = progress;
+    });
+  }
+  private herdProgress: () => void = () => {};
 
   /** A lamb taken out of the flock (offered), or back (staging). */
   setLamb(i: number, present: boolean): void {
@@ -880,9 +958,15 @@ export class CainScene extends Phaser.Scene {
 
   private updateFlock(dt: number): void {
     const view = this.cameras.main.worldView;
+    this.updateDog(dt, view);
+    if (this.herd && this.canMove()) this.updateHerd(dt, view);
     for (const g of [...this.sheep, ...this.lambs]) {
       const a = g.actor;
       if (!a.visible) continue;
+      if (this.herd && !g.penned && !g.frozen) {
+        if (!this.canMove()) a.stop();
+        continue;
+      }
       if (g.frozen) {
         a.stop();
         a.refresh();
@@ -909,6 +993,131 @@ export class CainScene extends Phaser.Scene {
       }
       if (view.contains(a.x, a.y) || a.moving) a.refresh();
     }
+  }
+
+  /**
+   * The dog: while herding, it runs to a point ahead of Abel the way he last
+   * walked (so walking Abel round behind the flock sends the dog behind
+   * it); otherwise it waits by the fold's gate.
+   */
+  private updateDog(dt: number, view: Phaser.Geom.Rectangle): void {
+    const d = this.dog;
+    let to: Pt = POINTS.dogRest;
+    if (this.herd && !this.canMove()) {
+      d.stop();
+      d.refresh();
+      return;
+    }
+    if (this.herd) {
+      const a = this.abel;
+      const h = this.herd;
+      const mx = a.x - h.last[0];
+      const my = a.y - h.last[1];
+      const m = Math.hypot(mx, my);
+      if (m > 0.6) {
+        // turn smoothly toward where Abel walks
+        const k = Math.min(1, dt * 5);
+        const nx = h.dir[0] + (mx / m - h.dir[0]) * k;
+        const ny = h.dir[1] + (my / m - h.dir[1]) * k;
+        const n = Math.hypot(nx, ny) || 1;
+        h.dir = [nx / n, ny / n];
+      }
+      h.last = [a.x, a.y];
+      to = [a.x + h.dir[0] * DOG_AHEAD, a.y + h.dir[1] * DOG_AHEAD * 0.8];
+    }
+    const dx = to[0] - d.x;
+    const dy = to[1] - d.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist > 700) d.setPosition(to[0], to[1]);
+    if (dist > 10) {
+      const sp = Math.min(DOG_SPEED, 40 + dist * 3);
+      d.move((dx / dist) * sp, (dy / dist) * sp);
+    } else {
+      d.stop();
+      if (this.herd) d.face(this.flockCentre()[0] < d.x ? 'left' : 'right');
+    }
+    if (view.contains(d.x, d.y) || d.moving) d.refresh();
+  }
+
+  /**
+   * The flock while herded: each sheep shies away from the dog and Abel,
+   * keeps to the others without crowding them, and near the gate is drawn
+   * in (a kind nudge so it goes through rather than along the wall). In
+   * the fold it stays: it grazes there again.
+   */
+  private updateHerd(dt: number, view: Phaser.Geom.Rectangle): void {
+    const all = [...this.sheep, ...this.lambs].filter((g) => g.actor.visible && !g.frozen);
+    const out = all.filter((g) => !g.penned);
+    const [cx, cy] = this.flockCentre();
+    const dog = this.dog;
+    const abel = this.abel;
+    const gateY = FOLD.y + FOLD.r * 0.75;
+    const inner = FOLD.r - 30;
+    for (const g of out) {
+      const a = g.actor;
+      let fx = 0;
+      let fy = 0;
+      let alarm = 0;
+      const away = (ox: number, oy: number, r: number, k: number) => {
+        const ex = a.x - ox;
+        const ey = a.y - oy;
+        const d = Math.hypot(ex, ey) || 1;
+        if (d >= r) return;
+        const w = (1 - d / r) * k;
+        fx += (ex / d) * w;
+        fy += (ey / d) * w;
+        alarm = Math.max(alarm, 1 - d / r);
+      };
+      away(dog.x, dog.y, DOG_FEAR, 2.4);
+      away(abel.x, abel.y, ABEL_FEAR, 1.1);
+      for (const o of out) if (o !== g) away(o.actor.x, o.actor.y, 34, 0.9);
+      // keep together
+      const tx = cx - a.x;
+      const ty = cy - a.y;
+      const td = Math.hypot(tx, ty) || 1;
+      const pull = Phaser.Math.Clamp((td - 50) / 220, 0, 1) * 0.7;
+      fx += (tx / td) * pull;
+      fy += (ty / td) * pull;
+      // near the gate, drawn in through it
+      const gx = FOLD.x - a.x;
+      const gy = gateY + 30 - a.y;
+      const gd = Math.hypot(gx, gy);
+      if (gd < 170 && alarm > 0) {
+        const into = Math.hypot(FOLD.x - a.x, FOLD.y - a.y) || 1;
+        fx += ((FOLD.x - a.x) / into) * 0.9 * (1 - gd / 170);
+        fy += ((FOLD.y - a.y) / into) * 0.9 * (1 - gd / 170);
+      }
+      // a stray far from the others and out of sight walks back to them
+      if (td > 420 && !view.contains(a.x, a.y)) fx += (tx / td) * 1.5;
+      const speed = HERD_SPEED * (g.speed > GRAZE_SPEED + 8 ? 1.1 : 1);
+      const f = Math.hypot(fx, fy);
+      let wx = 0;
+      let wy = 0;
+      if (f > 0.05) {
+        const sp = Math.min(1, f) * (alarm > 0.02 ? speed : GRAZE_SPEED * 2);
+        wx = (fx / f) * sp;
+        wy = (fy / f) * sp;
+      }
+      const k = Math.min(1, dt * (alarm > 0 ? 6 : 2.5));
+      g.vx += (wx - g.vx) * k;
+      g.vy += (wy - g.vy) * k;
+      if (Math.hypot(g.vx, g.vy) > 7) a.move(g.vx, g.vy);
+      else a.stop();
+      if (view.contains(a.x, a.y) || a.moving) a.refresh();
+      // in the fold: it stays and grazes there
+      if (((a.x - FOLD.x) / inner) ** 2 + ((a.y - FOLD.y) / (inner * 0.75)) ** 2 < 1 && a.y < gateY - 24) {
+        g.penned = true;
+        g.home = [a.x, Math.min(a.y, FOLD.y + 60)];
+        g.range = 60;
+        g.target = null;
+        g.wait = 1 + Math.random() * 2;
+        g.vx = g.vy = 0;
+        a.stop();
+        audio.play('pickup');
+        this.herdProgress();
+      }
+    }
+    if (all.length && all.every((g) => g.penned)) this.herd?.done();
   }
 
   private updateFollower(dt: number): void {

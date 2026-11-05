@@ -68,7 +68,10 @@ export const POINTS: Record<string, Pt> = {
   cainAltar: [2150, 2010],
   abelAltar: [2350, 2010],
   // Abel among his flock (mission 2)
-  abelFlock: [1500, 1060],
+  abelFlock: [1890, 1170],
+  // the fold's gate, a little outside, and where the dog waits
+  foldGate: [1500, 950],
+  dogRest: [1600, 975],
   // the field (mission 4): the gate where they come in, and the jawbone
   fieldGate: [1270, 3200],
   jawbone: [760, 4010],
@@ -107,13 +110,20 @@ export const PRODUCE: { kind: 'grain' | 'gourd' | 'fruit'; at: Pt }[] = [
   { kind: 'fruit', at: [2230, 3600] },
 ];
 
-/** The flock in the pasture: the ewes wander, the lambs stay near them. */
+/** The flock grazing in the meadow east of the fold, scattered but keeping
+ * together (the maintainer): Abel and his dog bring them in (mission 2). */
 export const SHEEP: Pt[] = [
-  [1380, 650], [1600, 700], [1500, 860], [1250, 980], [1820, 1000], [1150, 560], [1880, 540], [1700, 420],
+  [1800, 1110], [1925, 1085], [1995, 1180], [1860, 1235], [1755, 1200], [1950, 1275], [1840, 1035], [2045, 1115],
 ];
 export const LAMBS: Pt[] = [
-  [1440, 700], [1560, 800], [1300, 1020], [1760, 950], [1220, 600],
+  [1880, 1150], [1790, 1150], [1930, 1205], [2010, 1245], [1835, 1290],
 ];
+/** Where the sheep and lambs graze once they are in the fold. */
+export const PENNED: Pt[] = Array.from({ length: 13 }, (_, i) => {
+  const a = i * 2.4 + 0.3;
+  const r = 30 + (i % 4) * 28;
+  return [1500 + Math.cos(a) * r, 740 + Math.sin(a) * r * 0.7] as Pt;
+});
 
 /** Groves of the meadow and woods: centre and radius, with how dense. */
 export const GROVES: { x: number; y: number; r: number; n: number }[] = [
@@ -130,6 +140,8 @@ export const GROVES: { x: number; y: number; r: number; n: number }[] = [
 /** Open places the decoration keeps clear of. */
 export const CLEAR: Zone[] = [
   { x: 1500, y: 760, r: 300 },
+  // the meadow where the flock is herded to the fold (mission 2)
+  { x: 1720, y: 1110, r: 330 },
   { x: 1450, y: 2280, r: 260 },
   { x: 2250, y: 1900, r: 230 },
   { x: 250, y: 2300, r: 170 },
