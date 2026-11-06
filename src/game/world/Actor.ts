@@ -260,37 +260,25 @@ export class Actor {
    * stride. Resolves at the moment it lands; the recovery goes on after.
    */
   attack(kind: 'swing' | 'stab'): Promise<void> {
-    if (this.blow) this.scene.tweens.killTweensOf(this.blow);
     const b = { lunge: 0, turn: 0, lift: 0, aim: 0 };
     this.blow = b;
     const swing = kind === 'swing';
-    const wind = swing ? { lunge: -3, turn: -2.4, lift: -12, aim: 0 } : { lunge: -4, turn: -0.25, lift: -3, aim: 1 };
+    const wind = swing ? { lunge: -3, turn: -2.5, lift: -24, aim: 0 } : { lunge: -4, turn: -0.25, lift: -3, aim: 1 };
     const land = swing ? { lunge: 8, turn: 1.1, lift: 4, aim: 0 } : { lunge: 10, turn: 0.1, lift: 0, aim: 1 };
-    return new Promise((resolve) => {
-      this.scene.tweens.chain({
-        targets: b,
-        tweens: [
-          { ...wind, duration: swing ? 190 : 150, ease: 'Quad.easeOut' },
-          { ...land, duration: swing ? 95 : 80, ease: 'Quad.easeIn', onComplete: () => resolve() },
-          {
-            lunge: 0,
-            turn: 0,
-            lift: 0,
-            aim: 0,
-            delay: 110,
-            duration: 280,
-            ease: 'Sine.easeInOut',
-            onComplete: () => {
-              if (this.blow !== b) return;
-              this.blow = null;
-              this.sprite.setRotation(0);
-              this.sprite.anims.resume();
-              this.refresh(true);
-            },
-          },
-        ],
+    const step = (props: Partial<typeof b>, duration: number, ease: string, delay = 0) =>
+      new Promise<void>((done) => this.scene.tweens.add({ targets: b, ...props, duration, ease, delay, onComplete: () => done(), onStop: () => done() }));
+    const landed = step(wind, swing ? 230 : 150, 'Quad.easeOut').then(() => step(land, swing ? 100 : 80, 'Quad.easeIn', swing ? 70 : 40));
+    void landed
+      .then(() => step({ lunge: 0, turn: 0, lift: 0, aim: 0 }, 280, 'Sine.easeInOut', 110))
+      .then(() => {
+        // a newer blow has taken over
+        if (this.blow !== b) return;
+        this.blow = null;
+        this.sprite.setRotation(0);
+        this.sprite.anims.resume();
+        this.refresh(true);
       });
-    });
+    return landed;
   }
 
   /** The step into a blow, as an offset from the feet. */
@@ -419,8 +407,10 @@ export class Actor {
     if (b && !arms) {
       const [bx, by] = this.blowOffset();
       dx += bx * 1.3;
-      dy += by * 1.3 + b.lift;
       const side = this.facing === 'left' ? -1 : this.facing === 'right' ? 1 : 0;
+      // raised, the hand goes up and back over the shoulder
+      dx += side * b.lift * 0.3;
+      dy += by * 1.3 + b.lift;
       turn = side ? side * b.turn : (this.facing === 'down' ? 1 : -1) * (b.aim * Math.PI * 0.5 + b.turn * 0.4);
     }
     s.setPosition(x + dx, y + dy).setRotation(turn).setDepth(this.facing === 'up' ? y - 1 : y + 1);
