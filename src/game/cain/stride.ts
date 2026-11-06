@@ -284,7 +284,7 @@ export function sideRun(stand: Px, band: [number, number, number, number], o: Si
  * the leg that is off the ground comes up higher (its shin drawn shorter, the
  * knee coming towards or away from us), and the whole body bobs.
  */
-export function frontRun(p: Px, mid: number, knee: number, extra: number, lift: number): Px {
+export function frontRun(p: Px, mid: number, knee: number, extra: number, lift: number, arms?: FrontArms): Px {
   const out = blank(p.w, p.h);
   out.d.set(p.d);
   const bottom = (l: number, r: number) => {
@@ -303,8 +303,65 @@ export function frontRun(p: Px, mid: number, knee: number, extra: number, lift: 
       const sy = Math.round(knee + ((y - knee) * (b - knee)) / Math.max(1, nb - knee));
       for (let x = l; x < r; x++) if (p.d[(sy * p.w + x) * 4 + 3]) copyPx(out, p, x, y, x, sy);
     }
+    // the arm opposite the raised knee pumps up, bent at the elbow; the other swings back
+    if (arms) {
+      const pumped = left < right ? 1 : -1;
+      pumpArm(out, p, mid, pumped, arms, arms.pump, arms.inward);
+      pumpArm(out, p, mid, -pumped, arms, arms.back, 0);
+    }
   }
   return lifted(out, lift);
+}
+
+/** The forearms in a front or back running frame (fractions of the frame height). */
+export interface FrontArms {
+  /** the elbow and the bottom of the hand */
+  elbow: number;
+  hand: number;
+  /** nothing nearer the middle than this is arm (px) */
+  inner: number;
+  /** the forearm drawn this much shorter: bent towards us (pumped) or swung back */
+  pump: number;
+  back: number;
+  /** the pumped hand comes this far in, across the body (px) */
+  inward: number;
+}
+
+/**
+ * One forearm (side -1 the left of the picture, 1 the right) drawn shorter,
+ * as it looks bent at the elbow towards or away from us, and moved in. Arm
+ * pixels in a row are the ones from the outer edge in to the first gap.
+ */
+function pumpArm(out: Px, p: Px, mid: number, side: number, a: FrontArms, squash: number, inward: number): void {
+  const y0 = Math.round(a.elbow * p.h);
+  const y1 = Math.round(a.hand * p.h);
+  const runs: [number, number][] = [];
+  for (let y = y0; y <= y1; y++) {
+    let from = -1;
+    let to = -1;
+    const limit = Math.round(mid + side * a.inner);
+    for (let i = 0; ; i++) {
+      const x = side < 0 ? i : p.w - 1 - i;
+      if (side < 0 ? x > limit : x < limit) break;
+      const on = p.d[(y * p.w + x) * 4 + 3] > 0;
+      if (on && from < 0) from = x;
+      if (from >= 0 && !on) break;
+      if (on) to = x;
+    }
+    runs.push(from < 0 ? [0, -1] : [Math.min(from, to), Math.max(from, to)]);
+  }
+  runs.forEach(([l, r], k) => {
+    for (let x = l; x <= r; x++) out.d.fill(0, ((y0 + k) * p.w + x) * 4, ((y0 + k) * p.w + x) * 4 + 4);
+  });
+  const ny1 = y0 + Math.round((y1 - y0) * squash);
+  for (let y = y0; y <= ny1; y++) {
+    const k = Math.min(runs.length - 1, Math.round((y - y0) / squash));
+    const [l, r] = runs[k];
+    for (let x = l; x <= r; x++) {
+      const nx = x - side * inward;
+      if (nx >= 0 && nx < p.w) copyPx(out, p, nx, y, x, y0 + k);
+    }
+  }
 }
 
 /** A frame moved `pad` pixels right in a wider frame (room for longer strides). */

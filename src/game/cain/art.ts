@@ -3,7 +3,7 @@ import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAs
 import { Pixels } from './pixels';
 import { drawAnger, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
-import { frameOf, frontRun, gallop, padded, sideRun, sideStride, type Px } from './stride';
+import { frameOf, frontRun, gallop, padded, sideRun, sideStride, type FrontArms, type Px } from './stride';
 import GEN from '../../data/cain/generatedArt.json';
 
 /**
@@ -438,7 +438,12 @@ const RUN = {
   lift: [3, 1, 0, 1, 3, 1, 0, 1],
 };
 /** from the front and back: the leg off the ground comes up this much more */
-const FRONT_KNEE_LIFT = 5;
+const FRONT_KNEE_LIFT = 7;
+/** from the front and back the forearms pump (the maintainer: the arms did not bend running up or down) */
+const FRONT_ARMS: Record<'down' | 'up', FrontArms> = {
+  down: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.5, back: 0.85, inward: 3 },
+  up: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.4, back: 0.9, inward: 1 },
+};
 /** Cain walks slower than Adam (the maintainer): his steps at this share of Adam's rate (his speed is lower to match) */
 const CAIN_WALK_RATE = 0.8;
 /** room on each side of the side frames for the run's longer strides */
@@ -473,7 +478,7 @@ function cainStride(src: HTMLCanvasElement, a: SheetAsset, dir: Direction): [HTM
     }
   } else {
     // the knees: a little under the hem
-    run = walk.map((f, i) => frontRun(frames[f], a.anchorX, Math.round(fh * 0.79), FRONT_KNEE_LIFT, RUN.lift[i]));
+    run = walk.map((f, i) => frontRun(frames[f], a.anchorX, Math.round(fh * 0.79), FRONT_KNEE_LIFT, RUN.lift[i], FRONT_ARMS[dir === 'up' ? 'up' : 'down']));
   }
   const all = [...frames, ...run];
   const W = fw + pad * 2;
