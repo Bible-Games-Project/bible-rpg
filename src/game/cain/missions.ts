@@ -38,6 +38,9 @@ interface CainMission {
   reference: string;
   /** who is played */
   active: Brother;
+  /** begins with a cutscene that shows the world itself: it is left dark,
+   * with no moment of control before it (the maintainer) */
+  opensInDark?: boolean;
   /** told over black before the world fades in, the first time */
   intro?(w: CainScene): Promise<void>;
   run(w: CainScene): Promise<void>;
@@ -172,10 +175,9 @@ const MISSIONS: CainMission[] = [
     reference: 'Genesis 4:4',
     active: 'abel',
     async run(w) {
-      w.cutscene(true);
       w.cameraSnap();
+      // told while Abel can already walk (the maintainer)
       await w.scripture('firstlings');
-      w.cutscene(false);
       // the flock is out in the meadow: Abel and his dog bring it into the
       // fold (the maintainer), and there he offers the firstlings
       w.objective(step('m02', 'flock'), () => [w.flockCentre()]);
@@ -255,6 +257,8 @@ const MISSIONS: CainMission[] = [
           await w.wait(700);
         },
       });
+      // straight on to the LORD's answer (mission 3): no walking about in between
+      w.cutscene(true);
     },
   },
 
@@ -266,9 +270,8 @@ const MISSIONS: CainMission[] = [
     kind: 'scripture',
     reference: 'Genesis 4:4–7',
     active: 'cain',
+    opensInDark: true,
     async run(w) {
-      w.cutscene(true);
-      await w.fade(1, 600);
       w.show(w.cain, POINTS.cainAltar, 'up');
       w.show(w.abel, POINTS.abelAltar, 'up');
       w.abel.hold(...STAFF);
@@ -445,12 +448,15 @@ export class CainRunner {
     hud.setMission({ number: m.number, title: t(`cain.missions.${m.key}.title`), objective: t(`cain.missions.${m.key}.desc`), kind: m.kind, reference: m.reference });
     if (chapterStart) {
       if (this.mode !== 'restart') await ui().chapterIntro();
+      // told over black: held, read at the player's pace
+      w.cutscene(true);
       await m.intro?.(w);
     }
     // a new story starts behind black (start() darkens the screen): show the world after its intro
-    if (fromSave || relocate || chapterStart) await w.fade(0, 900);
+    if (m.opensInDark) w.cutscene(true);
+    else if (fromSave || relocate || chapterStart) await w.fade(0, 900);
     audio.play('missionStart');
-    await w.wait(900);
+    if (!m.opensInDark) await w.wait(900);
 
     await m.run(w);
     if (this.stopped) return;

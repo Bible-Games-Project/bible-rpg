@@ -101,10 +101,7 @@
     "where": [
       { "s": "god", "t": "Where is Abel your brother?", "ref": "Genesis 4:9" },
       { "s": "cain", "t": "I do not know. Am I my brother's keeper?", "ref": "Genesis 4:9" },
-      { "s": "god", "t": "What have you done? The voice of your brother's blood cries to me from the ground.", "ref": "Genesis 4:10" },
-      { "s": "god", "t": "When you till the ground, it will no longer give you its strength. You will be a fugitive and a wanderer on the earth.", "ref": "Genesis 4:11–12" },
-      { "s": "cain", "t": "My punishment is greater than I can bear. Whoever finds me will kill me.", "ref": "Genesis 4:13–14" },
-      { "s": "god", "t": "Not so. Whoever kills Cain, vengeance will be taken on him sevenfold.", "ref": "Genesis 4:15" }
+      { "s": "god", "t": "What have you done? Your brother's blood cries to me from the ground. You will be a wanderer on the earth.", "ref": "Genesis 4:10–12" }
     ]
   },
   "npc": {
