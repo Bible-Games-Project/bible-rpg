@@ -17,7 +17,10 @@ import { MANIFEST, shadowKey } from '../manifest';
  *   grass on the ground  night blue (#355C7D)
  *   leaves               indigo, between the blue and the purple grey
  *   earth on the ground  purple grey (#6C5B7B): paths and the field
- *   wood, thatch, clay   mauve to peach (#C06C84, #F8B195)
+ *   wood, clay           dark mauve (#C06C84 at the light end)
+ *   straw, thatch, grain dimmed peach (#F8B195 at the light end), so the
+ *                        roof, the wheat and the wood don't all turn the
+ *                        same pink (the maintainer)
  *   stone                cool lilac greys
  *   bright colours       coral and peach (#F67280, #F8B195)
  */
@@ -29,7 +32,9 @@ const ramp = (...c: string[]): V3[] => c.map(hex);
 const GRASS = ramp('#121b2e', '#18243b', '#1e2d48', '#253755', '#2c4262', '#344e70', '#3d5b7e', '#4c6a8c');
 const LEAVES = ramp('#10121f', '#171a2c', '#1f2339', '#292d48', '#343857', '#414466', '#535475', '#6c6b8c');
 const EARTH_GROUND = ramp('#1c1a2b', '#252337', '#2f2c43', '#3a3650', '#46415e', '#524c6b', '#5f5878', '#6e6787');
-const EARTH = ramp('#22131e', '#36192b', '#4d2239', '#672e4b', '#843d5f', '#a35472', '#c27486', '#de9c9a');
+const EARTH = ramp('#1d1420', '#2b1b2b', '#3d2338', '#532d47', '#6b3a57', '#844a66', '#a05f76', '#bd7a86');
+/** straw, thatch, grain, sand: the peach (#F8B195) dimmed by the night */
+const STRAW = ramp('#1e1822', '#2e2430', '#463540', '#62494f', '#806160', '#a07c72', '#c39b86', '#e3bb9c', '#f6caa8');
 const STONE = ramp('#181826', '#222234', '#2e2d42', '#3b3950', '#4a465f', '#5b5570', '#706883', '#8a8199');
 const ACCENT = ramp('#3a1424', '#6e2338', '#a33a50', '#d8586b', '#F67280', '#F8B195', '#fbd3bd');
 const BLUE = ramp('#121b2e', '#1b2a45', '#253a5b', '#2f4a6d', '#355C7D', '#4d7393', '#6a8ba8');
@@ -88,15 +93,18 @@ export function night(r: number, g: number, b: number, ground = false): V3 {
   const grey = 1 - smooth(0.08, 0.24, sat);
   const leaves = Math.max(band(h, 115, 70), 0);
   const blue = band(h, 225, 60);
-  const warm = band(h, 32, 32);
+  const warm = band(h, 14, 18);
+  const straw = band(h, 38, 18);
   const red = Math.max(band(h, 0, 22), band(h, 330, 30));
   // saturated warm colours (fruit, flowers, fire) take the complement
   const bright = ground ? 0 : smooth(0.5, 0.75, sat) * smooth(0.25, 0.45, lum);
   let wLeaves = leaves;
-  let wEarth = warm * (1 - bright);
+  let wEarth = warm * (1 - bright) + (ground ? straw : 0);
+  let wStraw = ground ? 0 : straw;
   let wAccent = red + warm * bright;
   let wBlue = blue;
-  const coloured = wLeaves + wEarth + wAccent + wBlue || 1;
+  const coloured = wLeaves + wEarth + wStraw + wAccent + wBlue || 1;
+  wStraw = (wStraw / coloured) * (1 - grey);
   wLeaves = (wLeaves / coloured) * (1 - grey);
   wEarth = (wEarth / coloured) * (1 - grey);
   wAccent = (wAccent / coloured) * (1 - grey);
@@ -105,6 +113,7 @@ export function night(r: number, g: number, b: number, ground = false): V3 {
   out[0] = out[1] = out[2] = 0;
   if (wLeaves) onRamp(ground ? GRASS : LEAVES, t, out, wLeaves);
   if (wEarth) onRamp(ground ? EARTH_GROUND : EARTH, ground ? t : t * 0.92, out, wEarth);
+  if (wStraw) onRamp(STRAW, t * 0.95, out, wStraw);
   if (wAccent) onRamp(ACCENT, t, out, wAccent);
   if (wBlue) onRamp(BLUE, t, out, wBlue);
   if (grey) onRamp(STONE, t, out, grey);
