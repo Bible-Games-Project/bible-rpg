@@ -3,7 +3,7 @@ import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAs
 import { Pixels } from './pixels';
 import { drawAnger, drawFat, drawFire, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
-import { frameOf, frontRun, padded, sideRun, sideStride, type Px } from './stride';
+import { frameOf, frontRun, gallop, padded, sideRun, sideStride, type Px } from './stride';
 import GEN from '../../data/cain/generatedArt.json';
 
 /**
@@ -151,14 +151,14 @@ function genTree(scene: Phaser.Scene, id: string, name: GenName): void {
 /**
  * Abel's sheepdog from its two generated poses (standing, trotting), on
  * frames of one size with the feet on the same row. Frames 0–1: idle (the
- * second breathing: the body a pixel higher). Frames 2–9: a smooth trot made
- * from the trotting pose, its front and back legs swinging in turn (sheared
- * from the hip, the feet moving most) while the body bobs.
+ * second breathing: the body a pixel higher). Frames 2–9: a gallop made from
+ * the running pose (gallop() in stride.ts: the front and hind legs reach out
+ * and gather in turn, the body rocking and off the ground as they reach).
  */
 const DOG_TROT_FRAMES = 8;
 function genDog(scene: Phaser.Scene): void {
   const poses = (['dog-0', 'dog-1'] as const).map((n) => ({ p: gen(scene, n), g: GEN[n] }));
-  const SWING = 5;
+  const SWING = 9;
   const W = Math.max(...poses.map((q) => q.g.w)) + SWING * 2 + 2;
   const AY = Math.max(...poses.map((q) => q.g.ay)) + 2;
   const H = AY + 2;
@@ -208,9 +208,16 @@ function genDog(scene: Phaser.Scene): void {
     return f;
   };
   const frames = [frame(0, null, 0), frame(0, null, 1)];
-  for (let i = 0; i < DOG_TROT_FRAMES; i++) {
-    const ph = (i / DOG_TROT_FRAMES) * Math.PI * 2;
-    frames.push(frame(1, ph, Math.round(0.5 + 0.5 * Math.cos(ph * 2))));
+  // the run: a gallop from the running pose (see stride.ts)
+  const run = frame(1, null, 0);
+  const { belly, mid } = legsOf(poses[1].p, poses[1].g.ay);
+  const shift = AX - poses[1].g.ax;
+  const lift = AY - poses[1].g.ay;
+  const px: Px = { w: W, h: H, d: run.data };
+  for (const g of gallop(px, belly + lift, mid + shift, { frames: DOG_TROT_FRAMES, reach: 32, lift: 3, rock: 4, ground: AY })) {
+    const p = new Pixels(W, H);
+    p.data.set(g.d);
+    frames.push(p);
   }
   addSheet(scene, 'cain-dog', frames, AX, AY - 1, ART, false, true);
 }

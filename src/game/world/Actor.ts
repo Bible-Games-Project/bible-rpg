@@ -32,6 +32,10 @@ export interface ActorOptions {
   shadow?: 'shadow-small' | 'shadow-medium' | 'shadow-large' | null;
   /** nudges the shadow (world px), e.g. the serpent's, a touch down and right */
   shadowOffset?: [number, number];
+  /** speed (px/s) at which its walk animation plays at its own rate; the
+   * walk plays faster or slower with the real speed so the feet keep pace
+   * (a sheep's short steps want a slower pace than a man's) */
+  stridePace?: number;
   facing?: Facing;
 }
 
@@ -66,6 +70,7 @@ export class Actor {
   /** offset the sprite vertically (e.g. a dove hopping or flying) */
   lift = 0;
   private shadowOffset: [number, number];
+  private stridePace?: number;
   /** added to the depth (e.g. the serpent drawn on a branch, in front of the canopy) */
   depthBias = 0;
 
@@ -75,6 +80,7 @@ export class Actor {
     this.charId = o.charId;
     this.outfit = o.outfit;
     this.shadowOffset = o.shadowOffset ?? [0, 0];
+    this.stridePace = o.stridePace;
     this.sheet = o.sheet;
     this.facing = o.facing ?? 'down';
     const bw = o.body?.w ?? 22;
@@ -292,7 +298,7 @@ export class Actor {
     let anim = '';
     // a character with its own running frames (Cain's trot) uses them
     // when going clearly faster than its walk
-    const pace = this.charId ? CHARACTERS[this.charId]?.speed || WALK_PACE : WALK_PACE;
+    const pace = this.stridePace ?? (this.charId ? CHARACTERS[this.charId]?.speed || WALK_PACE : WALK_PACE);
     const running = !!this.charId && this.moving && this.pace > pace * 1.3 && anims.exists(`${tex}:run`);
     if (this.charId) {
       anim = `${tex}:${running ? 'run' : this.moving ? 'walk' : 'idle'}`;
@@ -306,6 +312,7 @@ export class Actor {
     }
     // each character's walk matches its own usual speed (God walks slower, with shorter steps)
     if (this.charId) this.sprite.anims.timeScale = !this.moving ? 1 : running ? Phaser.Math.Clamp(this.pace / (pace * 1.6), 0.7, 1.4) : Phaser.Math.Clamp(this.pace / pace, 0.55, 1.75);
+    else if (this.stridePace) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / this.stridePace, 0.5, 2.5) : 1;
     this.placeHeld();
   }
 

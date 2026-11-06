@@ -59,7 +59,11 @@ const DOG_DRIVE_SPEED = 175;
 const DOG_FEAR = 150;
 const ABEL_FEAR = 70;
 /** the sheep's top speed when driven (the maintainer: they ran too fast) */
-const HERD_SPEED = 92;
+const HERD_SPEED = 76;
+/** the pace at which the sheep's and lambs' walks play at their own rate: their
+ * legs keep up with how fast they go (the maintainer saw them skate) */
+const SHEEP_STRIDE = 52;
+const LAMB_STRIDE = 40;
 const GRAZE_SPEED = 16;
 
 const ITEM_ICONS: Record<string, string> = {
@@ -694,12 +698,12 @@ export class CainScene extends Phaser.Scene {
 
   /** The flock: the ewes graze, the lambs keep close to them. */
   private flock(): void {
-    const grazer = (id: string, sheet: string, at: Pt, range: number, speed: number) => {
-      const actor = new Actor(this, { id, x: at[0], y: at[1], sheet, body: { w: 22, h: 10 }, facing: Math.random() < 0.5 ? 'left' : 'right' });
+    const grazer = (id: string, sheet: string, at: Pt, range: number, speed: number, stridePace: number) => {
+      const actor = new Actor(this, { id, x: at[0], y: at[1], sheet, body: { w: 22, h: 10 }, facing: Math.random() < 0.5 ? 'left' : 'right', stridePace });
       return { actor, home: at, range, speed, target: null, wait: Math.random() * 3, frozen: false, vx: 0, vy: 0, penned: false, stuck: 0, side: 0, was: [at[0], at[1]] as Pt };
     };
-    SHEEP.forEach((p, i) => this.sheep.push(grazer(`sheep${i}`, 'animal-sheep', p, 45, GRAZE_SPEED + 6)));
-    LAMBS.forEach((p, i) => this.lambs.push(grazer(`lamb${i}`, 'cain-lamb', p, 35, GRAZE_SPEED + 12)));
+    SHEEP.forEach((p, i) => this.sheep.push(grazer(`sheep${i}`, 'animal-sheep', p, 45, GRAZE_SPEED + 6, SHEEP_STRIDE)));
+    LAMBS.forEach((p, i) => this.lambs.push(grazer(`lamb${i}`, 'cain-lamb', p, 35, GRAZE_SPEED + 12, LAMB_STRIDE)));
     const [dx, dy] = POINTS.dogRest;
     this.dog = new Actor(this, { id: 'dog', x: dx, y: dy, sheet: 'cain-dog', body: { w: 20, h: 9 }, facing: 'left' });
   }
