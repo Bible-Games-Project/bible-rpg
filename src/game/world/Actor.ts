@@ -15,6 +15,8 @@ export const WALK_PACE = 170;
 /** How far below the bottom of the fist a held thing ends (world px): the
  * fist closes around its lower part. */
 const HELD_BELOW_FIST = 3;
+/** how much further ahead a carried thing is held when running from the side (world px) */
+const RUN_CARRY_AHEAD = 6;
 /** How much one axis must outweigh the other before a walker turns from a
  * side view to a front/back view or back (see faceVector). */
 const FACING_HOLD = 1.3;
@@ -75,6 +77,10 @@ export class Actor {
   private shadowOffset: [number, number];
   private stridePace?: number;
   private handHeight: number;
+  /** what is held (hold()'s arguments), to give it back after a while */
+  private heldArgs: [string, 'hand' | 'arms' | 'carry' | 'staff', [number, number]] | null = null;
+  /** a blow in progress (attack()): how far the body steps in (px), how far the held thing turns (rad) and rises (px), how much it points the way they face */
+  private blow: { lunge: number; turn: number; lift: number; aim: number } | null = null;
   /** added to the depth (e.g. the serpent drawn on a branch, in front of the canopy) */
   depthBias = 0;
 
@@ -236,9 +242,63 @@ export class Actor {
     this.heldSprite?.destroy();
     this.heldSprite = null;
     this.grip = grip;
+    this.heldArgs = key ? [key, grip, origin] : null;
     if (!key) return;
     this.heldSprite = sized(this.scene.add.image(this.x, this.y - 36, key).setOrigin(origin[0], origin[1]).setDepth(this.y + 1)).setVisible(this.sprite.visible);
     this.refresh();
+  }
+
+  /** What is held now (to hold it again later), or null. */
+  holding(): [string, 'hand' | 'arms' | 'carry' | 'staff', [number, number]] | null {
+    return this.heldArgs;
+  }
+
+  /**
+   * A blow with what is held in the hand (the maintainer): `swing` raises
+   * it high and brings it down hard (Cain's jawbone), `stab` draws it back
+   * and thrusts it in (Abel's knife). The body steps into it, caught in a
+   * stride. Resolves at the moment it lands; the recovery goes on after.
+   */
+  attack(kind: 'swing' | 'stab'): Promise<void> {
+    if (this.blow) this.scene.tweens.killTweensOf(this.blow);
+    const b = { lunge: 0, turn: 0, lift: 0, aim: 0 };
+    this.blow = b;
+    const swing = kind === 'swing';
+    const wind = swing ? { lunge: -3, turn: -2.4, lift: -12, aim: 0 } : { lunge: -4, turn: -0.25, lift: -3, aim: 1 };
+    const land = swing ? { lunge: 8, turn: 1.1, lift: 4, aim: 0 } : { lunge: 10, turn: 0.1, lift: 0, aim: 1 };
+    return new Promise((resolve) => {
+      this.scene.tweens.chain({
+        targets: b,
+        tweens: [
+          { ...wind, duration: swing ? 190 : 150, ease: 'Quad.easeOut' },
+          { ...land, duration: swing ? 95 : 80, ease: 'Quad.easeIn', onComplete: () => resolve() },
+          {
+            lunge: 0,
+            turn: 0,
+            lift: 0,
+            aim: 0,
+            delay: 110,
+            duration: 280,
+            ease: 'Sine.easeInOut',
+            onComplete: () => {
+              if (this.blow !== b) return;
+              this.blow = null;
+              this.sprite.setRotation(0);
+              this.sprite.anims.resume();
+              this.refresh(true);
+            },
+          },
+        ],
+      });
+    });
+  }
+
+  /** The step into a blow, as an offset from the feet. */
+  private blowOffset(): [number, number] {
+    const b = this.blow;
+    if (!b) return [0, 0];
+    const k = { left: [-1, 0], right: [1, 0], down: [0, 0.5], up: [0, -0.5] }[this.facing];
+    return [k[0] * b.lunge, k[1] * b.lunge];
   }
 
   topY(): number {
@@ -283,7 +343,8 @@ export class Actor {
     // sprite snapped to world px (about 3 screen px) shook against it
     const x = this.feet.x;
     const y = this.feet.y;
-    this.sprite.setPosition(x, y - this.lift);
+    const [bx, by] = this.blowOffset();
+    this.sprite.setPosition(x + bx, y - this.lift + by);
     this.sprite.setDepth(y + this.depthBias);
     this.emoteSprite?.setPosition(x, this.topY() - 6);
     const tex = this.textureFor(this.facing);
@@ -312,9 +373,19 @@ export class Actor {
       anim = this.lift > 4 && anims.exists(`${tex}:fly`) ? `${tex}:fly` : `${tex}:${this.moving ? 'walk' : 'idle'}`;
       if (!anims.exists(anim)) anim = anims.exists(`${tex}:loop`) ? `${tex}:loop` : '';
     }
+    // in a blow: caught mid-stride, leaning into it
+    if (this.blow && this.charId && anims.exists(`${tex}:walk`)) anim = `${tex}:walk`;
     if (anim && (force || anim !== this.lastAnim) && anims.exists(anim)) {
       this.sprite.play(anim, true);
       this.lastAnim = anim;
+    }
+    if (this.blow && anim.endsWith(':walk')) {
+      const frames = this.sprite.anims.currentAnim?.frames ?? [];
+      const stride = frames[Math.floor(frames.length / 4)];
+      if (stride && this.sprite.anims.currentFrame !== stride) this.sprite.anims.pause(stride);
+      else if (!this.sprite.anims.isPaused) this.sprite.anims.pause();
+      const side = this.facing === 'left' ? -1 : this.facing === 'right' ? 1 : 0;
+      this.sprite.setRotation(side * this.blow.lunge * 0.018);
     }
     // each character's walk matches its own usual speed (God walks slower, with shorter steps)
     if (this.charId) this.sprite.anims.timeScale = !this.moving ? 1 : running ? Phaser.Math.Clamp(this.pace / (pace * 1.6), 0.7, 1.4) : Phaser.Math.Clamp(this.pace / pace, 0.55, 1.75);
@@ -339,7 +410,20 @@ export class Actor {
     let dy = arms ? -22 : -this.handHeight;
     const fist = arms ? null : this.fist();
     if (fist) [dx, dy] = [fist[0], fist[1] + HELD_BELOW_FIST];
-    this.heldSprite.setPosition(x + dx, y + dy).setRotation(0).setDepth(this.facing === 'up' ? y - 1 : y + 1);
+    const s = this.heldSprite;
+    // what points ahead points the way they look
+    const flip = this.facing === 'left';
+    if (!arms && s.flipX !== flip) s.setFlipX(flip).setOrigin(1 - s.originX, s.originY);
+    let turn = 0;
+    const b = this.blow;
+    if (b && !arms) {
+      const [bx, by] = this.blowOffset();
+      dx += bx * 1.3;
+      dy += by * 1.3 + b.lift;
+      const side = this.facing === 'left' ? -1 : this.facing === 'right' ? 1 : 0;
+      turn = side ? side * b.turn : (this.facing === 'down' ? 1 : -1) * (b.aim * Math.PI * 0.5 + b.turn * 0.4);
+    }
+    s.setPosition(x + dx, y + dy).setRotation(turn).setDepth(this.facing === 'up' ? y - 1 : y + 1);
   }
 
   /**
@@ -380,8 +464,10 @@ export class Actor {
     const fist = this.fist();
     let dx: number;
     let dy: number;
+    // running from the side, it is held out further ahead, behind the near arm (the maintainer)
+    const runningSide = !!fist && this.lastAnim.endsWith(':run');
     if (fist) {
-      dx = fist[0] * 0.75;
+      dx = fist[0] * 0.75 + (runningSide ? (this.facing === 'left' ? -RUN_CARRY_AHEAD : RUN_CARRY_AHEAD) : 0);
       dy = fist[1] + 7;
     } else {
       const a = this.sprite.anims;
@@ -391,7 +477,7 @@ export class Actor {
       dx = this.moving ? Math.sin((i / n) * Math.PI * 2) * 1.2 : 0;
       dy = -20 + step * 1.6;
     }
-    s.setPosition(x + dx, y + dy).setDepth(this.facing === 'up' ? y - 1 : y + 1);
+    s.setPosition(x + dx, y + dy).setDepth(this.facing === 'up' || runningSide ? y - 1 : y + 1);
   }
 
   /** The bottom of the near fist in the current frame (world px from the

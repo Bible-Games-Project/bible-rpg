@@ -643,3 +643,14 @@ export function drawDog(): Drawing {
   }
   return { frames, ax: 36, ay: AY };
 }
+
+/** Abel's flint knife (for the firstlings, Genesis 4:4), pointing right: a wooden haft and a knapped blade. */
+export function drawKnife(): Drawing {
+  const w = 24;
+  const h = 8;
+  const p = new Pixels(w, h);
+  limb(p, 2, 4, 8, 4, 1.6, 1.6, (x, y, a) => tone(BARK, 0.6 - a * 0.3, x, y));
+  limb(p, 9, 4, 22, 3.5, 2.2, 0.6, (x, y, a) => tone(STONE, 0.8 - a * 0.35, x, y));
+  p.outline(STONE[0]);
+  return { frames: [p], ax: 5, ay: 4 };
+}

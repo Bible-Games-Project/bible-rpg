@@ -44,6 +44,9 @@ export const SFX = [
   'pour',
   'leafPick',
   'drop',
+  'swing',
+  'hit',
+  'cut',
 ] as const;
 
 export type Sfx = (typeof SFX)[number];
@@ -453,6 +456,22 @@ class AudioManager {
         break;
       case 'drop':
         this.noiseBurst(t, 0.12, 0.12 * v, 'lowpass', 600, 0.7);
+        break;
+      case 'swing':
+        // something heavy swung through the air: a short rising-falling whoosh
+        this.noiseBurst(t, 0.2, 0.3 * v, 'bandpass', 700, 1.4);
+        this.noiseBurst(t + 0.05, 0.15, 0.22 * v, 'bandpass', 1500, 1.6);
+        break;
+      case 'hit':
+        // a blow landing: a dull punch with a crack in it
+        this.tone(130, t, 0.2, 0.5 * v, 'sine', undefined, 45);
+        this.noiseBurst(t, 0.13, 0.5 * v, 'lowpass', 900, 0.8);
+        this.crackle(t, 0.12, 0.22 * v, 400, 2600, 0.6, 3);
+        break;
+      case 'cut':
+        // a blade drawn quickly: a thin hiss and a soft thud
+        this.noiseBurst(t, 0.1, 0.3 * v, 'highpass', 2600, 0.7);
+        this.tone(80, t + 0.03, 0.14, 0.25 * v, 'sine', undefined, 45);
         break;
       case 'fill':
       case 'pour':

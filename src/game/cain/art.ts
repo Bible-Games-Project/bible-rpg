@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAsset, type SheetAsset } from '../manifest';
 import { Pixels } from './pixels';
-import { drawAnger, drawFat, drawFire, drawShadow, type Drawing } from './drawings';
+import { drawAnger, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
 import { frameOf, frontRun, gallop, padded, sideRun, sideStride, type Px } from './stride';
 import GEN from '../../data/cain/generatedArt.json';
@@ -303,6 +303,7 @@ export function buildCainArt(scene: Phaser.Scene): void {
   addGen(scene, 'cain-jawbone', 'jawbone', { icon: true, sink: 2 });
   // in its own colours, like the basket of produce (at night it was lost on the stone)
   addDrawing(scene, 'cain-fat', drawFat(), true, true);
+  addDrawing(scene, 'cain-knife', drawKnife(), false, true);
   addGen(scene, 'cain-staff', 'staff');
   addGen(scene, 'cain-grave', 'grave');
   // Abel's sheepdog: its own colours, like the sheep (dimmed at night in CainScene)

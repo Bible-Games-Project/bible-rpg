@@ -52,6 +52,10 @@ const BLOOD = 0x9a1f2c;
 const BLOOD_DARK = 0x6b1420;
 /** seconds between drops on the trail after one blow (shorter with each) */
 const TRAIL_EVERY = 0.7;
+/** a struck body flushes red for a moment (instead of a white flash: the maintainer) */
+const HURT_TINT = 0xff6a6a;
+/** where Abel grips his flint knife (fractions of the drawing: in the haft) */
+const KNIFE_GRIP: [number, number] = [0.21, 0.5];
 
 /**
  * Herding (mission 2, the maintainer): the dog runs ahead of Abel the way
@@ -823,17 +827,63 @@ export class CainScene extends Phaser.Scene {
   async offerLamb(i: number): Promise<Pt> {
     const l = this.lambs[i];
     const at: Pt = [l.actor.x, l.actor.y];
+    const lamb = l.actor;
+    const p = this.player();
     this.freezeLamb(i, true);
-    l.actor.face(this.player().x < l.actor.x ? 'left' : 'right');
-    await this.wait(500);
-    this.cameras.main.flash(260, 255, 255, 255);
-    audio.play('drop');
-    const parts = [l.actor.sprite, l.actor.shadow].filter((o): o is NonNullable<typeof o> => !!o);
+    // the player on its left: it looks at him, and falls away from him
+    const side = p.x < lamb.x ? 1 : -1;
+    lamb.face(side > 0 ? 'left' : 'right');
+    p.stop();
+    p.face(lamb);
+    // Abel draws his knife (what he held goes back in his hand after)
+    const held = p.holding();
+    p.hold('cain-knife', 'hand', KNIFE_GRIP);
+    await this.wait(320);
+    audio.play('swing', { volume: 0.6 });
+    await p.attack('stab');
+    audio.play('cut');
+    const marks: Phaser.GameObjects.GameObject[] = [];
+    const cut = this.slash(lamb, side, marks);
+    this.bleed(lamb, p, 9, marks);
+    lamb.sprite.setTint(HURT_TINT);
+    this.time.delayedCall(140, () => lamb.sprite.setTint(NIGHT_TINT));
+    await this.wait(380);
+    // it sinks down on its side; the blood pools under it
+    cut.destroy();
+    this.tweens.add({ targets: lamb.sprite, angle: side * 88, duration: 360, ease: 'Quad.easeIn' });
+    const pool = this.add.ellipse(lamb.x + side * 10, lamb.y, 6, 3, BLOOD_DARK).setDepth(DEPTH_SHADOW + 2).setAlpha(0.9);
+    marks.push(pool);
+    this.tweens.add({ targets: pool, scaleX: 3.5, scaleY: 3, delay: 300, duration: 1400, ease: 'Sine.easeOut' });
+    await this.wait(1000);
+    p.hold(held?.[0] ?? null, held?.[1], held?.[2]);
+    const parts = [lamb.sprite, lamb.shadow].filter((o): o is NonNullable<typeof o> => !!o);
     await new Promise<void>((resolve) => this.tweens.add({ targets: parts, alpha: 0, duration: 700, onComplete: () => resolve() }));
-    l.actor.setVisible(false);
+    lamb.setVisible(false);
+    lamb.sprite.setAngle(0);
     parts.forEach((o) => o.setAlpha(1));
-    this.fx('sparkle', at);
+    // the blood soaks into the ground after a while
+    const left = marks.filter((m) => m.active);
+    this.tweens.add({ targets: left, alpha: 0, delay: 5000, duration: 3000, onComplete: () => left.forEach((m) => m.destroy()) });
     return at;
+  }
+
+  /**
+   * The cut of a blade (the maintainer): a quick red streak across the
+   * neck, and the open cut left there (returned: it goes when the body falls).
+   */
+  private slash(a: Actor, side: number, into: Phaser.GameObjects.GameObject[]): Phaser.GameObjects.Ellipse {
+    const h = a.y - a.topY();
+    const x = a.x - side * a.sprite.displayWidth * 0.26;
+    const y = a.topY() + h * 0.42;
+    const g = this.add.graphics().setDepth(a.y + 3).setPosition(x, y);
+    g.lineStyle(2.2, 0xe04a4a, 1).lineBetween(-side * 9, -7, side * 9, 7);
+    g.lineStyle(1, 0xffc0b0, 0.9).lineBetween(-side * 7, -5, side * 7, 5);
+    g.setScale(0.2, 1);
+    this.tweens.add({ targets: g, scaleX: 1, duration: 90, ease: 'Quad.easeOut' });
+    this.tweens.add({ targets: g, alpha: 0, delay: 120, duration: 260, onComplete: () => g.destroy() });
+    const cut = this.add.ellipse(x, y + 1, 7, 2.4, BLOOD).setAngle(side * 35).setDepth(a.y + 1);
+    into.push(cut);
+    return cut;
   }
 
   /** The fat of a lamb lying on the ground until it is taken. */
@@ -870,15 +920,20 @@ export class CainScene extends Phaser.Scene {
     });
   }
 
-  private strike(): void {
+  /** Cain swings the jawbone (the maintainer: a real blow); it lands as it comes down. */
+  private async strike(): Promise<void> {
     const s = this.chaseState;
     if (!s || s.cooldown > 0) return;
     s.cooldown = STRIKE_COOLDOWN;
     const c = this.cain;
     const a = this.abel;
+    c.stop();
     c.face(a);
-    audio.play('land');
-    if (!settings.get().reduceMotion) this.cameras.main.shake(140, 0.004);
+    audio.play('swing');
+    await c.attack('swing');
+    if (this.chaseState !== s || s.mode === 'reset' || s.mode === 'down') return;
+    audio.play('hit');
+    if (!settings.get().reduceMotion) this.cameras.main.shake(180, 0.007);
     s.hits++;
     this.drawHealth();
     // knocked a little away from Cain
@@ -886,9 +941,10 @@ export class CainScene extends Phaser.Scene {
     const dy = a.y - c.y;
     const d = Math.max(1, Math.hypot(dx, dy));
     a.setPosition(a.x + (dx / d) * 14, a.y + (dy / d) * 14);
-    a.sprite.setTintFill(0xffffff);
-    this.time.delayedCall(110, () => a.sprite.setTint(NIGHT_TINT));
-    this.bleed(4 + s.hits * 2);
+    // the blow shows in red, not a white flash
+    a.sprite.setTint(HURT_TINT);
+    this.time.delayedCall(140, () => a.sprite.setTint(NIGHT_TINT));
+    this.bleed(a, c, 4 + s.hits * 2);
     this.wound();
     if (s.hits >= HITS) {
       s.mode = 'down';
@@ -906,10 +962,9 @@ export class CainScene extends Phaser.Scene {
     a.stop();
   }
 
-  /** Drops of blood flying from Abel, away from the blow, staining the ground where they fall. */
-  private bleed(n: number): void {
-    const a = this.abel;
-    const away = Math.atan2(a.y - this.cain.y, a.x - this.cain.x);
+  /** Drops of blood flying from someone struck, away from the blow, staining the ground where they fall. */
+  private bleed(a: Actor, by: Actor, n: number, into = this.blood): void {
+    const away = Math.atan2(a.y - by.y, a.x - by.x);
     const h = a.y - a.topY();
     for (let i = 0; i < n; i++) {
       const ang = away + (Math.random() - 0.5) * 1.8;
@@ -928,16 +983,16 @@ export class CainScene extends Phaser.Scene {
         duration: ms,
         onComplete: () => {
           d.destroy();
-          this.stain(gx, gy, r * 1.3);
+          this.stain(gx, gy, r * 1.3, into);
         },
       });
-      this.blood.push(d);
+      into.push(d);
     }
   }
 
   /** A spot of blood on the ground. */
-  private stain(x: number, y: number, r: number): void {
-    this.blood.push(this.add.ellipse(x, y, r * 2.2, r * 1.3, BLOOD_DARK).setDepth(DEPTH_SHADOW + 1).setAlpha(0.85));
+  private stain(x: number, y: number, r: number, into = this.blood): void {
+    into.push(this.add.ellipse(x, y, r * 2.2, r * 1.3, BLOOD_DARK).setDepth(DEPTH_SHADOW + 1).setAlpha(0.85));
   }
 
   /** A new wound on Abel where the blow fell; the older ones spread. */
