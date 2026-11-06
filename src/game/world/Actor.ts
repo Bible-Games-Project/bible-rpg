@@ -318,7 +318,7 @@ export class Actor {
     }
     // each character's walk matches its own usual speed (God walks slower, with shorter steps)
     if (this.charId) this.sprite.anims.timeScale = !this.moving ? 1 : running ? Phaser.Math.Clamp(this.pace / (pace * 1.6), 0.7, 1.4) : Phaser.Math.Clamp(this.pace / pace, 0.55, 1.75);
-    else if (this.stridePace) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / this.stridePace, 0.5, 2.5) : 1;
+    else if (this.stridePace) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / this.stridePace, 0.5, 4) : 1;
     this.placeHeld();
   }
 

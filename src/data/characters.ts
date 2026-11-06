@@ -18,7 +18,7 @@ export const CHARACTERS: Record<string, CharacterDef> = {
   god: { nameKey: 'characters.god', portrait: 'god', sprite: 'god', outfit: 'robe', voice: 110, speed: 110 },
   serpent: { nameKey: 'characters.serpent', portrait: 'serpent', voice: 320, speed: 90 },
   // Genesis 4: Adam's sons, drawn from his sprite in the tunic God made
-  cain: { nameKey: 'characters.cain', portrait: 'cain', sprite: 'cain', outfit: 'tunic', voice: 135, speed: 170 },
+  cain: { nameKey: 'characters.cain', portrait: 'cain', sprite: 'cain', outfit: 'tunic', voice: 135, speed: 140 },
   abel: { nameKey: 'characters.abel', portrait: 'abel', sprite: 'abel', outfit: 'tunic', voice: 175, speed: 170 },
   narrator: { nameKey: 'characters.narrator', portrait: null, voice: 180, speed: 0 },
 };

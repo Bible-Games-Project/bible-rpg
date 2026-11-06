@@ -40,13 +40,13 @@ export const HITS = 5;
 const REACH = 62;
 const STRIKE_COOLDOWN = 0.6;
 /** Abel's running: his pace, slower with each blow; the stagger and the dash after it. */
-const FLEE_SPEED = 132;
-const FLEE_SLOWER = 15;
+const FLEE_SPEED = 112;
+const FLEE_SLOWER = 13;
 /** the dash after a blow loses this much per blow too */
-const DASH_SLOWER = 22;
+const DASH_SLOWER = 20;
 const STAGGER = 0.3;
 const DASH = 0.65;
-const DASH_SPEED = 215;
+const DASH_SPEED = 190;
 /** Abel's blood (the maintainer): drops flying from each blow, wounds that grow, a trail more frequent the more he is hurt */
 const BLOOD = 0x9a1f2c;
 const BLOOD_DARK = 0x6b1420;
@@ -68,12 +68,13 @@ const ABEL_FEAR = 70;
 /** the sheep's top speed when driven (the maintainer: they ran too fast) */
 const HERD_SPEED = 76;
 /** the pace at which the sheep's and lambs' walks play at their own rate: their
- * legs keep up with how fast they go (the maintainer saw them skate) */
-const SHEEP_STRIDE = 52;
+ * legs keep up with how fast they go (the maintainer saw them skate, then
+ * asked for the steps twice as quick) */
+const SHEEP_STRIDE = 26;
 /** the brothers' fists from the front and back (world px above the feet):
  * what they hold sits in the hand, not under it */
 const HAND_HEIGHT = 41;
-const LAMB_STRIDE = 40;
+const LAMB_STRIDE = 20;
 const GRAZE_SPEED = 16;
 
 const ITEM_ICONS: Record<string, string> = {

@@ -411,7 +411,7 @@ function buildBrothers(scene: Phaser.Scene): void {
       }
       set[dir] = asset;
       scene.anims.create({ key: `${key}:idle`, frames: scene.anims.generateFrameNumbers(key, { frames: a.idle ?? [0] }), frameRate: 1.4, repeat: -1 });
-      if (a.walk?.length) scene.anims.create({ key: `${key}:walk`, frames: scene.anims.generateFrameNumbers(key, { frames: a.walk }), frameRate: a.walkFps ?? 8, repeat: -1 });
+      if (a.walk?.length) scene.anims.create({ key: `${key}:walk`, frames: scene.anims.generateFrameNumbers(key, { frames: a.walk }), frameRate: (a.walkFps ?? 8) * (who === 'cain' ? CAIN_WALK_RATE : 1), repeat: -1 });
       if (asset.run?.length) scene.anims.create({ key: `${key}:run`, frames: scene.anims.generateFrameNumbers(key, { frames: asset.run }), frameRate: asset.runFps ?? 22, repeat: -1 });
     }
     MANIFEST.characters[who] = { tunic: set };
@@ -438,6 +438,8 @@ const RUN = {
 };
 /** from the front and back: the leg off the ground comes up this much more */
 const FRONT_KNEE_LIFT = 5;
+/** Cain walks slower than Adam (the maintainer): his steps at this share of Adam's rate (his speed is lower to match) */
+const CAIN_WALK_RATE = 0.8;
 /** room on each side of the side frames for the run's longer strides */
 const STRIDE_PAD = 8;
 
