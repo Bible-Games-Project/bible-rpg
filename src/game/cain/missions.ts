@@ -104,7 +104,6 @@ const MISSIONS: CainMission[] = [
     active: 'cain',
     async intro(w) {
       w.music('wonder');
-      await w.scripture('born');
       await w.scripture('keeper');
     },
     async run(w) {
@@ -441,7 +440,8 @@ export class CainRunner {
       if (this.mode !== 'restart') await ui().chapterIntro();
       await m.intro?.(w);
     }
-    if (fromSave || relocate) await w.fade(0, 900);
+    // a new story starts behind black (start() darkens the screen): show the world after its intro
+    if (fromSave || relocate || chapterStart) await w.fade(0, 900);
     audio.play('missionStart');
     await w.wait(900);
 
