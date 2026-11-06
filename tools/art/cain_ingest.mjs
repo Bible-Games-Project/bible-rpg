@@ -61,6 +61,7 @@ const SHEETS = {
     { name: 'dog-0', w: 70 },
     { name: 'dog-1', w: 70 },
   ],
+  'cain-grave': [{ name: 'grave', w: 110 }],
 };
 
 function newest(job) {

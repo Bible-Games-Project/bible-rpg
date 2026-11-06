@@ -22,6 +22,13 @@
    "size": "1536x1024",
    "references": ["art/reference/v2/style-scene.webp", "art/reference/v2/adam-sprite.png"],
    "prompt": "A sheet of small farming and shepherd sprites, in three rows with clear space between every item. Top row: 1) one long straight furrow of freshly tilled brown earth, a low ridge running left to right, much wider than tall; 2) a bunch of ripe golden wheat stalks with heavy ears; 3) another bunch of ripe wheat, different; 4) the same bunch cut down to short stubble. Middle row: 5) a young leafy vegetable plant, 6) a bigger leafy plant like a broad bean, 7) a row plant like a leek or onion with long leaves, 8) a low gourd vine with three round yellow gourds, 9) the same vine without gourds. Bottom row: 10) the bleached jawbone of a donkey lying flat, 11) a shepherd's staff: a long straight wooden stick with a curled crook at the top, standing upright, 12) a shaggy brown and cream sheepdog seen exactly from the side facing right, standing, 13) the same dog from the side facing right, trotting with legs apart."
+  },
+  {
+   "id": "cain-grave",
+   "title": "Abel's grave",
+   "size": "1024x1024",
+   "references": ["art/reference/v2/style-scene.webp"],
+   "prompt": "One single sprite in the middle of the image, about half the image wide: the grave of a shepherd in the first age of the world, seen from the top-down three-quarter view of the reference scene. A low, long mound of freshly dug dark brown earth, about twice as wide as deep, with rough grey and tan unhewn field stones piled on it into a low cairn, a slightly taller upright stone standing at its left end as a marker, a few loose pebbles at its foot. Simple and humble, no cross, no carving, no inscription, no flowers, no grass."
   }
  ]
 }

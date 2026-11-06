@@ -2374,5 +2374,36 @@
    "total_tokens": 2017
   },
   "at": "20261105-163611"
+ },
+ {
+  "job": "cain-grave",
+  "chapter": "cain",
+  "file": "(lost in a console reset before it was committed)",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0195,
+  "at": "20261106-140918"
+ },
+ {
+  "job": "cain-grave",
+  "chapter": "cain",
+  "file": "art/generated/cain-grave/20261106-141606-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0195,
+  "usage": {
+   "input_tokens": 1810,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 302
+   },
+   "output_tokens": 196,
+   "output_tokens_details": {
+    "image_tokens": 196,
+    "text_tokens": 0
+   },
+   "total_tokens": 2006
+  },
+  "at": "20261106-141606"
  }
 ]
