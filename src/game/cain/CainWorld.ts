@@ -136,21 +136,35 @@ export class CainWorld {
     const r = rng(31);
     const keep = (x: number, y: number, d: number) =>
       PRODUCE.some((p) => Math.hypot(p.at[0] - x, p.at[1] - y) < d) || Math.hypot(POINTS.jawbone[0] - x, POINTS.jawbone[1] - y) < d || distToPolyline(x, y, ESCAPE) < 34 || this.pathDistance(x, y) < 10;
-    for (let y = FIELD.y + 40; y < FIELD.y + FIELD.h - 20; y += 30) {
-      for (let x = FIELD.x + 30; x < FIELD.x + FIELD.w - 30; x += 86) {
-        const fx = x + (r() - 0.5) * 6;
-        if (fieldDistance(fx, y) > -24 || this.pathDistance(fx, y) < 0) continue;
-        const f = this.scene.add.image(fx, y, `cain-furrow-${Math.floor(r() * 3)}`).setDepth(DEPTH_GROUND + 4 + y * 0.0001).setScale(ART);
+    // furrows dug by hand: rows that wander, bunch up and spread apart, with
+    // gaps (the maintainer: ruler-straight rows looked fake)
+    const rowY = (base: number, x: number) => base + 9 * Math.sin(x / 260 + base * 0.013) + 4 * Math.sin(x / 93 + base * 0.031) + (x - FIELD.x) * 0.012 * Math.sin(base * 0.007);
+    const rows: number[] = [];
+    for (let y = FIELD.y + 40; y < FIELD.y + FIELD.h - 20; y += 24 + r() * 12) rows.push(y);
+    for (const base of rows) {
+      for (let x = FIELD.x + 30 + r() * 40; x < FIELD.x + FIELD.w - 30; x += 70 + r() * 26) {
+        if (r() < 0.07) continue;
+        const fx = x + (r() - 0.5) * 8;
+        const fy = rowY(base, fx) + (r() - 0.5) * 3;
+        if (fieldDistance(fx, fy) > -24 || this.pathDistance(fx, fy) < 0) continue;
+        const slope = (rowY(base, fx + 20) - rowY(base, fx - 20)) / 40;
+        const f = this.scene.add.image(fx, fy, `cain-furrow-${Math.floor(r() * 3)}`).setDepth(DEPTH_GROUND + 4 + fy * 0.0001);
+        f.setScale(ART * (0.85 + r() * 0.3), ART * (0.8 + r() * 0.4)).setRotation(Math.atan(slope) + (r() - 0.5) * 0.06);
         f.setFlipX(r() < 0.5);
       }
     }
-    // the crops, row by row (east half grain, west half greens, mixed)
-    for (let y = FIELD.y + 52; y < FIELD.y + FIELD.h - 30; y += 60) {
-      for (let x = FIELD.x + 50; x < FIELD.x + FIELD.w - 50; x += 44 + r() * 30) {
-        if (fieldDistance(x, y) > -40 || keep(x, y, 70) || r() < 0.25) continue;
-        const grain = r() < (x - FIELD.x) / FIELD.w;
+    // the crops along every other furrow (east half grain, west half greens,
+    // mixed), not quite in line, thicker in some places than others
+    for (let i = 1; i < rows.length - 1; i += 2) {
+      const base = rows[i];
+      for (let x = FIELD.x + 40 + r() * 30; x < FIELD.x + FIELD.w - 50; x += 30 + r() * 46) {
+        const y = rowY(base, x) - 8 + (r() - 0.5) * 9;
+        const cx = x + (r() - 0.5) * 10;
+        if (fieldDistance(cx, y) > -40 || keep(cx, y, 70) || r() < 0.3 + 0.2 * Math.sin(x / 170 + i)) continue;
+        const grain = r() < (cx - FIELD.x) / FIELD.w;
         const key = grain ? `cain-wheat-${Math.floor(r() * 3)}` : `cain-greens-${Math.floor(r() * 3)}`;
-        sized(this.scene.add.image(x, y, key).setOrigin(0.5, 1).setDepth(y)).setFlipX(r() < 0.5);
+        const img = sized(this.scene.add.image(cx, y, key).setOrigin(0.5, 1).setDepth(y)).setFlipX(r() < 0.5);
+        img.setScale(img.scaleX * (0.85 + r() * 0.3));
       }
     }
     // what Cain gathers
