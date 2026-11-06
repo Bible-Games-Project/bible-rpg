@@ -304,6 +304,7 @@ export function buildCainArt(scene: Phaser.Scene): void {
   // in its own colours, like the basket of produce (at night it was lost on the stone)
   addDrawing(scene, 'cain-fat', drawFat(), true, true);
   addGen(scene, 'cain-staff', 'staff');
+  addGen(scene, 'cain-grave', 'grave');
   // Abel's sheepdog: its own colours, like the sheep (dimmed at night in CainScene)
   genDog(scene);
   scene.anims.create({ key: 'cain-dog:idle', frames: scene.anims.generateFrameNumbers('cain-dog', { frames: [0, 1] }), frameRate: 1.6, repeat: -1 });

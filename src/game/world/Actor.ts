@@ -134,6 +134,7 @@ export class Actor {
   setVisible(v: boolean): this {
     this.sprite.setVisible(v);
     this.shadow?.setVisible(v);
+    this.heldSprite?.setVisible(v);
     this.body.enable = v && !this.scripted;
     return this;
   }
@@ -236,7 +237,7 @@ export class Actor {
     this.heldSprite = null;
     this.grip = grip;
     if (!key) return;
-    this.heldSprite = sized(this.scene.add.image(this.x, this.y - 36, key).setOrigin(origin[0], origin[1]).setDepth(this.y + 1));
+    this.heldSprite = sized(this.scene.add.image(this.x, this.y - 36, key).setOrigin(origin[0], origin[1]).setDepth(this.y + 1)).setVisible(this.sprite.visible);
     this.refresh();
   }
 

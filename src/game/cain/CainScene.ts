@@ -12,7 +12,7 @@ import type { Line } from '../../ui/DialogueBox';
 import { ui } from '../bridge';
 import { ART_RESOLUTION, pixelRatio } from '../display';
 import { MANIFEST, sized, textureScale } from '../manifest';
-import { Actor, DEPTH_OVERLAY, type Facing } from '../world/Actor';
+import { Actor, DEPTH_OVERLAY, DEPTH_SHADOW, type Facing } from '../world/Actor';
 import { Atmosphere } from '../world/Atmosphere';
 import { GodLight } from '../world/GodLight';
 import { ObjectiveMarkers } from '../world/ObjectiveMarkers';
@@ -41,10 +41,17 @@ const REACH = 62;
 const STRIKE_COOLDOWN = 0.6;
 /** Abel's running: his pace, slower with each blow; the stagger and the dash after it. */
 const FLEE_SPEED = 132;
-const FLEE_SLOWER = 7;
+const FLEE_SLOWER = 15;
+/** the dash after a blow loses this much per blow too */
+const DASH_SLOWER = 22;
 const STAGGER = 0.3;
 const DASH = 0.65;
 const DASH_SPEED = 215;
+/** Abel's blood (the maintainer): drops flying from each blow, wounds that grow, a trail more frequent the more he is hurt */
+const BLOOD = 0x9a1f2c;
+const BLOOD_DARK = 0x6b1420;
+/** seconds between drops on the trail after one blow (shorter with each) */
+const TRAIL_EVERY = 0.7;
 
 /**
  * Herding (mission 2, the maintainer): the dog runs ahead of Abel the way
@@ -141,6 +148,11 @@ export class CainScene extends Phaser.Scene {
   private npcsTalk = true;
   private chaseState: ChaseState | null = null;
   private healthBar!: Phaser.GameObjects.Graphics;
+  /** the blood on the ground (cleared when the chase begins again, and when Abel is buried) */
+  private blood: Phaser.GameObjects.GameObject[] = [];
+  /** the wounds on Abel, each at its place on his body (fractions of his height) */
+  private wounds: { o: Phaser.GameObjects.Ellipse; fx: number; fy: number }[] = [];
+  private trailTimer = 0;
 
   constructor() {
     super('cain');
@@ -157,6 +169,8 @@ export class CainScene extends Phaser.Scene {
     this.sheep = [];
     this.lambs = [];
     this.herd = null;
+    this.blood = [];
+    this.wounds = [];
     this.driving = false;
     this.active = 'cain';
     this.following = false;
@@ -472,6 +486,7 @@ export class CainScene extends Phaser.Scene {
 
   show(actor: Actor, at: Pt, facing: Facing = 'down'): void {
     actor.setPosition(at[0], at[1]);
+    actor.sprite.setAngle(0);
     actor.setVisible(true);
     actor.face(facing);
   }
@@ -869,9 +884,12 @@ export class CainScene extends Phaser.Scene {
     a.setPosition(a.x + (dx / d) * 14, a.y + (dy / d) * 14);
     a.sprite.setTintFill(0xffffff);
     this.time.delayedCall(110, () => a.sprite.setTint(NIGHT_TINT));
+    this.bleed(4 + s.hits * 2);
+    this.wound();
     if (s.hits >= HITS) {
       s.mode = 'down';
       a.stop();
+      this.fall();
       this.cutscene(true);
       this.healthBar.setVisible(false);
       this.chaseState = null;
@@ -882,6 +900,87 @@ export class CainScene extends Phaser.Scene {
     s.mode = 'stagger';
     s.timer = STAGGER;
     a.stop();
+  }
+
+  /** Drops of blood flying from Abel, away from the blow, staining the ground where they fall. */
+  private bleed(n: number): void {
+    const a = this.abel;
+    const away = Math.atan2(a.y - this.cain.y, a.x - this.cain.x);
+    const h = a.y - a.topY();
+    for (let i = 0; i < n; i++) {
+      const ang = away + (Math.random() - 0.5) * 1.8;
+      const dist = 8 + Math.random() * (18 + n * 2);
+      const gx = a.x + Math.cos(ang) * dist;
+      const gy = a.y + Math.sin(ang) * dist * 0.5 + (Math.random() - 0.5) * 6;
+      const r = 1.3 + Math.random() * 1.6;
+      const from = a.y - h * (0.45 + Math.random() * 0.2);
+      const d = this.add.circle(a.x + (Math.random() - 0.5) * 8, from, r, BLOOD).setDepth(a.y + 2);
+      const ms = 240 + Math.random() * 200;
+      this.tweens.add({ targets: d, x: gx, duration: ms });
+      this.tweens.add({
+        targets: d,
+        y: { from: from - 10 - Math.random() * 14, to: gy },
+        ease: 'Quad.easeIn',
+        duration: ms,
+        onComplete: () => {
+          d.destroy();
+          this.stain(gx, gy, r * 1.3);
+        },
+      });
+      this.blood.push(d);
+    }
+  }
+
+  /** A spot of blood on the ground. */
+  private stain(x: number, y: number, r: number): void {
+    this.blood.push(this.add.ellipse(x, y, r * 2.2, r * 1.3, BLOOD_DARK).setDepth(DEPTH_SHADOW + 1).setAlpha(0.85));
+  }
+
+  /** A new wound on Abel where the blow fell; the older ones spread. */
+  private wound(): void {
+    for (const w of this.wounds) w.o.setScale(w.o.scaleX * 1.25);
+    const o = this.add.ellipse(0, 0, 5 + Math.random() * 3, 4 + Math.random() * 2, BLOOD).setAlpha(0.92);
+    this.wounds.push({ o, fx: (Math.random() - 0.5) * 0.14, fy: 0.3 + Math.random() * 0.28 });
+    this.placeWounds();
+  }
+
+  private placeWounds(): void {
+    const a = this.abel;
+    const h = a.y - a.topY();
+    for (const w of this.wounds) w.o.setPosition(a.x + w.fx * h, a.topY() + w.fy * h).setDepth(a.sprite.depth + 0.5).setVisible(a.visible);
+  }
+
+  /** Abel falls (the fifth blow): the staff drops from his hand first, the blood pools under him. */
+  private fall(): void {
+    const a = this.abel;
+    a.hold(null);
+    for (const w of this.wounds) w.o.destroy();
+    this.wounds = [];
+    const side = a.x >= this.cain.x ? 1 : -1;
+    this.blood.push(sized(this.add.image(a.x - side * 20, a.y + 6, 'cain-staff')).setOrigin(0.5, 0.5).setAngle(-side * 80).setDepth(a.y - 1));
+    this.tweens.add({ targets: a.sprite, angle: side * 86, duration: 420, ease: 'Quad.easeIn' });
+    const pool = this.add.ellipse(a.x + side * 26, a.y, 8, 4, BLOOD_DARK).setDepth(DEPTH_SHADOW + 2).setAlpha(0.9);
+    this.blood.push(pool);
+    this.tweens.add({ targets: pool, scaleX: 5, scaleY: 4, delay: 400, duration: 1800, ease: 'Sine.easeOut' });
+  }
+
+  private clearBlood(): void {
+    for (const o of [...this.blood, ...this.wounds.map((w) => w.o)]) o.destroy();
+    this.blood = [];
+    this.wounds = [];
+    this.trailTimer = 0;
+  }
+
+  /** After the fall (in the dark): Abel gone, the blood gone, his grave in the field. */
+  buryAbel(): void {
+    this.abel.sprite.setAngle(0);
+    this.hide(this.abel);
+    this.clearBlood();
+    this.showGrave(true);
+  }
+
+  showGrave(on: boolean): void {
+    this.world.grave.setVisible(on);
   }
 
   private drawHealth(): void {
@@ -913,6 +1012,7 @@ export class CainScene extends Phaser.Scene {
     s.hits = 0;
     s.leg = 0;
     s.cooldown = 0;
+    this.clearBlood();
     this.drawHealth();
     this.cameraSnap();
     await this.wait(400);
@@ -929,6 +1029,7 @@ export class CainScene extends Phaser.Scene {
     if (!s) return;
     const a = this.abel;
     this.healthBar.setPosition(a.x, a.topY() - 10);
+    this.placeWounds();
     s.cooldown -= dt;
     if (s.mode === 'reset' || s.mode === 'down') return;
     if (ui().dialogue.open) {
@@ -954,8 +1055,16 @@ export class CainScene extends Phaser.Scene {
     const dx = tx - a.x;
     const dy = ty - a.y;
     const d = Math.max(1, Math.hypot(dx, dy));
-    const speed = s.mode === 'dash' ? DASH_SPEED : FLEE_SPEED - s.hits * FLEE_SLOWER;
+    const speed = s.mode === 'dash' ? DASH_SPEED - s.hits * DASH_SLOWER : FLEE_SPEED - s.hits * FLEE_SLOWER;
     a.move((dx / d) * speed, (dy / d) * speed);
+    // the more he is hurt, the more often a drop falls behind him
+    if (s.hits > 0) {
+      this.trailTimer -= dt;
+      if (this.trailTimer <= 0) {
+        this.trailTimer = (TRAIL_EVERY / s.hits) * (0.6 + Math.random() * 0.8);
+        this.stain(a.x + (Math.random() - 0.5) * 14, a.y - 2 + (Math.random() - 0.5) * 6, 1.6 + Math.random() * (1 + s.hits * 0.4));
+      }
+    }
     if (Math.hypot(a.x - SAFE.x, a.y - SAFE.y) < SAFE.r) void this.resetChase(s);
   }
 

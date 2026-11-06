@@ -59,6 +59,8 @@ export class CainWorld {
   readonly altarTop: Record<'cain' | 'abel', Pt> = { cain: [0, 0], abel: [0, 0] };
   /** the jawbone of an ass lying in the field (mission 4) */
   jawbone!: Phaser.GameObjects.Image;
+  /** Abel's grave, after mission 4 (hidden until then) */
+  grave!: Phaser.GameObjects.Image;
   private taken: Pt[] = [];
   /** the torches' light, flickering */
   private lights: { img: Phaser.GameObjects.Image; flame: Phaser.GameObjects.Sprite; scale: number; phase: number }[] = [];
@@ -135,7 +137,7 @@ export class CainWorld {
   private field(): void {
     const r = rng(31);
     const keep = (x: number, y: number, d: number) =>
-      PRODUCE.some((p) => Math.hypot(p.at[0] - x, p.at[1] - y) < d) || Math.hypot(POINTS.jawbone[0] - x, POINTS.jawbone[1] - y) < d || distToPolyline(x, y, ESCAPE) < 34 || this.pathDistance(x, y) < 10;
+      PRODUCE.some((p) => Math.hypot(p.at[0] - x, p.at[1] - y) < d) || Math.hypot(POINTS.jawbone[0] - x, POINTS.jawbone[1] - y) < d || Math.hypot(POINTS.grave[0] - x, POINTS.grave[1] - y) < d + 50 || distToPolyline(x, y, ESCAPE) < 34 || this.pathDistance(x, y) < 10;
     // furrows dug by hand: rows that wander, bunch up and spread apart, with
     // gaps (the maintainer: ruler-straight rows looked fake)
     const rowY = (base: number, x: number) => base + 9 * Math.sin(x / 260 + base * 0.013) + 4 * Math.sin(x / 93 + base * 0.031) + (x - FIELD.x) * 0.012 * Math.sin(base * 0.007);
@@ -183,6 +185,7 @@ export class CainWorld {
     }
     // the jawbone, lying in the earth at the far side of the field
     this.jawbone = this.scene.add.image(POINTS.jawbone[0], POINTS.jawbone[1], 'cain-jawbone').setOrigin(0.5, 1).setScale(ART).setDepth(DEPTH_GROUND + 30);
+    this.grave = this.scene.add.image(POINTS.grave[0], POINTS.grave[1], 'cain-grave').setOrigin(0.5, 0.9).setScale(ART).setDepth(POINTS.grave[1]).setVisible(false);
   }
 
   /** A produce spot gathered (or not, when a saved game is restored). */

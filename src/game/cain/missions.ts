@@ -67,6 +67,7 @@ function stage(w: CainScene, n: number, place: boolean): void {
   LAMBS.forEach((_, i) => w.setLamb(i, n < 3 || i >= LAMBS_TO_OFFER));
   w.penFlock(n >= 3);
   w.showJawbone(n <= 4);
+  w.showGrave(n >= 5);
   w.flag('offered', n >= 4);
   w.npcs(true);
   w.follow(false);
@@ -89,7 +90,7 @@ function stage(w: CainScene, n: number, place: boolean): void {
     at('cain', [2170, 2060], 'right');
     at('abel', [2320, 2060], 'left');
   } else {
-    at('cain', [POINTS.jawbone[0] + 60, POINTS.jawbone[1] - 40], 'right');
+    at('cain', [POINTS.grave[0] - 85, POINTS.grave[1] - 20], 'right');
     w.hide(w.abel);
   }
   w.cameraSnap();
@@ -337,10 +338,11 @@ const MISSIONS: CainMission[] = [
       w.music('none');
       await w.wait(400);
       await w.fade(1, 1200);
-      w.hide(w.abel);
+      w.buryAbel();
+      w.show(w.cain, [POINTS.grave[0] - 85, POINTS.grave[1] - 20], 'right');
+      w.cameraSnap();
       w.cain.hold(null);
       w.take('jawbone');
-      w.cain.face('down');
       await w.scripture('slew');
       w.music('sorrow');
       await w.fade(0, 1400);

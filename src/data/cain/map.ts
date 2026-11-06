@@ -76,6 +76,8 @@ export const POINTS: Record<string, Pt> = {
   fieldGate: [1270, 3200],
   jawbone: [760, 4010],
   godField: [980, 3830],
+  // where Abel is buried (after mission 4)
+  grave: [905, 3992],
   // the way out, east (Genesis 4:16)
   nod: [2900, 3440],
 };
