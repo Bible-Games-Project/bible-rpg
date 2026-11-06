@@ -47,12 +47,14 @@ export function addShadow(scene: Phaser.Scene, x: number, y: number, textureKey:
 export function fitShadow(img: Phaser.GameObjects.Image, textureKey: string, frame = 0, flipped = false): boolean {
   const sh = shadowOf(textureKey);
   if (!sh || !img.scene.textures.exists(shadowKey(textureKey))) return false;
-  // mirrored light: the shadow of the sprite drawn the other way, mirrored
-  // about the base point (Phaser flips an image about its origin)
+  // mirrored light: the shadow of the sprite drawn the other way, mirrored.
+  // Phaser mirrors an image within its frame, so the feet are then at
+  // width - anchorX (the shadow fell a sprite's width off the feet)
   const cell = (flipped !== light.mirrored ? sh.frames : 0) + Math.min(frame, sh.frames - 1);
   img.setFlipX(light.mirrored);
   if (img.texture.key !== shadowKey(textureKey)) img.setTexture(shadowKey(textureKey), cell);
   else if (String(img.frame.name) !== String(cell)) img.setFrame(cell);
-  img.setOrigin(sh.anchorX / sh.frameWidth, sh.anchorY / sh.frameHeight).setScale(textureScale(textureKey));
+  const ax = light.mirrored ? sh.frameWidth - sh.anchorX : sh.anchorX;
+  img.setOrigin(ax / sh.frameWidth, sh.anchorY / sh.frameHeight).setScale(textureScale(textureKey));
   return true;
 }
