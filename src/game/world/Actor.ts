@@ -264,7 +264,7 @@ export class Actor {
     this.blow = b;
     const swing = kind === 'swing';
     const wind = swing ? { lunge: -3, turn: -2.5, lift: -24, aim: 0 } : { lunge: -4, turn: -0.25, lift: -3, aim: 1 };
-    const land = swing ? { lunge: 8, turn: 1.1, lift: 4, aim: 0 } : { lunge: 10, turn: 0.1, lift: 0, aim: 1 };
+    const land = swing ? { lunge: 8, turn: 1.1, lift: 4, aim: 0 } : { lunge: 10, turn: 0.15, lift: 6, aim: 1 };
     const step = (props: Partial<typeof b>, duration: number, ease: string, delay = 0) =>
       new Promise<void>((done) => this.scene.tweens.add({ targets: b, ...props, duration, ease, delay, onComplete: () => done(), onStop: () => done() }));
     const landed = step(wind, swing ? 230 : 150, 'Quad.easeOut').then(() => step(land, swing ? 100 : 80, 'Quad.easeIn', swing ? 70 : 40));

@@ -823,7 +823,7 @@ export class CainScene extends Phaser.Scene {
   }
 
   /** The lamb offered: a moment of stillness, then it is gone and its fat
-   * lies there (Genesis 4:4). Shown with restraint: a flash and a fade. */
+   * lies there (Genesis 4:4). Abel cuts its throat with a flint knife; it bleeds, sinks down and fades. */
   async offerLamb(i: number): Promise<Pt> {
     const l = this.lambs[i];
     const at: Pt = [l.actor.x, l.actor.y];
@@ -848,9 +848,10 @@ export class CainScene extends Phaser.Scene {
     lamb.sprite.setTint(HURT_TINT);
     this.time.delayedCall(140, () => lamb.sprite.setTint(NIGHT_TINT));
     await this.wait(380);
-    // it sinks down on its side; the blood pools under it
+    // its legs give way and its head drops; the blood pools under it
     cut.destroy();
-    this.tweens.add({ targets: lamb.sprite, angle: side * 88, duration: 360, ease: 'Quad.easeIn' });
+    const sy = lamb.sprite.scaleY;
+    this.tweens.add({ targets: lamb.sprite, scaleY: sy * 0.55, angle: -side * 9, duration: 360, ease: 'Quad.easeIn' });
     const pool = this.add.ellipse(lamb.x + side * 10, lamb.y, 6, 3, BLOOD_DARK).setDepth(DEPTH_SHADOW + 2).setAlpha(0.9);
     marks.push(pool);
     this.tweens.add({ targets: pool, scaleX: 3.5, scaleY: 3, delay: 300, duration: 1400, ease: 'Sine.easeOut' });
@@ -859,7 +860,7 @@ export class CainScene extends Phaser.Scene {
     const parts = [lamb.sprite, lamb.shadow].filter((o): o is NonNullable<typeof o> => !!o);
     await new Promise<void>((resolve) => this.tweens.add({ targets: parts, alpha: 0, duration: 700, onComplete: () => resolve() }));
     lamb.setVisible(false);
-    lamb.sprite.setAngle(0);
+    lamb.sprite.setAngle(0).setScale(lamb.sprite.scaleX, sy);
     parts.forEach((o) => o.setAlpha(1));
     // the blood soaks into the ground after a while
     const left = marks.filter((m) => m.active);
