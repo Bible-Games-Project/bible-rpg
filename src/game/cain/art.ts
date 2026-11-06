@@ -1,9 +1,10 @@
 import Phaser from 'phaser';
 import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAsset, type SheetAsset } from '../manifest';
 import { Pixels } from './pixels';
+import { DOG_RIG, dogGallop } from './dogRun';
 import { drawAnger, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
-import { frameOf, frontRun, gallop, padded, sideRun, sideStride, type FrontArms, type Px } from './stride';
+import { frameOf, frontRun, padded, sideRun, sideStride, type FrontArms, type Px } from './stride';
 import GEN from '../../data/cain/generatedArt.json';
 
 /**
@@ -152,8 +153,8 @@ function genTree(scene: Phaser.Scene, id: string, name: GenName): void {
  * Abel's sheepdog from its two generated poses (standing, trotting), on
  * frames of one size with the feet on the same row. Frames 0–1: idle (the
  * second breathing: the body a pixel higher). Frames 2–9: a gallop made from
- * the running pose (gallop() in stride.ts: the front and hind legs reach out
- * and gather in turn, the body rocking and off the ground as they reach).
+ * the running pose (dogGallop() in dogRun.ts: the legs drawn again, bending,
+ * reaching out and gathering in turn, the body off the ground as they reach).
  */
 const DOG_TROT_FRAMES = 8;
 function genDog(scene: Phaser.Scene): void {
@@ -208,17 +209,8 @@ function genDog(scene: Phaser.Scene): void {
     return f;
   };
   const frames = [frame(0, null, 0), frame(0, null, 1)];
-  // the run: a gallop from the running pose (see stride.ts)
-  const run = frame(1, null, 0);
-  const { belly, mid } = legsOf(poses[1].p, poses[1].g.ay);
-  const shift = AX - poses[1].g.ax;
-  const lift = AY - poses[1].g.ay;
-  const px: Px = { w: W, h: H, d: run.data };
-  for (const g of gallop(px, belly + lift, mid + shift, { frames: DOG_TROT_FRAMES, reach: 32, lift: 3, rock: 4, ground: AY })) {
-    const p = new Pixels(W, H);
-    p.data.set(g.d);
-    frames.push(p);
-  }
+  // the run: a gallop, the legs drawn again on the running pose (see dogRun.ts)
+  frames.push(...dogGallop(poses[1].p, DOG_RIG, { frames: DOG_TROT_FRAMES, w: W, h: H, ox: AX - poses[1].g.ax, ground: AY, lift: 2 }));
   addSheet(scene, 'cain-dog', frames, AX, AY - 1, ART, false, true);
 }
 
