@@ -63,6 +63,9 @@ const HERD_SPEED = 76;
 /** the pace at which the sheep's and lambs' walks play at their own rate: their
  * legs keep up with how fast they go (the maintainer saw them skate) */
 const SHEEP_STRIDE = 52;
+/** the brothers' fists from the front and back (world px above the feet):
+ * what they hold sits in the hand, not under it */
+const HAND_HEIGHT = 41;
 const LAMB_STRIDE = 40;
 const GRAZE_SPEED = 16;
 
@@ -181,8 +184,8 @@ export class CainScene extends Phaser.Scene {
     this.physics.world.setBounds(BOUNDS.left, BOUNDS.top, BOUNDS.right - BOUNDS.left, BOUNDS.bottom - BOUNDS.top);
     this.world = new CainWorld(this);
     const body = { w: 22, h: 10 };
-    this.cain = new Actor(this, { id: 'cain', x: POINTS.start[0], y: POINTS.start[1], charId: 'cain', outfit: 'tunic', body, facing: 'right' });
-    this.abel = new Actor(this, { id: 'abel', x: POINTS.abelStart[0], y: POINTS.abelStart[1], charId: 'abel', outfit: 'tunic', body, facing: 'right' });
+    this.cain = new Actor(this, { id: 'cain', x: POINTS.start[0], y: POINTS.start[1], charId: 'cain', outfit: 'tunic', body, facing: 'right', handHeight: HAND_HEIGHT });
+    this.abel = new Actor(this, { id: 'abel', x: POINTS.abelStart[0], y: POINTS.abelStart[1], charId: 'abel', outfit: 'tunic', body, facing: 'right', handHeight: HAND_HEIGHT });
     this.god = new Actor(this, { id: 'god', x: POINTS.godStart[0], y: POINTS.godStart[1], charId: 'god', outfit: 'robe', body: { w: 26, h: 10 }, solid: true });
     this.god.setVisible(false);
     // Eve stands at the fire, cooking; Adam sits on the log (the maintainer)
@@ -643,14 +646,16 @@ export class CainScene extends Phaser.Scene {
     this.altarFire = null;
     const top = this.world.altarTop;
     if (state.cain) this.altarThings.push(sized(this.add.image(top.cain[0], top.cain[1] + 2, 'basket-full').setOrigin(0.5, 1).setDepth(POINTS.altarCain[1] + 1)));
-    if (state.abel && state.fire !== 'burning' && state.fire !== 'embers') {
-      for (const dx of [-12, 0, 12]) this.altarThings.push(this.add.image(top.abel[0] + dx, top.abel[1] + 4 - Math.abs(dx) / 4, 'cain-fat').setOrigin(0.5, 1).setScale(ART).setDepth(POINTS.altarAbel[1] + 1));
+    // the fat laid in the middle of the altar's top, big enough to see; the fire burns on it
+    if (state.abel && state.fire !== 'embers') {
+      for (const [dx, dy] of [[-10, -3], [10, -2], [0, 1]]) this.altarThings.push(this.add.image(top.abel[0] + dx, top.abel[1] + dy, 'cain-fat').setOrigin(0.5, 1).setScale(ART * 1.3).setDepth(POINTS.altarAbel[1] + 1));
     }
     if (state.fire === 'burning' || state.fire === 'embers') {
       const big = state.fire === 'burning';
       const key = big ? 'cain-fire-big' : 'cain-fire';
       const a = MANIFEST.sprites[key];
-      const f = this.add.sprite(top.abel[0], top.abel[1] + 6, key).setOrigin(a.anchorX / a.frameWidth, 1).setScale(ART * (big ? 1 : 0.7)).setDepth(POINTS.altarAbel[1] + 2);
+      // standing on the altar's top (from its front edge it looked cut off)
+      const f = this.add.sprite(top.abel[0], top.abel[1] - (big ? 2 : 4), key).setOrigin(a.anchorX / a.frameWidth, 1).setScale(ART * (big ? 1 : 0.7)).setDepth(POINTS.altarAbel[1] + 2);
       f.play(`${key}:loop`);
       this.altarFire = f;
       this.altarThings.push(f);

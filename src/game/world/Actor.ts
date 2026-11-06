@@ -36,6 +36,9 @@ export interface ActorOptions {
    * walk plays faster or slower with the real speed so the feet keep pace
    * (a sheep's short steps want a slower pace than a man's) */
   stridePace?: number;
+  /** seen from the front or back, how high the hand is (world px above the
+   * feet) for what it holds in the hand; 36 if not given */
+  handHeight?: number;
   facing?: Facing;
 }
 
@@ -71,6 +74,7 @@ export class Actor {
   lift = 0;
   private shadowOffset: [number, number];
   private stridePace?: number;
+  private handHeight: number;
   /** added to the depth (e.g. the serpent drawn on a branch, in front of the canopy) */
   depthBias = 0;
 
@@ -81,6 +85,7 @@ export class Actor {
     this.outfit = o.outfit;
     this.shadowOffset = o.shadowOffset ?? [0, 0];
     this.stridePace = o.stridePace;
+    this.handHeight = o.handHeight ?? 36;
     this.sheet = o.sheet;
     this.facing = o.facing ?? 'down';
     const bw = o.body?.w ?? 22;
@@ -330,7 +335,7 @@ export class Actor {
     if (this.grip === 'staff') return this.placeStaff(x, y);
     const arms = this.grip === 'arms';
     let dx = (arms ? { left: -9, right: 9, down: 0, up: 0 } : { left: -7, right: 7, down: -12, up: 12 })[this.facing];
-    let dy = arms ? -22 : -36;
+    let dy = arms ? -22 : -this.handHeight;
     const fist = arms ? null : this.fist();
     if (fist) [dx, dy] = [fist[0], fist[1] + HELD_BELOW_FIST];
     this.heldSprite.setPosition(x + dx, y + dy).setRotation(0).setDepth(this.facing === 'up' ? y - 1 : y + 1);

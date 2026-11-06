@@ -301,7 +301,8 @@ export function buildCainArt(scene: Phaser.Scene): void {
   addGen(scene, 'cain-gourds', 'gourds', { sink: 2 });
   addGen(scene, 'cain-gourds-picked', 'gourds-picked', { sink: 2 });
   addGen(scene, 'cain-jawbone', 'jawbone', { icon: true, sink: 2 });
-  addDrawing(scene, 'cain-fat', drawFat(), true);
+  // in its own colours, like the basket of produce (at night it was lost on the stone)
+  addDrawing(scene, 'cain-fat', drawFat(), true, true);
   addGen(scene, 'cain-staff', 'staff');
   // Abel's sheepdog: its own colours, like the sheep (dimmed at night in CainScene)
   genDog(scene);

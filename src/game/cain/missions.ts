@@ -25,6 +25,8 @@ const step = (m: string, s: string, p?: Record<string, string | number>) => t(`c
 const C = (key: string, p?: Record<string, string | number>) => t(`cain.${key}`, p);
 
 // held at the foot of the stick (the crook curls to one side)
+/** the fat resting in the hand, the fist under it */
+const FAT_GRIP: [number, number] = [0.5, 0.95];
 const STAFF: [string, 'staff', [number, number]] = ['cain-staff', 'staff', [(GEN.staff.ax + 0.5) / GEN.staff.w, (GEN.staff.ay - 0.5) / GEN.staff.h]];
 const LAMBS_TO_OFFER = 3;
 
@@ -226,6 +228,8 @@ const MISSIONS: CainMission[] = [
                   w.sfx('pickup');
                   fat++;
                   w.give('fat');
+                  // carried in his hand to the altar (the maintainer); the staff is set aside
+                  w.abel.hold('cain-fat', 'hand', FAT_GRIP);
                   update();
                   if (fat >= LAMBS_TO_OFFER) resolve();
                 },
@@ -244,6 +248,7 @@ const MISSIONS: CainMission[] = [
         prompt: () => C('prompts.offer'),
         onUse: async () => {
           w.take('fat', LAMBS_TO_OFFER);
+          w.abel.hold(...STAFF);
           w.sfx('drop');
           w.setAltars({ cain: true, abel: true });
           await w.wait(700);
