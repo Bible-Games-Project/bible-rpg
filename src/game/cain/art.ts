@@ -3,7 +3,7 @@ import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAs
 import { Pixels } from './pixels';
 import { drawAnger, drawFat, drawFire, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
-import { frameOf, lifted, sideStride, type Px } from './stride';
+import { frameOf, frontRun, padded, sideRun, sideStride, type Px } from './stride';
 import GEN from '../../data/cain/generatedArt.json';
 
 /**
@@ -417,44 +417,51 @@ const SIDE_ARM: [number, number, number, number] = [22, 32, 41, 92];
 const WALK_CYCLE = [18, 9, 0, -9, -18, -9, 0, 9];
 /** Adam's arms swing 0.45 of the legs' angle; Cain's more */
 const CAIN_ARM_SWING = 0.85;
-const TROT_STRIDE = 27;
-const TROT = {
-  cycle: [1, 0.5, 0, -0.5, -1, -0.5, 0, 0.5].map((k) => k * TROT_STRIDE),
-  armSwing: 0.95,
-  lean: 5,
+/** Cain's run (the maintainer: bent knees and elbows, upright, a real trot) */
+const RUN = {
+  frames: 8,
+  thigh: 30,
+  knee: [12, 88] as [number, number],
+  armSwing: 0.85,
+  elbow: 78,
   // off the ground with the legs apart, lowest as they pass
-  lift: [4, 2, 0, 2, 4, 2, 0, 2],
+  lift: [3, 1, 0, 1, 3, 1, 0, 1],
 };
-/** room on each side of the side frames for the trot's longer strides */
-const STRIDE_PAD = 6;
+/** from the front and back: the leg off the ground comes up this much more */
+const FRONT_KNEE_LIFT = 5;
+/** room on each side of the side frames for the run's longer strides */
+const STRIDE_PAD = 8;
 
 /** Cain's sheet for one direction: from the side his walk with more arm
- * swing and a trot; from the front and back the walk bouncing as the trot. */
+ * swing and a run with bent knees and elbows; from the front and back the
+ * walk with the knees coming higher, bobbing. */
 function cainStride(src: HTMLCanvasElement, a: SheetAsset, dir: Direction): [HTMLCanvasElement, SheetAsset] {
   const walk = a.walk ?? [];
   if (walk.length !== 8) return [src, { ...a }];
   const fw = a.frameWidth;
   const fh = a.frameHeight;
   const sheet = src.getContext('2d')!.getImageData(0, 0, src.width, src.height);
-  const frames: Px[] = [];
-  for (let i = 0; i < a.frames; i++) frames.push(frameOf(sheet, i, fw));
   const side = dir === 'right';
   const pad = side ? STRIDE_PAD : 0;
+  const frames: Px[] = [];
+  for (let i = 0; i < a.frames; i++) frames.push(padded(frameOf(sheet, i, fw), pad));
   let hands = a.hands ? a.hands.map(([x, y]) => [x + pad, y] as [number, number]) : undefined;
   let run: Px[];
   if (side) {
+    const band: [number, number, number, number] = [SIDE_ARM[0] + pad, SIDE_ARM[1] + pad, SIDE_ARM[2], SIDE_ARM[3]];
     const stand = frames[0];
-    const w = sideStride(stand, SIDE_ARM, { cycle: WALK_CYCLE, armSwing: CAIN_ARM_SWING });
-    const r = sideStride(stand, SIDE_ARM, TROT);
+    const w = sideStride(stand, band, { cycle: WALK_CYCLE, armSwing: CAIN_ARM_SWING });
+    const r = sideRun(stand, band, RUN);
     walk.forEach((f, i) => (frames[f] = w.frames[i]));
     run = r.frames;
     if (hands) {
       const hs = hands;
-      walk.forEach((f, i) => (hs[f] = [w.hands[i][0] + pad, w.hands[i][1]]));
-      hands = [...hs, ...r.hands.map(([x, y]) => [x + pad, y] as [number, number])];
+      walk.forEach((f, i) => (hs[f] = w.hands[i]));
+      hands = [...hs, ...r.hands];
     }
   } else {
-    run = walk.map((f, i) => lifted(frames[f], TROT.lift[i]));
+    // the knees: a little under the hem
+    run = walk.map((f, i) => frontRun(frames[f], a.anchorX, Math.round(fh * 0.79), FRONT_KNEE_LIFT, RUN.lift[i]));
   }
   const all = [...frames, ...run];
   const W = fw + pad * 2;
@@ -462,9 +469,9 @@ function cainStride(src: HTMLCanvasElement, a: SheetAsset, dir: Direction): [HTM
   c.width = W * all.length;
   c.height = fh;
   const ctx = c.getContext('2d')!;
-  all.forEach((f, i) => ctx.putImageData(new ImageData(new Uint8ClampedArray(f.d), f.w, f.h), i * W + pad, 0));
+  all.forEach((f, i) => ctx.putImageData(new ImageData(new Uint8ClampedArray(f.d), f.w, f.h), i * W, 0));
   const first = frames.length;
-  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, run: run.map((_, i) => first + i), runFps: 22 }];
+  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, run: run.map((_, i) => first + i), runFps: 16 }];
 }
 
 /** The lambs: the sheep, smaller. */
