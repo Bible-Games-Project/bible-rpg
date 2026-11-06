@@ -113,6 +113,18 @@ body {
   inset: 0;
 }
 
+/* always landscape: a device held upright shows the app turned a quarter
+   (see src/ui/orientation.ts) */
+:root.rotated #app {
+  inset: auto;
+  top: 0;
+  left: 0;
+  width: var(--app-w);
+  height: var(--app-h);
+  transform-origin: 0 0;
+  transform: translateX(100vw) rotate(90deg);
+}
+
 #game {
   position: absolute;
   inset: 0;
@@ -269,7 +281,7 @@ body {
 }
 
 @media (max-aspect-ratio: 3/4) {
-  .menu-bg-fill {
+  :root:not(.rotated) .menu-bg-fill {
     display: block;
     position: absolute;
     inset: 0;
@@ -279,7 +291,7 @@ body {
     filter: blur(14px) brightness(0.55);
     transform: scale(1.1);
   }
-  .main-menu .menu-bg {
+  :root:not(.rotated) .main-menu .menu-bg {
     height: min(100%, 134vw);
     object-position: 50% 0;
     -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent);
@@ -323,19 +335,19 @@ body {
 }
 
 @media (max-aspect-ratio: 4/3) {
-  .main-menu-buttons {
+  :root:not(.rotated) .main-menu-buttons {
     flex-direction: column;
     width: min(320px, 82vw);
   }
-  .main-menu-buttons .btn,
-  .main-menu-buttons .btn.primary {
+  :root:not(.rotated) .main-menu-buttons .btn,
+  :root:not(.rotated) .main-menu-buttons .btn.primary {
     min-width: 0;
     width: 100%;
   }
-  .menu-bg {
+  :root:not(.rotated) .menu-bg {
     object-position: 50% 28%;
   }
-  .menu-shade {
+  :root:not(.rotated) .menu-shade {
     background: linear-gradient(to top, rgba(12, 14, 20, 0.9) 0%, rgba(12, 14, 20, 0.55) 38%, rgba(12, 14, 20, 0) 60%);
   }
 }
@@ -824,7 +836,7 @@ select:focus-visible {
   position: absolute;
   left: calc(12px + var(--safe-l));
   top: calc(12px + var(--safe-t));
-  max-width: min(calc(600px * var(--ui-scale)), calc(100vw - 140px));
+  max-width: min(calc(600px * var(--ui-scale)), calc(100 * var(--vw, 1vw) - 140px));
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -1020,7 +1032,7 @@ select:focus-visible {
 
 /* on a narrow screen the touch pad fills the bottom: prompts go above it */
 @media (max-aspect-ratio: 1/1) {
-  .touch-ui .prompt {
+  :root:not(.rotated) .touch-ui .prompt {
     bottom: calc(170px + var(--safe-b));
   }
 }
@@ -1065,7 +1077,7 @@ select:focus-visible {
 
 .hud-banner {
   font-family: var(--font);
-  font-size: clamp(40px, 8vw, 84px);
+  font-size: clamp(40px, 8 * var(--vw, 1vw), 84px);
   font-weight: 700;
   letter-spacing: 0.03em;
   color: #ffe9a8;
@@ -1166,7 +1178,7 @@ select:focus-visible {
   left: 50%;
   bottom: calc(14px + var(--safe-b));
   transform: translateX(-50%);
-  width: min(calc(880px * var(--ui-scale)), calc(100vw - 24px));
+  width: min(calc(880px * var(--ui-scale)), calc(100 * var(--vw, 1vw) - 24px));
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -1181,7 +1193,7 @@ select:focus-visible {
 }
 
 @media (max-aspect-ratio: 1/1) {
-  .touch-ui .dialogue.passive {
+  :root:not(.rotated) .touch-ui .dialogue.passive {
     bottom: calc(170px + var(--safe-b));
   }
 }
@@ -1617,19 +1629,19 @@ select:focus-visible {
 }
 
 @media (max-width: 560px) {
-  .page-header h1 {
+  :root:not(.rotated) .page-header h1 {
     font-size: var(--fs-l);
   }
 
-  .page-header .spacer {
+  :root:not(.rotated) .page-header .spacer {
     display: none;
   }
 
-  .page-header .tabs {
+  :root:not(.rotated) .page-header .tabs {
     width: 100%;
   }
 
-  .page-header .tabs .btn {
+  :root:not(.rotated) .page-header .tabs .btn {
     flex: 1;
   }
 }
@@ -1875,7 +1887,7 @@ select:focus-visible {
 }
 
 .creation-verse {
-  max-width: min(calc(720px * var(--ui-scale)), calc(100vw - 48px));
+  max-width: min(calc(720px * var(--ui-scale)), calc(100 * var(--vw, 1vw) - 48px));
   margin: 0;
   padding: 0 24px;
   text-align: center;
@@ -2381,16 +2393,16 @@ select:focus-visible {
 }
 
 @media (max-width: 560px) {
-  .lib-cast {
+  :root:not(.rotated) .lib-cast {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .lib-cast.sounds {
+  :root:not(.rotated) .lib-cast.sounds {
     grid-template-columns: 1fr;
   }
-  .lib-grid {
+  :root:not(.rotated) .lib-grid {
     grid-template-columns: 1fr;
   }
-  .dev-library .page-header h1 {
+  :root:not(.rotated) .dev-library .page-header h1 {
     font-size: var(--fs-l);
   }
 }

@@ -2,6 +2,7 @@ import './styles/main.css';
 import { applyDocumentLanguage } from './core/i18n';
 import { settings } from './core/settings';
 import { App } from './ui/App';
+import { applyOrientation, viewSize } from './ui/orientation';
 import { setOverlayHost } from './ui/overlays';
 import { preloadPortraits } from './ui/PortraitAnimator';
 import { voices } from './core/voices';
@@ -13,7 +14,9 @@ import { voices } from './core/voices';
  * above what fills a large monitor; "large text" multiplies on top.
  */
 function applyUiScale(): void {
-  const fit = Math.min(1.4, Math.max(0.75, Math.min(window.innerWidth / 1180, window.innerHeight / 700)));
+  applyOrientation();
+  const { w, h } = viewSize();
+  const fit = Math.min(1.4, Math.max(0.75, Math.min(w / 1180, h / 700)));
   const large = settings.get().uiScale === 'large' ? 1.25 : 1;
   document.documentElement.style.setProperty('--ui-scale', (fit * large).toFixed(3));
 }
@@ -29,6 +32,7 @@ function applyDocumentSettings(): void {
 applyDocumentSettings();
 settings.on('change', applyDocumentSettings);
 window.addEventListener('resize', applyUiScale);
+window.addEventListener('orientationchange', () => window.setTimeout(applyUiScale, 150));
 
 const host = document.getElementById('ui')!;
 setOverlayHost(host);

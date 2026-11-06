@@ -22,6 +22,7 @@ import { funScreen, mainMenuScreen, moreGamesScreen, storyMapScreen } from './sc
 import { openSettings } from './SettingsPanel';
 import { TouchControls } from './TouchControls';
 import { pixelRatio } from '../game/display';
+import { viewSize } from './orientation';
 
 /**
  * The application shell: DOM screens (menu, story path, Fun, More Games),
@@ -63,7 +64,7 @@ export class App {
       pixelArt: true,
       roundPixels: true,
       // drawn at the screen's real resolution and shown at CSS size (see display.ts)
-      scale: { mode: Phaser.Scale.NONE, width: Math.round(window.innerWidth * pixelRatio()), height: Math.round(window.innerHeight * pixelRatio()), zoom: 1 / pixelRatio() },
+      scale: { mode: Phaser.Scale.NONE, width: Math.round(viewSize().w * pixelRatio()), height: Math.round(viewSize().h * pixelRatio()), zoom: 1 / pixelRatio() },
       // physics moves bodies by each frame's real time: the default fixed 60 Hz
       // step moved the player 0 or 2 steps in some frames (and only every other
       // frame on 120 Hz screens), which showed as a jerky walk
@@ -76,7 +77,8 @@ export class App {
     const fit = () => {
       const r = pixelRatio();
       this.game.scale.setZoom(1 / r);
-      this.game.scale.resize(Math.round(window.innerWidth * r), Math.round(window.innerHeight * r));
+      const { w, h } = viewSize();
+      this.game.scale.resize(Math.round(w * r), Math.round(h * r));
     };
     window.addEventListener('resize', fit);
     window.addEventListener('orientationchange', () => window.setTimeout(fit, 150));

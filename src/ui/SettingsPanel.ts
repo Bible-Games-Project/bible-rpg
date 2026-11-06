@@ -2,6 +2,7 @@ import { LANGUAGES, t } from '../core/i18n';
 import { settings, type Settings } from '../core/settings';
 import { audio } from '../core/audio';
 import { h } from './dom';
+import { lockLandscape } from './orientation';
 import { openOverlay } from './overlays';
 
 function slider(id: string, key: 'masterVolume' | 'musicVolume' | 'sfxVolume' | 'voiceVolume'): HTMLInputElement {
@@ -50,7 +51,7 @@ export function openSettings(onClose?: () => void): void {
   const fs = h('button', { class: 'btn small', type: 'button' }, t('settings.fullscreen'));
   fs.addEventListener('click', () => {
     if (document.fullscreenElement) void document.exitFullscreen?.();
-    else void document.documentElement.requestFullscreen?.().catch(() => undefined);
+    else void document.documentElement.requestFullscreen?.().then(lockLandscape).catch(() => undefined);
   });
 
   const box = h(
