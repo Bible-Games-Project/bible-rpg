@@ -290,8 +290,12 @@ export class Actor {
     this.syncShadow();
     const anims = this.scene.anims;
     let anim = '';
+    // a character with its own running frames (Cain's trot) uses them
+    // when going clearly faster than its walk
+    const pace = this.charId ? CHARACTERS[this.charId]?.speed || WALK_PACE : WALK_PACE;
+    const running = !!this.charId && this.moving && this.pace > pace * 1.3 && anims.exists(`${tex}:run`);
     if (this.charId) {
-      anim = `${tex}:${this.moving ? 'walk' : 'idle'}`;
+      anim = `${tex}:${running ? 'run' : this.moving ? 'walk' : 'idle'}`;
     } else if (this.sheet) {
       anim = this.lift > 4 && anims.exists(`${tex}:fly`) ? `${tex}:fly` : `${tex}:${this.moving ? 'walk' : 'idle'}`;
       if (!anims.exists(anim)) anim = anims.exists(`${tex}:loop`) ? `${tex}:loop` : '';
@@ -301,7 +305,7 @@ export class Actor {
       this.lastAnim = anim;
     }
     // each character's walk matches its own usual speed (God walks slower, with shorter steps)
-    if (this.charId) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / (CHARACTERS[this.charId]?.speed || WALK_PACE), 0.55, 1.75) : 1;
+    if (this.charId) this.sprite.anims.timeScale = !this.moving ? 1 : running ? Phaser.Math.Clamp(this.pace / (pace * 1.6), 0.7, 1.4) : Phaser.Math.Clamp(this.pace / pace, 0.55, 1.75);
     this.placeHeld();
   }
 

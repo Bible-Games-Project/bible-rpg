@@ -3,6 +3,7 @@ import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAs
 import { Pixels } from './pixels';
 import { drawAnger, drawFat, drawFire, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
+import { frameOf, lifted, sideStride, type Px } from './stride';
 import GEN from '../../data/cain/generatedArt.json';
 
 /**
@@ -390,19 +391,80 @@ function buildBrothers(scene: Phaser.Scene): void {
       const from = charKey('adam', 'tunic', dir);
       const key = charKey(who, 'tunic', dir);
       const img = scene.textures.get(from).getSourceImage() as HTMLImageElement;
-      const canvas = recolor(img, img.width, img.height, a.frameHeight, who);
-      scene.textures.addSpriteSheet(key, canvas as unknown as HTMLImageElement, { frameWidth: a.frameWidth, frameHeight: a.frameHeight });
+      let canvas = recolor(img, img.width, img.height, a.frameHeight, who);
+      let asset: SheetAsset = { ...a };
+      if (who === 'cain') [canvas, asset] = cainStride(canvas, a, dir);
+      scene.textures.addSpriteSheet(key, canvas as unknown as HTMLImageElement, { frameWidth: asset.frameWidth, frameHeight: asset.frameHeight });
       // the shadow is Adam's (same shapes)
       if (a.shadow && scene.textures.exists(shadowKey(from))) {
         const sh = scene.textures.get(shadowKey(from)).getSourceImage() as HTMLImageElement;
         scene.textures.addSpriteSheet(shadowKey(key), sh, { frameWidth: a.shadow.frameWidth, frameHeight: a.shadow.frameHeight });
       }
-      set[dir] = { ...a };
+      set[dir] = asset;
       scene.anims.create({ key: `${key}:idle`, frames: scene.anims.generateFrameNumbers(key, { frames: a.idle ?? [0] }), frameRate: 1.4, repeat: -1 });
       if (a.walk?.length) scene.anims.create({ key: `${key}:walk`, frames: scene.anims.generateFrameNumbers(key, { frames: a.walk }), frameRate: a.walkFps ?? 8, repeat: -1 });
+      if (asset.run?.length) scene.anims.create({ key: `${key}:run`, frames: scene.anims.generateFrameNumbers(key, { frames: asset.run }), frameRate: asset.runFps ?? 22, repeat: -1 });
     }
     MANIFEST.characters[who] = { tunic: set };
   }
+}
+
+// Cain's walk and trot (the maintainer, a test on Cain only; see stride.ts)
+/** Adam's near arm in his tunic side sheet (sheet pixels: x0, x1, y0, y1),
+ * as from_generated.py's SIDE_ARMS: rebuilding Adam's walk with it gives
+ * his frames pixel for pixel. Measure again if that sheet is redrawn. */
+const SIDE_ARM: [number, number, number, number] = [22, 32, 41, 92];
+const WALK_CYCLE = [18, 9, 0, -9, -18, -9, 0, 9];
+/** Adam's arms swing 0.45 of the legs' angle; Cain's more */
+const CAIN_ARM_SWING = 0.85;
+const TROT_STRIDE = 27;
+const TROT = {
+  cycle: [1, 0.5, 0, -0.5, -1, -0.5, 0, 0.5].map((k) => k * TROT_STRIDE),
+  armSwing: 0.95,
+  lean: 5,
+  // off the ground with the legs apart, lowest as they pass
+  lift: [4, 2, 0, 2, 4, 2, 0, 2],
+};
+/** room on each side of the side frames for the trot's longer strides */
+const STRIDE_PAD = 6;
+
+/** Cain's sheet for one direction: from the side his walk with more arm
+ * swing and a trot; from the front and back the walk bouncing as the trot. */
+function cainStride(src: HTMLCanvasElement, a: SheetAsset, dir: Direction): [HTMLCanvasElement, SheetAsset] {
+  const walk = a.walk ?? [];
+  if (walk.length !== 8) return [src, { ...a }];
+  const fw = a.frameWidth;
+  const fh = a.frameHeight;
+  const sheet = src.getContext('2d')!.getImageData(0, 0, src.width, src.height);
+  const frames: Px[] = [];
+  for (let i = 0; i < a.frames; i++) frames.push(frameOf(sheet, i, fw));
+  const side = dir === 'right';
+  const pad = side ? STRIDE_PAD : 0;
+  let hands = a.hands ? a.hands.map(([x, y]) => [x + pad, y] as [number, number]) : undefined;
+  let run: Px[];
+  if (side) {
+    const stand = frames[0];
+    const w = sideStride(stand, SIDE_ARM, { cycle: WALK_CYCLE, armSwing: CAIN_ARM_SWING });
+    const r = sideStride(stand, SIDE_ARM, TROT);
+    walk.forEach((f, i) => (frames[f] = w.frames[i]));
+    run = r.frames;
+    if (hands) {
+      const hs = hands;
+      walk.forEach((f, i) => (hs[f] = [w.hands[i][0] + pad, w.hands[i][1]]));
+      hands = [...hs, ...r.hands.map(([x, y]) => [x + pad, y] as [number, number])];
+    }
+  } else {
+    run = walk.map((f, i) => lifted(frames[f], TROT.lift[i]));
+  }
+  const all = [...frames, ...run];
+  const W = fw + pad * 2;
+  const c = document.createElement('canvas');
+  c.width = W * all.length;
+  c.height = fh;
+  const ctx = c.getContext('2d')!;
+  all.forEach((f, i) => ctx.putImageData(new ImageData(new Uint8ClampedArray(f.d), f.w, f.h), i * W + pad, 0));
+  const first = frames.length;
+  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, run: run.map((_, i) => first + i), runFps: 22 }];
 }
 
 /** The lambs: the sheep, smaller. */

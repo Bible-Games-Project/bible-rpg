@@ -28,6 +28,9 @@ export interface SheetAsset {
   walk?: number[];
   /** walk animation speed in frames per second (default 8) */
   walkFps?: number;
+  /** running frames, when the character has its own (Cain's trot) */
+  run?: number[];
+  runFps?: number;
   fly?: number[];
   /** world pixels per art pixel (sprites drawn with more detail than the world grid) */
   scale?: number;
