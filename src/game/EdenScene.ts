@@ -28,7 +28,8 @@ import { MissionRunner } from './missions/MissionRunner';
 import type { FlagValue } from '../core/save';
 
 export interface EdenStartData {
-  mode: 'continue' | 'new';
+  /** restart: the current mission again from its very beginning (menu) */
+  mode: 'continue' | 'new' | 'restart';
 }
 
 /** How much faster the player goes while running (Shift). */

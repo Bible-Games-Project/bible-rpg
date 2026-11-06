@@ -266,7 +266,7 @@ export class App {
   private restartMission(): void {
     this.stopScene();
     this.resetHud();
-    this.game.scene.start(this.sceneKey, { mode: 'continue' } satisfies EdenStartData);
+    this.game.scene.start(this.sceneKey, { mode: 'restart' } satisfies EdenStartData);
   }
 
   // ------------------------------------------------------------------ pause

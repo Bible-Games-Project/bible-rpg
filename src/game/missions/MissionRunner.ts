@@ -24,7 +24,7 @@ export class MissionRunner {
   private stopped = false;
   private readonly api: WorldApi;
 
-  constructor(private scene: EdenScene, private mode: 'continue' | 'new') {
+  constructor(private scene: EdenScene, private mode: 'continue' | 'new' | 'restart') {
     // Mission scripts talk to the world through a guard: once the scene is
     // left, any further call ends the script instead of touching a dead scene.
     this.api = new Proxy(scene, {
@@ -57,7 +57,9 @@ export class MissionRunner {
       for (let i = first; i < EDEN_MISSIONS.length; i++) {
         if (this.stopped) return;
         const active = (i === first ? progress.activeCharacter : this.scene.activeId()) as PlayableId;
-        await this.runMission(EDEN_MISSIONS[i], i === first, active, fresh && i === 0);
+        // a restarted first mission plays as at the chapter's start (without its title card)
+        const opening = i === 0 && (fresh || this.mode === 'restart');
+        await this.runMission(EDEN_MISSIONS[i], i === first && !opening, active, opening);
       }
     } catch (e) {
       if (e instanceof MissionStopped) return;
@@ -75,7 +77,7 @@ export class MissionRunner {
     const title = t(`eden.missions.${m.key}.title`);
     hud.setMission({ number: m.number, title, objective: t(`eden.missions.${m.key}.desc`), kind: m.kind, reference: m.reference });
     if (chapterStart) {
-      await ui().chapterIntro();
+      if (this.mode !== 'restart') await ui().chapterIntro();
       await this.scene.creationIntro();
     }
     if (fromSave) await w.fade(0, 900);

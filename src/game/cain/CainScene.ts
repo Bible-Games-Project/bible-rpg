@@ -24,7 +24,7 @@ import { NIGHT_BACKGROUND, NIGHT_SHADOW, NIGHT_TINT } from './palette';
 import { setShadowLight } from '../world/shadows';
 
 export interface CainStartData {
-  mode: 'continue' | 'new';
+  mode: 'continue' | 'new' | 'restart';
 }
 
 export type Brother = 'cain' | 'abel';

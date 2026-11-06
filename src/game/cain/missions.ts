@@ -383,7 +383,7 @@ export class CainRunner {
   private stopped = false;
   private readonly w: CainScene;
 
-  constructor(private scene: CainScene, private mode: 'continue' | 'new') {
+  constructor(private scene: CainScene, private mode: 'continue' | 'new' | 'restart') {
     this.w = new Proxy(scene, {
       get: (target, prop, receiver) => {
         const v = Reflect.get(target, prop, receiver);
@@ -413,7 +413,9 @@ export class CainRunner {
     try {
       for (let i = first; i < MISSIONS.length; i++) {
         if (this.stopped) return;
-        await this.runMission(MISSIONS[i], i === first, fresh && i === 0);
+        // a restarted first mission plays as at the chapter's start (without its title card)
+        const opening = i === 0 && (fresh || this.mode === 'restart');
+        await this.runMission(MISSIONS[i], i === first && !opening, opening);
       }
     } catch (e) {
       if (e instanceof MissionStopped) return;
@@ -432,7 +434,7 @@ export class CainRunner {
     stage(w, m.number, fromSave || relocate);
     hud.setMission({ number: m.number, title: t(`cain.missions.${m.key}.title`), objective: t(`cain.missions.${m.key}.desc`), kind: m.kind, reference: m.reference });
     if (chapterStart) {
-      await ui().chapterIntro();
+      if (this.mode !== 'restart') await ui().chapterIntro();
       await m.intro?.(w);
     }
     if (fromSave || relocate) await w.fade(0, 900);
