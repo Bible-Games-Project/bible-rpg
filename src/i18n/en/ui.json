@@ -153,8 +153,8 @@
     "title": "Paused",
     "resume": "Resume",
     "settings": "Settings",
-    "restartMission": "Restart mission",
-    "restartConfirm": "Restart the current mission from its beginning?",
+    "restartMission": "Restart story",
+    "restartConfirm": "Play this story again from the very beginning? Your progress in it will be lost.",
     "quit": "Save and return to menu",
     "saveNote": "Your progress is saved at the end of every mission."
   },

@@ -263,10 +263,12 @@ export class App {
     this.hud.setCharacter(null, null);
   }
 
+  /** The story played again from its very beginning, title card and all
+   * (the maintainer: "empezar desde el inicio esa pantalla"). */
   private restartMission(): void {
     this.stopScene();
     this.resetHud();
-    this.game.scene.start(this.sceneKey, { mode: 'restart' } satisfies EdenStartData);
+    this.game.scene.start(this.sceneKey, { mode: 'new' } satisfies EdenStartData);
   }
 
   // ------------------------------------------------------------------ pause
