@@ -54,9 +54,12 @@ const DASH_SPEED = 215;
  */
 const DOG_AHEAD = 95;
 const DOG_SPEED = 230;
-const DOG_FEAR = 175;
-const ABEL_FEAR = 95;
-const HERD_SPEED = 150;
+/** the dog when the player runs it (mission 2); faster than the sheep so it can get round them */
+const DOG_DRIVE_SPEED = 175;
+const DOG_FEAR = 150;
+const ABEL_FEAR = 70;
+/** the sheep's top speed when driven (the maintainer: they ran too fast) */
+const HERD_SPEED = 92;
 const GRAZE_SPEED = 16;
 
 const ITEM_ICONS: Record<string, string> = {
@@ -80,6 +83,11 @@ interface Grazer {
   vx: number;
   vy: number;
   penned: boolean;
+  /** herding: how long it has pushed without getting anywhere, the way it
+   * then sidesteps, and where it was */
+  stuck: number;
+  side: number;
+  was: Pt;
 }
 
 /**
@@ -142,6 +150,7 @@ export class CainScene extends Phaser.Scene {
     this.sheep = [];
     this.lambs = [];
     this.herd = null;
+    this.driving = false;
     this.active = 'cain';
     this.following = false;
     this.control = true;
@@ -687,7 +696,7 @@ export class CainScene extends Phaser.Scene {
   private flock(): void {
     const grazer = (id: string, sheet: string, at: Pt, range: number, speed: number) => {
       const actor = new Actor(this, { id, x: at[0], y: at[1], sheet, body: { w: 22, h: 10 }, facing: Math.random() < 0.5 ? 'left' : 'right' });
-      return { actor, home: at, range, speed, target: null, wait: Math.random() * 3, frozen: false, vx: 0, vy: 0, penned: false };
+      return { actor, home: at, range, speed, target: null, wait: Math.random() * 3, frozen: false, vx: 0, vy: 0, penned: false, stuck: 0, side: 0, was: [at[0], at[1]] as Pt };
     };
     SHEEP.forEach((p, i) => this.sheep.push(grazer(`sheep${i}`, 'animal-sheep', p, 45, GRAZE_SPEED + 6)));
     LAMBS.forEach((p, i) => this.lambs.push(grazer(`lamb${i}`, 'cain-lamb', p, 35, GRAZE_SPEED + 12)));
@@ -748,6 +757,21 @@ export class CainScene extends Phaser.Scene {
     });
   }
   private herdProgress: () => void = () => {};
+  /** the player runs the dog instead of Abel (herding, mission 2) */
+  private driving = false;
+
+  /** The player runs the dog (on) or Abel again (off); the camera goes with it. */
+  driveDog(on: boolean): void {
+    this.driving = on;
+    this.abel.stop();
+    this.dog.stop();
+    this.cameraFollow(on ? this.dog : undefined);
+  }
+
+  /** Who the keys move: the active brother, or the dog. */
+  private controlled(): Actor {
+    return this.driving ? this.dog : this.player();
+  }
 
   /** A lamb taken out of the flock (offered), or back (staging). */
   setLamb(i: number, present: boolean): void {
@@ -930,13 +954,13 @@ export class CainScene extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     const dt = Math.min(0.1, delta / 1000);
-    const p = this.player();
+    const p = this.controlled();
     const canMove = this.canMove() && !p.scripted && input.movementAllowed(this.layer) && !ui().dialogue.open;
     if (canMove) {
       const v = input.moveVector();
-      const speed = CHARACTERS[this.active].speed * (input.isDown('run') ? RUN : 1);
+      const speed = (this.driving ? DOG_DRIVE_SPEED : CHARACTERS[this.active].speed) * (input.isDown('run') ? (this.driving ? 1.25 : RUN) : 1);
       p.move(v.x * speed, v.y * speed);
-      if (p.moving) {
+      if (p.moving && !this.driving) {
         this.stepTimer -= dt;
         if (this.stepTimer <= 0) {
           audio.step(this.world.surfaceAt(p.x, p.y), { pitch: 0.96 + Math.random() * 0.08, volume: 0.6 });
@@ -1006,6 +1030,13 @@ export class CainScene extends Phaser.Scene {
    */
   private updateDog(dt: number, view: Phaser.Geom.Rectangle): void {
     const d = this.dog;
+    // its trot goes with its speed
+    d.sprite.anims.timeScale = d.moving ? Phaser.Math.Clamp(d.pace / 170, 0.6, 1.5) : 1;
+    if (this.driving) {
+      if (!this.canMove()) d.stop();
+      d.refresh();
+      return;
+    }
     let to: Pt = POINTS.dogRest;
     if (this.herd && !this.canMove()) {
       d.stop();
@@ -1140,6 +1171,31 @@ export class CainScene extends Phaser.Scene {
         fx += ((FOLD.x - a.x) / into) * 0.9 * (1 - gd / 170);
         fy += ((FOLD.y - a.y) / into) * 0.9 * (1 - gd / 170);
       }
+      // beside or behind the fold's wall: it goes round the wall toward the
+      // gate instead of pressing against the stones
+      const rx = a.x - FOLD.x;
+      const ry = (a.y - FOLD.y) / 0.75;
+      const rd = Math.hypot(rx, ry) || 1;
+      if (rd < FOLD.r + 110 && rd > FOLD.r - 20 && alarm > 0) {
+        const th = Math.atan2(ry, rx);
+        const dth = Phaser.Math.Angle.Wrap(FOLD.gate - th);
+        if (Math.abs(dth) > 0.35) {
+          const sg = Math.sign(dth);
+          const near = 1 - Phaser.Math.Clamp((rd - FOLD.r) / 110, 0, 1);
+          fx += (-Math.sin(th) * sg + (rx / rd) * 0.35) * 1.1 * near;
+          fy += (Math.cos(th) * 0.75 * sg + (ry / rd) * 0.35) * 1.1 * near;
+        }
+      }
+      // pushed against something without getting anywhere: it sidesteps
+      if (g.stuck > 0.35) {
+        const f0 = Math.hypot(fx, fy) || 1;
+        const c = Math.cos(1.2 * g.side);
+        const sn = Math.sin(1.2 * g.side);
+        const nx = (fx * c - fy * sn) / f0;
+        const ny = (fx * sn + fy * c) / f0;
+        fx = nx;
+        fy = ny;
+      }
       // a stray far from the others and out of sight walks back to them
       if (td > 420 && !view.contains(a.x, a.y)) fx += (tx / td) * 1.5;
       const speed = HERD_SPEED * (g.speed > GRAZE_SPEED + 8 ? 1.1 : 1);
@@ -1156,6 +1212,21 @@ export class CainScene extends Phaser.Scene {
       g.vy += (wy - g.vy) * k;
       if (Math.hypot(g.vx, g.vy) > 7) a.move(g.vx, g.vy);
       else a.stop();
+      // how far it really got (the walls and trees stop it)
+      const want = Math.hypot(g.vx, g.vy) * dt;
+      const got = Math.hypot(a.x - g.was[0], a.y - g.was[1]);
+      g.was = [a.x, a.y];
+      if (want > 0.6 && got < want * 0.35) {
+        if (g.stuck <= 0.35) g.side = Math.random() < 0.5 ? -1 : 1;
+        g.stuck = Math.min(1.6, g.stuck + dt);
+      } else if (g.stuck > 0) {
+        g.stuck = g.stuck > 0.35 ? g.stuck - dt * 0.5 : 0;
+      }
+      if (g.stuck >= 1.6) {
+        // that way did not work either: the other way
+        g.side = -g.side;
+        g.stuck = 0.5;
+      }
       if (view.contains(a.x, a.y) || a.moving) a.refresh();
       // in the fold: it stays and grazes there
       if (((a.x - FOLD.x) / inner) ** 2 + ((a.y - FOLD.y) / (inner * 0.75)) ** 2 < 1 && a.y < gateY - 24) {
@@ -1251,7 +1322,7 @@ export class CainScene extends Phaser.Scene {
       this.markers.hide(time);
       return;
     }
-    const p = this.player();
+    const p = this.controlled();
     const dist = (q: Pt) => Phaser.Math.Distance.Between(p.x, p.y, q[0], q[1]);
     let best = pts[0];
     for (const q of pts) if (dist(q.at) < dist(best.at)) best = q;

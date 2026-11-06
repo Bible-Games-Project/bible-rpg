@@ -21,6 +21,7 @@ export const SFX = [
   'uiBack',
   'step',
   'pickup',
+  'whistle',
   'dig',
   'plant',
   'splash',
@@ -179,6 +180,45 @@ class AudioManager {
     o.connect(g).connect(dest ?? this.sfx);
     o.start(t);
     o.stop(t + dur + 0.05);
+  }
+
+  /**
+   * A shepherd's whistle through the fingers (synthesized, so free of any
+   * copyright): a quick rise, a held high note, then a call that falls away;
+   * a pure tone with a little vibrato and the breath around it.
+   */
+  private whistle(t: number, peak: number, p: number): void {
+    const ctx = this.ctx!;
+    const parts: [number, number, number, number][] = [
+      // start, length, from Hz, to Hz
+      [0, 0.42, 1500, 2700],
+      [0.5, 0.55, 2650, 1750],
+    ];
+    for (const [at, dur, f0, f1] of parts) {
+      const s = t + at;
+      const o = ctx.createOscillator();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(f0 * p, s);
+      o.frequency.exponentialRampToValueAtTime(f1 * p, s + dur * 0.55);
+      o.frequency.setValueAtTime(f1 * p, s + dur * 0.55);
+      o.frequency.exponentialRampToValueAtTime(f1 * p * 0.97, s + dur);
+      const lfo = ctx.createOscillator();
+      const depth = ctx.createGain();
+      lfo.frequency.value = 6.5;
+      depth.gain.value = 22 * p;
+      lfo.connect(depth).connect(o.frequency);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, s);
+      g.gain.exponentialRampToValueAtTime(peak, s + 0.04);
+      g.gain.setValueAtTime(peak, s + dur - 0.12);
+      g.gain.exponentialRampToValueAtTime(0.0001, s + dur);
+      o.connect(g).connect(this.sfx);
+      o.start(s);
+      lfo.start(s);
+      o.stop(s + dur + 0.05);
+      lfo.stop(s + dur + 0.05);
+      this.noiseBurst(s, dur, peak * 0.12, 'bandpass', ((f0 + f1) / 2) * p, 2.5);
+    }
   }
 
   private noiseBurst(t: number, dur: number, peak: number, filter: BiquadFilterType, freq: number, q = 0.8, dest?: AudioNode): void {
@@ -370,6 +410,9 @@ class AudioManager {
         break;
       case 'step':
         this.noiseBurst(t, 0.07, 0.05 * v, 'bandpass', 900 * p, 1.2);
+        break;
+      case 'whistle':
+        this.whistle(t, 0.09 * v, p);
         break;
       case 'pickup':
         [0, 4, 7].forEach((s, i) => this.tone(523 * Math.pow(2, s / 12), t + i * 0.06, 0.25, 0.07 * v, 'triangle'));

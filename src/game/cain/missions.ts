@@ -179,6 +179,9 @@ const MISSIONS: CainMission[] = [
       w.objective(step('m02', 'flock'), () => [w.flockCentre()]);
       await w.until(() => Math.hypot(w.abel.x - w.flockCentre()[0], w.abel.y - w.flockCentre()[1]) < 300);
       await w.say('herd');
+      // Abel whistles, and from then the player is the dog (the maintainer)
+      audio.play('whistle');
+      w.driveDog(true);
       w.toast(C('hints.herd'));
       const count = () => {
         const c = w.pennedCount();
@@ -186,6 +189,7 @@ const MISSIONS: CainMission[] = [
       };
       count();
       await w.herdIntoFold(count);
+      w.driveDog(false);
       w.objective('');
       await w.wait(500);
       await w.say('penned');

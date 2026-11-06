@@ -149,35 +149,68 @@ function genTree(scene: Phaser.Scene, id: string, name: GenName): void {
 
 /**
  * Abel's sheepdog from its two generated poses (standing, trotting), on
- * frames of one size with the feet on the same row. Frames: 0–1 idle (the
- * second breathing: the body a pixel higher), 2–5 a trot (trotting and
- * standing poses in turn, bobbing).
+ * frames of one size with the feet on the same row. Frames 0–1: idle (the
+ * second breathing: the body a pixel higher). Frames 2–9: a smooth trot made
+ * from the trotting pose, its front and back legs swinging in turn (sheared
+ * from the hip, the feet moving most) while the body bobs.
  */
+const DOG_TROT_FRAMES = 8;
 function genDog(scene: Phaser.Scene): void {
   const poses = (['dog-0', 'dog-1'] as const).map((n) => ({ p: gen(scene, n), g: GEN[n] }));
-  const W = Math.max(...poses.map((q) => q.g.w)) + 2;
+  const SWING = 5;
+  const W = Math.max(...poses.map((q) => q.g.w)) + SWING * 2 + 2;
   const AY = Math.max(...poses.map((q) => q.g.ay)) + 2;
   const H = AY + 2;
   const AX = Math.round(W / 2);
-  const frame = (k: number, lift: number, liftAbove = 0) => {
+  const legsOf = (p: Pixels, footY: number) => {
+    // the belly: going up from the feet, the first row as wide as the body
+    const count = (y: number) => {
+      let n = 0;
+      for (let x = 0; x < p.w; x++) if (p.data[(y * p.w + x) * 4 + 3]) n++;
+      return n;
+    };
+    let max = 0;
+    for (let y = 0; y < p.h; y++) max = Math.max(max, count(y));
+    let belly = footY;
+    while (belly > 0 && count(belly) < max * 0.45) belly--;
+    let x0 = p.w;
+    let x1 = 0;
+    for (let x = 0; x < p.w; x++) if (p.data[(belly * p.w + x) * 4 + 3]) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); }
+    return { belly, mid: (x0 + x1) / 2 };
+  };
+  const frame = (k: number, phase: number | null, lift: number) => {
     const { p, g } = poses[k];
+    const { belly, mid } = legsOf(p, g.ay);
     const f = new Pixels(W, H);
     const ox = AX - g.ax;
     const oy = AY - g.ay;
+    const put = (x: number, y: number, tx: number, ty: number) => {
+      const i = (y * p.w + x) * 4;
+      if (!p.data[i + 3] || tx < 0 || ty < 0 || tx >= W || ty >= H) return;
+      f.data.set(p.data.subarray(i, i + 4), (ty * W + tx) * 4);
+    };
     for (let y = 0; y < p.h; y++) {
-      const dy = y < liftAbove * p.h ? lift : liftAbove ? 0 : lift;
       for (let x = 0; x < p.w; x++) {
-        const i = (y * p.w + x) * 4;
-        if (!p.data[i + 3]) continue;
-        const tx = x + ox;
-        const ty = y + oy - dy;
-        if (tx < 0 || ty < 0 || tx >= W || ty >= H) continue;
-        f.data.set(p.data.subarray(i, i + 4), (ty * W + tx) * 4);
+        if (y <= belly) {
+          put(x, y, x + ox, y + oy - lift);
+          continue;
+        }
+        // a leg: swung from the hip; drawn at the lifted height too, so the
+        // body never comes away from it
+        const t = (y - belly) / Math.max(1, g.ay - belly);
+        const s = phase === null ? 0 : Math.sin(phase + (x > mid ? 0 : Math.PI));
+        const dx = Math.round(SWING * t * s);
+        put(x, y, x + ox + dx, y + oy);
+        for (let l = 1; l <= lift; l++) put(x, y, x + ox + dx, y + oy - l);
       }
     }
     return f;
   };
-  const frames = [frame(0, 0), frame(0, 1, 0.55), frame(1, 0), frame(0, 1), frame(1, 1), frame(0, 0)];
+  const frames = [frame(0, null, 0), frame(0, null, 1)];
+  for (let i = 0; i < DOG_TROT_FRAMES; i++) {
+    const ph = (i / DOG_TROT_FRAMES) * Math.PI * 2;
+    frames.push(frame(1, ph, Math.round(0.5 + 0.5 * Math.cos(ph * 2))));
+  }
   addSheet(scene, 'cain-dog', frames, AX, AY - 1, ART, false, true);
 }
 
@@ -264,8 +297,8 @@ export function buildCainArt(scene: Phaser.Scene): void {
   addGen(scene, 'cain-staff', 'staff');
   // Abel's sheepdog: its own colours, like the sheep (dimmed at night in CainScene)
   genDog(scene);
-  scene.anims.create({ key: 'cain-dog:idle', frames: scene.anims.generateFrameNumbers('cain-dog', { frames: [0, 1] }), frameRate: 2.2, repeat: -1 });
-  scene.anims.create({ key: 'cain-dog:walk', frames: scene.anims.generateFrameNumbers('cain-dog', { frames: [2, 3, 4, 5] }), frameRate: 9, repeat: -1 });
+  scene.anims.create({ key: 'cain-dog:idle', frames: scene.anims.generateFrameNumbers('cain-dog', { frames: [0, 1] }), frameRate: 1.6, repeat: -1 });
+  scene.anims.create({ key: 'cain-dog:walk', frames: scene.anims.generateFrameNumbers('cain-dog', { start: 2, end: 1 + DOG_TROT_FRAMES }), frameRate: 14, repeat: -1 });
   addSheet(scene, 'cain-shadow', [drawShadow(60, 20)], 30, 10);
   // the anger over Cain's head is drawn at world size, like the other emotes
   addSheet(scene, 'emote-anger', [drawAnger()], 9, 19, 1, false, true);
