@@ -1,8 +1,10 @@
-import { audio } from '../core/audio';
+import { audio, SFX, type Sfx } from '../core/audio';
 import { devSounds, type LibraryData, type SoundCategory } from '../core/devSounds';
 import { t } from '../core/i18n';
 import { storage } from '../core/storage';
 import { SLOT, SOUND_SLOTS, SURFACES, type SlotGroup, type SoundSlot } from '../data/soundSlots';
+import { buildCainPortraits } from '../game/cain/art';
+import { assetUrl, MANIFEST } from '../game/manifest';
 import { clear, h } from './dom';
 
 /**
@@ -23,7 +25,12 @@ const STARS = 'bible-rpg.dev.stars';
 const VIEW = 'bible-rpg.dev.view';
 
 type Mode = 'voices' | 'sounds';
-const GROUPS: SlotGroup[] = ['serpent', 'cherubim', 'water', 'steps', 'other'];
+const GROUPS: SlotGroup[] = ['serpent', 'cherubim', 'water', 'steps', 'other', 'cain'];
+/** how long the synthesised sounds last, for the card's bar (s) */
+const SYNTH_LENGTH: Partial<Record<Sfx, number>> = { whistle: 1.1, flame: 1.2, bark: 0.4 };
+
+/** A slot that has a sound made by the game itself (src/core/audio.ts). */
+const synthesised = (id: string): id is Sfx => (SFX as readonly string[]).includes(id);
 
 interface Player {
   card: HTMLElement;
@@ -123,6 +130,35 @@ export function devLibraryScreen(back: () => void): HTMLElement {
     });
   }
 
+  /** Play the game's own synthesised sound on a card. */
+  function playSynth(card: HTMLElement, id: Sfx): void {
+    const bar = card.querySelector<HTMLElement>('.lib-bar')!;
+    audio.play(id, { synth: true });
+    const length = (SYNTH_LENGTH[id] ?? 0.4) * 1000;
+    const t0 = performance.now();
+    let raf = 0;
+    const tick = () => {
+      const k = (performance.now() - t0) / length;
+      if (k >= 1) {
+        if (player === me) stop();
+        return;
+      }
+      bar.style.width = `${k * 100}%`;
+      raf = requestAnimationFrame(tick);
+    };
+    const me: Player = {
+      card,
+      stop: () => {
+        cancelAnimationFrame(raf);
+        card.classList.remove('playing');
+        bar.style.width = '0';
+      },
+    };
+    player = me;
+    card.classList.add('playing');
+    tick();
+  }
+
   /** A voice from another site (the Cloudflare and local builds) */
   function playUrl(card: HTMLElement, url: string): void {
     const bar = card.querySelector<HTMLElement>('.lib-bar')!;
@@ -168,9 +204,17 @@ export function devLibraryScreen(back: () => void): HTMLElement {
 
   // ------------------------------------------------------------ voices
 
-  const voiceName = (id: string): string => {
+  const voiceName = (id: string | null): string => {
+    if (!id) return t('dev.noVoice');
     for (const g of lib?.voiceGroups ?? []) for (const v of g.voices) if (v[0] === id) return v[1].split(/ [-–] /)[0];
     return id;
+  };
+
+  /** A portrait file, or the one the game draws (Cain and Abel) */
+  const portraitOf = (id: string, file: string | null): string | null => {
+    if (file) return `${import.meta.env.BASE_URL}${file}`;
+    const drawn = MANIFEST.portraits[id];
+    return drawn ? assetUrl(drawn.file) : null;
   };
 
   function renderVoiceCast(): void {
@@ -180,7 +224,7 @@ export function devLibraryScreen(back: () => void): HTMLElement {
         h(
           'button',
           { class: 'lib-cast-btn', 'aria-pressed': String(who === c.id), onclick: () => ((who = c.id), remember(), render()) },
-          c.portrait ? h('img', { src: `${import.meta.env.BASE_URL}${c.portrait}`, alt: '' }) : h('span', { class: 'lib-seal', 'aria-hidden': 'true' }, '✦'),
+          portraitOf(c.id, c.portrait) ? h('img', { src: portraitOf(c.id, c.portrait)!, alt: '' }) : h('span', { class: 'lib-seal', 'aria-hidden': 'true' }, '✦'),
           h('span', { class: 'lib-cast-text' }, h('span', { class: 'lib-cast-name' }, c.name), h('span', { class: 'lib-cast-pick' }, pick ? `✓ ${voiceName(pick)}` : t('dev.now', { who: voiceName(c.voice) }))),
         ),
       );
@@ -272,7 +316,7 @@ export function devLibraryScreen(back: () => void): HTMLElement {
 
   function slotButton(s: SoundSlot, compact = false): HTMLElement {
     const now = devSounds.soundOf(s);
-    const label = now ? soundName(now) : s.id === 'river' ? t('dev.synth') : t('dev.empty');
+    const label = now ? soundName(now) : s.id === 'river' || synthesised(s.id) ? t('dev.synth') : t('dev.empty');
     return h(
       'button',
       {
@@ -317,7 +361,7 @@ export function devLibraryScreen(back: () => void): HTMLElement {
   function renderSoundGrid(): void {
     const s = SLOT[slot];
     const cat: SoundCategory | undefined = lib!.categories[s.category];
-    note.textContent = s.surface ? `${cat?.note ?? ''} ${t('dev.stepsHelp', { surface: t(`dev.surfaces.${s.surface}`).toLowerCase() })}` : (cat?.note ?? '');
+    note.textContent = s.surface ? `${cat?.note ?? ''} ${t('dev.stepsHelp', { surface: t(`dev.surfaces.${s.surface}`).toLowerCase() })}` : (cat?.note ?? t('dev.synthNote'));
     const now = devSounds.soundOf(s);
     const name = slotName(s);
     const actions = h('div', { class: 'lib-row' });
@@ -325,7 +369,33 @@ export function devLibraryScreen(back: () => void): HTMLElement {
     if (devSounds.changed(slot)) actions.append(h('button', { class: 'btn small', onclick: () => (devSounds.choose(slot, undefined), render()) }, t('dev.restore')));
     tools.append(h('h2', { class: 'lib-slot-title' }, `${t(`dev.groups.${s.group}`)} · ${name}`), actions);
     const options = cat?.options ?? [];
-    grid.append(h('p', { class: 'lib-count muted' }, t('dev.countSounds', { n: options.length })));
+    grid.append(h('p', { class: 'lib-count muted' }, t('dev.countSounds', { n: options.length + (synthesised(slot) ? 1 : 0) })));
+    // the game's own synthesised sound first: what plays while the slot has no recording
+    const id = slot;
+    if (synthesised(id)) {
+      const card = playButton(t('dev.synthName'), t('dev.synthDesc'), (c) => playSynth(c, id));
+      const mine = !now;
+      card.append(
+        h('div', { class: 'lib-tags' }, mine ? h('span', { class: 'lib-tag now' }, `✓ ${name}`) : null),
+        h(
+          'div',
+          { class: 'lib-row' },
+          h(
+            'button',
+            {
+              class: `btn small lib-choose${mine ? ' primary' : ''}`,
+              'aria-pressed': String(mine),
+              onclick: () => {
+                if (!mine) devSounds.choose(id, null);
+                render();
+              },
+            },
+            t(mine ? 'dev.chosen' : 'dev.choose', { who: name }),
+          ),
+        ),
+      );
+      grid.append(card);
+    }
     for (const [sound, oname, desc] of options) {
       const card = playButton(oname, desc, (c) => void decoded(`s:${sound}`, () => devSounds.bytes(sound)).then((buf) => buf && playOn(c, buf)));
       const tags = h('div', { class: 'lib-tags' });
@@ -438,6 +508,8 @@ export function devLibraryScreen(back: () => void): HTMLElement {
   }
 
   render();
+  // Cain and Abel's portraits are drawn by the game: show them once ready
+  void buildCainPortraits().then(() => mode === 'voices' && render());
   void devSounds.library().then((l) => {
     lib = l;
     if (!l) grid.textContent = t('dev.unavailable');

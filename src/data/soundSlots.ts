@@ -15,7 +15,7 @@ export const SURFACES: Surface[] = ['grass', 'dirt', 'water'];
 /** Footstep slots per surface: walking picks one of the filled ones at random. */
 export const STEP_SLOTS = 5;
 
-export type SlotGroup = 'serpent' | 'cherubim' | 'water' | 'steps' | 'other';
+export type SlotGroup = 'serpent' | 'cherubim' | 'water' | 'steps' | 'other' | 'cain';
 
 export interface SoundSlot {
   id: string;
@@ -55,6 +55,8 @@ export const SOUND_SLOTS: SoundSlot[] = [
   { id: 'leafPick', group: 'other', category: 'other', sound: sfx('leaf-pick'), gain: 0.45 },
   { id: 'leaves', group: 'other', category: 'other', sound: sfx('sew-leaves'), gain: 0.5 },
   { id: 'drop', group: 'other', category: 'other', sound: sfx('drop'), gain: 0.45 },
+  // Cain and Abel: synthesised (free) until the maintainer chooses recordings
+  ...(['cut', 'hit', 'swing', 'whistle', 'bark', 'flame'] as const).map((id) => ({ id, group: 'cain' as const, category: 'cain', sound: null, gain: 0.5 })),
 ];
 
 export const SLOT = Object.fromEntries(SOUND_SLOTS.map((s) => [s.id, s])) as Record<string, SoundSlot>;

@@ -28,8 +28,8 @@ export interface CastMember {
   id: string;
   name: string;
   portrait: string | null;
-  /** the voice the game uses now */
-  voice: string;
+  /** the voice the game uses now (null: not voiced yet) */
+  voice: string | null;
 }
 
 export interface SoundCategory {

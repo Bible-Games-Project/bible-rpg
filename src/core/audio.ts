@@ -435,14 +435,16 @@ class AudioManager {
     };
   }
 
-  play(name: Sfx, opts: { pitch?: number; volume?: number } = {}): void {
+  /** A sound effect: its slot's recording if it has one, else synthesised
+   * (always synthesised with `synth`: the library plays it so). */
+  play(name: Sfx, opts: { pitch?: number; volume?: number; synth?: boolean } = {}): void {
     const ctx = this.unlocked ? this.ensure() : null;
     if (!ctx || ctx.state !== 'running') return;
     const t = ctx.currentTime + 0.005;
     const v = opts.volume ?? 1;
     const p = opts.pitch ?? 1;
     const recorded = this.samples.get(name);
-    if (recorded && SLOT[name]) {
+    if (recorded && SLOT[name] && !opts.synth) {
       this.playBuffer(recorded, SLOT[name].gain * v, p);
       return;
     }

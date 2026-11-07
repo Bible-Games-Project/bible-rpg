@@ -225,6 +225,10 @@
     "restore": "Back to the game's own",
     "own": "the game's own",
     "synth": "synthesized",
+    "synthName": "The game’s own",
+    "synthDesc": "Synthesized by the game: free, no recording",
+    "synthNote": "Made by the game itself (synthesized, so free and without copyright). There are no recordings for this slot yet.",
+    "noVoice": "no voice yet",
     "yours": "Your choices",
     "yoursHelp": "Copy these lines and paste them into the chat to keep them in the game for everyone.",
     "nothing": "Nothing chosen yet.",
@@ -238,7 +242,8 @@
       "cherubim": "Cherubim",
       "water": "Water",
       "steps": "Footsteps",
-      "other": "Other"
+      "other": "Other",
+      "cain": "Cain and Abel"
     },
     "slots": {
       "hiss": "Hisses (before speaking to the woman)",
@@ -251,7 +256,13 @@
       "seed": "Seeds",
       "leafPick": "Fig leaf",
       "leaves": "Sew leaves",
-      "drop": "Drop"
+      "drop": "Drop",
+      "cut": "Knife into the lamb",
+      "hit": "Blow with the jawbone",
+      "swing": "Swing through the air",
+      "whistle": "Abel’s whistle",
+      "bark": "Dog’s bark",
+      "flame": "Offering fire"
     },
     "surfaces": {
       "grass": "Grass",

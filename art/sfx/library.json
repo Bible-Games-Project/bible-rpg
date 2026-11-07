@@ -2817,6 +2817,18 @@
    "voice": "xYWUvKNK6zWCgsdAK7Wi"
   },
   {
+   "id": "cain",
+   "name": "Cain",
+   "portrait": null,
+   "voice": null
+  },
+  {
+   "id": "abel",
+   "name": "Abel",
+   "portrait": null,
+   "voice": null
+  },
+  {
    "id": "narrator",
    "name": "Narrator",
    "portrait": null,
