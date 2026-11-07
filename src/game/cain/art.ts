@@ -431,10 +431,12 @@ const RUN = {
 };
 /** from the front and back: the leg off the ground comes up this much more */
 const FRONT_KNEE_LIFT = 7;
+/** from the front and back the body leans over the foot on the ground, a shoulder comes up with the pumped arm and the head bobs (the maintainer: the torso was too still) */
+const FRONT_BODY = { neck: 0.25, waist: 0.6, lean: 3, shoulder: 2 };
 /** from the front and back the forearms pump (the maintainer: the arms did not bend running up or down) */
 const FRONT_ARMS: Record<'down' | 'up', FrontArms> = {
-  down: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.5, back: 0.85, inward: 3 },
-  up: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.4, back: 0.9, inward: 1 },
+  down: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.5, back: 0.85, inward: 3, body: FRONT_BODY },
+  up: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.4, back: 0.9, inward: 1, body: FRONT_BODY },
 };
 /** Cain walks slower than Adam (the maintainer): his steps at this share of Adam's rate (his speed is lower to match) */
 const CAIN_WALK_RATE = 0.8;

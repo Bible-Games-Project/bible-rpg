@@ -308,8 +308,17 @@ export function frontRun(p: Px, mid: number, knee: number, extra: number, lift: 
       const pumped = left < right ? 1 : -1;
       pumpArm(out, p, mid, pumped, arms, arms.pump, arms.inward);
       pumpArm(out, p, mid, -pumped, arms, arms.back, 0);
+      // not a robot (the maintainer): the shoulder of the pumped arm comes up, and the
+      // body leans over the leg on the ground, the head most
+      if (arms.body) {
+        const b = arms.body;
+        shoulderUp(out, mid, pumped, Math.round(b.neck * p.h), Math.round(arms.hand * p.h) + 2, b.shoulder);
+        lean(out, -pumped * b.lean, Math.round(b.waist * p.h));
+      }
     }
   }
+  // the head comes down a little after the body as a foot lands
+  if (arms?.body && lift === 0 && left !== right) dropRows(out, Math.round(arms.body.neck * p.h), 1);
   return lifted(out, lift);
 }
 
@@ -325,6 +334,53 @@ export interface FrontArms {
   back: number;
   /** the pumped hand comes this far in, across the body (px) */
   inward: number;
+  /** the upper body moving with the stride (fractions of the frame height; px) */
+  body?: { neck: number; waist: number; lean: number; shoulder: number };
+}
+
+/** Everything above `waist` leaned sideways, by `by` px at the top and nothing at the waist. */
+function lean(p: Px, by: number, waist: number): void {
+  const src = new Uint8ClampedArray(p.d);
+  for (let y = 0; y < waist; y++) {
+    const dx = Math.round((by * (waist - y)) / waist);
+    if (!dx) continue;
+    p.d.fill(0, y * p.w * 4, (y + 1) * p.w * 4);
+    for (let x = 0; x < p.w; x++) {
+      const sx = x - dx;
+      if (sx >= 0 && sx < p.w && src[(y * p.w + sx) * 4 + 3]) copyPx(p, { w: p.w, h: p.h, d: src }, x, y, sx, y);
+    }
+  }
+}
+
+/** One side of the body (past the neck) from row y0 to y1 moved up by `by` px, the row under it stretched. */
+function shoulderUp(p: Px, mid: number, side: number, y0: number, y1: number, by: number): void {
+  if (!by) return;
+  const src: Px = { w: p.w, h: p.h, d: new Uint8ClampedArray(p.d) };
+  const edge = Math.round(mid + side * 3);
+  for (let x = 0; x < p.w; x++) {
+    if (side > 0 ? x < edge : x > edge) continue;
+    for (let y = y0 - by; y < y1; y++) {
+      const sy = Math.min(y1, y + by);
+      const i = (y * p.w + x) * 4;
+      if (y < 0) continue;
+      if (src.d[(sy * p.w + x) * 4 + 3]) copyPx(p, src, x, y, x, sy);
+      else if (y < y0) continue;
+      else p.d.fill(0, i, i + 4);
+    }
+  }
+}
+
+/** The rows above `neck` (the head) moved down by `by` px, over the neck. */
+function dropRows(p: Px, neck: number, by: number): void {
+  const src: Px = { w: p.w, h: p.h, d: new Uint8ClampedArray(p.d) };
+  for (let y = neck + by - 1; y >= 0; y--) {
+    const sy = y - by;
+    for (let x = 0; x < p.w; x++) {
+      const i = (y * p.w + x) * 4;
+      if (sy >= 0 && src.d[(sy * p.w + x) * 4 + 3]) copyPx(p, src, x, y, x, sy);
+      else if (y < neck) p.d.fill(0, i, i + 4);
+    }
+  }
 }
 
 /**
