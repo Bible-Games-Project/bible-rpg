@@ -136,11 +136,16 @@ const MISSIONS: CainMission[] = [
             radius: 72,
             prompt: () => t(p.kind === 'fruit' ? 'prompt.pick' : 'prompt.gather'),
             enabled: () => !p.picked,
-            onUse: () => {
+            onUse: async () => {
+              // he bends down and picks it (the maintainer)
+              w.cain.face({ x: p.at[0], y: p.at[1] });
+              await w.cain.stoop();
               w.sfx(p.kind === 'fruit' ? 'leafPick' : p.kind === 'grain' ? 'rustle' : 'pickup');
               w.setPicked(i, true);
               w.give('produce');
               update();
+              // and straightens up before going on
+              await w.wait(400);
               if (!left().length) resolve();
             },
           }),

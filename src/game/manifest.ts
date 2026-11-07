@@ -31,6 +31,8 @@ export interface SheetAsset {
   /** running frames, when the character has its own (Cain's trot) */
   run?: number[];
   runFps?: number;
+  /** bending down to pick something up: halfway, lowest */
+  stoop?: number[];
   fly?: number[];
   /** world pixels per art pixel (sprites drawn with more detail than the world grid) */
   scale?: number;

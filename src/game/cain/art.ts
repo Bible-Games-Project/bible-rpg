@@ -4,7 +4,7 @@ import { Pixels } from './pixels';
 import { DOG_RIG, DOG_RUN_SCALE, dogGallop, enlarge, scaledRig } from './dogRun';
 import { drawAnger, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
-import { frameOf, frontRun, handsOf, padded, sideRun, sideStride, type FrontArms, type Px, type XY } from './stride';
+import { frameOf, frontRun, handsOf, padded, stoopFrame, sideRun, sideStride, type FrontArms, type Px, type XY } from './stride';
 import GEN from '../../data/cain/generatedArt.json';
 
 /**
@@ -440,6 +440,8 @@ const FRONT_ARMS: Record<'down' | 'up', FrontArms> = {
   down: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.5, back: 0.85, inward: 3, body: FRONT_BODY },
   up: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.4, back: 0.9, inward: 1, body: FRONT_BODY },
 };
+/** bending down (stoopFrame): the hip (share of the frame height), the lean from the side (degrees) and how far the knees give */
+const STOOP = { hip: 0.5, lean: 42, sideSquash: 0.8, frontSquash: 0.7 };
 /** from the front, nothing nearer the middle than this is a hand (px): the tunic is about this wide */
 const HAND_INNER = 8;
 /** Cain walks slower than Adam (the maintainer): his steps at this share of Adam's rate (his speed is lower to match) */
@@ -478,7 +480,10 @@ function cainStride(src: HTMLCanvasElement, a: SheetAsset, dir: Direction): [HTM
     // the knees: a little under the hem
     run = walk.map((f, i) => frontRun(frames[f], a.anchorX, Math.round(fh * 0.79), FRONT_KNEE_LIFT, RUN.lift[i], FRONT_ARMS[dir === 'up' ? 'up' : 'down']));
   }
-  const all = [...frames, ...run];
+  // bending down to pick something up: halfway, then lowest (from the side leaning forward)
+  const hip: XY = [a.anchorX + pad, Math.round(fh * STOOP.hip)];
+  const stoop = [0.5, 1].map((k) => stoopFrame(frames[0], hip, side ? STOOP.lean * k : 0, 1 - (1 - (side ? STOOP.sideSquash : STOOP.frontSquash)) * k));
+  const all = [...frames, ...run, ...stoop];
   // from the front and back, where each hand is in each frame (the maintainer: the fat
   // carried up or down did not move with the hand)
   let sideHands: [XY, XY][] | undefined;
@@ -494,7 +499,7 @@ function cainStride(src: HTMLCanvasElement, a: SheetAsset, dir: Direction): [HTM
   const ctx = c.getContext('2d')!;
   all.forEach((f, i) => ctx.putImageData(new ImageData(new Uint8ClampedArray(f.d), f.w, f.h), i * W, 0));
   const first = frames.length;
-  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, sideHands, run: run.map((_, i) => first + i), runFps: 16 }];
+  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, sideHands, run: run.map((_, i) => first + i), runFps: 16, stoop: stoop.map((_, i) => first + run.length + i) }];
 }
 
 /** The lambs: the sheep, smaller. */

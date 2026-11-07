@@ -452,6 +452,29 @@ export function handsOf(p: Px, mid: number, inner: number, y0: number, y1: numbe
   return [hand(-1) ?? fallback[0], hand(1) ?? fallback[1]];
 }
 
+/**
+ * Bending down to pick something up (the maintainer): the knees give (the
+ * legs below `hip` squashed to `squash` of their height) and the body above
+ * the hip leans forward by `angle` degrees (positive: towards the right of
+ * the picture), coming down with the hips.
+ */
+export function stoopFrame(p: Px, hip: XY, angle: number, squash: number): Px {
+  const hy = Math.round(hip[1]);
+  let feet = hy;
+  for (let y = hy; y < p.h; y++) for (let x = 0; x < p.w; x++) if (alpha(p, x, y)) feet = y;
+  const legs = feet - hy;
+  const drop = Math.round(legs * (1 - squash));
+  const out = blank(p.w, p.h);
+  for (let y = hy + drop; y <= feet; y++) {
+    const sy = Math.min(feet, hy + Math.round(((y - hy - drop) * legs) / Math.max(1, legs - drop)));
+    for (let x = 0; x < p.w; x++) if (alpha(p, x, sy)) copyPx(out, p, x, y, x, sy);
+  }
+  const top = blank(p.w, p.h);
+  for (let y = 0; y < hy; y++) for (let x = 0; x < p.w; x++) if (alpha(p, x, y)) copyPx(top, p, x, y, x, y);
+  over(out, rotatePart(top, -angle, hip), drop);
+  return out;
+}
+
 /** A frame moved `pad` pixels right in a wider frame (room for longer strides). */
 export function padded(p: Px, pad: number): Px {
   const o = blank(p.w + pad * 2, p.h);

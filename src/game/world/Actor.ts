@@ -65,6 +65,8 @@ export class Actor {
   /** current walking speed (px/s) */
   pace = 0;
   private vy = 0;
+  /** bending down to pick something up (stoop()): 0 standing, 1 lowest */
+  private stooping: { k: number } | null = null;
   /** a side-drawn animal leaning the way it goes (see refresh) */
   private tilted = false;
   charId?: string;
@@ -322,6 +324,32 @@ export class Actor {
     return landed;
   }
 
+  /**
+   * Bends down to the ground and straightens again (Cain picking the
+   * produce, the maintainer), with the sheet's bending frames (else a
+   * crouch). Resolves when the hands are lowest; the rise goes on after.
+   */
+  stoop(): Promise<void> {
+    const st = { k: 0 };
+    this.stooping = st;
+    this.stop();
+    this.refresh(true);
+    this.sprite.anims.pause();
+    const step = (k: number, duration: number, ease: string, delay = 0) =>
+      new Promise<void>((done) => this.scene.tweens.add({ targets: st, k, duration, ease, delay, onUpdate: () => this.refresh(), onComplete: () => done(), onStop: () => done() }));
+    const low = step(1, 240, 'Quad.easeOut');
+    void low
+      .then(() => step(0, 260, 'Sine.easeInOut', 220))
+      .then(() => {
+        if (this.stooping !== st) return;
+        this.stooping = null;
+        this.sprite.setScale(textureScale(this.sprite.texture.key));
+        this.sprite.anims.resume();
+        this.refresh(true);
+      });
+    return low;
+  }
+
   /** The step into a blow, as an offset from the feet. */
   private blowOffset(): [number, number] {
     const b = this.blow;
@@ -419,6 +447,18 @@ export class Actor {
     // each character's walk matches its own usual speed (God walks slower, with shorter steps)
     if (this.charId) this.sprite.anims.timeScale = !this.moving ? 1 : running ? Phaser.Math.Clamp(this.pace / (pace * 1.6), 0.7, 1.4) : Phaser.Math.Clamp(this.pace / pace, 0.55, 1.75);
     else if (this.stridePace) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / this.stridePace, 0.5, 4) : 1;
+    if (this.stooping) {
+      const k = this.stooping.k;
+      const parts = tex.split(':');
+      const bend = parts[0] === 'char' ? MANIFEST.characters[parts[1]]?.[parts[2]]?.[parts[3] as Direction]?.stoop : undefined;
+      if (bend?.length) {
+        const i = k < 0.3 ? -1 : k < 0.75 ? 0 : 1;
+        this.sprite.setFrame(i < 0 ? (this.sprite.anims.currentAnim?.frames[0]?.frame.name ?? 0) : bend[Math.min(i, bend.length - 1)]);
+      } else {
+        const base = textureScale(tex);
+        this.sprite.setScale(base, base * (1 - 0.2 * k));
+      }
+    }
     // side-drawn animals going up or down (the sheep the dog drives) lean the
     // way they go and bob with each step, instead of sliding (the maintainer saw them skate)
     if (this.sheet && this.stridePace) {
