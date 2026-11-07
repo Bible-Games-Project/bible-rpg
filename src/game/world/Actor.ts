@@ -261,6 +261,27 @@ export class Actor {
     this.refresh();
   }
 
+  private stepFrame = -1;
+  /**
+   * True once each time a foot comes down (footsteps in time with the legs,
+   * the maintainer): frames 0 and 4 of the 8-frame walk (legs furthest
+   * apart), 2 and 6 of the run (lowest, on the ground).
+   */
+  footDown(): boolean {
+    const a = this.sprite.anims;
+    const key = a.currentAnim?.key ?? '';
+    const run = key.endsWith(':run');
+    if (!this.moving || !(run || key.endsWith(':walk')) || !a.currentFrame) {
+      this.stepFrame = -1;
+      return false;
+    }
+    const i = a.currentFrame.index - 1;
+    if (i === this.stepFrame) return false;
+    this.stepFrame = i;
+    const half = Math.max(1, Math.round(a.currentAnim!.frames.length / 2));
+    return i % half === (run ? Math.round(half / 2) : 0);
+  }
+
   /** What is held now (to hold it again later), or null. */
   holding(): [string, 'hand' | 'arms' | 'carry' | 'staff', [number, number]] | null {
     return this.heldArgs;

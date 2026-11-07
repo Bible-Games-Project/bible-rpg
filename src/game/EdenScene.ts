@@ -96,7 +96,6 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private fireflies: Phaser.GameObjects.Image[] = [];
   private layer!: InputLayer;
   private runner!: MissionRunner;
-  private stepTimer = 0;
   private followStuck = 0;
   /** How far beside the leader the other one walks (closer while hiding). */
   private followGap = 46;
@@ -126,7 +125,6 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.thornSprites = [];
     this.cherubSprites = [];
     this.fireflies = [];
-    this.stepTimer = 0;
     this.followStuck = 0;
     this.followGap = 46;
     setShadowLight(false, 1);
@@ -1236,10 +1234,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       const speed = CHARACTERS[this.active].speed * (input.isDown('run') ? RUN : 1);
       p.move(v.x * speed, v.y * speed);
       if (p.moving) {
-        this.stepTimer -= dt;
-        if (this.stepTimer <= 0) {
+        // in time with the feet coming down
+        if (p.footDown()) {
           audio.step(this.terrain.surfaceAt(p.x, p.y), { pitch: 0.96 + Math.random() * 0.08, volume: 0.6 });
-          this.stepTimer = 0.27 / (p.pace / CHARACTERS[this.active].speed); // two steps per walk cycle (8 frames at 15 fps)
         }
       }
     } else if (!p.scripted) {

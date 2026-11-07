@@ -143,7 +143,6 @@ export class CainScene extends Phaser.Scene {
   private flags: Record<string, FlagValue> = {};
   private layer!: InputLayer;
   private runner!: CainRunner;
-  private stepTimer = 0;
   private followStuck = 0;
   private brotherColliders: Record<Brother, Phaser.Physics.Arcade.Collider[]> = { cain: [], abel: [] };
   /** things laid on the altars, the fire on Abel's */
@@ -188,7 +187,6 @@ export class CainScene extends Phaser.Scene {
     this.godLit = false;
     this.inventory = {};
     this.flags = {};
-    this.stepTimer = 0;
     this.followStuck = 0;
     this.brotherColliders = { cain: [], abel: [] };
     this.altarThings = [];
@@ -1141,10 +1139,9 @@ export class CainScene extends Phaser.Scene {
       const speed = (this.driving ? DOG_DRIVE_SPEED : CHARACTERS[this.active].speed) * (input.isDown('run') ? (this.driving ? 1.25 : RUN) : 1);
       p.move(v.x * speed, v.y * speed);
       if (p.moving && !this.driving) {
-        this.stepTimer -= dt;
-        if (this.stepTimer <= 0) {
+        // in time with the feet coming down
+        if (p.footDown()) {
           audio.step(this.world.surfaceAt(p.x, p.y), { pitch: 0.96 + Math.random() * 0.08, volume: 0.6 });
-          this.stepTimer = 0.27 / (p.pace / CHARACTERS[this.active].speed);
         }
       }
     } else if (!p.scripted) {
