@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAsset, type SheetAsset } from '../manifest';
 import { Pixels } from './pixels';
-import { DOG_RIG, dogGallop } from './dogRun';
+import { DOG_RIG, DOG_RUN_SCALE, dogGallop, enlarge, scaledRig } from './dogRun';
 import { drawAnger, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
 import { frameOf, frontRun, handsOf, padded, sideRun, sideStride, type FrontArms, type Px, type XY } from './stride';
@@ -160,7 +160,8 @@ const DOG_TROT_FRAMES = 8;
 function genDog(scene: Phaser.Scene): void {
   const poses = (['dog-0', 'dog-1'] as const).map((n) => ({ p: gen(scene, n), g: GEN[n] }));
   const SWING = 9;
-  const W = Math.max(...poses.map((q) => q.g.w)) + SWING * 2 + 2;
+  const runPose = enlarge(poses[1].p, DOG_RUN_SCALE);
+  const W = Math.max(poses[0].g.w, runPose.w) + SWING * 2 + 2;
   const AY = Math.max(...poses.map((q) => q.g.ay)) + 2;
   const H = AY + 2;
   const AX = Math.round(W / 2);
@@ -210,7 +211,7 @@ function genDog(scene: Phaser.Scene): void {
   };
   const frames = [frame(0, null, 0), frame(0, null, 1)];
   // the run: a gallop, the legs drawn again on the running pose (see dogRun.ts)
-  frames.push(...dogGallop(poses[1].p, DOG_RIG, { frames: DOG_TROT_FRAMES, w: W, h: H, ox: AX - poses[1].g.ax, ground: AY, lift: 2 }));
+  frames.push(...dogGallop(runPose, scaledRig(DOG_RIG, DOG_RUN_SCALE), { frames: DOG_TROT_FRAMES, w: W, h: H, ox: AX - Math.round(poses[1].g.ax * DOG_RUN_SCALE), ground: AY, lift: 2 }));
   addSheet(scene, 'cain-dog', frames, AX, AY - 1, ART, false, true);
 }
 

@@ -22,6 +22,25 @@ export interface DogRig {
 /** Measured on public/assets/cain/dog-1.png: measure again if it is redrawn. */
 export const DOG_RIG: DogRig = { belly: 24, hind: [19, 20], front: [50, 20], len: 16 };
 
+/** The running pose drawn bigger (nearest pixel): generated smaller than the
+ * standing one, the dog shrank as it ran (the maintainer). */
+export const DOG_RUN_SCALE = 1.2;
+
+export function enlarge(p: Pixels, k: number): Pixels {
+  const out = new Pixels(Math.round(p.w * k), Math.round(p.h * k));
+  for (let y = 0; y < out.h; y++)
+    for (let x = 0; x < out.w; x++) {
+      const i = (Math.min(p.h - 1, Math.floor(y / k)) * p.w + Math.min(p.w - 1, Math.floor(x / k))) * 4;
+      if (p.data[i + 3]) out.data.set(p.data.subarray(i, i + 4), (y * out.w + x) * 4);
+    }
+  return out;
+}
+
+export function scaledRig(r: DogRig, k: number): DogRig {
+  const pt = (q: [number, number]): [number, number] => [Math.round(q[0] * k), Math.round(q[1] * k)];
+  return { belly: Math.round(r.belly * k), hind: pt(r.hind), front: pt(r.front), len: Math.round(r.len * k) };
+}
+
 /** Colours of a part of the pose, darkest first (quantiles of its brightness). */
 function sample(p: Pixels, x0: number, y0: number, x1: number, y1: number, keep: (c: RGB) => boolean): RGB[] {
   const all: RGB[] = [];
@@ -45,6 +64,8 @@ export function dogGallop(pose: Pixels, rig: DogRig, o: { frames: number; w: num
   const body = new Pixels(pose.w, pose.h);
   for (let y = 0; y <= rig.belly; y++) for (let x = 0; x < pose.w; x++) if (pose.alpha(x, y)) body.set(x, y, pose.get(x, y), pose.alpha(x, y));
   const L = rig.len;
+  // the legs as thick as the pose is big
+  const k = L / DOG_RIG.len;
   const frames: Pixels[] = [];
   for (let i = 0; i < o.frames; i++) {
     const ph = (i / o.frames) * Math.PI * 2;
@@ -64,11 +85,11 @@ export function dogGallop(pose: Pixels, rig: DogRig, o: { frames: number; w: num
       const p = new Pixels(pose.w, pose.h + 8);
       const dark = far ? 0.28 : 0;
       if (front) {
-        limb(p, hip[0], hip[1], knee[0], knee[1], 6, 5, (x, y, ac) => tone(cream, 0.6 - dark - ac * 0.2, x, y));
-        limb(p, knee[0], knee[1], paw[0], paw[1], 5, 4.4, (x, y, ac) => tone(cream, 0.75 - dark - ac * 0.2, x, y));
+        limb(p, hip[0], hip[1], knee[0], knee[1], 6 * k, 5 * k, (x, y, ac) => tone(cream, 0.6 - dark - ac * 0.2, x, y));
+        limb(p, knee[0], knee[1], paw[0], paw[1], 5 * k, 4.4 * k, (x, y, ac) => tone(cream, 0.75 - dark - ac * 0.2, x, y));
       } else {
-        limb(p, hip[0], hip[1], knee[0], knee[1], 7, 5, (x, y, ac) => tone(brown, 0.55 - dark - ac * 0.25, x, y));
-        limb(p, knee[0], knee[1], paw[0], paw[1], 4.6, 4.4, (x, y, ac, t) => tone(t > 0.55 ? cream : brown, 0.6 - dark - ac * 0.2, x, y));
+        limb(p, hip[0], hip[1], knee[0], knee[1], 7 * k, 5 * k, (x, y, ac) => tone(brown, 0.55 - dark - ac * 0.25, x, y));
+        limb(p, knee[0], knee[1], paw[0], paw[1], 4.6 * k, 4.4 * k, (x, y, ac, t) => tone(t > 0.55 ? cream : brown, 0.6 - dark - ac * 0.2, x, y));
       }
       p.outline(edge(front ? cream[0] : brown[0]));
       return p;
