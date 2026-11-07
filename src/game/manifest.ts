@@ -39,6 +39,8 @@ export interface SheetAsset {
   flame?: [number, number];
   /** side views: the bottom of the near fist in each frame, in frame pixels */
   hands?: [number, number][];
+  /** front and back views: the bottom of the left and the right hand (of the picture) in each frame, in frame pixels */
+  sideHands?: [[number, number], [number, number]][];
 }
 
 export interface TreeAsset {

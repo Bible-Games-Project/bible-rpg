@@ -438,6 +438,11 @@ export class Actor {
     let dy = arms ? -22 : -this.handHeight;
     const fist = arms ? null : this.fist();
     if (fist) [dx, dy] = [fist[0], fist[1] + HELD_BELOW_FIST];
+    else if (!arms) {
+      // from the front and back, in the hand of this frame when the sheet records it
+      const hand = this.frontHand(dx < 0 ? 0 : 1);
+      if (hand) [dx, dy] = [hand[0], hand[1] + HELD_BELOW_FIST];
+    }
     // what points ahead points the way they look
     const flip = this.facing === 'left';
     if (!arms && s.flipX !== flip) s.setFlipX(flip).setOrigin(1 - s.originX, s.originY);
@@ -515,6 +520,19 @@ export class Actor {
       dy = -20 + step * 1.6;
     }
     s.setPosition(x + dx, y + dy).setDepth(this.facing === 'up' || runningSide ? y - 1 : y + 1);
+  }
+
+  /** From the front or back, the bottom of a hand (0 the left of the picture, 1 the right)
+   * in the current frame (world px from the feet), when the sheet records it. */
+  private frontHand(i: 0 | 1): [number, number] | null {
+    const parts = this.sprite.texture.key.split(':');
+    if (parts[0] !== 'char') return null;
+    const a = MANIFEST.characters[parts[1]]?.[parts[2]]?.[parts[3] as Direction];
+    const p = a?.sideHands?.[Number(this.sprite.frame.name) || 0]?.[this.sprite.flipX ? 1 - i : i];
+    if (!a || !p) return null;
+    const s = a.scale ?? 1;
+    const dx = (p[0] - a.anchorX) * s;
+    return [this.sprite.flipX ? -dx : dx, (p[1] - a.anchorY - 1) * s];
   }
 
   /** The bottom of the near fist in the current frame (world px from the

@@ -420,6 +420,38 @@ function pumpArm(out: Px, p: Px, mid: number, side: number, a: FrontArms, squash
   }
 }
 
+/**
+ * From the front or back, the bottom of each hand (left and right of the
+ * picture) in a frame: the lowest row between y0 and y1 where, coming in from
+ * that edge, an arm is met and then a gap before the body (nearer the middle
+ * than `inner` px is not arm). Where none is found, `fallback`.
+ */
+export function handsOf(p: Px, mid: number, inner: number, y0: number, y1: number, fallback: [XY, XY]): [XY, XY] {
+  const hand = (side: number): XY | null => {
+    let best: XY | null = null;
+    const limit = Math.round(mid + side * inner);
+    for (let y = Math.round(y0); y <= Math.round(y1); y++) {
+      let from = -1;
+      let to = -1;
+      let gap = false;
+      for (let i = 0; ; i++) {
+        const x = side < 0 ? i : p.w - 1 - i;
+        if (side < 0 ? x > limit : x < limit) break;
+        const on = alpha(p, x, y) > 0;
+        if (on && from < 0) from = x;
+        if (from >= 0 && !on) {
+          gap = true;
+          break;
+        }
+        if (on) to = x;
+      }
+      if (from >= 0 && gap) best = [(from + to) / 2, y];
+    }
+    return best;
+  };
+  return [hand(-1) ?? fallback[0], hand(1) ?? fallback[1]];
+}
+
 /** A frame moved `pad` pixels right in a wider frame (room for longer strides). */
 export function padded(p: Px, pad: number): Px {
   const o = blank(p.w + pad * 2, p.h);

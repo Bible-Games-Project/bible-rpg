@@ -4,7 +4,7 @@ import { Pixels } from './pixels';
 import { DOG_RIG, dogGallop } from './dogRun';
 import { drawAnger, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
-import { frameOf, frontRun, padded, sideRun, sideStride, type FrontArms, type Px } from './stride';
+import { frameOf, frontRun, handsOf, padded, sideRun, sideStride, type FrontArms, type Px, type XY } from './stride';
 import GEN from '../../data/cain/generatedArt.json';
 
 /**
@@ -439,6 +439,8 @@ const FRONT_ARMS: Record<'down' | 'up', FrontArms> = {
   down: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.5, back: 0.85, inward: 3, body: FRONT_BODY },
   up: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.4, back: 0.9, inward: 1, body: FRONT_BODY },
 };
+/** from the front, nothing nearer the middle than this is a hand (px): the tunic is about this wide */
+const HAND_INNER = 8;
 /** Cain walks slower than Adam (the maintainer): his steps at this share of Adam's rate (his speed is lower to match) */
 const CAIN_WALK_RATE = 0.8;
 /** room on each side of the side frames for the run's longer strides */
@@ -476,6 +478,14 @@ function cainStride(src: HTMLCanvasElement, a: SheetAsset, dir: Direction): [HTM
     run = walk.map((f, i) => frontRun(frames[f], a.anchorX, Math.round(fh * 0.79), FRONT_KNEE_LIFT, RUN.lift[i], FRONT_ARMS[dir === 'up' ? 'up' : 'down']));
   }
   const all = [...frames, ...run];
+  // from the front and back, where each hand is in each frame (the maintainer: the fat
+  // carried up or down did not move with the hand)
+  let sideHands: [XY, XY][] | undefined;
+  if (!side) {
+    const mid = a.anchorX;
+    const still = handsOf(frames[0], mid, HAND_INNER, fh * 0.4, fh * 0.6, [[mid - 12, fh * 0.6], [mid + 12, fh * 0.6]]);
+    sideHands = all.map((f) => handsOf(f, mid, HAND_INNER, fh * 0.4, fh * 0.6, still));
+  }
   const W = fw + pad * 2;
   const c = document.createElement('canvas');
   c.width = W * all.length;
@@ -483,7 +493,7 @@ function cainStride(src: HTMLCanvasElement, a: SheetAsset, dir: Direction): [HTM
   const ctx = c.getContext('2d')!;
   all.forEach((f, i) => ctx.putImageData(new ImageData(new Uint8ClampedArray(f.d), f.w, f.h), i * W, 0));
   const first = frames.length;
-  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, run: run.map((_, i) => first + i), runFps: 16 }];
+  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, sideHands, run: run.map((_, i) => first + i), runFps: 16 }];
 }
 
 /** The lambs: the sheep, smaller. */
