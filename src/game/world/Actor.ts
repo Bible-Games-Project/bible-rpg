@@ -15,6 +15,8 @@ export const WALK_PACE = 170;
 /** How far below the bottom of the fist a held thing ends (world px): the
  * fist closes around its lower part. */
 const HELD_BELOW_FIST = 3;
+/** how far ahead a carried thing is held walking from the side (world px) */
+const WALK_CARRY_AHEAD = 11;
 /** how much further ahead a carried thing is held when running from the side (world px) */
 const RUN_CARRY_AHEAD = 6;
 /** How much one axis must outweigh the other before a walker turns from a
@@ -506,10 +508,12 @@ export class Actor {
     const fist = this.fist();
     let dx: number;
     let dy: number;
-    // running from the side, it is held out further ahead, behind the near arm (the maintainer)
-    const runningSide = !!fist && this.lastAnim.endsWith(':run');
+    // from the side it is held out ahead, behind the near arm, walking as running (the maintainer)
+    const fromSide = !!fist;
     if (fist) {
-      dx = fist[0] * 0.75 + (runningSide ? (this.facing === 'left' ? -RUN_CARRY_AHEAD : RUN_CARRY_AHEAD) : 0);
+      const ahead = this.facing === 'left' ? -1 : 1;
+      // walking, the arms hold it out in front instead of swinging it back with the near arm
+      dx = this.lastAnim.endsWith(':run') ? fist[0] * 0.75 + ahead * RUN_CARRY_AHEAD : fist[0] * 0.25 + ahead * WALK_CARRY_AHEAD;
       dy = fist[1] + 7;
     } else {
       const a = this.sprite.anims;
@@ -517,9 +521,10 @@ export class Actor {
       const i = a.currentFrame?.index ?? 0;
       const step = this.moving ? Math.sin((i / n) * Math.PI * 4) : 0;
       dx = this.moving ? Math.sin((i / n) * Math.PI * 2) * 1.2 : 0;
-      dy = -20 + step * 1.6;
+      // going away it is held higher, up against the chest (the maintainer)
+      dy = (this.facing === 'up' ? -26 : -20) + step * 1.6;
     }
-    s.setPosition(x + dx, y + dy).setDepth(this.facing === 'up' || runningSide ? y - 1 : y + 1);
+    s.setPosition(x + dx, y + dy).setDepth(this.facing === 'up' || fromSide ? y - 1 : y + 1);
   }
 
   /** From the front or back, the bottom of a hand (0 the left of the picture, 1 the right)
