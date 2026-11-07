@@ -64,6 +64,9 @@ export class Actor {
   moving = false;
   /** current walking speed (px/s) */
   pace = 0;
+  private vy = 0;
+  /** a side-drawn animal leaning the way it goes (see refresh) */
+  private tilted = false;
   charId?: string;
   outfit?: string;
   sheet?: string;
@@ -159,6 +162,7 @@ export class Actor {
     this.body.setVelocity(vx, vy);
     this.moving = Math.abs(vx) + Math.abs(vy) > 1;
     this.pace = Math.hypot(vx, vy);
+    this.vy = vy;
     if (this.moving) this.faceVector(vx, vy);
   }
 
@@ -171,7 +175,8 @@ export class Actor {
     // sheets drawn from the side (the serpent, animals) only turn left or
     // right: going up or down they faced right and crawled backwards
     if (this.sheet) {
-      if (Math.abs(vx) > 0.5) this.facing = vx < 0 ? 'left' : 'right';
+      // going (nearly) straight up or down, it does not keep turning round
+      if (Math.abs(vx) > Math.max(0.5, Math.abs(vy) * 0.25)) this.facing = vx < 0 ? 'left' : 'right';
       return;
     }
     // near a diagonal the facing keeps its axis until the other one clearly
@@ -414,6 +419,22 @@ export class Actor {
     // each character's walk matches its own usual speed (God walks slower, with shorter steps)
     if (this.charId) this.sprite.anims.timeScale = !this.moving ? 1 : running ? Phaser.Math.Clamp(this.pace / (pace * 1.6), 0.7, 1.4) : Phaser.Math.Clamp(this.pace / pace, 0.55, 1.75);
     else if (this.stridePace) this.sprite.anims.timeScale = this.moving ? Phaser.Math.Clamp(this.pace / this.stridePace, 0.5, 4) : 1;
+    // side-drawn animals going up or down (the sheep the dog drives) lean the
+    // way they go and bob with each step, instead of sliding (the maintainer saw them skate)
+    if (this.sheet && this.stridePace) {
+      const a = this.sprite.anims;
+      if (this.moving && this.pace > 1 && a.currentAnim && a.currentFrame) {
+        const share = Phaser.Math.Clamp(this.vy / this.pace, -1, 1);
+        const dir = this.facing === 'left' ? -1 : 1;
+        const n = a.currentAnim.frames.length;
+        const bob = Math.abs(Math.sin(((a.currentFrame.index - 1) / n) * Math.PI * 2)) * (0.6 + Math.abs(share) * 0.8);
+        this.sprite.setRotation(dir * share * 0.2).setY(this.sprite.y - bob);
+        this.tilted = true;
+      } else if (this.tilted) {
+        this.sprite.setRotation(0);
+        this.tilted = false;
+      }
+    }
     this.placeHeld();
   }
 
