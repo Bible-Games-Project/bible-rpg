@@ -47,6 +47,7 @@ export const SFX = [
   'swing',
   'hit',
   'cut',
+  'bark',
 ] as const;
 
 export type Sfx = (typeof SFX)[number];
@@ -223,6 +224,52 @@ class AudioManager {
       this.noiseBurst(s, dur, peak * 0.12, 'bandpass', ((f0 + f1) / 2) * p, 2.5);
     }
   }
+
+  /**
+   * A dog's bark (synthesized, so free of any copyright): two short "woofs",
+   * each a rough voiced burst that jumps up and falls, through the formant
+   * of a dog's open mouth, with a breath of noise in it.
+   */
+  private bark(t: number, peak: number, p: number): void {
+    const ctx = this.ctx!;
+    for (const [at, f, k] of [
+      [0, 1, 1],
+      [0.21, 0.94, 0.8],
+    ] as const) {
+      const s = t + at;
+      const dur = 0.15;
+      const f0 = (330 + Math.random() * 40) * f * p;
+      const o = ctx.createOscillator();
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(f0 * 0.75, s);
+      o.frequency.exponentialRampToValueAtTime(f0 * 1.25, s + 0.025);
+      o.frequency.exponentialRampToValueAtTime(f0 * 0.6, s + dur);
+      // a little roughness: the pitch shaken fast
+      const lfo = ctx.createOscillator();
+      const depth = ctx.createGain();
+      lfo.frequency.value = 55;
+      depth.gain.value = f0 * 0.08;
+      lfo.connect(depth).connect(o.frequency);
+      const formant = ctx.createBiquadFilter();
+      formant.type = 'bandpass';
+      formant.Q.value = 1.6;
+      formant.frequency.setValueAtTime(1100 * p, s);
+      formant.frequency.exponentialRampToValueAtTime(650 * p, s + dur);
+      const low = ctx.createBiquadFilter();
+      low.type = 'lowpass';
+      low.frequency.value = 2600;
+      const g = ctx.createGain();
+      this.env(g, s, 0.012, peak * k, dur);
+      o.connect(formant).connect(low).connect(g).connect(this.sfx);
+      o.start(s);
+      lfo.start(s);
+      o.stop(s + dur + 0.05);
+      lfo.stop(s + dur + 0.05);
+      this.noiseBurst(s, 0.09, peak * k * 0.35, 'bandpass', 1400 * p, 1.1);
+      this.tone(f0 * 0.5, s, 0.1, peak * k * 0.5, 'triangle', undefined, f0 * 0.32);
+    }
+  }
+
 
   private noiseBurst(t: number, dur: number, peak: number, filter: BiquadFilterType, freq: number, q = 0.8, dest?: AudioNode): void {
     const ctx = this.ctx!;
@@ -416,6 +463,9 @@ class AudioManager {
         break;
       case 'whistle':
         this.whistle(t, 0.09 * v, p);
+        break;
+      case 'bark':
+        this.bark(t, 0.22 * v, p);
         break;
       case 'pickup':
         [0, 4, 7].forEach((s, i) => this.tone(523 * Math.pow(2, s / 12), t + i * 0.06, 0.25, 0.07 * v, 'triangle'));

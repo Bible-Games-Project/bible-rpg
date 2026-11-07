@@ -792,6 +792,8 @@ export class CainScene extends Phaser.Scene {
   private herdProgress: () => void = () => {};
   /** the player runs the dog instead of Abel (herding, mission 2) */
   private driving = false;
+  /** when the dog may bark again (scene time, ms) */
+  private barkAt = 0;
 
   /** The player runs the dog (on) or Abel again (off); the camera goes with it. */
   driveDog(on: boolean): void {
@@ -1212,6 +1214,7 @@ export class CainScene extends Phaser.Scene {
     if (this.driving) {
       if (!this.canMove()) d.stop();
       d.refresh();
+      this.barkAtFlock();
       return;
     }
     let to: Pt = POINTS.dogRest;
@@ -1259,6 +1262,16 @@ export class CainScene extends Phaser.Scene {
       if (this.herd) d.face(this.flockCentre()[0] < d.x ? 'left' : 'right');
     }
     if (view.contains(d.x, d.y) || d.moving) d.refresh();
+  }
+
+  /** The dog barks now and then as it runs up close behind a sheep. */
+  private barkAtFlock(): void {
+    const d = this.dog;
+    if (!d.moving || this.time.now < this.barkAt) return;
+    const near = [...this.sheep, ...this.lambs].some((g) => !g.penned && g.actor.visible && Math.hypot(g.actor.x - d.x, g.actor.y - d.y) < DOG_FEAR * 0.6);
+    if (!near) return;
+    audio.play('bark', { pitch: 0.95 + Math.random() * 0.1, volume: 0.8 });
+    this.barkAt = this.time.now + 2600 + Math.random() * 2600;
   }
 
   /**
