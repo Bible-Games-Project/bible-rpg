@@ -417,9 +417,14 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   }
 
   async lines(lines: Line[]): Promise<void> {
-    // a narrator with a voice tells it while the player keeps moving
+    // the narrator tells it while the player keeps moving, and it cannot be
+    // skipped (the maintainer); in a cutscene, only a voiced line goes on by itself
     const [first] = lines;
-    if (lines.length === 1 && first.speaker === 'narrator' && first.voice && voices.has(first.voice, first.text)) return ui().dialogue.narrate(first);
+    const voiced = !!first?.voice && voices.has(first.voice, first.text);
+    if (lines.length && lines.every((l) => l.speaker === 'narrator') && (this.control || (lines.length === 1 && voiced))) {
+      for (const l of lines) await ui().dialogue.narrate(l);
+      return;
+    }
     this.player().stop();
     this.facePartners(lines);
     await ui().dialogue.show(lines);

@@ -350,10 +350,13 @@ export class CainScene extends Phaser.Scene {
 
   async lines(lines: Line[]): Promise<void> {
     const [first] = lines;
-    // the narrator does not hold the player (the maintainer: one can walk while it is told);
-    // in a cutscene, only a voiced line goes on by itself
+    // the narrator does not hold the player and cannot be skipped (the maintainer:
+    // one can walk while it is told); in a cutscene, only a voiced line goes on by itself
     const voiced = !!first?.voice && voices.has(first.voice, first.text);
-    if (lines.length === 1 && first.speaker === 'narrator' && (voiced || this.control)) return ui().dialogue.narrate(first);
+    if (lines.length && lines.every((l) => l.speaker === 'narrator') && (this.control || (lines.length === 1 && voiced))) {
+      for (const l of lines) await ui().dialogue.narrate(l);
+      return;
+    }
     this.player().stop();
     this.facePartners(lines);
     await ui().dialogue.show(lines);
