@@ -69,6 +69,8 @@ export class Actor {
   hidden = false;
   private emoteSprite: Phaser.GameObjects.Image | null = null;
   private heldSprite: Phaser.GameObjects.Image | null = null;
+  /** a thing in the other hand (Abel's knife, the staff still in the first: the maintainer) */
+  private offSprite: Phaser.GameObjects.Image | null = null;
   private anchorY = 1;
   private lastAnim = '';
   private grip: 'hand' | 'arms' | 'carry' | 'staff' = 'hand';
@@ -141,6 +143,7 @@ export class Actor {
     this.sprite.setVisible(v);
     this.shadow?.setVisible(v);
     this.heldSprite?.setVisible(v);
+    this.offSprite?.setVisible(v);
     this.body.enable = v && !this.scripted;
     return this;
   }
@@ -245,6 +248,16 @@ export class Actor {
     this.heldArgs = key ? [key, grip, origin] : null;
     if (!key) return;
     this.heldSprite = sized(this.scene.add.image(this.x, this.y - 36, key).setOrigin(origin[0], origin[1]).setDepth(this.y + 1)).setVisible(this.sprite.visible);
+    this.refresh();
+  }
+
+  /** Something in the other hand as well, held as hold(key, 'hand') would hold it
+   * (a blow is made with it); what is in the first hand moves to the far side. */
+  holdOther(key: string | null, origin: [number, number] = [0.5, 1]): void {
+    this.offSprite?.destroy();
+    this.offSprite = null;
+    if (!key) return void this.refresh();
+    this.offSprite = sized(this.scene.add.image(this.x, this.y - 36, key).setOrigin(origin[0], origin[1]).setDepth(this.y + 1)).setVisible(this.sprite.visible);
     this.refresh();
   }
 
@@ -388,17 +401,22 @@ export class Actor {
    * pipeline: the maintainer saw held things hang still while the arm moved).
    */
   private placeHeld(): void {
-    if (!this.heldSprite) return;
     const x = this.feet.x;
     const y = this.feet.y;
+    if (this.offSprite) this.placeInHand(this.offSprite, x, y, false, this.grip === 'staff');
+    if (!this.heldSprite) return;
     if (this.grip === 'carry') return this.placeCarried(x, y);
     if (this.grip === 'staff') return this.placeStaff(x, y);
-    const arms = this.grip === 'arms';
+    this.placeInHand(this.heldSprite, x, y, this.grip === 'arms', false);
+  }
+
+  /** A thing in the hand (or both arms); `other`: the hand the staff is not in, from the front and back. */
+  private placeInHand(s: Phaser.GameObjects.Image, x: number, y: number, arms: boolean, other: boolean): void {
     let dx = (arms ? { left: -9, right: 9, down: 0, up: 0 } : { left: -7, right: 7, down: -12, up: 12 })[this.facing];
+    if (other && (this.facing === 'down' || this.facing === 'up')) dx = -dx;
     let dy = arms ? -22 : -this.handHeight;
     const fist = arms ? null : this.fist();
     if (fist) [dx, dy] = [fist[0], fist[1] + HELD_BELOW_FIST];
-    const s = this.heldSprite;
     // what points ahead points the way they look
     const flip = this.facing === 'left';
     if (!arms && s.flipX !== flip) s.setFlipX(flip).setOrigin(1 - s.originX, s.originY);
@@ -428,7 +446,15 @@ export class Actor {
     const fist = this.fist();
     let foot: [number, number];
     let hand: [number, number];
-    if (side) {
+    // with something in the other hand, the staff is in the far hand: planted
+    // ahead of the body, behind it and the near arm
+    const far = !!this.offSprite && !!side;
+    if (far) {
+      // it goes with the body as it steps into a blow
+      const [bx] = this.blowOffset();
+      foot = [side * 9 + bx, -1];
+      hand = [side * 6 + bx, -34];
+    } else if (side) {
       foot = [side * 3, 1];
       hand = fist ?? [side * 7, -34];
     } else {
@@ -440,7 +466,7 @@ export class Actor {
     // the crook faces the way they look
     const flip = this.facing === 'left';
     if (s.flipX !== flip) s.setFlipX(flip).setOrigin(1 - s.originX, s.originY);
-    s.setPosition(x + foot[0], y + foot[1]).setRotation(lean).setDepth(this.facing === 'up' ? y - 1 : y + 1);
+    s.setPosition(x + foot[0], y + foot[1]).setRotation(lean).setDepth(this.facing === 'up' || far ? y - 1 : y + 1);
   }
 
   /**
@@ -513,5 +539,6 @@ export class Actor {
     this.feet.destroy();
     this.emoteSprite?.destroy();
     this.heldSprite?.destroy();
+    this.offSprite?.destroy();
   }
 }

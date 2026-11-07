@@ -468,11 +468,27 @@ class AudioManager {
         this.noiseBurst(t, 0.13, 0.5 * v, 'lowpass', 900, 0.8);
         this.crackle(t, 0.12, 0.22 * v, 400, 2600, 0.6, 3);
         break;
-      case 'cut':
-        // a blade drawn quickly: a thin hiss and a soft thud
-        this.noiseBurst(t, 0.1, 0.3 * v, 'highpass', 2600, 0.7);
-        this.tone(80, t + 0.03, 0.14, 0.25 * v, 'sine', undefined, 45);
+      case 'cut': {
+        // a knife going into flesh (the maintainer; synthesised, so free): the
+        // edge slicing in, a wet squelch sliding down in pitch, a soft thud
+        this.noiseBurst(t, 0.07, 0.22 * v, 'highpass', 3200, 0.8);
+        const ctx = this.ctx!;
+        const src = ctx.createBufferSource();
+        src.buffer = this.noise;
+        const bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.Q.value = 4;
+        bp.frequency.setValueAtTime(1500, t + 0.02);
+        bp.frequency.exponentialRampToValueAtTime(260, t + 0.26);
+        const g = ctx.createGain();
+        this.env(g, t + 0.02, 0.015, 0.55 * v, 0.24);
+        src.connect(bp).connect(g).connect(this.sfx);
+        src.start(t + 0.02, Math.random());
+        src.stop(t + 0.32);
+        this.crackle(t + 0.03, 0.2, 0.28 * v, 260, 900, 1.2, 3);
+        this.tone(90, t + 0.03, 0.16, 0.35 * v, 'sine', undefined, 45);
         break;
+      }
       case 'fill':
       case 'pour':
         this.noiseBurst(t, 0.6, 0.1 * v, 'bandpass', 1400, 0.6);

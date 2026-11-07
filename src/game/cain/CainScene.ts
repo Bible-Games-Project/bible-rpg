@@ -838,9 +838,8 @@ export class CainScene extends Phaser.Scene {
     lamb.face(side > 0 ? 'left' : 'right');
     p.stop();
     p.face(lamb);
-    // Abel draws his knife (what he held goes back in his hand after)
-    const held = p.holding();
-    p.hold('cain-knife', 'hand', KNIFE_GRIP);
+    // Abel draws his knife in his other hand; the staff stays in the first (the maintainer)
+    p.holdOther('cain-knife', KNIFE_GRIP);
     await this.wait(320);
     audio.play('swing', { volume: 0.6 });
     await p.attack('stab');
@@ -859,7 +858,7 @@ export class CainScene extends Phaser.Scene {
     marks.push(pool);
     this.tweens.add({ targets: pool, scaleX: 3.5, scaleY: 3, delay: 300, duration: 1400, ease: 'Sine.easeOut' });
     await this.wait(1000);
-    p.hold(held?.[0] ?? null, held?.[1], held?.[2]);
+    p.holdOther(null);
     const parts = [lamb.sprite, lamb.shadow].filter((o): o is NonNullable<typeof o> => !!o);
     await new Promise<void>((resolve) => this.tweens.add({ targets: parts, alpha: 0, duration: 700, onComplete: () => resolve() }));
     lamb.setVisible(false);
