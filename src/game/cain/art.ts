@@ -395,7 +395,8 @@ function buildBrothers(scene: Phaser.Scene): void {
       const img = scene.textures.get(from).getSourceImage() as HTMLImageElement;
       let canvas = recolor(img, img.width, img.height, a.frameHeight, who);
       let asset: SheetAsset = { ...a };
-      if (who === 'cain') [canvas, asset] = cainStride(canvas, a, dir);
+      // Abel runs as Cain does (the maintainer)
+      [canvas, asset] = cainStride(canvas, a, dir);
       scene.textures.addSpriteSheet(key, canvas as unknown as HTMLImageElement, { frameWidth: asset.frameWidth, frameHeight: asset.frameHeight });
       // the shadow is Adam's (same shapes)
       if (a.shadow && scene.textures.exists(shadowKey(from))) {
