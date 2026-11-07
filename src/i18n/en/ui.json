@@ -289,8 +289,7 @@
     "chapter": "The Garden of Eden",
     "body": "Adam and Eve left the garden. Cherubim guard the way to the tree of life. The story continues.",
     "next": "Next on the path: Cain and Abel.",
-    "toMap": "Return to the story path",
-    "toMenu": "Main menu"
+    "continue": "Continue"
   },
   "characters": {
     "adam": "Adam",

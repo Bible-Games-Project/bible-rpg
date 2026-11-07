@@ -362,16 +362,14 @@ export class App {
     const p = this.sceneKey === 'eden' ? 'complete' : `${this.sceneKey}.complete`;
     this.hud.setMission(null);
     this.touch.setActive(false);
-    const done = (to: 'map' | 'menu') => {
+    // one way on (the maintainer): back to the story path, where the next story waits
+    const done = () => {
       c.close();
-      this.leaveGame(to);
+      this.leaveGame('map');
     };
     const c = this.card(
       [h('h1', {}, t('complete.title')), h('h2', {}, t(`${p}.chapter`)), h('p', {}, t(`${p}.body`)), h('p', { class: 'next' }, t(`${p}.next`))],
-      [
-        h('button', { class: 'btn primary', onclick: () => done('map') }, t('complete.toMap')),
-        h('button', { class: 'btn', onclick: () => done('menu') }, t('complete.toMenu')),
-      ],
+      [h('button', { class: 'btn primary', onclick: done }, t('complete.continue'))],
     );
   }
 }

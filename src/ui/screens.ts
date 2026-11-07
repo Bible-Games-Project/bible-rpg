@@ -100,7 +100,11 @@ function chapterStatus(c: ChapterDef): 'completed' | 'progress' | 'available' | 
 
 export function storyMapScreen(a: MapActions, initial: Testament = 'ot'): HTMLElement {
   let testament: Testament = initial;
-  let selected: string = initial === 'ot' ? 'eden' : chaptersOf('nt')[0].id;
+  // the story that waits next: the first open one not finished yet (after a
+  // chapter is completed, Continue lands here on the one that follows)
+  const list = chaptersOf(initial);
+  const next = list.find((c) => { const st = chapterStatus(c); return st === 'available' || st === 'progress'; });
+  let selected: string = (next ?? list[0]).id;
   const mapInner = h('div', { class: 'story-map-inner' });
   const map = h('div', { class: 'story-map', tabindex: '-1' }, mapInner);
   // A painted map fills the frame's height (or width, on very wide screens)
