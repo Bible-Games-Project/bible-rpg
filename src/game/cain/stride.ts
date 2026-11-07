@@ -456,9 +456,9 @@ export function handsOf(p: Px, mid: number, inner: number, y0: number, y1: numbe
  * Bending down to pick something up (the maintainer): the knees give (the
  * legs below `hip` squashed to `squash` of their height) and the body above
  * the hip leans forward by `angle` degrees (positive: towards the right of
- * the picture), coming down with the hips.
+ * the picture), coming down with the hips, which go `back` px the other way.
  */
-export function stoopFrame(p: Px, hip: XY, angle: number, squash: number): Px {
+export function stoopFrame(p: Px, hip: XY, angle: number, squash: number, back = 0): Px {
   const hy = Math.round(hip[1]);
   let feet = hy;
   for (let y = hy; y < p.h; y++) for (let x = 0; x < p.w; x++) if (alpha(p, x, y)) feet = y;
@@ -471,7 +471,12 @@ export function stoopFrame(p: Px, hip: XY, angle: number, squash: number): Px {
   }
   const top = blank(p.w, p.h);
   for (let y = 0; y < hy; y++) for (let x = 0; x < p.w; x++) if (alpha(p, x, y)) copyPx(top, p, x, y, x, y);
-  over(out, rotatePart(top, -angle, hip), drop);
+  // the hips go back as the body leans over
+  const bent = rotatePart(top, -angle, hip);
+  const moved = blank(p.w, p.h);
+  const dx = Math.round(back);
+  for (let y = 0; y < p.h; y++) for (let x = 0; x < p.w; x++) if (alpha(bent, x, y) && x - dx >= 0 && x - dx < p.w) copyPx(moved, bent, x - dx, y, x, y);
+  over(out, moved, drop);
   return out;
 }
 

@@ -440,8 +440,8 @@ const FRONT_ARMS: Record<'down' | 'up', FrontArms> = {
   down: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.5, back: 0.85, inward: 3, body: FRONT_BODY },
   up: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.4, back: 0.9, inward: 1, body: FRONT_BODY },
 };
-/** bending down (stoopFrame): the hip (share of the frame height), the lean from the side (degrees) and how far the knees give */
-const STOOP = { hip: 0.5, lean: 42, sideSquash: 0.8, frontSquash: 0.7 };
+/** bending down (stoopFrame): the hip (share of the frame height), the lean from the side (degrees), how far the hips go back (px) and how far the knees give */
+const STOOP = { hip: 0.5, lean: 36, back: 8, sideSquash: 0.82, frontSquash: 0.7 };
 /** from the front, nothing nearer the middle than this is a hand (px): the tunic is about this wide */
 const HAND_INNER = 8;
 /** Cain walks slower than Adam (the maintainer): his steps at this share of Adam's rate (his speed is lower to match) */
@@ -482,7 +482,7 @@ function cainStride(src: HTMLCanvasElement, a: SheetAsset, dir: Direction): [HTM
   }
   // bending down to pick something up: halfway, then lowest (from the side leaning forward)
   const hip: XY = [a.anchorX + pad, Math.round(fh * STOOP.hip)];
-  const stoop = [0.5, 1].map((k) => stoopFrame(frames[0], hip, side ? STOOP.lean * k : 0, 1 - (1 - (side ? STOOP.sideSquash : STOOP.frontSquash)) * k));
+  const stoop = [0.5, 1].map((k) => stoopFrame(frames[0], hip, side ? STOOP.lean * k : 0, 1 - (1 - (side ? STOOP.sideSquash : STOOP.frontSquash)) * k, side ? STOOP.back * k : 0));
   const all = [...frames, ...run, ...stoop];
   // from the front and back, where each hand is in each frame (the maintainer: the fat
   // carried up or down did not move with the hand)
