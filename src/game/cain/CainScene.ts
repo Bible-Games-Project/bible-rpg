@@ -899,6 +899,16 @@ export class CainScene extends Phaser.Scene {
     return cut;
   }
 
+  /** Abel's staff laid on the ground beside him while his hand carries the fat (the maintainer), or taken away again. */
+  layStaff(on: boolean): void {
+    this.laidStaff?.destroy();
+    this.laidStaff = null;
+    if (!on) return;
+    const a = this.abel;
+    const side = a.facing === 'left' ? 1 : -1;
+    this.laidStaff = sized(this.add.image(a.x + side * 22, a.y + 4, 'cain-staff')).setOrigin(0.5, 0.5).setAngle(side * 84).setDepth(DEPTH_SHADOW + 3);
+  }
+
   /** The fat of a lamb lying on the ground until it is taken. */
   dropFat(at: Pt): Phaser.GameObjects.Image {
     return this.add.image(at[0], at[1], 'cain-fat').setOrigin(0.5, 1).setScale(ART).setDepth(at[1]);
@@ -1023,6 +1033,8 @@ export class CainScene extends Phaser.Scene {
   }
 
   /** Abel falls (the fifth blow): the staff drops from his hand first, the blood pools under him. */
+  private laidStaff: Phaser.GameObjects.Image | null = null;
+
   private fall(): void {
     const a = this.abel;
     a.hold(null);
@@ -1474,6 +1486,8 @@ export class CainScene extends Phaser.Scene {
     if (all.length && all.every((g) => g.penned)) this.herd?.done();
   }
 
+  private followSpeed = 0;
+
   private updateFollower(dt: number): void {
     const leader = this.player();
     const f = this.other();
@@ -1492,13 +1506,18 @@ export class CainScene extends Phaser.Scene {
     const dx = tx - f.x;
     const dy = ty - f.y;
     const gap = Math.hypot(dx, dy);
-    if (dist > 64 || gap > 30) {
-      const sp = Math.max(CHARACTERS[f.id].speed, leader.pace) * (dist > 160 ? 1.1 : gap < 60 ? 0.6 : 0.95);
+    // starts after the leader when he is a little away, stops once beside him
+    if (dist > 64 || gap > (f.moving ? 16 : 30)) {
+      // the speed eases from one to the next (jumping between them, Abel's legs flickered between walk and run)
+      const want = Math.max(CHARACTERS[f.id].speed, leader.pace) * (dist > 160 ? 1.1 : gap < 60 ? 0.75 : 0.95);
+      this.followSpeed += (want - this.followSpeed) * Math.min(1, dt * 4);
+      const sp = Math.max(this.followSpeed, CHARACTERS[f.id].speed * 0.6);
       const before = { x: f.x, y: f.y };
       f.move((dx / gap) * sp, (dy / gap) * sp);
       this.followStuck = Math.hypot(f.x - before.x, f.y - before.y) < 0.2 ? this.followStuck + dt : 0;
     } else {
       f.stop();
+      this.followSpeed = 0;
       if (!leader.moving) {
         const want: Facing = leader.facing === 'up' || leader.facing === 'down' ? leader.facing : leader.x < f.x ? 'left' : 'right';
         if (f.facing !== want) f.face(want);

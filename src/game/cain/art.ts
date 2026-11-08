@@ -4,7 +4,7 @@ import { Pixels } from './pixels';
 import { DOG_RIG, DOG_RUN_SCALE, dogGallop, enlarge, scaledRig } from './dogRun';
 import { drawAnger, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
-import { frameOf, frontRun, handsOf, padded, stoopFrame, sideRun, sideStride, type FrontArms, type Px, type XY } from './stride';
+import { frameOf, frontRaise, frontRun, frontThrust, handsOf, padded, sidePoses, stoopFrame, sideRun, sideStride, type FrontArms, type Px, type SidePose, type XY } from './stride';
 import GEN from '../../data/cain/generatedArt.json';
 
 /**
@@ -447,7 +447,19 @@ const HAND_INNER = 8;
 /** Cain walks slower than Adam (the maintainer): his steps at this share of Adam's rate (his speed is lower to match) */
 const CAIN_WALK_RATE = 0.8;
 /** room on each side of the side frames for the run's longer strides */
-const STRIDE_PAD = 8;
+const STRIDE_PAD = 24;
+/** the poses of a blow, in the order the sheet keeps them */
+const ATTACK_POSES = ['raise', 'strike', 'draw', 'thrust'] as const;
+/** from the side: the near arm (degrees from hanging, forward positive), the elbow, the lean and the step of each pose; from the front: how long the raised forearm looks, how far out it leans (px), and how short the forearm coming at us is */
+const ATTACK = {
+  side: {
+    raise: { arm: -135, elbow: 20, lean: -4 },
+    strike: { arm: 55, elbow: 10, lean: 7, step: 14 },
+    draw: { arm: -35, elbow: 75, lean: -3 },
+    thrust: { arm: 78, elbow: 6, lean: 7, step: 14 },
+  } satisfies Record<(typeof ATTACK_POSES)[number], SidePose>,
+  front: { raise: 0.9, out: 5, strike: 0.6, thrust: 0.35 },
+};
 
 /** Cain's sheet for one direction: from the side his walk with more arm
  * swing and a run with bent knees and elbows; from the front and back the
@@ -483,7 +495,27 @@ function cainStride(src: HTMLCanvasElement, a: SheetAsset, dir: Direction): [HTM
   // bending down to pick something up: halfway, then lowest (from the side leaning forward)
   const hip: XY = [a.anchorX + pad, Math.round(fh * STOOP.hip)];
   const stoop = [0.5, 1].map((k) => stoopFrame(frames[0], hip, side ? STOOP.lean * k : 0, 1 - (1 - (side ? STOOP.sideSquash : STOOP.frontSquash)) * k, side ? STOOP.back * k : 0));
-  const all = [...frames, ...run, ...stoop];
+  // a blow (Actor.attack; the maintainer: the arm must come up): raised and brought down, drawn back and thrust
+  const poses = ATTACK_POSES.map(() => [] as Px[]);
+  let poseHands: XY[] = [];
+  const raisedHands: XY[] = [];
+  if (side) {
+    const band: [number, number, number, number] = [SIDE_ARM[0] + pad, SIDE_ARM[1] + pad, SIDE_ARM[2], SIDE_ARM[3]];
+    const r = sidePoses(frames[0], band, ATTACK_POSES.map((k) => ATTACK.side[k]));
+    r.frames.forEach((f, i) => poses[i].push(f));
+    poseHands = r.hands;
+  } else {
+    const arms = FRONT_ARMS[dir === 'up' ? 'up' : 'down'];
+    for (const k of [-1, 1]) {
+      const up = frontRaise(frames[0], a.anchorX, k, arms, ATTACK.front.raise, ATTACK.front.out);
+      raisedHands.push(up.hand);
+      poses[0].push(up.frame);
+      poses[1].push(frontThrust(frames[0], a.anchorX, k, arms, ATTACK.front.strike, 2));
+      poses[2].push(frames[0]);
+      poses[3].push(frontThrust(frames[0], a.anchorX, k, arms, ATTACK.front.thrust, 3));
+    }
+  }
+  const all = [...frames, ...run, ...stoop, ...poses.flat()];
   // from the front and back, where each hand is in each frame (the maintainer: the fat
   // carried up or down did not move with the hand)
   let sideHands: [XY, XY][] | undefined;
@@ -491,6 +523,14 @@ function cainStride(src: HTMLCanvasElement, a: SheetAsset, dir: Direction): [HTM
     const mid = a.anchorX;
     const still = handsOf(frames[0], mid, HAND_INNER, fh * 0.4, fh * 0.6, [[mid - 12, fh * 0.6], [mid + 12, fh * 0.6]]);
     sideHands = all.map((f) => handsOf(f, mid, HAND_INNER, fh * 0.4, fh * 0.6, still));
+    // the raised fists, which handsOf does not look for
+    const at = frames.length + run.length + stoop.length;
+    raisedHands.forEach((h, k) => (sideHands![at + k][k] = h));
+  }
+  // the fists in the poses of a blow (none in the bending frames)
+  if (hands && side) {
+    const at = frames.length + run.length + stoop.length;
+    poseHands.forEach((h, i) => (hands![at + i] = h));
   }
   const W = fw + pad * 2;
   const c = document.createElement('canvas');
@@ -499,7 +539,10 @@ function cainStride(src: HTMLCanvasElement, a: SheetAsset, dir: Direction): [HTM
   const ctx = c.getContext('2d')!;
   all.forEach((f, i) => ctx.putImageData(new ImageData(new Uint8ClampedArray(f.d), f.w, f.h), i * W, 0));
   const first = frames.length;
-  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, sideHands, run: run.map((_, i) => first + i), runFps: 16, stoop: stoop.map((_, i) => first + run.length + i) }];
+  const firstPose = first + run.length + stoop.length;
+  let n = firstPose;
+  const [raise, strike, draw, thrust] = poses.map((list) => list.map(() => n++));
+  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, sideHands, run: run.map((_, i) => first + i), runFps: 16, stoop: stoop.map((_, i) => first + run.length + i), attack: { raise, strike, draw, thrust } }];
 }
 
 /** The lambs: the sheep, smaller. */

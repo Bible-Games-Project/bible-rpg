@@ -89,7 +89,11 @@ export class Actor {
   /** what is held (hold()'s arguments), to give it back after a while */
   private heldArgs: [string, 'hand' | 'arms' | 'carry' | 'staff', [number, number]] | null = null;
   /** a blow in progress (attack()): how far the body steps in (px), how far the held thing turns (rad) and rises (px), how much it points the way they face */
-  private blow: { lunge: number; turn: number; lift: number; aim: number } | null = null;
+  private blow: { lunge: number; turn: number; lift: number; aim: number; kind: 'swing' | 'stab'; phase: 'wind' | 'land' | 'rest' } | null = null;
+  /** what is held sits this much lower (px) in the hand, by the way they face (the maintainer: the jawbone hung below the fist, the fat too high from the front) */
+  private heldNudge: Partial<Record<Facing, number>> = {};
+  /** going at a run (kept a little below the speed that starts it, so it does not flicker) */
+  private running = false;
   /** added to the depth (e.g. the serpent drawn on a branch, in front of the canopy) */
   depthBias = 0;
 
@@ -252,7 +256,8 @@ export class Actor {
    * in front with both arms (`arms`, e.g. the basket). `origin` is the
    * point of the image held (default: its bottom centre; a staff is held
    * halfway up). */
-  hold(key: string | null, grip: 'hand' | 'arms' | 'carry' | 'staff' = 'hand', origin: [number, number] = [0.5, 1]): void {
+  hold(key: string | null, grip: 'hand' | 'arms' | 'carry' | 'staff' = 'hand', origin: [number, number] = [0.5, 1], nudge: Partial<Record<Facing, number>> = {}): void {
+    this.heldNudge = nudge;
     this.heldSprite?.destroy();
     this.heldSprite = null;
     this.grip = grip;
@@ -305,16 +310,34 @@ export class Actor {
    * stride. Resolves at the moment it lands; the recovery goes on after.
    */
   attack(kind: 'swing' | 'stab'): Promise<void> {
-    const b = { lunge: 0, turn: 0, lift: 0, aim: 0 };
+    const b = { lunge: 0, turn: 0, lift: 0, aim: 0, kind, phase: 'wind' as 'wind' | 'land' | 'rest' };
     this.blow = b;
     const swing = kind === 'swing';
-    const wind = swing ? { lunge: -3, turn: -2.5, lift: -24, aim: 0 } : { lunge: -4, turn: -0.25, lift: -3, aim: 1 };
-    const land = swing ? { lunge: 8, turn: 1.1, lift: 4, aim: 0 } : { lunge: 10, turn: 0.15, lift: 6, aim: 1 };
+    // with the sheet's own poses the arm carries it up and down; else the held thing moves alone
+    const posed = this.blowFrame() !== undefined;
+    const wind = swing ? { lunge: -3, turn: -2.5, lift: posed ? 0 : -24, aim: 0 } : { lunge: -4, turn: -0.25, lift: posed ? 0 : -3, aim: 1 };
+    const land = swing ? { lunge: 8, turn: 1.1, lift: posed ? 0 : 4, aim: 0 } : { lunge: 10, turn: 0.15, lift: posed ? 0 : 6, aim: 1 };
     const step = (props: Partial<typeof b>, duration: number, ease: string, delay = 0) =>
       new Promise<void>((done) => this.scene.tweens.add({ targets: b, ...props, duration, ease, delay, onComplete: () => done(), onStop: () => done() }));
-    const landed = step(wind, swing ? 230 : 150, 'Quad.easeOut').then(() => step(land, swing ? 100 : 80, 'Quad.easeIn', swing ? 70 : 40));
+    this.refresh();
+    const landed = step(wind, swing ? 230 : 150, 'Quad.easeOut').then(() => {
+      // the arm comes down as the blow starts to fall
+      this.scene.time.delayedCall(swing ? 70 : 40, () => {
+        if (this.blow !== b) return;
+        b.phase = 'land';
+        this.refresh();
+      });
+      return step(land, swing ? 100 : 80, 'Quad.easeIn', swing ? 70 : 40);
+    });
     void landed
-      .then(() => step({ lunge: 0, turn: 0, lift: 0, aim: 0 }, 280, 'Sine.easeInOut', 110))
+      .then(() => {
+        this.scene.time.delayedCall(posed ? 200 : 0, () => {
+          if (this.blow !== b || !posed) return;
+          b.phase = 'rest';
+          this.refresh(true);
+        });
+        return step({ lunge: 0, turn: 0, lift: 0, aim: 0 }, 280, 'Sine.easeInOut', 110);
+      })
       .then(() => {
         // a newer blow has taken over
         if (this.blow !== b) return;
@@ -425,20 +448,32 @@ export class Actor {
     // a character with its own running frames (Cain's trot) uses them
     // when going clearly faster than its walk
     const pace = this.stridePace ?? (this.charId ? CHARACTERS[this.charId]?.speed || WALK_PACE : WALK_PACE);
-    const running = !!this.charId && this.moving && this.pace > pace * 1.3 && anims.exists(`${tex}:run`);
+    // (once running, it keeps running down to a little slower: Abel following at about that speed flickered between walk and run, stuck on one leg)
+    const running = !!this.charId && this.moving && this.pace > pace * (this.running ? 1.12 : 1.3) && anims.exists(`${tex}:run`);
+    this.running = running;
     if (this.charId) {
       anim = `${tex}:${running ? 'run' : this.moving ? 'walk' : 'idle'}`;
     } else if (this.sheet) {
       anim = this.lift > 4 && anims.exists(`${tex}:fly`) ? `${tex}:fly` : `${tex}:${this.moving ? 'walk' : 'idle'}`;
       if (!anims.exists(anim)) anim = anims.exists(`${tex}:loop`) ? `${tex}:loop` : '';
     }
-    // in a blow: caught mid-stride, leaning into it
-    if (this.blow && this.charId && anims.exists(`${tex}:walk`)) anim = `${tex}:walk`;
+    // in a blow: the sheet's poses for it, else caught mid-stride, leaning into it
+    const pose = this.blowFrame();
+    if (this.blow && pose === undefined && this.charId && anims.exists(`${tex}:walk`)) anim = `${tex}:walk`;
     if (anim && (force || anim !== this.lastAnim) && anims.exists(anim)) {
       this.sprite.play(anim, true);
       this.lastAnim = anim;
     }
-    if (this.blow && anim.endsWith(':walk')) {
+    if (this.blow && pose !== undefined) {
+      if (pose === null) {
+        if (this.sprite.anims.isPaused) this.sprite.anims.resume();
+      } else {
+        if (!this.sprite.anims.isPaused) this.sprite.anims.pause();
+        if (this.sprite.frame.name !== String(pose)) this.sprite.setFrame(pose);
+      }
+      this.sprite.setRotation(0);
+      this.syncShadow();
+    } else if (this.blow && anim.endsWith(':walk')) {
       const frames = this.sprite.anims.currentAnim?.frames ?? [];
       const stride = frames[Math.floor(frames.length / 4)];
       if (stride && this.sprite.anims.currentFrame !== stride) this.sprite.anims.pause(stride);
@@ -504,6 +539,7 @@ export class Actor {
       const hand = this.frontHand(dx < 0 ? 0 : 1);
       if (hand) [dx, dy] = [hand[0], hand[1] + HELD_BELOW_FIST];
     }
+    if (s === this.heldSprite) dy += this.heldNudge[this.facing] ?? 0;
     // what points ahead points the way they look
     const flip = this.facing === 'left';
     if (!arms && s.flipX !== flip) s.setFlipX(flip).setOrigin(1 - s.originX, s.originY);
@@ -518,7 +554,29 @@ export class Actor {
       dy += by * 1.3 + b.lift;
       turn = side ? side * b.turn : (this.facing === 'down' ? 1 : -1) * (b.aim * Math.PI * 0.5 + b.turn * 0.4);
     }
-    s.setPosition(x + dx, y + dy).setRotation(turn).setDepth(this.facing === 'up' ? y - 1 : y + 1);
+    // from behind, the hand without the staff (Abel's knife) and a raised arm show beside the body
+    const behind = this.facing === 'up' && !other && !(b && this.blowFrame() !== undefined);
+    s.setPosition(x + dx, y + dy).setRotation(turn).setDepth(behind ? y - 1 : y + 1);
+  }
+
+  /**
+   * The frame of the sheet's pose for the blow in progress (attack()): the
+   * arm raised or drawn back, then brought down or thrust in; from the front
+   * and back, with the arm of the hand that holds it. null between poses,
+   * undefined when the sheet has none (or no blow).
+   */
+  private blowFrame(): number | null | undefined {
+    const b = this.blow;
+    if (!b) return undefined;
+    const parts = this.sprite.texture.key.split(':');
+    const set = parts[0] === 'char' ? MANIFEST.characters[parts[1]]?.[parts[2]]?.[parts[3] as Direction]?.attack : undefined;
+    if (!set) return undefined;
+    if (b.phase === 'rest') return null;
+    const list = set[b.kind === 'swing' ? (b.phase === 'wind' ? 'raise' : 'strike') : b.phase === 'wind' ? 'draw' : 'thrust'];
+    if (list.length < 2) return list[0];
+    // the weapon is in the other hand when the first holds a staff (Abel's knife)
+    const right = this.facing === 'up' ? !this.offSprite : !!this.offSprite;
+    return list[right ? 1 : 0];
   }
 
   /**

@@ -303,9 +303,10 @@ export function frontRun(p: Px, mid: number, knee: number, extra: number, lift: 
       const sy = Math.round(knee + ((y - knee) * (b - knee)) / Math.max(1, nb - knee));
       for (let x = l; x < r; x++) if (p.d[(sy * p.w + x) * 4 + 3]) copyPx(out, p, x, y, x, sy);
     }
-    // the arm opposite the raised knee pumps up, bent at the elbow; the other swings back
     if (arms) {
-      const pumped = left < right ? 1 : -1;
+      // the arm on the side of the raised knee comes forward, the other goes back as its foot is down (the maintainer)
+      const raised = left < right ? -1 : 1;
+      const pumped = raised;
       pumpArm(out, p, mid, pumped, arms, arms.pump, arms.inward);
       pumpArm(out, p, mid, -pumped, arms, arms.back, 0);
       // not a robot (the maintainer): the shoulder of the pumped arm comes up, and the
@@ -313,7 +314,7 @@ export function frontRun(p: Px, mid: number, knee: number, extra: number, lift: 
       if (arms.body) {
         const b = arms.body;
         shoulderUp(out, mid, pumped, Math.round(b.neck * p.h), Math.round(arms.hand * p.h) + 2, b.shoulder);
-        lean(out, -pumped * b.lean, Math.round(b.waist * p.h));
+        lean(out, raised * b.lean, Math.round(b.waist * p.h));
       }
     }
   }
@@ -578,3 +579,113 @@ export function frameOf(sheet: { width: number; height: number; data: Uint8Clamp
   return p;
 }
 
+
+/** A blow seen from the side: the near arm at `arm` degrees from hanging (forward positive), the forearm bent `elbow` more, the body leaning `lean` (forward positive) and the near foot `step` degrees forward. */
+export interface SidePose {
+  arm: number;
+  elbow?: number;
+  lean?: number;
+  step?: number;
+}
+
+/**
+ * The standing side frame in the poses of a blow (the maintainer: the arm
+ * must come up, not only the weapon): the near arm turned at the shoulder
+ * and bent at the elbow, the legs a little apart as they step into it.
+ * Returns the frames and where the fist is in each (its bottom).
+ */
+export function sidePoses(stand: Px, band: [number, number, number, number], poses: SidePose[]): { frames: Px[]; hands: XY[] } {
+  const { w, h, leg, body, arm, hip, figBottom } = splitSide(stand, band);
+  const [x0, x1, y0, y1] = band;
+  const shoulder: XY = [(x0 + x1) / 2, y0 + 2];
+  const fist: XY = [(x0 + x1) / 2, y1];
+  const elbowY = Math.round(y0 + 0.46 * (y1 - y0));
+  const elbow: XY = [middleAt(arm, elbowY, (x0 + x1) / 2), elbowY + 0.5];
+  const upper = rows(arm, 0, elbowY + 2);
+  const fore = rows(arm, elbowY - 1, h);
+  const farLeg = darker(leg);
+  const farArm = darker(arm);
+  const frames: Px[] = [];
+  const hands: XY[] = [];
+  for (const o of poses) {
+    const bend = o.elbow ?? 0;
+    const step = o.step ?? 0;
+    let out = blank(w, h);
+    for (const layer of [
+      farArm,
+      rotatePart(farLeg, -step * 0.6, hip),
+      rotatePart(leg, step, hip),
+      body,
+      turnSteps(fore, [{ angle: bend, pivot: elbow }, { angle: o.arm, pivot: shoulder }]),
+      turnSteps(upper, [{ angle: o.arm, pivot: shoulder }]),
+    ])
+      over(out, layer);
+    let hand = turnPoint(turnPoint(fist, bend, elbow), o.arm, shoulder);
+    if (o.lean) {
+      const feet: XY = [hip[0], figBottom];
+      out = rotatePart(out, -o.lean, feet);
+      hand = turnPoint(hand, -o.lean, feet);
+    }
+    let low = 0;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (out.d[(y * w + x) * 4 + 3]) low = y;
+    const dy = figBottom - low;
+    const f = blank(w, h);
+    over(f, out, dy);
+    frames.push(f);
+    hands.push([hand[0], hand[1] + dy]);
+  }
+  return { frames, hands };
+}
+
+/**
+ * From the front or back, one forearm (side -1 the left of the picture, 1
+ * the right) raised for a blow (the maintainer: the arm must come up): turned
+ * up at the elbow, beside the head and a little out, drawn `length` of its
+ * length (it comes towards or goes away from us as well). Returns the frame
+ * and where the fist is (its top).
+ */
+export function frontRaise(p: Px, mid: number, side: number, a: FrontArms, length: number, out: number): { frame: Px; hand: XY } {
+  const y0 = Math.round(a.elbow * p.h);
+  const y1 = Math.round(a.hand * p.h);
+  const f = blank(p.w, p.h);
+  f.d.set(p.d);
+  const runs: [number, number][] = [];
+  const limit = Math.round(mid + side * a.inner);
+  for (let y = y0; y <= y1; y++) {
+    let from = -1;
+    let to = -1;
+    for (let i = 0; ; i++) {
+      const x = side < 0 ? i : p.w - 1 - i;
+      if (side < 0 ? x > limit : x < limit) break;
+      const on = alpha(p, x, y) > 0;
+      if (on && from < 0) from = x;
+      if (from >= 0 && !on) break;
+      if (on) to = x;
+    }
+    const run: [number, number] = from < 0 ? [0, -1] : [Math.min(from, to), Math.max(from, to)];
+    runs.push(run);
+    for (let x = run[0]; x <= run[1]; x++) f.d.fill(0, (y * p.w + x) * 4, (y * p.w + x) * 4 + 4);
+  }
+  // the forearm turned up about the elbow: row y0 + k goes to y0 - k * length, leaning out
+  const top = Math.round(y0 - (y1 - y0) * length);
+  let hand: XY = [mid + side * a.inner, top];
+  for (let y = top; y <= y0; y++) {
+    const k = Math.min(runs.length - 1, Math.round((y0 - y) / length));
+    const [l, r] = runs[k];
+    const dx = Math.round((side * out * (y0 - y)) / Math.max(1, y0 - top));
+    for (let x = l; x <= r; x++) {
+      const nx = x + dx;
+      if (nx >= 0 && nx < p.w && y >= 0) copyPx(f, p, nx, y, x, y0 + k);
+    }
+    if (y === top + 2 && r >= l) hand = [(l + r) / 2 + dx, y];
+  }
+  return { frame: f, hand };
+}
+
+/** From the front or back, one forearm drawn bent towards or away from us (a thrust), as the run's pumped arm. */
+export function frontThrust(p: Px, mid: number, side: number, a: FrontArms, squash: number, inward: number): Px {
+  const out = blank(p.w, p.h);
+  out.d.set(p.d);
+  pumpArm(out, p, mid, side, a, squash, inward);
+  return out;
+}

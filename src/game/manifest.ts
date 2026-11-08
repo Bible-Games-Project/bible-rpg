@@ -33,6 +33,8 @@ export interface SheetAsset {
   runFps?: number;
   /** bending down to pick something up: halfway, lowest */
   stoop?: number[];
+  /** the poses of a blow (Actor.attack): arm raised and brought down (swing), drawn back and thrust (stab); one frame from the side, from the front and back one for each arm (the left of the picture, the right) */
+  attack?: { raise: number[]; strike: number[]; draw: number[]; thrust: number[] };
   fly?: number[];
   /** world pixels per art pixel (sprites drawn with more detail than the world grid) */
   scale?: number;

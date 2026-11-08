@@ -27,6 +27,11 @@ const C = (key: string, p?: Record<string, string | number>) => t(`cain.${key}`,
 // held at the foot of the stick (the crook curls to one side)
 /** the fat resting in the hand, the fist under it */
 const FAT_GRIP: [number, number] = [0.5, 0.95];
+/** from the front the fat hangs a little lower in the hand (the maintainer) */
+const FAT_LOW = { down: 4 };
+/** the jawbone in the fist, not hanging under it (the maintainer) */
+const JAW_GRIP: [number, number] = [0.2, 0.5];
+const JAW_UP = { left: -5, right: -5, up: -5, down: -5 };
 const STAFF: [string, 'staff', [number, number]] = ['cain-staff', 'staff', [(GEN.staff.ax + 0.5) / GEN.staff.w, (GEN.staff.ay - 0.5) / GEN.staff.h]];
 const LAMBS_TO_OFFER = 3;
 
@@ -75,6 +80,7 @@ function stage(w: CainScene, n: number, place: boolean): void {
   w.npcs(true);
   w.follow(false);
   w.hide(w.god);
+  w.layStaff(false);
   w.abel.hold(n >= 2 && n <= 4 ? STAFF[0] : null, STAFF[1], STAFF[2]);
   w.cain.hold(null);
   w.setActive(active);
@@ -239,7 +245,8 @@ const MISSIONS: CainMission[] = [
                   fat++;
                   w.give('fat');
                   // carried in his hand to the altar (the maintainer); the staff is set aside
-                  w.abel.hold('cain-fat', 'hand', FAT_GRIP);
+                  if (w.abel.holding()?.[0] === STAFF[0]) w.layStaff(true);
+                  w.abel.hold('cain-fat', 'hand', FAT_GRIP, FAT_LOW);
                   update();
                   if (fat >= LAMBS_TO_OFFER) resolve();
                 },
@@ -258,7 +265,8 @@ const MISSIONS: CainMission[] = [
         prompt: () => C('prompts.offer'),
         onUse: async () => {
           w.take('fat', LAMBS_TO_OFFER);
-          w.abel.hold(...STAFF);
+          // his staff stays where he laid it until the next scene (it opens in the dark)
+          w.abel.hold(null);
           w.sfx('drop');
           w.setAltars({ cain: true, abel: true });
           await w.wait(700);
@@ -281,6 +289,7 @@ const MISSIONS: CainMission[] = [
     async run(w) {
       w.show(w.cain, POINTS.cainAltar, 'up');
       w.show(w.abel, POINTS.abelAltar, 'up');
+      w.layStaff(false);
       w.abel.hold(...STAFF);
       w.cameraSnap();
       await w.cameraTo([POINTS.godAltars[0], POINTS.godAltars[1] + 80], 1);
@@ -334,7 +343,7 @@ const MISSIONS: CainMission[] = [
           w.showJawbone(false);
           w.sfx('pickup');
           w.give('jawbone');
-          w.cain.hold('cain-jawbone', 'hand', [0.2, 0.5]);
+          w.cain.hold('cain-jawbone', 'hand', JAW_GRIP, JAW_UP);
         },
       });
       w.follow(false);
