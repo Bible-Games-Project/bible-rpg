@@ -3528,6 +3528,342 @@
      "Leather on grass · CC0, Kenney"
     ]
    ]
+  },
+  "cain-cut": {
+   "title": "Cain and Abel · Knife into the lamb",
+   "note": "Made with ElevenLabs sound effects for this game: royalty-free, no attribution needed.",
+   "options": [
+    [
+     "assets/sfx/cain/cut-1.mp3",
+     "Knife into the lamb 1",
+     "A short flint knife cutting into raw meat, one wet slice, close up, no voice · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/cut-2.mp3",
+     "Knife into the lamb 2",
+     "Stone blade stabbing into flesh, a single soft wet thud, close up · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/cut-3.mp3",
+     "Knife into the lamb 3",
+     "Quick knife slash through hide and meat, short and muffled · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/cut-4.mp3",
+     "Knife into the lamb 4",
+     "A blade sinking into a carcass, wet squelch, single hit, dry room · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/cut-5.mp3",
+     "Knife into the lamb 5",
+     "Butcher knife slicing raw lamb on a wooden board, one stroke · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/cut-6.mp3",
+     "Knife into the lamb 6",
+     "Short sharp knife cut into soft flesh with a faint tear of skin · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/cut-7.mp3",
+     "Knife into the lamb 7",
+     "Bronze knife thrust into meat, dull wet impact, short tail · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/cut-8.mp3",
+     "Knife into the lamb 8",
+     "Gentle, quiet knife cut into wool and skin, outdoor, close microphone · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/cut-9.mp3",
+     "Knife into the lamb 9",
+     "Heavy wet stab into meat followed by a short pull out · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/cut-10.mp3",
+     "Knife into the lamb 10",
+     "Single slice through fat and meat, crisp and juicy, no music · ElevenLabs sound effect, royalty-free"
+    ]
+   ]
+  },
+  "cain-hit": {
+   "title": "Cain and Abel · Blow with the jawbone",
+   "note": "Made with ElevenLabs sound effects for this game: royalty-free, no attribution needed.",
+   "options": [
+    [
+     "assets/sfx/cain/hit-1.mp3",
+     "Blow with the jawbone 1",
+     "A heavy bone club hitting a body, dull thump, single hit, close up · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hit-2.mp3",
+     "Blow with the jawbone 2",
+     "Blunt bone striking a person, muffled heavy punch impact · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hit-3.mp3",
+     "Blow with the jawbone 3",
+     "Wooden club hitting flesh, deep thud with a short crack · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hit-4.mp3",
+     "Blow with the jawbone 4",
+     "A heavy blunt strike to the body, low punch, no voice · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hit-5.mp3",
+     "Blow with the jawbone 5",
+     "Animal jawbone smacking against a shoulder, hollow bony knock and thud · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hit-6.mp3",
+     "Blow with the jawbone 6",
+     "Single fight punch impact, heavy and dry, cinematic but short · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hit-7.mp3",
+     "Blow with the jawbone 7",
+     "Blunt weapon hit, low muffled body blow, outdoor · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hit-8.mp3",
+     "Blow with the jawbone 8",
+     "Quick hard strike of bone against bone and flesh, crack and thump · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hit-9.mp3",
+     "Blow with the jawbone 9",
+     "Dull heavy impact on cloth and body, short, no reverb · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hit-10.mp3",
+     "Blow with the jawbone 10",
+     "Brutal club hit, deep thud with a small crunch, single shot · ElevenLabs sound effect, royalty-free"
+    ]
+   ]
+  },
+  "cain-swing": {
+   "title": "Cain and Abel · Swing through the air",
+   "note": "Made with ElevenLabs sound effects for this game: royalty-free, no attribution needed.",
+   "options": [
+    [
+     "assets/sfx/cain/swing-1.mp3",
+     "Swing through the air 1",
+     "Fast whoosh of a club swung through the air, short · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/swing-2.mp3",
+     "Swing through the air 2",
+     "Quick air swish of a heavy bone weapon, single swing · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/swing-3.mp3",
+     "Swing through the air 3",
+     "Short sharp whoosh of a stick swung hard · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/swing-4.mp3",
+     "Swing through the air 4",
+     "Low heavy swoosh of a blunt weapon through air · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/swing-5.mp3",
+     "Swing through the air 5",
+     "Light fast swish, arm swinging a small object, close · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/swing-6.mp3",
+     "Swing through the air 6",
+     "A knife swiped through the air, thin quick whoosh · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/swing-7.mp3",
+     "Swing through the air 7",
+     "Single woosh of a swung staff, airy and short · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/swing-8.mp3",
+     "Swing through the air 8",
+     "Deep swing whoosh, fighting move, no impact · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/swing-9.mp3",
+     "Swing through the air 9",
+     "Brief windy swoosh of a punch missing, close up · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/swing-10.mp3",
+     "Swing through the air 10",
+     "Two-part whoosh of a weapon raised and brought down fast · ElevenLabs sound effect, royalty-free"
+    ]
+   ]
+  },
+  "cain-whistle": {
+   "title": "Cain and Abel · Shepherd whistle",
+   "note": "Made with ElevenLabs sound effects for this game: royalty-free, no attribution needed.",
+   "options": [
+    [
+     "assets/sfx/cain/whistle-1.mp3",
+     "Shepherd whistle 1",
+     "A shepherd whistling with his fingers to call sheep, one long loud whistle, outdoors in a valley · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/whistle-2.mp3",
+     "Shepherd whistle 2",
+     "Two short sharp finger whistles of a herder calling his flock · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/whistle-3.mp3",
+     "Shepherd whistle 3",
+     "A rising then falling shepherd whistle across open fields · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/whistle-4.mp3",
+     "Shepherd whistle 4",
+     "Man whistling loudly through his teeth, calling a dog, outdoor · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/whistle-5.mp3",
+     "Shepherd whistle 5",
+     "Short two-tone whistle of a shepherd, bright, with a little echo from the hills · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/whistle-6.mp3",
+     "Shepherd whistle 6",
+     "Loud piercing finger whistle, single blast, open air · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/whistle-7.mp3",
+     "Shepherd whistle 7",
+     "Herder whistle, three quick chirps then a long note · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/whistle-8.mp3",
+     "Shepherd whistle 8",
+     "Soft melodic shepherd whistle calling animals at dusk · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/whistle-9.mp3",
+     "Shepherd whistle 9",
+     "Sharp sheepdog command whistle, short up-sweep · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/whistle-10.mp3",
+     "Shepherd whistle 10",
+     "A man whistles for his flock, long falling note, meadow ambience faint · ElevenLabs sound effect, royalty-free"
+    ]
+   ]
+  },
+  "cain-bark": {
+   "title": "Cain and Abel · Dog bark",
+   "note": "Made with ElevenLabs sound effects for this game: royalty-free, no attribution needed.",
+   "options": [
+    [
+     "assets/sfx/cain/bark-1.mp3",
+     "Dog bark 1",
+     "A medium sheepdog barking once, outdoors · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/bark-2.mp3",
+     "Dog bark 2",
+     "Two quick barks of a herding dog, alert and friendly · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/bark-3.mp3",
+     "Dog bark 3",
+     "A single deep bark of a big dog in an open field · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/bark-4.mp3",
+     "Dog bark 4",
+     "Short high bark of a young shepherd dog · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/bark-5.mp3",
+     "Dog bark 5",
+     "Dog barking twice, eager, outdoors with slight echo · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/bark-6.mp3",
+     "Dog bark 6",
+     "One sharp woof of a working dog herding sheep · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/bark-7.mp3",
+     "Dog bark 7",
+     "A shepherd dog gives three short barks · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/bark-8.mp3",
+     "Dog bark 8",
+     "Single gruff bark of an old farm dog · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/bark-9.mp3",
+     "Dog bark 9",
+     "Playful bark of a dog, short, close microphone · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/bark-10.mp3",
+     "Dog bark 10",
+     "A dog barks once loudly then a small huff · ElevenLabs sound effect, royalty-free"
+    ]
+   ]
+  },
+  "cain-flame": {
+   "title": "Cain and Abel · Altar fire",
+   "note": "Made with ElevenLabs sound effects for this game: royalty-free, no attribution needed.",
+   "options": [
+    [
+     "assets/sfx/cain/flame-1.mp3",
+     "Altar fire 1",
+     "An altar fire catching and flaring up, a whoosh of flames then crackling · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/flame-2.mp3",
+     "Altar fire 2",
+     "Wood fire igniting with a soft whoosh, flames rising, crackle · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/flame-3.mp3",
+     "Altar fire 3",
+     "Sudden burst of fire from the sky landing on an altar, roaring whoosh · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/flame-4.mp3",
+     "Altar fire 4",
+     "Campfire flaring up, crackling dry wood and rising flames · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/flame-5.mp3",
+     "Altar fire 5",
+     "A torch lighting a pile of wood, short whoosh and pops · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/flame-6.mp3",
+     "Altar fire 6",
+     "Flames bursting into life, deep roar then gentle crackling · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/flame-7.mp3",
+     "Altar fire 7",
+     "Holy fire descending, bright whooshing flare, then burning · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/flame-8.mp3",
+     "Altar fire 8",
+     "Dry branches catching fire, quick crackle and swell of flames · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/flame-9.mp3",
+     "Altar fire 9",
+     "Big fire whoosh, like a fireball, ending in crackling embers · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/flame-10.mp3",
+     "Altar fire 10",
+     "Burning offering on a stone altar, fire rising, sizzling fat and crackle · ElevenLabs sound effect, royalty-free"
+    ]
+   ]
   }
  }
 }

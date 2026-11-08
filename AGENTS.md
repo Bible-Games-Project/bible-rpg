@@ -509,7 +509,8 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   opengameart.org and freesound.org (kenney.nl refuses scripted downloads;
   Kenney's packs are on OpenGameArt too). `crackle()` (many tiny random
   clicks, band-passed) makes crunching, crinkling and grit in synthesized
-  sounds.
+  sounds. The Cain slots each have their own category `cain-<slot>`, filled
+  with ten ElevenLabs sound effects by `tools/audio/build_cain_sfx.mjs`.
 - Characters speak their lines (the maintainer's request; English first, all
   languages later). `tools/audio/build_voices.mjs` (Node: the build server has no
   Python or ffmpeg; `npm i @ffmpeg-installer/linux-x64` in /tmp and pass

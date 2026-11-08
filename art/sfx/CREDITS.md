@@ -58,3 +58,12 @@ Spuds Oxley (the narrator, who reads the gold verses). They were generated
 on a paid plan, which per ElevenLabs gives a commercial licence that lasts
 after the subscription ends; they are not CC0. The settings screen still
 credits ElevenLabs ("Character voices made with ElevenLabs").
+
+## Cain and Abel sound effects (not CC0)
+
+`public/assets/sfx/cain/` holds ten options for each Cain and Abel sound slot
+(knife, blow, swing, whistle, bark, altar fire), made with ElevenLabs sound
+effects by `tools/audio/build_cain_sfx.mjs` on the same paid plan:
+royalty-free for commercial use, no attribution needed. The prompt of each
+one is its description in the library. Options not chosen can be deleted
+once the maintainer has picked.
