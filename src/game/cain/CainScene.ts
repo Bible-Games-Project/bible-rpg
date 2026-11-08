@@ -251,6 +251,11 @@ export class CainScene extends Phaser.Scene {
           return true;
         }
         if (a === 'interact') {
+          // running the dog, E makes it bark: just for fun (the maintainer)
+          if (this.driving) {
+            if (this.canMove()) this.dogBark();
+            return true;
+          }
           if (this.canAct() && this.currentInteract) void this.useInteract(this.currentInteract);
           return true;
         }
@@ -797,6 +802,8 @@ export class CainScene extends Phaser.Scene {
   private driving = false;
   /** when the dog may bark again (scene time, ms) */
   private barkAt = 0;
+  /** whether the HUD shows "Bark" (while the player runs the dog) */
+  private barkPrompt = false;
 
   /** The player runs the dog (on) or Abel again (off); the camera goes with it. */
   driveDog(on: boolean): void {
@@ -1267,6 +1274,14 @@ export class CainScene extends Phaser.Scene {
     if (view.contains(d.x, d.y) || d.moving) d.refresh();
   }
 
+  /** The player makes the dog bark (E): no effect on the flock. */
+  private dogBark(): void {
+    if (this.time.now < this.barkAt - 4800) return;
+    audio.play('bark', { pitch: 0.95 + Math.random() * 0.1 });
+    // and it does not bark again by itself straight away
+    this.barkAt = this.time.now + 5200;
+  }
+
   /** The dog barks now and then as it runs up close behind a sheep. */
   private barkAtFlock(): void {
     const d = this.dog;
@@ -1492,6 +1507,14 @@ export class CainScene extends Phaser.Scene {
 
   private updateInteractPrompt(): void {
     const p = this.player();
+    // running the dog: E barks
+    const bark = this.driving && this.canMove() && !ui().dialogue.open;
+    if (bark !== this.barkPrompt) {
+      this.barkPrompt = bark;
+      this.currentInteract = null;
+      ui().hud.setPrompt(bark ? t('cain.prompts.bark') : null);
+    }
+    if (bark) return;
     if (!this.canAct() || ui().dialogue.open) {
       if (this.currentInteract) ui().hud.setPrompt(null);
       this.currentInteract = null;
