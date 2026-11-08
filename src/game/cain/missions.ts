@@ -159,7 +159,7 @@ const MISSIONS: CainMission[] = [
       });
       w.clearInteractions();
       w.toast(C('toasts.basket'));
-      w.cain.hold('basket-full', 'carry');
+      w.cain.hold('cain-basket', 'carry');
       w.objective(step('m01', 'altar'), POINTS.cainAltar);
       await useOnce(w, {
         id: 'altar',

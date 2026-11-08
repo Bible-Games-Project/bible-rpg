@@ -664,3 +664,55 @@ export function drawKnife(): Drawing {
   p.outline(STONE[1]);
   return { frames: [p], ax: 7, ay: 6 };
 }
+
+/**
+ * Cain's basket of the fruit of the ground (Genesis 4:3), in the chapter's
+ * own style (the maintainer: the apples and grapes of the Eden basket did
+ * not belong): a woven straw basket with a gourd, ears of wheat and greens
+ * from his field.
+ */
+export function drawCainBasket(): Drawing {
+  const w = 38;
+  const h = 36;
+  const p = new Pixels(w, h);
+  // ears of wheat standing up at the back
+  for (const [x0, x1, top] of [[13, 10, 3], [17, 17, 1], [21, 24, 3], [25, 29, 7]] as const) {
+    limb(p, x0, 20, x1, top + 7, 0.8, 0.6, (x, y) => tone(WHEAT, 0.45, x, y));
+    for (let i = 0; i < 4; i++) {
+      const t = i / 4;
+      const ex = x1 + (x0 - x1) * t * 0.35;
+      const ey = top + 1 + i * 2;
+      ellipse(p, ex - 0.8, ey, 1.3, 1.5, (x, y, nx) => tone(WHEAT, 0.75 - nx * 0.25, x, y, 0.4));
+      ellipse(p, ex + 0.8, ey + 0.6, 1.3, 1.5, (x, y, nx) => tone(WHEAT, 0.6 - nx * 0.25, x, y, 0.4));
+    }
+  }
+  // greens spilling over the left of the rim
+  for (const [x, y, a] of [[7, 17, -2.4], [10, 15, -1.9], [13, 16, -1.2]] as const) {
+    limb(p, x + 3, y + 4, x + Math.cos(a) * 7, y + Math.sin(a) * 5, 2.6, 0.8, (px, py, ac) => tone(LEAVES, 0.62 - ac * 0.3, px, py));
+  }
+  // a ripe gourd on the right, ribbed
+  ellipse(p, 25, 17.5, 7, 5.5, (x, y, nx, ny) => {
+    const rib = Math.abs(Math.sin((nx + 1) * 2.4 * Math.PI)) < 0.25 ? -0.18 : 0;
+    return tone(GOURD, 0.72 - nx * 0.25 - ny * 0.3 + rib, x, y, 0.5);
+  });
+  limb(p, 25, 12.5, 26.5, 10, 1.1, 0.8, (x, y) => tone(LEAVES, 0.35, x, y));
+  // a smaller one at the front left
+  ellipse(p, 14, 19.5, 4.5, 3.6, (x, y, nx, ny) => tone(GOURD, 0.6 - nx * 0.25 - ny * 0.3, x, y, 0.5));
+  // the basket: woven straw, wider at the rim, in light from the upper left
+  const top = 20;
+  const bottom = h - 2;
+  for (let y = top; y <= bottom; y++) {
+    const t = (y - top) / (bottom - top);
+    const half = 16 - t * t * 5;
+    for (let x = Math.ceil(19 - half); x <= Math.floor(19 + half); x++) {
+      const nx = (x + 0.5 - 19) / half;
+      const weave = ((Math.floor(x / 3) + Math.floor((y - top) / 2)) & 1) ? 0.1 : -0.06;
+      const row = (y - top) % 2 === 1 ? -0.08 : 0;
+      p.set(x, y, tone(STRAW, 0.62 - nx * 0.28 - t * 0.25 + weave + row, x, y, 0.3));
+    }
+  }
+  // the rim, a twisted band
+  limb(p, 3.5, top, 34.5, top, 1.8, 1.8, (x, y, ac) => tone(STRAW, 0.82 - ac * 0.3 + ((x & 2) ? 0.08 : -0.08), x, y, 0.3));
+  p.outline(STRAW[0]);
+  return { frames: [p], ax: 19, ay: h - 2 };
+}

@@ -640,6 +640,8 @@ export class Actor {
       dx = this.moving ? Math.sin((i / n) * Math.PI * 2) * 1.2 : 0;
       // going away it is held higher, up against the chest (the maintainer)
       dy = (this.facing === 'up' ? -26 : -20) + step * 1.6;
+      // running, the arms hold it higher still, against the chest (the maintainer)
+      if (this.lastAnim.endsWith(':run')) dy -= 6;
     }
     s.setPosition(x + dx, y + dy).setDepth(this.facing === 'up' || fromSide ? y - 1 : y + 1);
   }

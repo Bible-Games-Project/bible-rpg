@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAsset, type SheetAsset } from '../manifest';
-import { Pixels } from './pixels';
+import { Pixels, ramp } from './pixels';
 import { DOG_RIG, DOG_RUN_SCALE, dogGallop, enlarge, scaledRig } from './dogRun';
-import { drawAnger, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
+import { drawAnger, drawCainBasket, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
 import { frameOf, frontRaise, frontRun, frontThrust, handsOf, padded, sidePoses, stoopFrame, sideRun, sideStride, type FrontArms, type Px, type SidePose, type XY } from './stride';
 import GEN from '../../data/cain/generatedArt.json';
@@ -66,11 +66,30 @@ function gen(scene: Phaser.Scene, name: GenName, mirror = false): Pixels {
 }
 
 /** A generated prop with its base point (sunk `sink` px into the ground). */
-function addGen(scene: Phaser.Scene, key: string, name: GenName, o: { mirror?: boolean; icon?: boolean; sink?: number; centre?: boolean } = {}): void {
+function addGen(scene: Phaser.Scene, key: string, name: GenName, o: { mirror?: boolean; icon?: boolean; sink?: number; centre?: boolean; wood?: boolean } = {}): void {
   const g = GEN[name];
   const p = gen(scene, name, o.mirror);
+  if (o.wood) asWood(p);
   const ax = o.mirror ? g.w - 1 - g.ax : g.ax;
-  addSheet(scene, key, [p], o.centre ? g.w / 2 : ax, o.centre ? g.h / 2 : g.ay - (o.sink ?? 1), ART, o.icon);
+  addSheet(scene, key, [p], o.centre ? g.w / 2 : ax, o.centre ? g.h / 2 : g.ay - (o.sink ?? 1), ART, o.icon, o.wood);
+}
+
+/** plain brown wood, as the knife's haft and the brothers' tunics (the maintainer: Abel's staff came out pink in the night palette) */
+const WOOD = ramp('#22160f', '#3a271a', '#543a26', '#6d4e33', '#876443', '#a07c55');
+
+/** A generated prop in wood colours, kept by its light and shade, in its own colours at night. */
+function asWood(p: Pixels): void {
+  const d = p.data;
+  let lo = 255;
+  let hi = 0;
+  const lum = (i: number) => 0.3 * d[i] + 0.55 * d[i + 1] + 0.15 * d[i + 2];
+  for (let i = 0; i < d.length; i += 4) if (d[i + 3]) [lo, hi] = [Math.min(lo, lum(i)), Math.max(hi, lum(i))];
+  for (let i = 0; i < d.length; i += 4) {
+    if (!d[i + 3]) continue;
+    const k = (lum(i) - lo) / Math.max(1, hi - lo);
+    const c = WOOD[Math.min(WOOD.length - 1, Math.round(k * (WOOD.length - 1)))];
+    [d[i], d[i + 1], d[i + 2]] = c;
+  }
 }
 
 const leafy = (d: Uint8ClampedArray, i: number) => d[i + 3] > 0 && d[i + 1] > d[i] + 2 && d[i + 1] >= d[i + 2];
@@ -296,8 +315,9 @@ export function buildCainArt(scene: Phaser.Scene): void {
   addGen(scene, 'cain-jawbone', 'jawbone', { icon: true, sink: 2 });
   // in its own colours, like the basket of produce (at night it was lost on the stone)
   addDrawing(scene, 'cain-fat', drawFat(), true, true);
+  addDrawing(scene, 'cain-basket', drawCainBasket(), true, true);
   addDrawing(scene, 'cain-knife', drawKnife(), false, true);
-  addGen(scene, 'cain-staff', 'staff');
+  addGen(scene, 'cain-staff', 'staff', { wood: true });
   addGen(scene, 'cain-grave', 'grave');
   // Abel's sheepdog: its own colours, like the sheep (dimmed at night in CainScene)
   genDog(scene);

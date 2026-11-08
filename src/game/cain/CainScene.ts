@@ -85,7 +85,7 @@ const LAMB_STRIDE = 20;
 const GRAZE_SPEED = 16;
 
 const ITEM_ICONS: Record<string, string> = {
-  produce: 'basket-full',
+  produce: 'cain-basket',
   fat: 'cain-fat',
   jawbone: 'cain-jawbone',
 };
@@ -658,7 +658,7 @@ export class CainScene extends Phaser.Scene {
     ui().hud.setInventory(
       Object.entries(this.inventory)
         .filter(([, n]) => n > 0)
-        .map(([k, n]) => ({ icon: ITEM_ICONS[k] ?? 'basket-full', label: t(`cain.items.${k}`), count: n > 1 ? n : undefined })),
+        .map(([k, n]) => ({ icon: ITEM_ICONS[k] ?? 'cain-basket', label: t(`cain.items.${k}`), count: n > 1 ? n : undefined })),
     );
   }
 
@@ -677,7 +677,7 @@ export class CainScene extends Phaser.Scene {
     this.smoke = null;
     this.altarFire = null;
     const top = this.world.altarTop;
-    if (state.cain) this.altarThings.push(sized(this.add.image(top.cain[0], top.cain[1] + 2, 'basket-full').setOrigin(0.5, 1).setDepth(POINTS.altarCain[1] + 1)));
+    if (state.cain) this.altarThings.push(sized(this.add.image(top.cain[0], top.cain[1] + 2, 'cain-basket').setOrigin(0.5, 1).setDepth(POINTS.altarCain[1] + 1)));
     // the fat laid in the middle of the altar's top, big enough to see; the fire burns on it
     if (state.abel && state.fire !== 'embers') {
       for (const [dx, dy] of [[-10, -3], [10, -2], [0, 1]]) this.altarThings.push(this.add.image(top.abel[0] + dx, top.abel[1] + dy, 'cain-fat').setOrigin(0.5, 1).setScale(ART * 1.3).setDepth(POINTS.altarAbel[1] + 1));
