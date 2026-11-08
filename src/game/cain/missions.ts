@@ -464,9 +464,15 @@ export class CainRunner {
     else if (fromSave || relocate || chapterStart) await w.fade(0, 900);
     audio.play('missionStart');
     if (!m.opensInDark) await w.wait(900);
+    // the player was held since the last mission ended (below); a story's
+    // first mission holds and frees the player itself
+    if (!m.opensInDark && !chapterStart) w.cutscene(false);
 
     await m.run(w);
     if (this.stopped) return;
+    // done: nobody walks off while the turn passes on (the maintainer: once
+    // Cain has laid his offering down, on to Abel)
+    w.cutscene(true);
 
     w.clearInteractions();
     w.objective('', null);
