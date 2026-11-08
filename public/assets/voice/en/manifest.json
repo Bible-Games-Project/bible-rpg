@@ -1,4 +1,284 @@
 {
+  "cain.chase.escaped": {
+    "text": "Abel got home to his father and mother. You are a good person: you did not want to kill Abel, and that is good. But it did not happen that way. Play it again as the Bible tells it.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.command.0": {
+    "text": "Cain, Abel. Bring me an offering, each of you, from the work of your hands.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.adam.after.0": {
+    "text": "The LORD looked on your brother's offering. Do not let your heart grow dark.",
+    "voice": "Josh",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.adam.after.1": {
+    "text": "Anger is a heavy thing to carry, son. Put it down.",
+    "voice": "Josh",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.adam.after.2": {
+    "text": "Where is your brother? He should be home before the evening.",
+    "voice": "Josh",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.adam.before.0": {
+    "text": "I worked the ground by the sweat of my brow. Now my sons work it with me.",
+    "voice": "Josh",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.adam.before.1": {
+    "text": "Bring the LORD your best, my son.",
+    "voice": "Josh",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.adam.before.2": {
+    "text": "We could not go back to the garden. But the LORD has not left us.",
+    "voice": "Josh",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.adam.before.3": {
+    "text": "Cain keeps the field, Abel keeps the sheep. Each has his work.",
+    "voice": "Josh",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.eve.after.0": {
+    "text": "Your face has fallen, Cain. What is it?",
+    "voice": "Zara",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.eve.after.1": {
+    "text": "Make peace with your brother before the sun goes down.",
+    "voice": "Zara",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.eve.after.2": {
+    "text": "Is Abel with you? I have kept his bread warm.",
+    "voice": "Zara",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.eve.before.0": {
+    "text": "I have gotten a man from the LORD. And then another. My two sons.",
+    "voice": "Zara",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.eve.before.1": {
+    "text": "The pot is almost ready. Go on, do your work first.",
+    "voice": "Zara",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.eve.before.2": {
+    "text": "Take care of your brother, Cain.",
+    "voice": "Zara",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.npc.eve.before.3": {
+    "text": "The tunics the LORD made us still keep us warm.",
+    "voice": "Zara",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.rebuke.0": {
+    "text": "Why are you angry? Why has your face fallen?",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.rebuke.1": {
+    "text": "If you do well, will you not be accepted? If not, sin lies at the door. It wants you, but you must rule over it.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.scripture.born": {
+    "text": "And Adam knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man from the LORD.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.scripture.firstlings": {
+    "text": "And Abel, he also brought of the firstlings of his flock and of the fat thereof.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.scripture.keeper": {
+    "text": "And she again bare his brother Abel. And Abel was a keeper of sheep, but Cain was a tiller of the ground.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.scripture.mark": {
+    "text": "And the LORD set a mark upon Cain, lest any finding him should kill him.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.scripture.nod": {
+    "text": "And Cain went out from the presence of the LORD, and dwelt in the land of Nod, on the east of Eden.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.scripture.respect": {
+    "text": "And the LORD had respect unto Abel and to his offering: but unto Cain and to his offering he had not respect.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.scripture.slew": {
+    "text": "And it came to pass, when they were in the field, that Cain rose up against Abel his brother, and slew him.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.scripture.wroth": {
+    "text": "And Cain was very wroth, and his countenance fell.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.where.0": {
+    "text": "Where is Abel your brother?",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.where.2": {
+    "text": "What have you done? Your brother's blood cries to me from the ground. You will be a wanderer on the earth.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
   "creation": {
     "text": "In the beginning God created the heaven and the earth.",
     "voice": "Spuds Oxley",
@@ -6,7 +286,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m02_command.0": {
@@ -16,7 +296,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m02_forbidden.0": {
@@ -26,7 +306,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m02_life.0": {
@@ -36,7 +316,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m03_intro.0": {
@@ -46,7 +326,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m04_wake.0": {
@@ -56,7 +336,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m05_forbidden_touch.0": {
@@ -66,7 +346,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m05_intro.0": {
@@ -76,7 +356,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m05_share.0": {
@@ -86,7 +366,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m06_serpent.0": {
@@ -96,7 +376,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m06_serpent.1": {
@@ -106,7 +386,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m06_serpent.2": {
@@ -116,7 +396,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m08_answer.0": {
@@ -126,7 +406,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m08_answer.1": {
@@ -136,7 +416,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m08_answer.2": {
@@ -146,7 +426,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m08_answer.3": {
@@ -156,7 +436,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m08_answer.4": {
@@ -166,7 +446,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m08_call.0": {
@@ -176,7 +456,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m09_adam.0": {
@@ -186,7 +466,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m09_serpent.0": {
@@ -196,7 +476,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m09_woman.0": {
@@ -206,7 +486,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "m10_intro.0": {
@@ -216,7 +496,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "scripture.gen2_15": {
@@ -226,7 +506,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "scripture.gen2_20": {
@@ -236,7 +516,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "scripture.gen2_22": {
@@ -246,7 +526,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "scripture.gen3_21": {
@@ -256,7 +536,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "scripture.gen3_24": {
@@ -266,7 +546,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   },
   "scripture.gen3_6": {
@@ -276,7 +556,7 @@
     "settings": {
       "stability": 0.3,
       "similarity_boost": 0.75,
-      "speed": 1.0
+      "speed": 1
     }
   }
 }

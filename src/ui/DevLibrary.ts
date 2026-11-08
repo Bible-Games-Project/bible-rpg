@@ -13,7 +13,7 @@ import { clear, h } from './dom';
  * (src/core/dev.ts): the main menu shows no button for it otherwise.
  *
  * Voices: the characters on top, the voices to give them below. A choice is
- * only noted: the lines are voiced again by tools/audio/build_voices.py once
+ * only noted: the lines are voiced again by tools/audio/build_voices.mjs once
  * the maintainer sends the list. Sounds: the game's sound slots on top
  * (several for the serpent and the water, five footsteps per surface); a
  * slot shows only the options of its own kind, and a sound chosen for it

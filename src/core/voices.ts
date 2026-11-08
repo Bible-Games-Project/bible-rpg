@@ -2,7 +2,7 @@ import { audio } from './audio';
 import { settings } from './settings';
 
 /**
- * Recorded voices for the dialogue (made by tools/audio/build_voices.py):
+ * Recorded voices for the dialogue (made by tools/audio/build_voices.mjs):
  * public/assets/voice/<lang>/<key>.mp3, with manifest.json listing the text
  * each file says. A line plays its file only while the manifest's text is
  * still the line's text: an edited line falls silent until it is voiced

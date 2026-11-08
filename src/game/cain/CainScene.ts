@@ -428,7 +428,7 @@ export class CainScene extends Phaser.Scene {
           if (list.length > 1 && i === last) i = (i + 1) % list.length;
           this.flags[`npc:${who}`] = i;
           if (who === 'eve') this.eve.face(this.player());
-          await this.lines([this.line(who, list[i] ?? '…')]);
+          await this.lines([this.line(who, list[i] ?? '…', undefined, `cain.npc.${who}.${phase}.${i}`)]);
           if (who === 'eve') this.eve.face('left');
         },
       });
@@ -1089,7 +1089,7 @@ export class CainScene extends Phaser.Scene {
     this.cutscene(true);
     await this.fade(1, 500);
     // why it begins again, told plainly and read at the player's pace (the maintainer)
-    await this.lines([this.line('narrator', t('cain.chase.escaped'))]);
+    await this.lines([this.line('narrator', t('cain.chase.escaped'), undefined, 'cain.chase.escaped')]);
     this.cain.setPosition(POINTS.jawbone[0] + 20, POINTS.jawbone[1] - 30);
     this.cain.face('right');
     this.abel.setPosition(POINTS.jawbone[0] + 110, POINTS.jawbone[1] - 70);

@@ -52,7 +52,7 @@ above.
 
 The spoken lines in `public/assets/voice/` are made with
 [ElevenLabs](https://elevenlabs.io) text to speech by
-`tools/audio/build_voices.py`, with Voice Library voices: W. Storytime Oxley
+`tools/audio/build_voices.mjs`, with Voice Library voices: W. Storytime Oxley
 (the LORD God), Josh (Adam), Zara (Eve), Matthew Schmitz (the serpent) and
 Spuds Oxley (the narrator, who reads the gold verses). They were generated
 on a paid plan, which per ElevenLabs gives a commercial licence that lasts
