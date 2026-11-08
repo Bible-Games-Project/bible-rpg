@@ -557,18 +557,26 @@ export function drawStaff(): Drawing {
 
 /** Anger over someone's head: a little dark scribble (Genesis 4:5). World-sized. */
 export function drawAnger(): Pixels {
-  const p = new Pixels(18, 20);
-  const red: RGB = [214, 64, 48];
-  const dark: RGB = [70, 18, 20];
-  for (let i = 0; i < 26; i++) {
-    const a = i * 0.9;
-    const rr = 2 + i * 0.22;
-    const x = 9 + Math.cos(a) * rr;
-    const y = 9 + Math.sin(a) * rr * 0.8;
-    p.set(x, y, red);
-    p.set(x + 1, y, red);
-  }
-  p.outline(dark);
+  // the "cross vein" sign of anger: four bent strokes round a centre, bright
+  // red edged in pale peach so it shows against hair and stone at night
+  // (the maintainer lost the old dark scribble against the altar)
+  const rows = [
+    '   RR    RR   ',
+    '   RR    RR   ',
+    'RRRRR    RRRRR',
+    ' RRR      RRR ',
+    '              ',
+    '              ',
+    ' RRR      RRR ',
+    'RRRRR    RRRRR',
+    '   RR    RR   ',
+    '   RR    RR   ',
+  ];
+  // each mark two pixels square: thick strokes, mostly red
+  const p = new Pixels(30, 22);
+  const red: RGB = [236, 58, 48];
+  rows.forEach((r, y) => [...r].forEach((ch, x) => ch === 'R' && [0, 1].forEach((i) => [0, 1].forEach((j) => p.set(x * 2 + 1 + i, y * 2 + 1 + j, red)))));
+  p.outline([248, 177, 149]);
   return p;
 }
 

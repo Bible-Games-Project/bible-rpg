@@ -305,7 +305,7 @@ export function buildCainArt(scene: Phaser.Scene): void {
   scene.anims.create({ key: 'cain-dog:walk', frames: scene.anims.generateFrameNumbers('cain-dog', { start: 2, end: 1 + DOG_TROT_FRAMES }), frameRate: 14, repeat: -1 });
   addSheet(scene, 'cain-shadow', [drawShadow(60, 20)], 30, 10);
   // the anger over Cain's head is drawn at world size, like the other emotes
-  addSheet(scene, 'emote-anger', [drawAnger()], 9, 19, 1, false, true);
+  addSheet(scene, 'emote-anger', [drawAnger()], 15, 22, 0.85, false, true);
   buildBrothers(scene);
   buildLamb(scene);
   buildSittingAdam(scene);

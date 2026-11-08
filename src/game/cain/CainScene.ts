@@ -1076,7 +1076,8 @@ export class CainScene extends Phaser.Scene {
     this.abel.stop();
     this.cutscene(true);
     await this.fade(1, 500);
-    ui().hud.toast(t('cain.chase.escaped'), false, 3600);
+    // why it begins again, told plainly and read at the player's pace (the maintainer)
+    await this.lines([this.line('narrator', t('cain.chase.escaped'))]);
     this.cain.setPosition(POINTS.jawbone[0] + 20, POINTS.jawbone[1] - 30);
     this.cain.face('right');
     this.abel.setPosition(POINTS.jawbone[0] + 110, POINTS.jawbone[1] - 70);

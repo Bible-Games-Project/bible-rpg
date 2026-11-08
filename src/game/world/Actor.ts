@@ -74,6 +74,7 @@ export class Actor {
   scripted = false;
   hidden = false;
   private emoteSprite: Phaser.GameObjects.Image | null = null;
+  private emoteLift = 6;
   private heldSprite: Phaser.GameObjects.Image | null = null;
   /** a thing in the other hand (Abel's knife, the staff still in the first: the maintainer) */
   private offSprite: Phaser.GameObjects.Image | null = null;
@@ -232,11 +233,13 @@ export class Actor {
     for (const [x, y] of points) await this.walkTo(x, y, speed);
   }
 
-  emote(kind: string, ms = 1400): void {
+  /** A sign over the head; `lift`: how far above the head's top it sits. */
+  emote(kind: string, ms = 1400, lift = 6): void {
+    this.emoteLift = lift;
     this.emoteSprite?.destroy();
     const key = `emote-${kind}`;
     if (!this.scene.textures.exists(key)) return;
-    const e = this.scene.add.image(this.x, this.topY() - 6, key).setOrigin(0.5, 1).setDepth(DEPTH_OVERLAY - 10);
+    const e = sized(this.scene.add.image(this.x, this.topY() - lift, key).setOrigin(0.5, 1).setDepth(DEPTH_OVERLAY - 10));
     this.emoteSprite = e;
     this.scene.tweens.add({ targets: e, y: e.y - 4, duration: 220, yoyo: true });
     this.scene.time.delayedCall(ms, () => {
@@ -402,7 +405,7 @@ export class Actor {
     const [bx, by] = this.blowOffset();
     this.sprite.setPosition(x + bx, y - this.lift + by);
     this.sprite.setDepth(y + this.depthBias);
-    this.emoteSprite?.setPosition(x, this.topY() - 6);
+    this.emoteSprite?.setPosition(x, this.topY() - this.emoteLift);
     const tex = this.textureFor(this.facing);
     if (this.sprite.texture.key !== tex) {
       this.sprite.setTexture(tex);

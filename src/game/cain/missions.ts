@@ -292,7 +292,8 @@ const MISSIONS: CainMission[] = [
       w.kindleAltar();
       await w.wait(1400);
       await w.scripture('respect');
-      w.cain.emote('anger', 2600);
+      // low, close over his head: higher it was lost against the altar (the maintainer)
+      w.cain.emote('anger', 2600, -10);
       w.sfx('wrong');
       await w.wait(900);
       w.cain.face('down');
