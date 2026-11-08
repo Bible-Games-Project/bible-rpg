@@ -4,7 +4,7 @@ import { Pixels, ramp } from './pixels';
 import { DOG_RIG, DOG_RUN_SCALE, dogGallop, enlarge, scaledRig } from './dogRun';
 import { drawAnger, drawCainBasket, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
-import { frameOf, frontRaise, frontRun, frontThrust, handsOf, padded, sidePoses, stoopFrame, sideRun, sideStride, type FrontArms, type Px, type SidePose, type XY } from './stride';
+import { frameOf, frontRaise, frontRun, frontThrust, handsOf, padded, sidePoses, sitFrame, stoopFrame, sideRun, sideStride, type FrontArms, type Px, type SidePose, type XY } from './stride';
 import GEN from '../../data/cain/generatedArt.json';
 
 /**
@@ -589,46 +589,37 @@ function buildLamb(scene: Phaser.Scene): void {
  */
 function buildSittingAdam(scene: Phaser.Scene): void {
   // Adam seen from the side, sitting, made from his side idle frames: the
-  // body down to the hem as it is, the thigh (the upper leg turned to lie
-  // forward) and the shin and foot hanging down from the knee.
+  // near leg turned at the hip to lie forward, the shin hanging from the knee
+  // (stride.ts sitFrame)
   const a = MANIFEST.characters.adam?.tunic?.right;
   if (!a) return;
   const img = scene.textures.get(charKey('adam', 'tunic', 'right')).getSourceImage() as HTMLImageElement;
-  const fw = a.frameWidth;
-  const W = fw + 22;
-  const HEM = 107;
-  const LEG_X = 21;
-  const LEG_W = 12;
-  const KNEE = 126;
-  const FOOT = a.anchorY + 1;
-  const SEAT = HEM - 1;
-  const shin = FOOT - KNEE;
-  const H = SEAT + shin;
+  const c = document.createElement('canvas');
+  c.width = img.width;
+  c.height = img.height;
+  const cx = c.getContext('2d')!;
+  cx.drawImage(img, 0, 0);
+  const sheet = cx.getImageData(0, 0, c.width, c.height);
+  const pad = SIT_PAD;
+  const band: [number, number, number, number] = [SIDE_ARM[0] + pad, SIDE_ARM[1] + pad, SIDE_ARM[2], SIDE_ARM[3]];
+  const sits = [0, 1].map((f) => sitFrame(padded(frameOf(sheet, a.idle?.[f] ?? f, a.frameWidth), pad), band));
+  const W = sits[0].frame.w;
+  const H = sits[0].frame.h;
   const key = 'cain-adam-sitting';
   const tex = scene.textures.createCanvas(key, W * 2, H)!;
   const ctx = tex.getContext();
-  ctx.imageSmoothingEnabled = false;
-  for (let f = 0; f < 2; f++) {
-    const sx = (a.idle?.[f] ?? f) * fw;
-    const dx = f * W;
-    // the shin and foot, hanging from the knee in front of the seat
-    const kneeX = dx + LEG_X + 25;
-    ctx.drawImage(img, sx + LEG_X - 1, KNEE, fw - LEG_X, shin, kneeX - 1, SEAT, fw - LEG_X, shin);
-    // the thigh, lying forward from the hip to the knee
-    ctx.save();
-    ctx.translate(dx + LEG_X + 2, SEAT - LEG_W);
-    ctx.rotate(-Math.PI / 2);
-    ctx.drawImage(img, sx + LEG_X, HEM, LEG_W, KNEE - HEM, -LEG_W + 1, 0, LEG_W, 30);
-    ctx.restore();
-    // the body, down to the hem of the tunic
-    ctx.drawImage(img, sx, 0, fw, HEM, dx, 0, fw, HEM);
-    tex.add(f, 0, dx, 0, W, H);
-  }
+  sits.forEach((s, f) => {
+    ctx.putImageData(new ImageData(new Uint8ClampedArray(s.frame.d), W, H), f * W, 0);
+    tex.add(f, 0, f * W, 0, W, H);
+  });
   tex.refresh();
-  // the anchor is under the seat (the top of the log)
-  MANIFEST.sprites[key] = { file: '', frameWidth: W, frameHeight: H, frames: 2, anchorX: LEG_X + 6, anchorY: H - 1, scale: a.scale, idle: [0, 1], idleFps: 1.4 };
+  // the anchor is under the seat, on the ground
+  MANIFEST.sprites[key] = { file: '', frameWidth: W, frameHeight: H, frames: 2, anchorX: Math.round(sits[0].hip[0]), anchorY: H - 1, scale: a.scale, idle: [0, 1], idleFps: 1.4 };
   scene.anims.create({ key: `${key}:idle`, frames: scene.anims.generateFrameNumbers(key, { frames: [0, 1] }), frameRate: 1.4, repeat: -1 });
 }
+
+/** room ahead for Adam's legs as he sits */
+const SIT_PAD = 22;
 
 // ------------------------------------------------------------- portraits
 

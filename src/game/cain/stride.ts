@@ -689,3 +689,37 @@ export function frontThrust(p: Px, mid: number, side: number, a: FrontArms, squa
   pumpArm(out, p, mid, side, a, squash, inward);
   return out;
 }
+
+/**
+ * Sitting on a log, seen from the side (Adam by the house, the maintainer:
+ * the old one had a body longer than its legs and a cut showed at the knee):
+ * from the standing side frame, the near leg turned at the hip to lie forward
+ * and the shin hanging straight down again from the knee, the skirt of the
+ * tunic laid over the thigh. Returns the frame (the feet on its bottom row)
+ * and the seat (the hip, where the log is under him).
+ */
+export function sitFrame(stand: Px, band: [number, number, number, number], lap = 88, drape = 70): { frame: Px; hip: XY } {
+  const { w, h, leg, body, arm, hip, figBottom } = splitSide(stand, band);
+  const kneeY = Math.round(hip[1] + 0.52 * (figBottom - hip[1]));
+  const knee: XY = [middleAt(leg, kneeY, hip[0]), kneeY + 0.5];
+  const thigh = rows(leg, 0, kneeY + 3);
+  const shin = rows(leg, kneeY - 2, h);
+  const hy = Math.round(hip[1]);
+  const upper = rows(body, 0, hy + 2);
+  const skirt = rows(body, hy, h);
+  const out = blank(w, h);
+  for (const layer of [
+    turnSteps(shin, [{ angle: -lap, pivot: knee }, { angle: lap, pivot: hip }]),
+    turnSteps(thigh, [{ angle: lap, pivot: hip }]),
+    // over the lap only: what turned under the seat or up into the body is not drawn
+    rows(rotatePart(skirt, drape, hip), hy - 4, hy + 8),
+    upper,
+    arm,
+  ])
+    over(out, layer);
+  let low = 0;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (out.d[(y * w + x) * 4 + 3]) low = y;
+  const f = blank(w, h);
+  over(f, out, h - 1 - low);
+  return { frame: f, hip: [hip[0], hip[1] + h - 1 - low] };
+}
