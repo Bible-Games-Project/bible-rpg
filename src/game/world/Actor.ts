@@ -68,7 +68,6 @@ export class Actor {
   /** bending down to pick something up (stoop()): 0 standing, 1 lowest */
   private stooping: { k: number } | null = null;
   /** a side-drawn animal leaning the way it goes (see refresh) */
-  private tilted = false;
   charId?: string;
   outfit?: string;
   sheet?: string;
@@ -459,20 +458,16 @@ export class Actor {
         this.sprite.setScale(base, base * (1 - 0.2 * k));
       }
     }
-    // side-drawn animals going up or down (the sheep the dog drives) lean the
-    // way they go and bob with each step, instead of sliding (the maintainer saw them skate)
+    // side-drawn animals going up or down (the sheep the dog drives) bob with
+    // each step, instead of sliding (the maintainer saw them skate); they do
+    // not lean (the maintainer did not like it)
     if (this.sheet && this.stridePace) {
       const a = this.sprite.anims;
       if (this.moving && this.pace > 1 && a.currentAnim && a.currentFrame) {
         const share = Phaser.Math.Clamp(this.vy / this.pace, -1, 1);
-        const dir = this.facing === 'left' ? -1 : 1;
         const n = a.currentAnim.frames.length;
         const bob = Math.abs(Math.sin(((a.currentFrame.index - 1) / n) * Math.PI * 2)) * (0.6 + Math.abs(share) * 0.8);
-        this.sprite.setRotation(dir * share * 0.2).setY(this.sprite.y - bob);
-        this.tilted = true;
-      } else if (this.tilted) {
-        this.sprite.setRotation(0);
-        this.tilted = false;
+        this.sprite.setY(this.sprite.y - bob);
       }
     }
     this.placeHeld();

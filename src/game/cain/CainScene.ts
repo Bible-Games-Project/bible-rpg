@@ -68,6 +68,9 @@ const DOG_SPEED = 230;
 /** the dog when the player runs it (mission 2); faster than the sheep so it can get round them */
 const DOG_DRIVE_SPEED = 175;
 const DOG_FEAR = 150;
+/** a herded sheep is pushed back within this of the map's edges, and goes no further out within EDGE_STOP */
+const EDGE_KEEP = 230;
+const EDGE_STOP = 140;
 const ABEL_FEAR = 70;
 /** the sheep's top speed when driven (the maintainer: they ran too fast) */
 const HERD_SPEED = 76;
@@ -1376,6 +1379,20 @@ export class CainScene extends Phaser.Scene {
           fy += (Math.cos(th) * 0.75 * sg + (ry / rd) * 0.35) * 1.1 * near;
         }
       }
+      // the map's edges push it back: it never gets so far out that the dog
+      // cannot get round it (the maintainer had sheep stuck at the edge)
+      const edges: [number, number, number][] = [
+        [a.x - BOUNDS.left, 1, 0],
+        [BOUNDS.right - a.x, -1, 0],
+        [a.y - BOUNDS.top, 0, 1],
+        [BOUNDS.bottom - a.y, 0, -1],
+      ];
+      for (const [d, ex, ey] of edges) {
+        if (d >= EDGE_KEEP) continue;
+        const w = (1 - Math.max(0, d) / EDGE_KEEP) * 3.2;
+        fx += ex * w;
+        fy += ey * w;
+      }
       // pushed against something without getting anywhere: it sidesteps
       if (g.stuck > 0.35) {
         const f0 = Math.hypot(fx, fy) || 1;
@@ -1396,6 +1413,12 @@ export class CainScene extends Phaser.Scene {
         const sp = Math.min(1, f) * (alarm > 0.02 ? speed : GRAZE_SPEED * 2);
         wx = (fx / f) * sp;
         wy = (fy / f) * sp;
+      }
+      // and close to an edge it does not step any further out
+      for (const [d, ex, ey] of edges) {
+        if (d >= EDGE_STOP) continue;
+        if (ex && wx * ex < 0) wx = 0;
+        if (ey && wy * ey < 0) wy = 0;
       }
       const k = Math.min(1, dt * (alarm > 0 ? 6 : 2.5));
       g.vx += (wx - g.vx) * k;
