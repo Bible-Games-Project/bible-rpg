@@ -2344,9 +2344,17 @@ select:focus-visible {
   color: #d8f0c8;
 }
 
+/* the voice a character has now: bright green, easy to spot (the maintainer) */
 .lib-tag.now {
-  background: #2a3042;
-  color: var(--ivory-dim);
+  background: #3fae4a;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* the chosen character's voice, now or picked: shown first, framed in green */
+.lib-card.current {
+  border-color: #3fae4a;
+  box-shadow: 0 0 0 2px #3fae4a;
 }
 
 .lib-choose {

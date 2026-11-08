@@ -247,6 +247,9 @@ export function devLibraryScreen(back: () => void): HTMLElement {
     let list = g ? g.voices : stars.map((id) => all.get(id)).filter((v): v is [string, string, string, string] => !!v);
     const q = filter.value.trim().toLowerCase();
     if (q) list = list.filter((v) => `${v[1]} ${v[2]}`.toLowerCase().includes(q));
+    // the chosen character's voice first, so it needs no looking for (the maintainer)
+    const current = voicePicks[who] ?? lib!.cast.find((c) => c.id === who)?.voice;
+    list = [...list.filter((v) => v[0] === current), ...list.filter((v) => v[0] !== current)];
     const whoName = lib!.cast.find((c) => c.id === who)?.name ?? who;
     const count = h('p', { class: 'lib-count muted' }, t('dev.countVoices', { n: list.length }));
     grid.append(count);
@@ -255,6 +258,7 @@ export function devLibraryScreen(back: () => void): HTMLElement {
       const card = playButton(first, (rest.length ? `${rest.join(' - ')} · ` : '') + desc, (c) => {
         void decoded(`v:${id}`, () => devSounds.voiceBytes(id)).then((buf) => (buf ? playOn(c, buf) : playUrl(c, url)));
       });
+      if (id === current) card.classList.add('current');
       const tags = h('div', { class: 'lib-tags' });
       for (const c of lib!.cast) {
         if (voicePicks[c.id] === id) tags.append(h('span', { class: 'lib-tag' }, `✓ ${c.name}`));
