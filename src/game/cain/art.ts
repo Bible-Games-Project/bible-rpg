@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAsset, type SheetAsset } from '../manifest';
-import { Pixels, ramp } from './pixels';
+import { Pixels, ramp, type RGB } from './pixels';
 import { DOG_RIG, DOG_RUN_SCALE, dogGallop, enlarge, scaledRig } from './dogRun';
 import { drawAnger, drawCainBasket, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
@@ -66,19 +66,35 @@ function gen(scene: Phaser.Scene, name: GenName, mirror = false): Pixels {
 }
 
 /** A generated prop with its base point (sunk `sink` px into the ground). */
-function addGen(scene: Phaser.Scene, key: string, name: GenName, o: { mirror?: boolean; icon?: boolean; sink?: number; centre?: boolean; wood?: boolean } = {}): void {
+function addGen(scene: Phaser.Scene, key: string, name: GenName, o: { mirror?: boolean; icon?: boolean; sink?: number; centre?: boolean; wood?: boolean; tone?: RGB[] } = {}): void {
   const g = GEN[name];
   const p = gen(scene, name, o.mirror);
-  if (o.wood) asWood(p);
+  const tone = o.tone ?? (o.wood ? WOOD : undefined);
+  if (tone) onTone(p, tone);
   const ax = o.mirror ? g.w - 1 - g.ax : g.ax;
-  addSheet(scene, key, [p], o.centre ? g.w / 2 : ax, o.centre ? g.h / 2 : g.ay - (o.sink ?? 1), ART, o.icon, o.wood);
+  addSheet(scene, key, [p], o.centre ? g.w / 2 : ax, o.centre ? g.h / 2 : g.ay - (o.sink ?? 1), ART, o.icon, !!tone);
 }
 
 /** plain brown wood, as the knife's haft and the brothers' tunics (the maintainer: Abel's staff came out pink in the night palette) */
 const WOOD = ramp('#22160f', '#3a271a', '#543a26', '#6d4e33', '#876443', '#a07c55');
 
-/** A generated prop in wood colours, kept by its light and shade, in its own colours at night. */
-function asWood(p: Pixels): void {
+/**
+ * The chapter's base colour (the maintainer chose it: the rosy brown of the
+ * paths, the trunks' mauve as it shows at night), dark to light, in one hue.
+ * Props drawn in it (`tone`): the furrows, the greens in the field and
+ * Adam and Eve's house. Without `tone` they took the night palette like
+ * the rest (palette.ts), as they did before 2026-11-09.
+ */
+const BASE = ramp('#140e0f', '#1e1518', '#281c1f', '#342429', '#402b32', '#4c343b', '#5a3d46', '#6b4853', '#7d5863', '#916875', '#a77c89', '#bf919e', '#d8a8b6');
+/** the furrows: the path's colour, darker in the grooves */
+const FURROW_TONE = BASE.slice(1, 8);
+/** the greens in the field: the same, lighter (the maintainer) */
+const GREENS_TONE = BASE.slice(6, 13);
+/** the house: the whole ramp, so the thatch and the stones keep their light and shade */
+const HOUSE_TONE = BASE.slice(1, 13);
+
+/** A generated prop in one colour ramp (wood, the base colour…), kept by its light and shade, in those colours at night. */
+function onTone(p: Pixels, tone: RGB[]): void {
   const d = p.data;
   let lo = 255;
   let hi = 0;
@@ -87,7 +103,7 @@ function asWood(p: Pixels): void {
   for (let i = 0; i < d.length; i += 4) {
     if (!d[i + 3]) continue;
     const k = (lum(i) - lo) / Math.max(1, hi - lo);
-    const c = WOOD[Math.min(WOOD.length - 1, Math.round(k * (WOOD.length - 1)))];
+    const c = tone[Math.min(tone.length - 1, Math.round(k * (tone.length - 1)))];
     [d[i], d[i + 1], d[i + 2]] = c;
   }
 }
@@ -290,7 +306,7 @@ export function buildCainArt(scene: Phaser.Scene): void {
   built = true;
   // trees and props: the generated art
   for (const [id, name] of Object.entries(TREE_ART)) genTree(scene, id, name);
-  addGen(scene, 'cain-hut', 'hut', { sink: 3 });
+  addGen(scene, 'cain-hut', 'hut', { sink: 3, tone: HOUSE_TONE });
   addGen(scene, 'cain-altar', 'altar', { sink: 2 });
   addGen(scene, 'cain-altar-b', 'altar-b', { sink: 2 });
   for (let i = 0; i < 3; i++) addGen(scene, `cain-wall-${i}`, `wall-${i}` as GenName, { sink: 2 });
@@ -304,11 +320,11 @@ export function buildCainArt(scene: Phaser.Scene): void {
   loop(scene, 'cain-fire', 8);
   loop(scene, 'cain-flame', 9);
   loop(scene, 'cain-fire-big', 7);
-  for (let i = 0; i < 3; i++) addGen(scene, `cain-furrow-${i}`, 'furrow', { mirror: i === 1, centre: true });
+  for (let i = 0; i < 3; i++) addGen(scene, `cain-furrow-${i}`, 'furrow', { mirror: i === 1, centre: true, tone: FURROW_TONE });
   for (let i = 0; i < 3; i++) {
     addGen(scene, `cain-wheat-${i}`, i === 1 ? 'wheat-1' : 'wheat-0', { mirror: i === 2 });
     addGen(scene, `cain-wheat-${i}-reaped`, 'stubble', { mirror: i === 1 });
-    addGen(scene, `cain-greens-${i}`, `greens-${i}` as GenName);
+    addGen(scene, `cain-greens-${i}`, `greens-${i}` as GenName, { tone: GREENS_TONE });
   }
   addGen(scene, 'cain-gourds', 'gourds', { sink: 2 });
   addGen(scene, 'cain-gourds-picked', 'gourds-picked', { sink: 2 });
