@@ -55,7 +55,8 @@ export interface WorldApi {
   wait(ms: number): Promise<void>;
 
   // staging
-  cutscene(on: boolean): void;
+  /** A staged scene: the player can still walk, unless `hold` (the maintainer: only the creation and the eating of the fruit hold them). */
+  cutscene(on: boolean, hold?: boolean): void;
   show(actor: Actor, at: Pt, facing?: Facing): void;
   hide(actor: Actor): void;
   walk(actor: Actor, to: Pt | Pt[], speed?: number): Promise<void>;

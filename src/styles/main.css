@@ -1193,7 +1193,7 @@ select:focus-visible {
 }
 
 @media (max-aspect-ratio: 1/1) {
-  :root:not(.rotated) .touch-ui .dialogue.passive {
+  :root:not(.rotated) .touch-ui .dialogue {
     bottom: calc(170px + var(--safe-b));
   }
 }
@@ -1653,9 +1653,14 @@ select:focus-visible {
   }
 }
 
-/* the dialogue box sits where the touch buttons are; tapping the box advances */
-.dialogue:not([hidden]) ~ .touch-controls {
+/* the dialogue box sits where the touch buttons are; tapping the box advances.
+   The pad stays, over the box, since players walk while people talk */
+.dialogue:not([hidden]) ~ .touch-controls .touch-buttons {
   visibility: hidden;
+}
+
+.dialogue:not([hidden]) ~ .touch-controls .touch-stick {
+  z-index: 43;
 }
 
 /* ------------------------------------------------- before the game starts */

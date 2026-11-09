@@ -21,6 +21,7 @@ import { addShadow, setShadowLight } from './world/shadows';
 import { GodLight } from './world/GodLight';
 import { crackTexture } from './world/GroundCrack';
 import { ObjectiveMarkers } from './world/ObjectiveMarkers';
+import { TalkFollow } from './world/talkFollow';
 import { Terrain } from './world/Terrain';
 import { WorldObjects, type TreeInstance } from './world/WorldObjects';
 import type { InteractSpec, ObjectiveOptions, ObjectiveTarget, TimeOfDay, WorldApi } from './WorldApi';
@@ -75,6 +76,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private canSwitch = false;
   private following = false;
   private control = true;
+  /** the player is held still (only the scenes that ask for it: cutscene(true, true)) */
+  private held = false;
+  private talk = new TalkFollow();
   /** an interaction is being handled (separate from cutscenes, which own `control`) */
   private busy = false;
   private interactions: InteractSpec[] = [];
@@ -481,6 +485,17 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     return this.control && (!this.busy || ui().dialogue.narrating);
   }
 
+  /**
+   * The player may walk: everywhere, in dialogues, narration and cutscenes
+   * too (the maintainer, 2026-11-09), except in the scenes that hold them
+   * (the creation, which has its own screen, and the eating of the fruit)
+   * and while they are doing something (digging…) until it is talked about.
+   */
+  private mayWalk(): boolean {
+    const d = ui().dialogue;
+    return !this.held && (!this.busy || d.open || d.narrating);
+  }
+
   private async useInteract(spec: InteractSpec): Promise<void> {
     this.busy = true;
     this.player().stop();
@@ -529,8 +544,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
 
   // ---------------------------------------------------------------- staging
 
-  cutscene(on: boolean): void {
+  cutscene(on: boolean, hold = false): void {
     this.control = !on;
+    this.held = on && hold;
     if (on) {
       this.adam.stop();
       this.eve.stop();
@@ -1227,9 +1243,10 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   update(time: number, delta: number): void {
     const dt = delta / 1000;
     const p = this.player();
-    const canMove = this.canMove() && !p.scripted && input.movementAllowed(this.layer) && !ui().dialogue.open;
+    const canMove = this.mayWalk() && !p.scripted && input.movementAllowed(this.layer);
     if (canMove) {
       const v = input.moveVector();
+      this.keepInView(p, v);
       // Shift: run
       const speed = CHARACTERS[this.active].speed * (input.isDown('run') ? RUN : 1);
       p.move(v.x * speed, v.y * speed);
@@ -1243,6 +1260,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       p.stop();
     }
     this.updateFollower(dt);
+    this.updateTalker(p);
     for (const a of [this.adam, this.eve, this.god, this.serpent]) if (!a.scripted) a.refresh();
     this.animals.update(time, dt);
     const cam = this.cameras.main;
@@ -1258,11 +1276,27 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     audio.setWaterLevel(1 - Math.min(1, Math.max(0, rd) / 380));
   }
 
+  /** Adam or Eve, talking to the player, walks after them (TalkFollow);
+   * not while following them anyway. God and the serpent stay put. */
+  private updateTalker(p: Actor): void {
+    const id = ui().dialogue.speaker;
+    let npc = id === 'adam' ? this.adam : id === 'eve' ? this.eve : null;
+    if (npc && npc === this.other() && this.following && this.canMove()) npc = null;
+    this.talk.update(npc, p);
+  }
+
+  /** Walking off during a cutscene, the camera comes back to the player. */
+  private keepInView(p: Actor, v: { x: number; y: number }): void {
+    if (!v.x && !v.y) return;
+    const cam = this.cameras.main as Phaser.Cameras.Scene2D.Camera & { _follow: unknown };
+    if (cam._follow !== p.sprite && !cam.panEffect.isRunning) this.cameraFollow();
+  }
+
   private updateFollower(dt: number): void {
     const leader = this.player();
     const f = this.other();
     if (!this.following || !f.visible || f.scripted || !this.canMove()) {
-      if (!f.scripted) f.stop();
+      if (!f.scripted && f !== this.talk.walker) f.stop();
       return;
     }
     const dist = Math.hypot(leader.x - f.x, leader.y - f.y);

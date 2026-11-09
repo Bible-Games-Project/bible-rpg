@@ -16,6 +16,7 @@ import { Actor, DEPTH_OVERLAY, DEPTH_SHADOW, type Facing } from '../world/Actor'
 import { Atmosphere } from '../world/Atmosphere';
 import { GodLight } from '../world/GodLight';
 import { ObjectiveMarkers } from '../world/ObjectiveMarkers';
+import { TalkFollow } from '../world/talkFollow';
 import type { InteractSpec, ObjectiveOptions, ObjectiveTarget } from '../WorldApi';
 import { ART, buildCainArt, buildCainPortraits, loadCainArt } from './art';
 import { CainWorld } from './CainWorld';
@@ -139,6 +140,7 @@ export class CainScene extends Phaser.Scene {
   private active: Brother = 'cain';
   private following = false;
   private control = true;
+  private talk = new TalkFollow();
   private busy = false;
   private interactions: InteractSpec[] = [];
   private currentInteract: InteractSpec | null = null;
@@ -452,6 +454,16 @@ export class CainScene extends Phaser.Scene {
 
   private canMove(): boolean {
     return this.control && (!this.busy || ui().dialogue.narrating);
+  }
+
+  /**
+   * The player may walk: always in this story, in dialogues, narration and
+   * cutscenes too (the maintainer, 2026-11-09), except while they are doing
+   * something (cutting, striking…) until it is talked about.
+   */
+  private mayWalk(): boolean {
+    const d = ui().dialogue;
+    return !this.busy || d.open || d.narrating;
   }
 
   private async useInteract(spec: InteractSpec): Promise<void> {
@@ -1183,9 +1195,10 @@ export class CainScene extends Phaser.Scene {
   update(time: number, delta: number): void {
     const dt = Math.min(0.1, delta / 1000);
     const p = this.controlled();
-    const canMove = this.canMove() && !p.scripted && input.movementAllowed(this.layer) && !ui().dialogue.open;
+    const canMove = this.mayWalk() && !p.scripted && input.movementAllowed(this.layer);
     if (canMove) {
       const v = input.moveVector();
+      this.keepInView(p, v);
       const speed = (this.driving ? DOG_DRIVE_SPEED : CHARACTERS[this.active].speed) * (input.isDown('run') ? (this.driving ? 1.25 : RUN) : 1);
       p.move(v.x * speed, v.y * speed);
       if (p.moving && !this.driving) {
@@ -1198,6 +1211,7 @@ export class CainScene extends Phaser.Scene {
       p.stop();
     }
     this.updateFollower(dt);
+    this.updateTalker(p);
     this.updateChase(dt);
     this.updateFlock(dt);
     for (const a of [this.cain, this.abel, this.god, this.eve]) if (!a.scripted) a.refresh();
@@ -1529,11 +1543,29 @@ export class CainScene extends Phaser.Scene {
 
   private followSpeed = 0;
 
+  /** Abel, Cain or Eve, talking to the player, walks after them
+   * (TalkFollow); not while following them anyway, nor in the fight. God
+   * stays put, and Adam is sitting. */
+  private updateTalker(p: Actor): void {
+    const id = ui().dialogue.speaker;
+    const cast: Record<string, Actor> = { cain: this.cain, abel: this.abel, eve: this.eve };
+    let npc: Actor | null = (id && cast[id]) || null;
+    if (this.chaseState || (npc && npc === this.other() && this.following && this.canMove())) npc = null;
+    this.talk.update(npc, p);
+  }
+
+  /** Walking off during a cutscene, the camera comes back to the player. */
+  private keepInView(p: Actor, v: { x: number; y: number }): void {
+    if (!v.x && !v.y) return;
+    const cam = this.cameras.main as Phaser.Cameras.Scene2D.Camera & { _follow: unknown };
+    if (cam._follow !== p.sprite && !cam.panEffect.isRunning) this.cameraFollow(p === this.player() ? undefined : p);
+  }
+
   private updateFollower(dt: number): void {
     const leader = this.player();
     const f = this.other();
     if (!this.following || !f.visible || f.scripted || !this.canMove()) {
-      if (!f.scripted && !this.chaseState) f.stop();
+      if (!f.scripted && !this.chaseState && f !== this.talk.walker) f.stop();
       return;
     }
     const dist = Math.hypot(leader.x - f.x, leader.y - f.y);

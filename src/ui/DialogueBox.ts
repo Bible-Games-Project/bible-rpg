@@ -21,7 +21,8 @@ export interface Line {
 /**
  * Dialogue with an animated portrait above a text box. The text is
  * revealed progressively; the first press shows the whole line, the next
- * press continues. Movement is blocked while it is open. A line with a
+ * press continues. The player can walk meanwhile (the maintainer,
+ * 2026-11-09; a scene holds them itself where it must). A line with a
  * recorded voice is spoken (instead of the reveal's blips) and faded out when
  * the player moves on. A narrated line can also be told without holding the
  * player (`narrate`).
@@ -55,6 +56,8 @@ export class DialogueBox {
   open = false;
   /** a line is being narrated while the player moves (nothing can be used) */
   narrating = false;
+  /** who is saying the line on screen (a character id, 'narrator'), or null */
+  speaker: string | null = null;
 
   constructor(host: HTMLElement, private onPause: () => void) {
     this.frame = h('div', { class: 'portrait-frame panel' }, this.portrait.canvas);
@@ -69,7 +72,7 @@ export class DialogueBox {
     host.append(this.root);
     this.layer = {
       modal: true,
-      allowMovement: false,
+      allowMovement: true,
       captureKeys: true,
       onAction: (a) => {
         if (a === 'interact') this.advance();
@@ -167,7 +170,10 @@ export class DialogueBox {
     this.narrating = false;
     this.passiveLine = false;
     this.voiceLength = 0;
-    if (!this.open) this.conceal();
+    if (!this.open) {
+      this.speaker = null;
+      this.conceal();
+    }
   }
 
   private nextLine(): void {
@@ -187,6 +193,7 @@ export class DialogueBox {
   private present(line: Line, no: number): Promise<boolean> {
     const ch = CHARACTERS[line.speaker] ?? CHARACTERS.narrator;
     const narrator = !ch.portrait;
+    this.speaker = line.speaker;
     this.root.classList.toggle('narration', narrator && !line.scripture);
     this.root.classList.toggle('scripture', !!line.scripture);
     this.frame.hidden = narrator || !!line.scripture;
@@ -298,6 +305,7 @@ export class DialogueBox {
     this.stopVoice();
     this.lineNo++;
     this.open = false;
+    this.speaker = null;
     this.conceal();
     input.remove(this.layer);
     this.portrait.stop();
