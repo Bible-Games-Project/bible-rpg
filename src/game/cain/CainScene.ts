@@ -801,6 +801,12 @@ export class CainScene extends Phaser.Scene {
         last: [a.x, a.y],
       };
       this.herdProgress = progress;
+      // they stop where they graze; calm, only one now and then takes a step
+      for (const g of [...this.sheep, ...this.lambs]) {
+        g.target = null;
+        g.wait = 2 + Math.random() * 10;
+        g.fright = 0;
+      }
     });
   }
   private herdProgress: () => void = () => {};
@@ -1442,7 +1448,7 @@ export class CainScene extends Phaser.Scene {
         // frightened it runs; calm it only ambles back when it has strayed
         // from the others (the maintainer: calm sheep stay almost still)
         const calm = g.fright < 0.05;
-        const sp = calm ? (td > 120 ? GRAZE_SPEED : 0) : Math.min(1, f) * speed * (0.45 + 0.55 * Math.min(1, g.fright * 1.5));
+        const sp = calm ? (td > 170 ? GRAZE_SPEED : 0) : Math.min(1, f) * speed * (0.45 + 0.55 * Math.min(1, g.fright * 1.5));
         wx = (fx / f) * sp;
         wy = (fy / f) * sp;
       }
