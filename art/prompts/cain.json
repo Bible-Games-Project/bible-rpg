@@ -6,29 +6,50 @@
    "id": "cain-homestead",
    "title": "House, hearth, altars, fold walls, torch, log",
    "size": "1536x1024",
-   "references": ["art/reference/v2/style-scene.webp", "art/reference/v2/adam-sprite.png"],
+   "references": [
+    "art/reference/v2/style-scene.webp",
+    "art/reference/v2/adam-sprite.png"
+   ],
    "prompt": "A sheet of sprites for the home of the first family after Eden, in two rows with clear space between every item. Top row: 1) their house, the biggest item (about a third of the image wide): a round dwelling with a low wall of stacked grey fieldstones and mud, a thick conical roof of golden reed thatch tied with cords, and a dark low doorway with a hanging hide in front; 2) a cooking hearth: a small ring of stones with a round brown clay cooking pot sitting on them and a few glowing embers under it, no tall flames; 3) a standing torch: a straight wooden pole with a thick bundle of dry reeds bound with cord at the top, not burning. Bottom row: 4) an altar of rough unhewn field stones piled into a low wide block with a flat stone slab on top; 5) a second, different altar of rough field stones, a little taller and rounder, flat on top; 6) three short separate pieces of a low dry-stone wall of stacked flat grey stones, each piece about twice as wide as tall; 7) a short fallen log lying on its side to sit on."
   },
   {
    "id": "cain-trees",
    "title": "Trees and bushes of the land outside Eden",
    "size": "1536x1024",
-   "references": ["art/reference/v2/style-scene.webp"],
+   "references": [
+    "art/reference/v2/style-scene.webp"
+   ],
    "prompt": "A sheet of tree and bush sprites for the land east of Eden, in two rows of five with clear space between every item; each tree complete with its trunk and roots, whole crown visible. Top row: 1) a big broad oak tree with a round full crown, 2) another big oak with a wider, lumpier crown, 3) an old olive tree with a twisted trunk and a silvery green crown, 4) a young slender tree with a small round crown, 5) a tall narrow cypress. Bottom row: 6) an umbrella pine with a flat wide crown on a bare trunk, 7) a pomegranate tree with a round crown full of red fruits, 8) a round leafy bush, 9) a low wide bush, 10) a small bush with tiny white flowers."
   },
   {
    "id": "cain-field",
    "title": "Field crops, furrow, jawbone, staff, sheepdog",
    "size": "1536x1024",
-   "references": ["art/reference/v2/style-scene.webp", "art/reference/v2/adam-sprite.png"],
+   "references": [
+    "art/reference/v2/style-scene.webp",
+    "art/reference/v2/adam-sprite.png"
+   ],
    "prompt": "A sheet of small farming and shepherd sprites, in three rows with clear space between every item. Top row: 1) one long straight furrow of freshly tilled brown earth, a low ridge running left to right, much wider than tall; 2) a bunch of ripe golden wheat stalks with heavy ears; 3) another bunch of ripe wheat, different; 4) the same bunch cut down to short stubble. Middle row: 5) a young leafy vegetable plant, 6) a bigger leafy plant like a broad bean, 7) a row plant like a leek or onion with long leaves, 8) a low gourd vine with three round yellow gourds, 9) the same vine without gourds. Bottom row: 10) the bleached jawbone of a donkey lying flat, 11) a shepherd's staff: a long straight wooden stick with a curled crook at the top, standing upright, 12) a shaggy brown and cream sheepdog seen exactly from the side facing right, standing, 13) the same dog from the side facing right, trotting with legs apart."
   },
   {
    "id": "cain-grave",
    "title": "Abel's grave",
    "size": "1024x1024",
-   "references": ["art/reference/v2/style-scene.webp"],
+   "references": [
+    "art/reference/v2/style-scene.webp"
+   ],
    "prompt": "One single sprite in the middle of the image, about half the image wide: the grave of a shepherd in the first age of the world, seen from the top-down three-quarter view of the reference scene. A low, long mound of freshly dug dark brown earth, about twice as wide as deep, with rough grey and tan unhewn field stones piled on it into a low cairn, a slightly taller upright stone standing at its left end as a marker, a few loose pebbles at its foot. Simple and humble, no cross, no carving, no inscription, no flowers, no grass."
+  },
+  {
+   "id": "cain-adam-sitting",
+   "size": "1024x1024",
+   "style": "styleCharacter",
+   "references": [
+    "art/reference/v2/style-scene.webp",
+    "art/reference/cain/adam-tunic-side.png"
+   ],
+   "prompt": "One single figure in the middle of the image, about two thirds of the image tall: the young man of the second reference image, seen exactly from the side and facing right, SITTING on an invisible low seat (a log at knee height, not drawn). His back is upright and relaxed, his thighs are horizontal pointing right, his knees bent at a right angle, his shins vertical, both bare feet flat on the ground; the near leg in front, the far leg just behind it. His tunic hangs over his lap and thighs. His hands rest on his knees. Whole body visible from hair to feet, nothing cut off. Natural human proportions: the thigh as long as the shin, the upper body not stretched."
   }
- ]
+ ],
+ "styleCharacter": "STYLE RULES: Soft, modern pixel art exactly like the reference character (the second image): the same small soft pixel blocks, the same colours for his skin, curly brown hair and torn tan hide tunic with its rope belt, gentle shading with light from the upper left, NO dark outlines. Draw this same young man again in a new pose; keep his face, hair, tunic, proportions and size exactly. No cast shadow, no ground, no grass, no seat, no scenery. BACKGROUND: one flat solid magenta colour (#FF00FF) everywhere around him, with no glow or texture. No text, letters, numbers, labels, borders or frames."
 }

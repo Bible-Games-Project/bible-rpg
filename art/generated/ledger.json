@@ -2405,5 +2405,27 @@
    "total_tokens": 2006
   },
   "at": "20261106-141606"
+ },
+ {
+  "job": "cain-adam-sitting",
+  "chapter": "cain",
+  "file": "art/generated/cain-adam-sitting/20261109-155858-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0235,
+  "usage": {
+   "input_tokens": 2313,
+   "input_tokens_details": {
+    "image_tokens": 2020,
+    "text_tokens": 293
+   },
+   "output_tokens": 196,
+   "output_tokens_details": {
+    "image_tokens": 196,
+    "text_tokens": 0
+   },
+   "total_tokens": 2509
+  },
+  "at": "20261109-155858"
  }
 ]
