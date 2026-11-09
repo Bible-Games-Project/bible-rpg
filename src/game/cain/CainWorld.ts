@@ -208,8 +208,8 @@ export class CainWorld {
     this.taken.push([hx, hy - 40]);
     // the log Adam sits on
     const [lx, ly] = POINTS.adamLog;
-    // a low log, so that Adam's seat (the top of it) is at the height of his hem
-    this.place('cain-log', lx - 12, ly - 2).setScale(ART * 0.9, ART * 0.7);
+    // as high as Adam's seat in his sitting drawing (it was squashed to 0.7 for the old one, with short legs)
+    this.place('cain-log', lx - 12, ly - 2).setScale(ART * 1.05, ART * 1.3);
     this.solid(lx, ly - 8, 40, 12);
     // the fire Eve cooks on, with the pot
     const [fx, fy] = POINTS.fire;

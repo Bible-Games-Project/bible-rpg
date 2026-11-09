@@ -62,6 +62,8 @@ const SHEETS = {
     { name: 'dog-1', w: 70 },
   ],
   'cain-grave': [{ name: 'grave', w: 150 }],
+  // Adam sitting, in his sprite's pixels (scaled like his other frames, not ART)
+  'cain-adam-sitting': [{ name: 'adam-sitting', h: 116 }],
 };
 
 function newest(job) {
