@@ -22,8 +22,10 @@ export const BOUNDS = { left: 150, top: 230, right: 2800, bottom: 4290 };
 export const PATHS: { points: Pt[]; width: number }[] = [
   // from the west edge to the house
   { width: 58, points: [[0, 2290], [380, 2300], [760, 2270], [1100, 2290], [1330, 2330]] },
-  // north from the house to the sheepfold's gate
-  { width: 52, points: [[1450, 2190], [1430, 1820], [1480, 1460], [1500, 1080]] },
+  // north from the yard to the sheepfold's gate, round the east side of the
+  // house (it went straight up from behind it, as if through the house, until 2026-11-09:
+  // [[1450, 2190], [1430, 1820], …])
+  { width: 52, points: [[1585, 2250], [1610, 2060], [1490, 1850], [1480, 1460], [1500, 1080]] },
   // south from the house down to the field
   { width: 52, points: [[1430, 2420], [1390, 2780], [1330, 3120], [1260, 3230]] },
   // east from the house up to the place of offering
@@ -37,7 +39,7 @@ export const PATHS: { points: Pt[]; width: number }[] = [
 export const TORCHES: Pt[] = [
   [1300, 2235], [1505, 2240], [1700, 2390], [1250, 2420],
   [2075, 1960], [2425, 1960], [2250, 1830],
-  [1395, 1010], [1600, 1010], [1440, 1420], [1500, 1760],
+  [1395, 1010], [1600, 1010], [1440, 1420], [1545, 1760],
   [1200, 3200], [1340, 3240], [1360, 2800],
   [600, 2240], [1000, 2245], [1860, 2190],
   [900, 3500], [1700, 3600], [2200, 3540], [2600, 3400], [1100, 3950], [1900, 4000],

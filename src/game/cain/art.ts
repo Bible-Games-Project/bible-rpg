@@ -423,8 +423,9 @@ function recolor(src: CanvasImageSource, w: number, h: number, frameH: number, w
  * Recolour a canvas onto a ramp by each pixel's own brightness (not
  * stretched to the picture's range, so every sheet of a character matches):
  * the ramp's colours are placed by their brightness and blended between.
+ * `amount` below 1 only leans the picture's own colours that way.
  */
-function toneByLight(c: HTMLCanvasElement, tone: RGB[]): void {
+function toneByLight(c: HTMLCanvasElement, tone: RGB[], amount = 1): void {
   const ctx = c.getContext('2d')!;
   const img = ctx.getImageData(0, 0, c.width, c.height);
   const d = img.data;
@@ -436,10 +437,13 @@ function toneByLight(c: HTMLCanvasElement, tone: RGB[]): void {
     let k = 0;
     while (k < at.length - 2 && at[k + 1] < l) k++;
     const f = Math.max(0, Math.min(1, (l - at[k]) / Math.max(1, at[k + 1] - at[k])));
-    for (let j = 0; j < 3; j++) d[i + j] = Math.round(tone[k][j] + (tone[k + 1][j] - tone[k][j]) * f);
+    for (let j = 0; j < 3; j++) d[i + j] = Math.round(d[i + j] * (1 - amount) + (tone[k][j] + (tone[k + 1][j] - tone[k][j]) * f) * amount);
   }
   ctx.putImageData(img, 0, 0);
 }
+
+/** how far Cain's colours lean to the base colour: a normal, tanned skin that suits the map (the maintainer) */
+const CAIN_BASE = 0.3;
 
 function buildBrothers(scene: Phaser.Scene): void {
   const src = MANIFEST.characters.adam?.tunic;
@@ -453,8 +457,9 @@ function buildBrothers(scene: Phaser.Scene): void {
       const key = charKey(who, 'tunic', dir);
       const img = scene.textures.get(from).getSourceImage() as HTMLImageElement;
       let canvas = recolor(img, img.width, img.height, a.frameHeight, who);
-      // Cain in the chapter's base colour, one hue by light and shade (the maintainer)
-      if (who === 'cain') toneByLight(canvas, BASE);
+      // Cain leaning to the chapter's base colour (the maintainer); wholly in
+      // it (CAIN_BASE 1, until 2026-11-09) his skin was purple
+      if (who === 'cain') toneByLight(canvas, BASE, CAIN_BASE);
       let asset: SheetAsset = { ...a };
       // Abel runs as Cain does (the maintainer)
       [canvas, asset] = cainStride(canvas, a, dir);
