@@ -64,7 +64,6 @@ export class Actor {
   moving = false;
   /** current walking speed (px/s) */
   pace = 0;
-  private vy = 0;
   /** bending down to pick something up (stoop()): 0 standing, 1 lowest */
   private stooping: { k: number } | null = null;
   /** a side-drawn animal leaning the way it goes (see refresh) */
@@ -168,7 +167,6 @@ export class Actor {
     this.body.setVelocity(vx, vy);
     this.moving = Math.abs(vx) + Math.abs(vy) > 1;
     this.pace = Math.hypot(vx, vy);
-    this.vy = vy;
     if (this.moving) this.faceVector(vx, vy);
   }
 
@@ -496,18 +494,8 @@ export class Actor {
         this.sprite.setScale(base, base * (1 - 0.2 * k));
       }
     }
-    // side-drawn animals going up or down (the sheep the dog drives) bob with
-    // each step, instead of sliding (the maintainer saw them skate); they do
-    // not lean (the maintainer did not like it)
-    if (this.sheet && this.stridePace) {
-      const a = this.sprite.anims;
-      if (this.moving && this.pace > 1 && a.currentAnim && a.currentFrame) {
-        const share = Phaser.Math.Clamp(this.vy / this.pace, -1, 1);
-        const n = a.currentAnim.frames.length;
-        const bob = Math.abs(Math.sin(((a.currentFrame.index - 1) / n) * Math.PI * 2)) * (0.6 + Math.abs(share) * 0.8);
-        this.sprite.setY(this.sprite.y - bob);
-      }
-    }
+    // side-drawn animals (the sheep) neither bob nor lean as they go: the
+    // maintainer saw them hop, and did not like the lean
     this.placeHeld();
   }
 

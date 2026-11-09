@@ -72,6 +72,10 @@ const DOG_FEAR = 150;
 const EDGE_KEEP = 230;
 const EDGE_STOP = 140;
 const ABEL_FEAR = 70;
+/** when the player runs the dog, the sheep only heed it when it barks (E, the
+ * maintainer): a bark scares those within BARK_REACH, fading over BARK_SCARE ms */
+const BARK_REACH = 190;
+const BARK_SCARE = 1800;
 /** the sheep's top speed when driven (the maintainer: they ran too fast) */
 const HERD_SPEED = 76;
 /** the pace at which the sheep's and lambs' walks play at their own rate: their
@@ -802,6 +806,8 @@ export class CainScene extends Phaser.Scene {
   private driving = false;
   /** when the dog may bark again (scene time, ms) */
   private barkAt = 0;
+  /** when the player last made the dog bark (scene time, ms) */
+  private barkedAt = -Infinity;
   /** whether the HUD shows "Bark" (while the player runs the dog) */
   private barkPrompt = false;
 
@@ -1237,7 +1243,6 @@ export class CainScene extends Phaser.Scene {
     if (this.driving) {
       if (!this.canMove()) d.stop();
       d.refresh();
-      this.barkAtFlock();
       return;
     }
     let to: Pt = POINTS.dogRest;
@@ -1287,22 +1292,12 @@ export class CainScene extends Phaser.Scene {
     if (view.contains(d.x, d.y) || d.moving) d.refresh();
   }
 
-  /** The player makes the dog bark (E): no effect on the flock. */
+  /** The player makes the dog bark (E): the sheep near it run from it. */
   private dogBark(): void {
-    if (this.time.now < this.barkAt - 4800) return;
+    if (this.time.now < this.barkAt) return;
     audio.play('bark', { pitch: 0.95 + Math.random() * 0.1 });
-    // and it does not bark again by itself straight away
-    this.barkAt = this.time.now + 5200;
-  }
-
-  /** The dog barks now and then as it runs up close behind a sheep. */
-  private barkAtFlock(): void {
-    const d = this.dog;
-    if (!d.moving || this.time.now < this.barkAt) return;
-    const near = [...this.sheep, ...this.lambs].some((g) => !g.penned && g.actor.visible && Math.hypot(g.actor.x - d.x, g.actor.y - d.y) < DOG_FEAR * 0.6);
-    if (!near) return;
-    audio.play('bark', { pitch: 0.95 + Math.random() * 0.1, volume: 0.8 });
-    this.barkAt = this.time.now + 2600 + Math.random() * 2600;
+    this.barkAt = this.time.now + 400;
+    this.barkedAt = this.time.now;
   }
 
   /**
@@ -1334,7 +1329,9 @@ export class CainScene extends Phaser.Scene {
         fy += (ey / d) * w;
         alarm = Math.max(alarm, 1 - d / r);
       };
-      away(dog.x, dog.y, DOG_FEAR, 2.4);
+      // the dog Abel sends ahead scares them; the dog the player runs only when it barks
+      const scare = this.driving ? 1 - Phaser.Math.Clamp((this.time.now - this.barkedAt) / BARK_SCARE, 0, 1) : 1;
+      if (scare > 0) away(dog.x, dog.y, this.driving ? BARK_REACH : DOG_FEAR, 2.4 * (0.4 + 0.6 * scare));
       away(abel.x, abel.y, ABEL_FEAR, 1.1);
       const fear = alarm;
       // go the way the sheep near it go (a flock moves as one)

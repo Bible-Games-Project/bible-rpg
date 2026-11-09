@@ -138,7 +138,7 @@
     "jawbone": "Jawbone"
   },
   "hints": {
-    "herd": "Now you are the dog. Run round behind the sheep and drive them gently through the gate."
+    "herd": "Now you are the dog. Run round behind the sheep and bark (E) to drive them through the gate: they only heed you when you bark."
   },
   "prompts": {
     "offer": "Lay the offering on the altar",
