@@ -105,6 +105,8 @@ interface Grazer {
   target: Pt | null;
   wait: number;
   frozen: boolean;
+  /** herding: how frightened it is (0 calm, 1 fleeing), fading after a bark */
+  fright: number;
   /** herding: its current speed, and whether it is in the fold */
   vx: number;
   vy: number;
@@ -741,7 +743,7 @@ export class CainScene extends Phaser.Scene {
   private flock(): void {
     const grazer = (id: string, sheet: string, at: Pt, range: number, speed: number, stridePace: number) => {
       const actor = new Actor(this, { id, x: at[0], y: at[1], sheet, body: { w: 22, h: 10 }, facing: Math.random() < 0.5 ? 'left' : 'right', stridePace });
-      return { actor, home: at, range, speed, target: null, wait: Math.random() * 3, frozen: false, vx: 0, vy: 0, penned: false, stuck: 0, side: 0, was: [at[0], at[1]] as Pt };
+      return { actor, home: at, range, speed, target: null, wait: Math.random() * 3, frozen: false, fright: 0, vx: 0, vy: 0, penned: false, stuck: 0, side: 0, was: [at[0], at[1]] as Pt };
     };
     SHEEP.forEach((p, i) => this.sheep.push(grazer(`sheep${i}`, 'animal-sheep', p, 45, GRAZE_SPEED + 6, SHEEP_STRIDE)));
     LAMBS.forEach((p, i) => this.lambs.push(grazer(`lamb${i}`, 'cain-lamb', p, 35, GRAZE_SPEED + 12, LAMB_STRIDE)));
@@ -1319,7 +1321,7 @@ export class CainScene extends Phaser.Scene {
       let fx = 0;
       let fy = 0;
       let alarm = 0;
-      const away = (ox: number, oy: number, r: number, k: number) => {
+      const away = (ox: number, oy: number, r: number, k: number, scary = true) => {
         const ex = a.x - ox;
         const ey = a.y - oy;
         const d = Math.hypot(ex, ey) || 1;
@@ -1327,12 +1329,14 @@ export class CainScene extends Phaser.Scene {
         const w = (1 - d / r) * k;
         fx += (ex / d) * w;
         fy += (ey / d) * w;
-        alarm = Math.max(alarm, 1 - d / r);
+        if (scary) alarm = Math.max(alarm, 1 - d / r);
       };
       // the dog Abel sends ahead scares them; the dog the player runs only when it barks
       const scare = this.driving ? 1 - Phaser.Math.Clamp((this.time.now - this.barkedAt) / BARK_SCARE, 0, 1) : 1;
       if (scare > 0) away(dog.x, dog.y, this.driving ? BARK_REACH : DOG_FEAR, 2.4 * (0.4 + 0.6 * scare));
       away(abel.x, abel.y, ABEL_FEAR, 1.1);
+      // fright fades over a second or two; frightened sheep near it frighten it a little
+      g.fright = Math.max(alarm, g.fright - dt * 0.7);
       const fear = alarm;
       // go the way the sheep near it go (a flock moves as one)
       let ax = 0;
@@ -1340,10 +1344,11 @@ export class CainScene extends Phaser.Scene {
       for (const o of out) {
         if (o === g) continue;
         const d = Math.hypot(o.actor.x - a.x, o.actor.y - a.y);
-        if (d < 34) away(o.actor.x, o.actor.y, 34, 0.9);
-        if (d < 130) {
-          ax += o.vx;
-          ay += o.vy;
+        if (d < 34) away(o.actor.x, o.actor.y, 34, 0.9, false);
+        if (d < 130 && o.fright > 0.05) {
+          ax += o.vx * o.fright;
+          ay += o.vy * o.fright;
+          g.fright = Math.max(g.fright, o.fright * 0.55);
         }
       }
       const al = Math.hypot(ax, ay);
@@ -1351,7 +1356,6 @@ export class CainScene extends Phaser.Scene {
         const k = Math.min(1, al / (HERD_SPEED * 3)) * 0.8;
         fx += (ax / al) * k;
         fy += (ay / al) * k;
-        alarm = Math.max(alarm, Math.min(0.5, al / (HERD_SPEED * 4)));
       }
       // keep together, closer when afraid: toward the sheep around it (those
       // already in the fold too), or the nearest one when it is alone
@@ -1384,7 +1388,7 @@ export class CainScene extends Phaser.Scene {
       const gx = FOLD.x - a.x;
       const gy = gateY + 30 - a.y;
       const gd = Math.hypot(gx, gy);
-      if (gd < 170 && alarm > 0) {
+      if (gd < 170 && g.fright > 0.05) {
         const into = Math.hypot(FOLD.x - a.x, FOLD.y - a.y) || 1;
         fx += ((FOLD.x - a.x) / into) * 0.9 * (1 - gd / 170);
         fy += ((FOLD.y - a.y) / into) * 0.9 * (1 - gd / 170);
@@ -1394,7 +1398,7 @@ export class CainScene extends Phaser.Scene {
       const rx = a.x - FOLD.x;
       const ry = (a.y - FOLD.y) / 0.75;
       const rd = Math.hypot(rx, ry) || 1;
-      if (rd < FOLD.r + 110 && rd > FOLD.r - 20 && alarm > 0) {
+      if (rd < FOLD.r + 110 && rd > FOLD.r - 20 && g.fright > 0.05) {
         const th = Math.atan2(ry, rx);
         const dth = Phaser.Math.Angle.Wrap(FOLD.gate - th);
         if (Math.abs(dth) > 0.35) {
@@ -1435,17 +1439,40 @@ export class CainScene extends Phaser.Scene {
       let wx = 0;
       let wy = 0;
       if (f > 0.05) {
-        const sp = Math.min(1, f) * (alarm > 0.02 ? speed : GRAZE_SPEED * 2);
+        // frightened it runs; calm it only ambles back when it has strayed
+        // from the others (the maintainer: calm sheep stay almost still)
+        const calm = g.fright < 0.05;
+        const sp = calm ? (td > 120 ? GRAZE_SPEED : 0) : Math.min(1, f) * speed * (0.45 + 0.55 * Math.min(1, g.fright * 1.5));
         wx = (fx / f) * sp;
         wy = (fy / f) * sp;
       }
+      // calm, now and then one takes a few slow steps near where it stands
+      if (g.fright < 0.05 && !wx && !wy) {
+        g.wait -= dt;
+        if (g.target) {
+          const dx = g.target[0] - a.x;
+          const dy = g.target[1] - a.y;
+          const d = Math.hypot(dx, dy);
+          if (d < 4 || g.wait < -4) {
+            g.target = null;
+            g.wait = 4 + Math.random() * 8;
+          } else {
+            wx = (dx / d) * GRAZE_SPEED * 0.7;
+            wy = (dy / d) * GRAZE_SPEED * 0.7;
+          }
+        } else if (g.wait <= 0 && td < 160) {
+          const ang = Math.random() * Math.PI * 2;
+          g.target = [a.x + Math.cos(ang) * 22, a.y + Math.sin(ang) * 14];
+          g.wait = 0;
+        }
+      } else g.target = null;
       // and close to an edge it does not step any further out
       for (const [d, ex, ey] of edges) {
         if (d >= EDGE_STOP) continue;
         if (ex && wx * ex < 0) wx = 0;
         if (ey && wy * ey < 0) wy = 0;
       }
-      const k = Math.min(1, dt * (alarm > 0 ? 6 : 2.5));
+      const k = Math.min(1, dt * (g.fright > 0.05 ? 6 : 2.5));
       g.vx += (wx - g.vx) * k;
       g.vy += (wy - g.vy) * k;
       if (Math.hypot(g.vx, g.vy) > 7) a.move(g.vx, g.vy);
