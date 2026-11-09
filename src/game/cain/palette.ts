@@ -16,10 +16,9 @@ import { MANIFEST, shadowKey } from '../manifest';
  * by its brightness, so the art keeps its shading:
  *   grass on the ground  night blue (#355C7D)
  *   leaves               indigo, between the blue and the purple grey
- *   earth on the ground  Cain's skin in the dark (a warm umber, one hue):
- *                        paths and the field, so the earth goes with the
- *                        people made of it (the maintainer found the old
- *                        purple grey paths too lilac; kept in PREVIOUS)
+ *   earth on the ground  the tree trunks' mauve, one hue, darker: paths and
+ *                        the field (the maintainer's choice, after the
+ *                        lilac grey and Cain's skin: both kept in PREVIOUS)
  *   wood, clay           dark mauve (#C06C84 at the light end)
  *   straw, thatch, grain dimmed peach (#F8B195 at the light end), so the
  *                        roof, the wheat and the wood don't all turn the
@@ -34,7 +33,7 @@ const ramp = (...c: string[]): V3[] => c.map(hex);
 
 const GRASS = ramp('#121b2e', '#18243b', '#1e2d48', '#253755', '#2c4262', '#344e70', '#3d5b7e', '#4c6a8c');
 const LEAVES = ramp('#10121f', '#171a2c', '#1f2339', '#292d48', '#343857', '#414466', '#535475', '#6c6b8c');
-const EARTH_GROUND = ramp('#1a1613', '#231d19', '#2d241f', '#372d25', '#41352c', '#4d3e33', '#59473a', '#685243');
+const EARTH_GROUND = ramp('#1f141b', '#2a1b24', '#35212e', '#412938', '#4e3043', '#5b384e', '#6a415a', '#7b4a69');
 const EARTH = ramp('#1d1420', '#2b1b2b', '#3d2338', '#532d47', '#6b3a57', '#844a66', '#a05f76', '#bd7a86');
 /** straw, thatch, grain, sand: the peach (#F8B195) dimmed by the night */
 const STRAW = ramp('#1e1822', '#2e2430', '#463540', '#62494f', '#806160', '#a07c72', '#c39b86', '#e3bb9c', '#f6caa8');
@@ -45,7 +44,9 @@ const BLUE = ramp('#121b2e', '#1b2a45', '#253a5b', '#2f4a6d', '#355C7D', '#4d739
 /** Colours the chapter used before, kept to go back to (the maintainer). */
 export const PREVIOUS = {
   /** paths and the field until 2026-11-09: the purple grey #6C5B7B */
-  EARTH_GROUND: ramp('#1c1a2b', '#252337', '#2f2c43', '#3a3650', '#46415e', '#524c6b', '#5f5878', '#6e6787'),
+  EARTH_GROUND_LILAC: ramp('#1c1a2b', '#252337', '#2f2c43', '#3a3650', '#46415e', '#524c6b', '#5f5878', '#6e6787'),
+  /** tried on 2026-11-09: a dark umber from Cain's skin */
+  EARTH_GROUND_SKIN: ramp('#1a1613', '#231d19', '#2d241f', '#372d25', '#41352c', '#4d3e33', '#59473a', '#685243'),
 };
 
 /** How dark shadows are at night (Eden's are 1): very faint (the maintainer). */
