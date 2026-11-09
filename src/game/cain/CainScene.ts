@@ -982,8 +982,9 @@ export class CainScene extends Phaser.Scene {
     await c.attack('swing');
     if (this.chaseState !== s || s.mode === 'reset' || s.mode === 'down') return;
     audio.play('hit');
-    // and Abel cries out (the maintainer)
-    this.time.delayedCall(60, () => audio.recording('hurt', { pitch: 0.97 + Math.random() * 0.06 }));
+    // and Abel cries out (the maintainer); the last blow, his dying cry
+    const last = s.hits + 1 >= HITS;
+    this.time.delayedCall(60, () => audio.recording(last ? 'death' : 'hurt', { pitch: last ? 1 : 0.97 + Math.random() * 0.06 }));
     if (!settings.get().reduceMotion) this.cameras.main.shake(180, 0.007);
     s.hits++;
     this.drawHealth();
