@@ -262,7 +262,11 @@
       "swing": "Swing through the air",
       "whistle": "Abel’s whistle",
       "bark": "Dog’s bark",
-      "flame": "Offering fire"
+      "flame": "Offering fire",
+      "hurt": "Abel cries out in pain",
+      "dig": "Digging the grave",
+      "drag": "Dragging the body",
+      "stones": "Covering with stones"
     },
     "surfaces": {
       "grass": "Grass",

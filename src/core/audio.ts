@@ -410,6 +410,17 @@ class AudioManager {
 
   private lastStep = '';
 
+  /** A slot that only has recordings (no synthesised sound): its chosen one,
+   * if any. Returns how long it lasts (s), 0 when nothing plays. */
+  recording(id: string, opts: { pitch?: number; volume?: number } = {}): number {
+    const ctx = this.unlocked ? this.ensure() : null;
+    const buf = this.samples.get(id);
+    if (!ctx || ctx.state !== 'running' || !buf || !SLOT[id]) return 0;
+    const pitch = opts.pitch ?? 1;
+    this.playBuffer(buf, SLOT[id].gain * (opts.volume ?? 1), pitch);
+    return buf.duration / pitch;
+  }
+
   /** A recording for the maintainer's library, at full level (not the game's
    * volumes); elapsed() runs from 0 to 1. */
   preview(buf: AudioBuffer): { ended: Promise<void>; stop(): void; elapsed(): number } | null {

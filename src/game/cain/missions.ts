@@ -358,6 +358,7 @@ const MISSIONS: CainMission[] = [
       w.music('none');
       await w.wait(400);
       await w.fade(1, 1200);
+      await w.burialSounds();
       w.buryAbel();
       w.show(w.cain, [POINTS.grave[0] - 85, POINTS.grave[1] - 20], 'right');
       w.cameraSnap();

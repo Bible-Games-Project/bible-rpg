@@ -57,6 +57,8 @@ export const SOUND_SLOTS: SoundSlot[] = [
   { id: 'drop', group: 'other', category: 'other', sound: sfx('drop'), gain: 0.45 },
   // Cain and Abel: synthesised (free) until the maintainer chooses recordings
   ...(['cut', 'hit', 'swing', 'whistle', 'bark', 'flame'] as const).map((id) => ({ id, group: 'cain' as const, category: `cain-${id}`, sound: null, gain: 0.5 })),
+  // recordings only (ElevenLabs, tools/audio/build_cain_sfx.mjs): Abel's cry when struck, and the burial heard over black
+  ...(['hurt', 'dig', 'drag', 'stones'] as const).map((id) => ({ id, group: 'cain' as const, category: `cain-${id}`, sound: `assets/sfx/cain/${id}-1.mp3`, gain: id === 'hurt' ? 0.55 : 0.5 })),
 ];
 
 export const SLOT = Object.fromEntries(SOUND_SLOTS.map((s) => [s.id, s])) as Record<string, SoundSlot>;

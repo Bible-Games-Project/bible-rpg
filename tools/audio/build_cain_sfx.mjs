@@ -99,6 +99,39 @@ const SLOTS = {
     'Big fire whoosh, like a fireball, ending in crackling embers',
     'Burning offering on a stone altar, fire rising, sizzling fat and crackle',
   ]],
+  hurt: ['Abel cries out in pain', 1.2, [
+    'A young man cries out in sharp pain as he is struck, short male grunt-scream, no words',
+    'Male pain yell, sudden and short, hit by a blow, close up, no reverb',
+    'A man gasps and screams briefly in pain, outdoors at night',
+    'Short anguished male cry of pain, a strong hit, raw and human',
+    'Young man groaning loudly after being hit, short "agh" of pain',
+    'Male shout of pain and surprise, abrupt, one breath',
+    'A man is struck and lets out a strangled cry of pain',
+    'Deep male scream of pain, short, desperate',
+    'Male painful grunt followed by a short whimper',
+    'A wounded young man yells in pain, brief and loud',
+  ]],
+  dig: ['Digging the grave', 3.0, [
+    'A man digging hard earth with a flat stone, steady scraping strokes, night, crickets faint',
+    'Digging dirt by hand with a wooden tool, several strokes and soil thrown aside',
+    'Shovel-like scraping into dry ground, dull thuds and falling soil, slow rhythm',
+    'Hands clawing and scooping loose earth quickly, close up',
+    'Digging a pit in stony soil, scrape, thud, earth tossed, heavy breathing',
+  ]],
+  drag: ['Dragging the body', 3.0, [
+    'A heavy body dragged over dirt and grass, slow pulls, cloth scraping the ground',
+    'Dragging a heavy sack across rough ground, step by step, grunts of effort',
+    'Slow drag of a limp weight over gravel and earth, close up, night',
+    'Something heavy pulled through dry grass and soil, scraping and rustling',
+    'Body dragged along the ground then dropped into a hole with a dull thud',
+  ]],
+  stones: ['Covering with stones', 3.0, [
+    'Heavy stones placed one by one on a pile of earth, dull knocks of rock on rock',
+    'Rocks dropped onto soil and other rocks, building a cairn, slow',
+    'Earth pushed back into a hole by hand, then stones laid on top',
+    'Stones rolled and stacked, clacking and thudding, outdoors at night',
+    'Large rocks set down heavily one after another, gritty scrapes between them',
+  ]],
 };
 
 async function generate(text, seconds) {

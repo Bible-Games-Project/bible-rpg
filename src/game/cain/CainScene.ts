@@ -970,6 +970,8 @@ export class CainScene extends Phaser.Scene {
     await c.attack('swing');
     if (this.chaseState !== s || s.mode === 'reset' || s.mode === 'down') return;
     audio.play('hit');
+    // and Abel cries out (the maintainer)
+    this.time.delayedCall(60, () => audio.recording('hurt', { pitch: 0.97 + Math.random() * 0.06 }));
     if (!settings.get().reduceMotion) this.cameras.main.shake(180, 0.007);
     s.hits++;
     this.drawHealth();
@@ -1070,6 +1072,15 @@ export class CainScene extends Phaser.Scene {
   }
 
   /** After the fall (in the dark): Abel gone, the blood gone, his grave in the field. */
+  /** Heard over black after the murder (the maintainer): digging, dragging
+   * the body, covering it with stones, one after the other. */
+  async burialSounds(): Promise<void> {
+    for (const id of ['dig', 'drag', 'stones']) {
+      const d = audio.recording(id);
+      if (d) await this.wait(Math.max(800, d * 1000 - 250));
+    }
+  }
+
   buryAbel(): void {
     this.abel.sprite.setAngle(0);
     this.hide(this.abel);

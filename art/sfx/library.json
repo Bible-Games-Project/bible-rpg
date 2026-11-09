@@ -3864,6 +3864,155 @@
      "Burning offering on a stone altar, fire rising, sizzling fat and crackle · ElevenLabs sound effect, royalty-free"
     ]
    ]
+  },
+  "cain-hurt": {
+   "title": "Cain and Abel · Abel cries out in pain",
+   "note": "Made with ElevenLabs sound effects for this game: royalty-free, no attribution needed.",
+   "options": [
+    [
+     "assets/sfx/cain/hurt-1.mp3",
+     "Abel cries out in pain 1",
+     "A young man cries out in sharp pain as he is struck, short male grunt-scream, no words · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hurt-2.mp3",
+     "Abel cries out in pain 2",
+     "Male pain yell, sudden and short, hit by a blow, close up, no reverb · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hurt-3.mp3",
+     "Abel cries out in pain 3",
+     "A man gasps and screams briefly in pain, outdoors at night · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hurt-4.mp3",
+     "Abel cries out in pain 4",
+     "Short anguished male cry of pain, a strong hit, raw and human · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hurt-5.mp3",
+     "Abel cries out in pain 5",
+     "Young man groaning loudly after being hit, short \"agh\" of pain · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hurt-6.mp3",
+     "Abel cries out in pain 6",
+     "Male shout of pain and surprise, abrupt, one breath · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hurt-7.mp3",
+     "Abel cries out in pain 7",
+     "A man is struck and lets out a strangled cry of pain · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hurt-8.mp3",
+     "Abel cries out in pain 8",
+     "Deep male scream of pain, short, desperate · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hurt-9.mp3",
+     "Abel cries out in pain 9",
+     "Male painful grunt followed by a short whimper · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/hurt-10.mp3",
+     "Abel cries out in pain 10",
+     "A wounded young man yells in pain, brief and loud · ElevenLabs sound effect, royalty-free"
+    ]
+   ]
+  },
+  "cain-dig": {
+   "title": "Cain and Abel · Digging the grave",
+   "note": "Made with ElevenLabs sound effects for this game: royalty-free, no attribution needed.",
+   "options": [
+    [
+     "assets/sfx/cain/dig-1.mp3",
+     "Digging the grave 1",
+     "A man digging hard earth with a flat stone, steady scraping strokes, night, crickets faint · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/dig-2.mp3",
+     "Digging the grave 2",
+     "Digging dirt by hand with a wooden tool, several strokes and soil thrown aside · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/dig-3.mp3",
+     "Digging the grave 3",
+     "Shovel-like scraping into dry ground, dull thuds and falling soil, slow rhythm · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/dig-4.mp3",
+     "Digging the grave 4",
+     "Hands clawing and scooping loose earth quickly, close up · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/dig-5.mp3",
+     "Digging the grave 5",
+     "Digging a pit in stony soil, scrape, thud, earth tossed, heavy breathing · ElevenLabs sound effect, royalty-free"
+    ]
+   ]
+  },
+  "cain-drag": {
+   "title": "Cain and Abel · Dragging the body",
+   "note": "Made with ElevenLabs sound effects for this game: royalty-free, no attribution needed.",
+   "options": [
+    [
+     "assets/sfx/cain/drag-1.mp3",
+     "Dragging the body 1",
+     "A heavy body dragged over dirt and grass, slow pulls, cloth scraping the ground · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/drag-2.mp3",
+     "Dragging the body 2",
+     "Dragging a heavy sack across rough ground, step by step, grunts of effort · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/drag-3.mp3",
+     "Dragging the body 3",
+     "Slow drag of a limp weight over gravel and earth, close up, night · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/drag-4.mp3",
+     "Dragging the body 4",
+     "Something heavy pulled through dry grass and soil, scraping and rustling · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/drag-5.mp3",
+     "Dragging the body 5",
+     "Body dragged along the ground then dropped into a hole with a dull thud · ElevenLabs sound effect, royalty-free"
+    ]
+   ]
+  },
+  "cain-stones": {
+   "title": "Cain and Abel · Covering with stones",
+   "note": "Made with ElevenLabs sound effects for this game: royalty-free, no attribution needed.",
+   "options": [
+    [
+     "assets/sfx/cain/stones-1.mp3",
+     "Covering with stones 1",
+     "Heavy stones placed one by one on a pile of earth, dull knocks of rock on rock · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/stones-2.mp3",
+     "Covering with stones 2",
+     "Rocks dropped onto soil and other rocks, building a cairn, slow · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/stones-3.mp3",
+     "Covering with stones 3",
+     "Earth pushed back into a hole by hand, then stones laid on top · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/stones-4.mp3",
+     "Covering with stones 4",
+     "Stones rolled and stacked, clacking and thudding, outdoors at night · ElevenLabs sound effect, royalty-free"
+    ],
+    [
+     "assets/sfx/cain/stones-5.mp3",
+     "Covering with stones 5",
+     "Large rocks set down heavily one after another, gritty scrapes between them · ElevenLabs sound effect, royalty-free"
+    ]
+   ]
   }
  }
 }
