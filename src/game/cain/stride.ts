@@ -304,9 +304,11 @@ export function frontRun(p: Px, mid: number, knee: number, extra: number, lift: 
       for (let x = l; x < r; x++) if (p.d[(sy * p.w + x) * 4 + 3]) copyPx(out, p, x, y, x, sy);
     }
     if (arms) {
-      // the arm on the side of the raised knee comes forward, the other goes back as its foot is down (the maintainer)
+      // arms against legs, as people run (the maintainer): the arm on the other
+      // side from the raised knee comes forward, the one over the foot on the
+      // ground goes back
       const raised = left < right ? -1 : 1;
-      const pumped = raised;
+      const pumped = -raised;
       pumpArm(out, p, mid, pumped, arms, arms.pump, arms.inward);
       pumpArm(out, p, mid, -pumped, arms, arms.back, 0);
       // not a robot (the maintainer): the shoulder of the pumped arm comes up, and the
