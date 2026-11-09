@@ -19,6 +19,66 @@
       "speed": 1
     }
   },
+  "cain.command.1": {
+    "text": "I will bring the fruit of my field.",
+    "voice": "David Boles",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.command.2": {
+    "text": "And I, the firstlings of my flock.",
+    "voice": "Adam",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.fear.0": {
+    "text": "Cain? What are you doing with that?",
+    "voice": "Adam",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.field.0": {
+    "text": "Abel. Come with me, let us go out to the field.",
+    "voice": "David Boles",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.field.1": {
+    "text": "I'll come, brother.",
+    "voice": "Adam",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.herd.0": {
+    "text": "Come, boy! Bring them in to the fold.",
+    "voice": "Adam",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
   "cain.npc.adam.after.0": {
     "text": "The LORD looked on your brother's offering. Do not let your heart grow dark.",
     "voice": "Josh",
@@ -159,6 +219,16 @@
       "speed": 1
     }
   },
+  "cain.penned.0": {
+    "text": "All in. Now, the firstlings.",
+    "voice": "Adam",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
   "cain.rebuke.0": {
     "text": "Why are you angry? Why has your face fallen?",
     "voice": "W. Storytime Oxley",
@@ -262,6 +332,16 @@
   "cain.where.0": {
     "text": "Where is Abel your brother?",
     "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "cain.where.1": {
+    "text": "I do not know. Am I my brother's keeper?",
+    "voice": "David Boles",
     "model": "eleven_v4",
     "settings": {
       "stability": 0.3,

@@ -515,8 +515,8 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   languages later). `tools/audio/build_voices.mjs` (Node: the build server has no
   Python or ffmpeg; `npm i @ffmpeg-installer/linux-x64` in /tmp and pass
   `FFMPEG=` its binary) voices each line, Eden and Cain (`cain.<id>.<i>`,
-  `cain.scripture.<id>`, `cain.npc.<who>.<phase>.<i>`; Cain and Abel have no
-  voice yet, so their lines stay silent), with
+  `cain.scripture.<id>`, `cain.npc.<who>.<phase>.<i>`; Cain is David Boles and
+  Abel is Adam, the maintainer's choice), with
   ElevenLabs text to speech into `public/assets/voice/<lang>/<key>.mp3`
   (`<dialogue id>.<index>`, `scripture.<id>`, `creation`) and lists its text
   in `manifest.json`; it only sends lines whose text or voice changed (each

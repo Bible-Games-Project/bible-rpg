@@ -33,12 +33,13 @@ const SETTINGS = { stability: 0.3, similarity_boost: 0.75, speed: 1.0 };
 // Voice Library voices chosen by the maintainer from the account's paid plan:
 // what is generated while subscribed keeps its commercial licence after the
 // subscription ends (generate final lines only while subscribed).
-// Cain and Abel have no voice yet: their lines are left unvoiced.
 const VOICES = {
   god: ['W. Storytime Oxley', 'iUqOXhMfiOIbBejNtfLR', SETTINGS],
   adam: ['Josh', 'nzFihrBIvB34imQBuxub', SETTINGS],
   eve: ['Zara', 'jqcCZkN6Knx8BJ5TBdYR', SETTINGS],
   serpent: ['Matthew Schmitz', 'xYWUvKNK6zWCgsdAK7Wi', SETTINGS],
+  cain: ['David Boles', 'y1adqrqs4jNaANXsIZnD', SETTINGS],
+  abel: ['Adam', 'QIhD5ivPGEoYZQDocuHI', SETTINGS],
 };
 // reads the gold scripture cards, the creation verse and the short narrations
 const NARRATOR = ['Spuds Oxley', 'NOpBlnGInO9m6vDvFkFC', SETTINGS];
