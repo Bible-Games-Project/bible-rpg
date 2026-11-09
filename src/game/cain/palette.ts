@@ -33,7 +33,7 @@ const ramp = (...c: string[]): V3[] => c.map(hex);
 
 const GRASS = ramp('#121b2e', '#18243b', '#1e2d48', '#253755', '#2c4262', '#344e70', '#3d5b7e', '#4c6a8c');
 const LEAVES = ramp('#10121f', '#171a2c', '#1f2339', '#292d48', '#343857', '#414466', '#535475', '#6c6b8c');
-const EARTH_GROUND = ramp('#1f141b', '#2a1b24', '#35212e', '#412938', '#4e3043', '#5b384e', '#6a415a', '#7b4a69');
+const EARTH_GROUND = ramp('#1e1518', '#281c20', '#332328', '#3e2b31', '#4c333a', '#593c44', '#66444f', '#774f5b');
 const EARTH = ramp('#1d1420', '#2b1b2b', '#3d2338', '#532d47', '#6b3a57', '#844a66', '#a05f76', '#bd7a86');
 /** straw, thatch, grain, sand: the peach (#F8B195) dimmed by the night */
 const STRAW = ramp('#1e1822', '#2e2430', '#463540', '#62494f', '#806160', '#a07c72', '#c39b86', '#e3bb9c', '#f6caa8');
