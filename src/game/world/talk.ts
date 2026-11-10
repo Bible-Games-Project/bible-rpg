@@ -23,7 +23,8 @@ export interface Talker {
  * lines go on by themselves and cannot be skipped; walking off too far
  * pauses it before the next line, the box says to come back and the
  * objective arrow points at the one they were talking with (`away`).
- * Whoever is speaking turns to look at a player who walks about. In
+ * Whoever is speaking, and the one they talk with, turn to look at a
+ * player who walks about. In
  * cutscenes the player is held instead (the scenes' `mayWalk`).
  */
 export class Conversation {
@@ -51,15 +52,21 @@ export class Conversation {
       return;
     }
     if (player.moving) this.moved = true;
-    // the one speaking looks at a player who walks about (a staged look is kept until then)
-    const npc = d.speaker ? cast(d.speaker) : null;
-    if (!this.moved || !npc || npc === player || npc.scripted || npc.moving || !npc.visible) return;
-    const dx = player.x - npc.x;
-    const dy = player.y - npc.y;
-    if (Math.hypot(dx, dy) < 4) return;
-    const was = npc.facing;
-    npc.faceVector(dx, dy);
-    if (npc.facing !== was) npc.refresh(true);
+    // the one speaking, and the one they talk with, look at a player who
+    // walks about (a staged look is kept until then): God speaking to Adam
+    // turns to follow him (the maintainer)
+    if (!this.moved) return;
+    const speaker = d.speaker ? cast(d.speaker) : null;
+    const listener = partner ? cast(partner.id) : null;
+    for (const npc of [speaker, listener === speaker ? null : listener]) {
+      if (!npc || npc === player || npc.scripted || npc.moving || !npc.visible) continue;
+      const dx = player.x - npc.x;
+      const dy = player.y - npc.y;
+      if (Math.hypot(dx, dy) < 4) continue;
+      const was = npc.facing;
+      npc.faceVector(dx, dy);
+      if (npc.facing !== was) npc.refresh(true);
+    }
   }
 
   /** The one the player talks with in these lines: the first speaker in the scene other than the player. */

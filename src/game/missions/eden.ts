@@ -448,7 +448,7 @@ const m04: MissionDef = {
     void w.walk(w.god, GOD_TO_OAK, 90);
     await useOnce(w, { id: 'rest', at: POINTS.restSpot, radius: 80, prompt: () => t('prompt.rest') });
 
-    w.cutscene(true);
+    w.cutscene(true, true); // a cinematic: the player is held (the maintainer)
     await w.walk(w.adam, POINTS.restSpot);
     w.face(w.adam, 'down');
     w.sleeping(true);
@@ -590,7 +590,7 @@ const m06: MissionDef = {
     w.objective(step('m06', 'go'), POINTS.eveSerpent);
     await w.waitZone('forbidden');
 
-    w.cutscene(true);
+    w.cutscene(true, true); // a cinematic: the player is held (the maintainer)
     w.music('tension');
     await Promise.all([w.walk(w.eve, POINTS.eveSerpent), w.walk(w.adam, POINTS.adamSerpent)]);
     w.face(w.eve, 'up');
@@ -814,7 +814,7 @@ const m10: MissionDef = {
     w.objective(step('m10', 'leave'), POINTS.exit);
     await w.until(() => w.player().x > BOUNDS.right + 40);
 
-    w.cutscene(true);
+    w.cutscene(true, true); // a cinematic: the player is held (the maintainer)
     const p = w.player();
     const o = other(w);
     await Promise.all([w.walk(p, [POINTS.ending[0] - 40, POINTS.exit[1] - 12], 110), w.walk(o, [POINTS.ending[0] - 90, POINTS.exit[1] + 22], 110)]);

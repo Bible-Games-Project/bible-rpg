@@ -76,6 +76,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private canSwitch = false;
   private following = false;
   private control = true;
+  /** a cinematic: the player is held even in its dialogues (cutscene(true, true)) */
+  private held = false;
   private talk = new Conversation();
   /** an interaction is being handled (separate from cutscenes, which own `control`) */
   private busy = false;
@@ -489,13 +491,21 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   }
 
   /**
-   * The player may walk: in dialogues and narration too (at half pace in a
-   * dialogue, world/talk.ts), but not in cutscenes (the maintainer,
-   * 2026-11-10), nor while doing something (digging…) until it is talked about.
+   * The player may walk (the maintainer, 2026-11-10): in every dialogue and
+   * narration too, cutscenes included, at a slow walk (`talking`), but not
+   * in a cinematic (`held`: the eating of the fruit, Adam asleep, the end of
+   * Eden; the creation has its own screen), nor in a cutscene between its
+   * lines, nor while doing something (digging…) until it is talked about.
    */
   private mayWalk(): boolean {
+    if (this.held) return false;
+    return this.talking() || (this.control && !this.busy);
+  }
+
+  /** a dialogue or a narration is showing: walking slowly, never running */
+  private talking(): boolean {
     const d = ui().dialogue;
-    return this.control && (!this.busy || d.open || d.narrating);
+    return d.open || d.narrating;
   }
 
   /** The actor of a speaker's id, if they are in the scene. */
@@ -551,8 +561,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
 
   // ---------------------------------------------------------------- staging
 
-  cutscene(on: boolean): void {
+  cutscene(on: boolean, hold = false): void {
     this.control = !on;
+    this.held = on && hold;
     if (on) {
       this.adam.stop();
       this.eve.stop();
@@ -1252,8 +1263,9 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     const canMove = this.mayWalk() && !p.scripted && input.movementAllowed(this.layer);
     if (canMove) {
       const v = input.moveVector();
+      this.keepInView(p, v);
       // Shift: run; talking, only a slow walk (the maintainer)
-      const speed = CHARACTERS[this.active].speed * (ui().dialogue.open ? TALK_PACE : input.isDown('run') ? RUN : 1);
+      const speed = CHARACTERS[this.active].speed * (this.talking() ? TALK_PACE : input.isDown('run') ? RUN : 1);
       p.move(v.x * speed, v.y * speed);
       if (p.moving) {
         // in time with the feet coming down
@@ -1279,6 +1291,13 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     // river sound when near the water
     const rd = this.terrain.riverDistance(p.x, p.y);
     audio.setWaterLevel(1 - Math.min(1, Math.max(0, rd) / 380));
+  }
+
+  /** Walking during a cutscene that moved the camera away, it comes back to the player. */
+  private keepInView(p: Actor, v: { x: number; y: number }): void {
+    if (this.control || (!v.x && !v.y)) return;
+    const cam = this.cameras.main as Phaser.Cameras.Scene2D.Camera & { _follow: unknown };
+    if (cam._follow !== p.sprite && !cam.panEffect.isRunning) this.cameraFollow();
   }
 
   private updateFollower(dt: number): void {

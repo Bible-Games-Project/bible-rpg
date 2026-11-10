@@ -55,7 +55,8 @@ export interface WorldApi {
   wait(ms: number): Promise<void>;
 
   // staging
-  cutscene(on: boolean): void;
+  /** A staged scene; the player still walks in its dialogues, unless `hold` (a cinematic: the maintainer, 2026-11-10). */
+  cutscene(on: boolean, hold?: boolean): void;
   show(actor: Actor, at: Pt, facing?: Facing): void;
   hide(actor: Actor): void;
   walk(actor: Actor, to: Pt | Pt[], speed?: number): Promise<void>;
