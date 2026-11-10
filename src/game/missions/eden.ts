@@ -590,8 +590,7 @@ const m06: MissionDef = {
     w.objective(step('m06', 'go'), POINTS.eveSerpent);
     await w.waitZone('forbidden');
 
-    // the one scene, with the creation, where the player is held (the maintainer)
-    w.cutscene(true, true);
+    w.cutscene(true);
     w.music('tension');
     await Promise.all([w.walk(w.eve, POINTS.eveSerpent), w.walk(w.adam, POINTS.adamSerpent)]);
     w.face(w.eve, 'up');

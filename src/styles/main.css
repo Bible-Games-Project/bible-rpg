@@ -1305,6 +1305,15 @@ select:focus-visible {
   color: var(--ivory-dim);
 }
 
+/* the player walked away: the conversation waits, the box dims, the hint says to come back */
+.dialogue.away .text {
+  opacity: 0.55;
+}
+
+.dialogue.away .controls-hint {
+  color: var(--gold);
+}
+
 /* ---------------------------------------------------------------- puzzle */
 
 .puzzle {

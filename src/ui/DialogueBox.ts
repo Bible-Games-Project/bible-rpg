@@ -1,5 +1,5 @@
 import { audio } from '../core/audio';
-import { input, KEY_LABELS, type InputLayer } from '../core/input';
+import { input, type InputLayer } from '../core/input';
 import { graphemes, t } from '../core/i18n';
 import { settings, TEXT_SPEED_CPS } from '../core/settings';
 import { voices } from '../core/voices';
@@ -8,6 +8,12 @@ import { h } from './dom';
 import { PortraitAnimator } from './PortraitAnimator';
 
 const sleep = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+
+/** a line without a voice stays this long per character, plus READ_PAUSE */
+const READ_MS = 55;
+const READ_PAUSE = 1200;
+/** the pause after a line, before the next */
+const LINE_GAP = 450;
 
 export interface Line {
   speaker: string;            // character id, or 'narrator'
@@ -20,12 +26,12 @@ export interface Line {
 
 /**
  * Dialogue with an animated portrait above a text box. The text is
- * revealed progressively; the first press shows the whole line, the next
- * press continues. The player can walk meanwhile (the maintainer,
- * 2026-11-09; a scene holds them itself where it must). A line with a
- * recorded voice is spoken (instead of the reveal's blips) and faded out when
- * the player moves on. A narrated line can also be told without holding the
- * player (`narrate`).
+ * revealed progressively and goes on by itself: once its recorded voice has
+ * been said (instead of the reveal's blips), or after the time to read it.
+ * It cannot be skipped (the maintainer, 2026-11-10). The player can walk
+ * meanwhile (the scene slows them and holds them in cutscenes); one who
+ * walks away pauses it before the next line (`setAway`). A narrated line
+ * can also be told without holding the player (`narrate`).
  */
 export class DialogueBox {
   private root: HTMLElement;
@@ -58,6 +64,8 @@ export class DialogueBox {
   narrating = false;
   /** who is saying the line on screen (a character id, 'narrator'), or null */
   speaker: string | null = null;
+  /** the player has walked away from whoever they are talking with: the next line waits */
+  private away = false;
 
   constructor(host: HTMLElement, private onPause: () => void) {
     this.frame = h('div', { class: 'portrait-frame panel' }, this.portrait.canvas);
@@ -68,15 +76,14 @@ export class DialogueBox {
     this.hintEl = h('div', { class: 'controls-hint' });
     const box = h('div', { class: 'box panel' }, h('div', { class: 'speaker' }, this.nameEl, this.refEl), this.textEl, this.nextEl, this.hintEl);
     this.root = h('div', { class: 'dialogue', hidden: true, role: 'dialog', 'aria-label': t('dialogue.next') }, this.frame, box);
-    box.addEventListener('click', () => this.advance());
     host.append(this.root);
     this.layer = {
       modal: true,
       allowMovement: true,
       captureKeys: true,
       onAction: (a) => {
-        if (a === 'interact') this.advance();
-        else if (a === 'pause') this.onPause();
+        // nothing skips a line (the maintainer)
+        if (a === 'pause') this.onPause();
         return true;
       },
     };
@@ -185,7 +192,30 @@ export class DialogueBox {
       return;
     }
     this.passiveLine = false;
-    void this.present(line, no);
+    void this.tell(line, no);
+  }
+
+  /** A line of a dialogue, then the next by itself, never while the player is away. */
+  private async tell(line: Line, no: number): Promise<void> {
+    const started = performance.now();
+    const said = await this.present(line, no);
+    if (no !== this.lineNo) return;
+    if (!said) await sleep(Math.max(0, this.chars.length * READ_MS + READ_PAUSE - (performance.now() - started)));
+    if (no !== this.lineNo) return;
+    if (this.revealing) this.finishLine();
+    await sleep(LINE_GAP);
+    while (this.away && no === this.lineNo) await sleep(100);
+    if (no === this.lineNo) this.nextLine();
+  }
+
+  /**
+   * The player walked away from `name` (the one they are talking with), or
+   * came back (null): the box says so, and the next line waits for them.
+   */
+  setAway(name: string | null): void {
+    this.away = !!name;
+    this.root.classList.toggle('away', this.away);
+    this.hintEl.textContent = name ? t('dialogue.comeBack', { name }) : '';
   }
 
   /** Shows a line, revealing its text; resolves once its voice has been
@@ -209,8 +239,6 @@ export class DialogueBox {
     this.acc = 0;
     this.textEl.textContent = '';
     this.nextEl.hidden = true;
-    const touch = document.documentElement.classList.contains('touch-ui');
-    this.hintEl.textContent = this.passiveLine ? '' : touch ? t('dialogue.tapHint') : t('dialogue.skipHint', { key: KEY_LABELS.interact });
     this.root.classList.toggle('passive', this.passiveLine);
     this.voiceLength = 0;
     const voiced = !!line.voice && voices.has(line.voice, line.text);
@@ -251,7 +279,7 @@ export class DialogueBox {
     this.shown = this.chars.length;
     this.textEl.textContent = this.chars.join('');
     if (!this.speaking) this.portrait.setTalking(false);
-    this.nextEl.hidden = this.passiveLine;
+    this.nextEl.hidden = true;
   }
 
   /** Plays the line's recorded voice; the portrait talks until it ends.
@@ -279,16 +307,6 @@ export class DialogueBox {
     this.speaking = null;
   }
 
-  advance(): void {
-    if (!this.open) return;
-    if (this.revealing) {
-      this.finishLine();
-      return;
-    }
-    audio.play('uiMove', { volume: 0.6 });
-    this.nextLine();
-  }
-
   /** Close at once (e.g. when leaving the game); resolves the pending show(). */
   dismiss(): void {
     if (this.narrating) {
@@ -306,6 +324,7 @@ export class DialogueBox {
     this.lineNo++;
     this.open = false;
     this.speaker = null;
+    this.setAway(null);
     this.conceal();
     input.remove(this.layer);
     this.portrait.stop();

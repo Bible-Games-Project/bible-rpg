@@ -21,7 +21,7 @@ import { addShadow, setShadowLight } from './world/shadows';
 import { GodLight } from './world/GodLight';
 import { crackTexture } from './world/GroundCrack';
 import { ObjectiveMarkers } from './world/ObjectiveMarkers';
-import { TalkFollow } from './world/talkFollow';
+import { Conversation, TALK_PACE } from './world/talk';
 import { Terrain } from './world/Terrain';
 import { WorldObjects, type TreeInstance } from './world/WorldObjects';
 import type { InteractSpec, ObjectiveOptions, ObjectiveTarget, TimeOfDay, WorldApi } from './WorldApi';
@@ -76,9 +76,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private canSwitch = false;
   private following = false;
   private control = true;
-  /** the player is held still (only the scenes that ask for it: cutscene(true, true)) */
-  private held = false;
-  private talk = new TalkFollow();
+  private talk = new Conversation();
   /** an interaction is being handled (separate from cutscenes, which own `control`) */
   private busy = false;
   private interactions: InteractSpec[] = [];
@@ -429,7 +427,12 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     }
     this.player().stop();
     this.facePartners(lines);
-    await ui().dialogue.show(lines);
+    this.talk.partner = Conversation.partnerOf(lines.map((l) => l.speaker), this.player(), (id) => this.castOf(id));
+    try {
+      await ui().dialogue.show(lines);
+    } finally {
+      this.talk.partner = null;
+    }
   }
 
   /** During dialogue, the speakers turn towards each other. */
@@ -486,14 +489,18 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   }
 
   /**
-   * The player may walk: everywhere, in dialogues, narration and cutscenes
-   * too (the maintainer, 2026-11-09), except in the scenes that hold them
-   * (the creation, which has its own screen, and the eating of the fruit)
-   * and while they are doing something (digging…) until it is talked about.
+   * The player may walk: in dialogues and narration too (at half pace in a
+   * dialogue, world/talk.ts), but not in cutscenes (the maintainer,
+   * 2026-11-10), nor while doing something (digging…) until it is talked about.
    */
   private mayWalk(): boolean {
     const d = ui().dialogue;
-    return !this.held && (!this.busy || d.open || d.narrating);
+    return this.control && (!this.busy || d.open || d.narrating);
+  }
+
+  /** The actor of a speaker's id, if they are in the scene. */
+  private castOf(id: string): Actor | null {
+    return id === 'adam' ? this.adam : id === 'eve' ? this.eve : id === 'god' ? this.god : id === 'serpent' ? this.serpent : null;
   }
 
   private async useInteract(spec: InteractSpec): Promise<void> {
@@ -544,9 +551,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
 
   // ---------------------------------------------------------------- staging
 
-  cutscene(on: boolean, hold = false): void {
+  cutscene(on: boolean): void {
     this.control = !on;
-    this.held = on && hold;
     if (on) {
       this.adam.stop();
       this.eve.stop();
@@ -1246,9 +1252,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     const canMove = this.mayWalk() && !p.scripted && input.movementAllowed(this.layer);
     if (canMove) {
       const v = input.moveVector();
-      this.keepInView(p, v);
-      // Shift: run
-      const speed = CHARACTERS[this.active].speed * (input.isDown('run') ? RUN : 1);
+      // Shift: run; talking, only a slow walk (the maintainer)
+      const speed = CHARACTERS[this.active].speed * (ui().dialogue.open ? TALK_PACE : input.isDown('run') ? RUN : 1);
       p.move(v.x * speed, v.y * speed);
       if (p.moving) {
         // in time with the feet coming down
@@ -1260,7 +1265,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       p.stop();
     }
     this.updateFollower(dt);
-    this.updateTalker(p);
+    this.talk.update(p, (id) => this.castOf(id));
     for (const a of [this.adam, this.eve, this.god, this.serpent]) if (!a.scripted) a.refresh();
     this.animals.update(time, dt);
     const cam = this.cameras.main;
@@ -1276,27 +1281,11 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     audio.setWaterLevel(1 - Math.min(1, Math.max(0, rd) / 380));
   }
 
-  /** Adam or Eve, talking to the player, walks after them (TalkFollow);
-   * not while following them anyway. God and the serpent stay put. */
-  private updateTalker(p: Actor): void {
-    const id = ui().dialogue.speaker;
-    let npc = id === 'adam' ? this.adam : id === 'eve' ? this.eve : null;
-    if (npc && npc === this.other() && this.following && this.canMove()) npc = null;
-    this.talk.update(npc, p);
-  }
-
-  /** Walking off during a cutscene, the camera comes back to the player. */
-  private keepInView(p: Actor, v: { x: number; y: number }): void {
-    if (!v.x && !v.y) return;
-    const cam = this.cameras.main as Phaser.Cameras.Scene2D.Camera & { _follow: unknown };
-    if (cam._follow !== p.sprite && !cam.panEffect.isRunning) this.cameraFollow();
-  }
-
   private updateFollower(dt: number): void {
     const leader = this.player();
     const f = this.other();
     if (!this.following || !f.visible || f.scripted || !this.canMove()) {
-      if (!f.scripted && f !== this.talk.walker) f.stop();
+      if (!f.scripted) f.stop();
       return;
     }
     const dist = Math.hypot(leader.x - f.x, leader.y - f.y);
@@ -1371,9 +1360,12 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
 
   /** Where the objective is (`at`) and where its arrow points (`mark`). */
   private objectivePoints(): { at: Pt; mark: Pt }[] {
+    const toPt = (v: Pt | Actor) => (Array.isArray(v) ? { at: v, mark: v } : { at: [v.x, v.y] as Pt, mark: [v.x, v.topY() - 4] as Pt });
+    // walked away from a conversation: back to the one they were talking with
+    const away = this.talk.away;
+    if (away) return [away instanceof Actor ? toPt(away) : { at: [away.x, away.y], mark: [away.x, away.y - 90] }];
     const tg = this.objectiveTarget;
     if (!tg) return [];
-    const toPt = (v: Pt | Actor) => (Array.isArray(v) ? { at: v, mark: v } : { at: [v.x, v.y] as Pt, mark: [v.x, v.topY() - 4] as Pt });
     if (typeof tg === 'function') return tg().map(toPt);
     return [toPt(tg as Pt | Actor)];
   }
@@ -1381,7 +1373,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private updateObjectiveIndicator(time: number): void {
     const pts = this.objectivePoints();
     const hud = ui().hud;
-    if (!pts.length || !this.canMove()) {
+    if (!pts.length || (!this.canMove() && !this.talk.away)) {
       hud.setArrow(null);
       this.markers.hide(time);
       return;
