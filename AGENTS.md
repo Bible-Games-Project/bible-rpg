@@ -345,15 +345,17 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   eats). A skipped voice fades out over 0.3 s, and the box itself fades in
   and out over 0.3 s (`reveal`/`conceal`). The serpent hisses, then speaks
   (a pause after `sfx('hiss')`).
-- Players walk during every dialogue, narration and cutscene too (the
-  maintainer, 2026-11-09; `mayWalk` in both scenes, the dialogue's input
-  layer allows movement). Only `w.cutscene(true, true)` holds them: in Eden
-  just the eating of the fruit (m06) and the creation (its own screen);
-  Cain and Abel never. An interaction's action (digging…) holds them until
-  it talks. Whoever is speaking (Adam, Eve, Cain, Abel; not God or the
-  serpent) walks after a player who walks off, at a walk, and looks at them
-  (`world/talkFollow.ts`, `DialogueBox.speaker`); the camera comes back to
-  the player when they walk off during a cutscene (`keepInView`).
+- Dialogues (the maintainer, 2026-11-10): the lines go on by themselves
+  and cannot be skipped (no E, no click; `DialogueBox.tell`). The player
+  may walk in a dialogue or narration, at half pace and never running
+  (`TALK_PACE`, `mayWalk` in both scenes); in cutscenes
+  (`w.cutscene(true)`) they are held. Walking more than 240 px from the
+  one they talk with (the first speaker in the scene other than the player,
+  `Conversation.partnerOf`; Adam sitting counts) pauses the conversation
+  before the next line: the box dims and says `dialogue.comeBack`, the
+  objective arrow points at that person, and it goes on once the player is
+  back within 150 px (`world/talk.ts`, `DialogueBox.setAway`). NPCs never
+  walk after the player; the one speaking only turns to look at them.
 - What Adam picks up he carries in his hand until it has served (the stick,
   the seeds, the gourd empty then full) and then sets it down beside him
   (`putDown`, `dropProp`). Seeds are gathered one press at a time. Adam
