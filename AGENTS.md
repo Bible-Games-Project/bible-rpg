@@ -347,15 +347,20 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   (a pause after `sfx('hiss')`).
 - Dialogues (the maintainer, 2026-11-10): the lines go on by themselves
   and cannot be skipped (no E, no click; `DialogueBox.tell`). The player
-  may walk in a dialogue or narration, at half pace and never running
-  (`TALK_PACE`, `mayWalk` in both scenes); in cutscenes
-  (`w.cutscene(true)`) they are held. Walking more than 240 px from the
-  one they talk with (the first speaker in the scene other than the player,
-  `Conversation.partnerOf`; Adam sitting counts) pauses the conversation
-  before the next line: the box dims and says `dialogue.comeBack`, the
-  objective arrow points at that person, and it goes on once the player is
-  back within 150 px (`world/talk.ts`, `DialogueBox.setAway`). NPCs never
-  walk after the player; the one speaking only turns to look at them.
+  walks in every dialogue and narration, cutscenes included, at half pace
+  and never running (`TALK_PACE`, `mayWalk`/`talking` in both scenes);
+  between a cutscene's lines they wait. Cinematics hold them all through:
+  `w.cutscene(true, true)` (Eden: Adam asleep in m04, the eating of the
+  fruit in m06, the end in m10; the creation has its own screen; Cain and
+  Abel none). Walking off in a cutscene brings the camera back
+  (`keepInView`). Walking more than 240 px from the one they talk with
+  (the first speaker in the scene other than the player,
+  `Conversation.partnerOf`; Adam sitting counts), once they have been
+  within 240 px of them in that conversation, pauses it before the next
+  line: the box dims and says `dialogue.comeBack`, the objective arrow
+  points at that person, and it goes on once the player is back within
+  150 px (`world/talk.ts`, `DialogueBox.setAway`). NPCs never walk after
+  the player; the one speaking and the one spoken to turn to look at them.
 - What Adam picks up he carries in his hand until it has served (the stick,
   the seeds, the gourd empty then full) and then sets it down beside him
   (`putDown`, `dropProp`). Seeds are gathered one press at a time. Adam
