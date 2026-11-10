@@ -33,6 +33,9 @@ export class Conversation {
   /** the player walked away from them: the arrow points back */
   away: Talker | null = null;
   private moved = false;
+  /** the player has been close to the partner in this conversation: only then can walking off pause it
+   * (God calling from afar, or a held cinematic, must not wait for them) */
+  private near: Talker | null = null;
 
   /** Every frame; `cast` gives the actor of a speaker's id. */
   update(player: Actor, cast: (id: string) => Actor | null): void {
@@ -41,7 +44,10 @@ export class Conversation {
     let away = false;
     if (partner) {
       const dist = Math.hypot(player.x - partner.x, player.y - partner.y);
-      away = this.away ? dist > BACK : dist > AWAY;
+      if (dist <= AWAY) this.near = partner;
+      away = this.near === partner && (this.away ? dist > BACK : dist > AWAY);
+    } else {
+      this.near = null;
     }
     if (away !== !!this.away) {
       this.away = away ? partner : null;
