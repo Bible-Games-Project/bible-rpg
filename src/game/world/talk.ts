@@ -3,8 +3,6 @@ import { CHARACTERS } from '../../data/characters';
 import { ui } from '../bridge';
 import type { Actor } from './Actor';
 
-/** walking during a conversation: at half pace, never running (the maintainer) */
-export const TALK_PACE = 0.5;
 /** this far from the one they talk with, the conversation waits… */
 const AWAY = 240;
 /** …until they come this close again */

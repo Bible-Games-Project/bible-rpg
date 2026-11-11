@@ -13,7 +13,7 @@ import { openNamingPuzzle } from '../ui/NamingPuzzle';
 import { ui } from './bridge';
 import { ART_RESOLUTION, pixelRatio } from './display';
 import { MANIFEST, sized, textureScale } from './manifest';
-import { Actor, DEPTH_GROUND, DEPTH_OVERLAY, type Facing } from './world/Actor';
+import { Actor, DEPTH_GROUND, DEPTH_OVERLAY, PLAYER_WALK, type Facing } from './world/Actor';
 import { Animals } from './world/Animals';
 import { Ambience } from './world/Ambience';
 import { Atmosphere } from './world/Atmosphere';
@@ -21,7 +21,7 @@ import { addShadow, setShadowLight } from './world/shadows';
 import { GodLight } from './world/GodLight';
 import { crackTexture } from './world/GroundCrack';
 import { ObjectiveMarkers } from './world/ObjectiveMarkers';
-import { Conversation, TALK_PACE } from './world/talk';
+import { Conversation } from './world/talk';
 import { Terrain } from './world/Terrain';
 import { WorldObjects, type TreeInstance } from './world/WorldObjects';
 import type { InteractSpec, ObjectiveOptions, ObjectiveTarget, TimeOfDay, WorldApi } from './WorldApi';
@@ -1264,8 +1264,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     if (canMove) {
       const v = input.moveVector();
       this.keepInView(p, v);
-      // Shift: run; talking, only a slow walk (the maintainer)
-      const speed = CHARACTERS[this.active].speed * (this.talking() ? TALK_PACE : input.isDown('run') ? RUN : 1);
+      // Shift: run, never while talking (the maintainer)
+      const speed = CHARACTERS[this.active].speed * (!this.talking() && input.isDown('run') ? RUN : PLAYER_WALK);
       p.move(v.x * speed, v.y * speed);
       if (p.moving) {
         // in time with the feet coming down
@@ -1323,7 +1323,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     const gap = Math.hypot(dx, dy);
     if (dist > 64 || gap > 30) {
       // keep up with a leader who runs
-      const sp = Math.max(CHARACTERS[f.id].speed, leader.pace) * (dist > 160 ? 1.1 : gap < 60 ? 0.6 : 0.95);
+      const sp = Math.max(CHARACTERS[f.id].speed * PLAYER_WALK, leader.pace) * (dist > 160 ? 1.1 : gap < 60 ? 0.6 : 0.95);
       const before = { x: f.x, y: f.y };
       f.move((dx / gap) * sp, (dy / gap) * sp);
       this.followStuck = Math.hypot(f.x - before.x, f.y - before.y) < 0.2 ? this.followStuck + dt : 0;

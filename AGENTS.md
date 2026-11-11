@@ -228,7 +228,10 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   view the browser can still call the pointer coarse and the game was drawn
   turned at the left until a reload. `onViewChange` measures again on
   resize, pointer, pixel-ratio change and when a chapter begins.
-- Walk timing: the eight-frame walks play at `WALK_FPS` 15 at the player's
+- The player walks a quarter slower than the character `speed`, feet
+  with it (`PLAYER_WALK` 0.75 in `Actor.ts`, the maintainer 2026-11-11, for
+  every playable character); running (`RUN`) is as before. Followers match it.
+$1 play at `WALK_FPS` 15 at the player's
   speed (`WALK_PACE` 170 px/s in `Actor.ts`, `speed` in
   `src/data/characters.ts`); any other speed scales the animation with it,
   so feet and ground keep pace (the maintainer saw them not matching).
@@ -361,8 +364,9 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   (a pause after `sfx('hiss')`).
 - Dialogues (the maintainer, 2026-11-10): the lines go on by themselves
   and cannot be skipped (no E, no click; `DialogueBox.tell`). The player
-  walks in every dialogue and narration, cutscenes included, at half pace
-  and never running (`TALK_PACE`, `mayWalk`/`talking` in both scenes);
+  walks in every dialogue and narration, cutscenes included, at the
+  usual walk but never running (2026-11-11: half pace was dropped;
+  `mayWalk`/`talking` in both scenes);
   between a cutscene's lines they wait. Cinematics hold them all through:
   `w.cutscene(true, true)` (Eden: Adam asleep in m04, the eating of the
   fruit in m06, the end in m10; the creation has its own screen; Cain and

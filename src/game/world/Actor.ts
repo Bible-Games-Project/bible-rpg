@@ -12,6 +12,8 @@ export const DEPTH_OVERLAY = 1000000;
  * rate: the player's walking speed. Slower or faster walks play it slower or
  * faster, so the feet keep pace with the ground. */
 export const WALK_PACE = 170;
+/** the player walks a quarter slower than the character speed, feet with it; running is unchanged (the maintainer) */
+export const PLAYER_WALK = 0.75;
 /** How far below the bottom of the fist a held thing ends (world px): the
  * fist closes around its lower part. */
 const HELD_BELOW_FIST = 3;

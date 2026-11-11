@@ -12,11 +12,11 @@ import type { Line } from '../../ui/DialogueBox';
 import { ui } from '../bridge';
 import { ART_RESOLUTION, pixelRatio } from '../display';
 import { MANIFEST, sized, textureScale } from '../manifest';
-import { Actor, DEPTH_OVERLAY, DEPTH_SHADOW, type Facing } from '../world/Actor';
+import { Actor, DEPTH_OVERLAY, DEPTH_SHADOW, PLAYER_WALK, type Facing } from '../world/Actor';
 import { Atmosphere } from '../world/Atmosphere';
 import { GodLight } from '../world/GodLight';
 import { ObjectiveMarkers } from '../world/ObjectiveMarkers';
-import { Conversation, TALK_PACE, type Talker } from '../world/talk';
+import { Conversation, type Talker } from '../world/talk';
 import type { InteractSpec, ObjectiveOptions, ObjectiveTarget } from '../WorldApi';
 import { ART, buildCainArt, buildCainPortraits, loadCainArt } from './art';
 import { CainWorld } from './CainWorld';
@@ -1228,8 +1228,8 @@ export class CainScene extends Phaser.Scene {
     if (canMove) {
       const v = input.moveVector();
       this.keepInView(p, v);
-      // talking, only a slow walk (the maintainer)
-      const pace = this.talking() ? TALK_PACE : input.isDown('run') ? (this.driving ? 1.25 : RUN) : 1;
+      // Shift: run, never while talking (the maintainer)
+      const pace = !this.talking() && input.isDown('run') ? (this.driving ? 1.25 : RUN) : this.driving ? 1 : PLAYER_WALK;
       const speed = (this.driving ? DOG_DRIVE_SPEED : CHARACTERS[this.active].speed) * pace;
       p.move(v.x * speed, v.y * speed);
       if (p.moving && !this.driving) {
@@ -1602,7 +1602,7 @@ export class CainScene extends Phaser.Scene {
     // starts after the leader when he is a little away, stops once beside him
     if (dist > 64 || gap > (f.moving ? 16 : 30)) {
       // the speed eases from one to the next (jumping between them, Abel's legs flickered between walk and run)
-      const want = Math.max(CHARACTERS[f.id].speed, leader.pace) * (dist > 160 ? 1.1 : gap < 60 ? 0.75 : 0.95);
+      const want = Math.max(CHARACTERS[f.id].speed * PLAYER_WALK, leader.pace) * (dist > 160 ? 1.1 : gap < 60 ? 0.75 : 0.95);
       this.followSpeed += (want - this.followSpeed) * Math.min(1, dt * 4);
       const sp = Math.max(this.followSpeed, CHARACTERS[f.id].speed * 0.6);
       const before = { x: f.x, y: f.y };
