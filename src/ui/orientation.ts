@@ -37,3 +37,24 @@ export function lockLandscape(): void {
   const o = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
   void o?.lock?.('landscape')?.catch(() => undefined);
 }
+
+/**
+ * Calls `fn` whenever the app's size may have changed: a resize, a turn of
+ * the device, and also a change of pointer (touch ↔ mouse, which decides
+ * `rotated`) or of pixel ratio, which come without a resize (the
+ * maintainer, going from the phone view to the computer, got the game drawn
+ * upright at the left until a reload).
+ */
+export function onViewChange(fn: () => void): void {
+  window.addEventListener('resize', fn);
+  window.addEventListener('orientationchange', () => window.setTimeout(fn, 150));
+  window.matchMedia?.('(pointer: coarse)').addEventListener?.('change', fn);
+  const watchRatio = () => {
+    const mq = window.matchMedia?.(`(resolution: ${window.devicePixelRatio || 1}dppx)`);
+    mq?.addEventListener?.('change', () => {
+      fn();
+      watchRatio();
+    }, { once: true });
+  };
+  watchRatio();
+}

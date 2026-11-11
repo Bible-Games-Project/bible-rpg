@@ -22,7 +22,7 @@ import { funScreen, mainMenuScreen, moreGamesScreen, storyMapScreen } from './sc
 import { openSettings } from './SettingsPanel';
 import { TouchControls } from './TouchControls';
 import { pixelRatio } from '../game/display';
-import { viewSize } from './orientation';
+import { applyOrientation, onViewChange, viewSize } from './orientation';
 
 /**
  * The application shell: DOM screens (menu, story path, Fun, More Games),
@@ -74,14 +74,15 @@ export class App {
       scene: [BootScene, EdenScene, CainScene],
     });
     this.assetsReady = new Promise((resolve) => this.game.events.once('assets-ready', () => resolve()));
-    const fit = () => {
-      const r = pixelRatio();
-      this.game.scale.setZoom(1 / r);
-      const { w, h } = viewSize();
-      this.game.scale.resize(Math.round(w * r), Math.round(h * r));
-    };
-    window.addEventListener('resize', fit);
-    window.addEventListener('orientationchange', () => window.setTimeout(fit, 150));
+    onViewChange(() => this.fit());
+  }
+
+  /** The game drawn at the app's size and the screen's pixel ratio. */
+  private fit(): void {
+    const r = pixelRatio();
+    this.game.scale.setZoom(1 / r);
+    const { w, h } = viewSize();
+    this.game.scale.resize(Math.round(w * r), Math.round(h * r));
   }
 
   start(): void {
@@ -145,6 +146,10 @@ export class App {
     if (key === 'cain') await buildCainPortraits();
     this.sceneKey = key;
     this.setScreen(null);
+    // measured again as it begins: a size missed while in the menus would
+    // leave the game drawn at the old one (the maintainer)
+    applyOrientation();
+    this.fit();
     // the headphones note and the controls open the first chapter only
     if (key === 'eden') await this.preGame();
     this.playing = true;

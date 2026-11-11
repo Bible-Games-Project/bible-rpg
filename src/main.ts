@@ -2,7 +2,7 @@ import './styles/main.css';
 import { applyDocumentLanguage } from './core/i18n';
 import { settings } from './core/settings';
 import { App } from './ui/App';
-import { applyOrientation, viewSize } from './ui/orientation';
+import { applyOrientation, onViewChange, viewSize } from './ui/orientation';
 import { setOverlayHost } from './ui/overlays';
 import { preloadPortraits } from './ui/PortraitAnimator';
 import { voices } from './core/voices';
@@ -31,8 +31,7 @@ function applyDocumentSettings(): void {
 
 applyDocumentSettings();
 settings.on('change', applyDocumentSettings);
-window.addEventListener('resize', applyUiScale);
-window.addEventListener('orientationchange', () => window.setTimeout(applyUiScale, 150));
+onViewChange(applyUiScale);
 
 const host = document.getElementById('ui')!;
 setOverlayHost(host);
