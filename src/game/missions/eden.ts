@@ -64,13 +64,22 @@ function pickUp(w: WorldApi, propId: string, at: Pt, item: string, n = 1): Promi
     at,
     radius: 60,
     prompt: () => t('prompt.pickUp', { name: itemName(item) }),
-    onUse: () => {
+    onUse: async () => {
+      await bendFor(w, at);
       w.hideProp(propId);
       w.sfx('pickup');
       w.give(item, n);
       w.toast(E('toasts.got', { item: itemName(item) }));
     },
   });
+}
+
+/** The player bends down to what lies at `at` (as Cain picks his crops, the
+ * maintainer); resolves with the hands lowest, they straighten up after. */
+function bendFor(w: WorldApi, at: Pt): Promise<void> {
+  const p = w.player();
+  p.face({ x: at[0], y: at[1] });
+  return p.stoop();
 }
 
 /** Leave a carried item on the ground beside the player once it has served
@@ -247,7 +256,8 @@ const m01: MissionDef = {
         at: POINTS.grain,
         radius: 80,
         prompt: () => t('prompt.gather'),
-        onUse: () => {
+        onUse: async () => {
+          await bendFor(w, POINTS.grain);
           w.sfx('seed');
           w.fx('leaves', POINTS.grain);
           w.give('seeds');
@@ -498,12 +508,13 @@ const m05: MissionDef = {
         at: POINTS.basket,
         radius: 60,
         prompt: () => t('prompt.pickUp', { name: itemName('basket') }),
-        onUse: () => {
+        onUse: async () => {
           if (w.activeId() !== 'adam') {
             w.toast(E('toasts.adamBasket', { key: KEY_LABELS.switch }));
             return;
           }
           off();
+          await bendFor(w, POINTS.basket);
           w.hideProp('basket');
           w.sfx('pickup');
           w.give('basket');

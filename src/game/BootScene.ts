@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { ARROW_CELL } from '../ui/HUD';
 import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type ShadowAsset } from './manifest';
+import { strideCharacters } from './world/strideSheets';
 
 /**
  * Loads every texture listed in the asset manifest and creates the shared
@@ -45,6 +46,8 @@ export class BootScene extends Phaser.Scene {
 
   create(): void {
     const m = MANIFEST;
+    // Adam and Eve walk, run and bend as Cain does (world/strideSheets.ts)
+    strideCharacters(this);
     for (const [id, outfits] of Object.entries(m.characters)) {
       for (const [outfit, dirs] of Object.entries(outfits)) {
         for (const [dir, a] of Object.entries(dirs)) {
@@ -54,6 +57,7 @@ export class BootScene extends Phaser.Scene {
           if (a.walk && a.walk.length) {
             this.anims.create({ key: `${key}:walk`, frames: this.anims.generateFrameNumbers(key, { frames: a.walk }), frameRate: a.walkFps ?? 8, repeat: -1 });
           }
+          if (a.run?.length) this.anims.create({ key: `${key}:run`, frames: this.anims.generateFrameNumbers(key, { frames: a.run }), frameRate: a.runFps ?? 16, repeat: -1 });
         }
       }
     }

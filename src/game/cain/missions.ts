@@ -238,7 +238,10 @@ const MISSIONS: CainMission[] = [
                 radius: 60,
                 prompt: () => t('prompt.pickUp', { name: C('items.fat') }),
                 enabled: () => !f.taken,
-                onUse: () => {
+                onUse: async () => {
+                  // he bends down for it, as Cain for his crops (the maintainer)
+                  w.abel.face({ x: at[0], y: at[1] });
+                  await w.abel.stoop();
                   f.taken = true;
                   f.img.destroy();
                   w.sfx('pickup');
@@ -339,7 +342,9 @@ const MISSIONS: CainMission[] = [
         at: [POINTS.jawbone[0], POINTS.jawbone[1] - 8],
         radius: 64,
         prompt: () => t('prompt.pickUp', { name: C('items.jawbone') }),
-        onUse: () => {
+        onUse: async () => {
+          w.cain.face({ x: POINTS.jawbone[0], y: POINTS.jawbone[1] });
+          await w.cain.stoop();
           w.showJawbone(false);
           w.sfx('pickup');
           w.give('jawbone');
