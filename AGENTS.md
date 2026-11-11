@@ -214,6 +214,20 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   no legs: his side walk is short steps of the feet under the hem with the
   lower robe swaying (the generated strides looked "horrible"). Generated
   walk strips flickered (a different drawing per frame).
+- Adam's and Eve's sheets are rebuilt at boot like Cain's
+  (`src/game/world/strideSheets.ts`, from `world/stride.ts`): the walk,
+  `:run` and the stoop/attack poses are added to every outfit and direction,
+  and Cain and Abel recolour Adam's rebuilt tunic. The side arm bands
+  (`SIDE_ARMS` there) were measured per sheet: if a sheet is redrawn,
+  measure again (`sideStride` with `WALK_CYCLE` and arm swing 0.45 gives
+  back the old walk frames). The maintainer asked that Adam, Eve and Abel
+  walk, run and pick things up as Cain does: anything picked up from the
+  ground is picked up bending (`stoop`, `bendFor` in `missions/eden.ts`);
+  fruit and leaves come from trees and are not.
+- A mouse click means a computer (`src/ui/orientation.ts`): after the phone
+  view the browser can still call the pointer coarse and the game was drawn
+  turned at the left until a reload. `onViewChange` measures again on
+  resize, pointer, pixel-ratio change and when a chapter begins.
 - Walk timing: the eight-frame walks play at `WALK_FPS` 15 at the player's
   speed (`WALK_PACE` 170 px/s in `Actor.ts`, `speed` in
   `src/data/characters.ts`); any other speed scales the animation with it,
