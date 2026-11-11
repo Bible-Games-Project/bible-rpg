@@ -5,9 +5,30 @@
  * screen asks here for the size the app really has.
  */
 
-/** Held upright on a touch screen: the app is drawn turned. */
+/** the last press came from a mouse: whatever the screen says, it is not held in the hand */
+let mouse = false;
+const watchers = new Set<() => void>();
+window.addEventListener(
+  'pointerdown',
+  (e) => {
+    const was = mouse;
+    mouse = e.pointerType === 'mouse';
+    if (mouse !== was) watchers.forEach((fn) => fn());
+  },
+  { capture: true, passive: true },
+);
+
+/** The last press came from a mouse. */
+export function usingMouse(): boolean {
+  return mouse;
+}
+
+/** Held upright on a touch screen: the app is drawn turned. A mouse click
+ * undoes it (the maintainer, back from the phone view on the computer, saw
+ * the game turned upright at the left: the browser can go on calling the
+ * pointer coarse until a reload). */
 export function rotated(): boolean {
-  const touch = window.matchMedia?.('(pointer: coarse)').matches ?? false;
+  const touch = !mouse && (window.matchMedia?.('(pointer: coarse)').matches ?? false);
   return touch && window.innerHeight > window.innerWidth;
 }
 
@@ -46,6 +67,7 @@ export function lockLandscape(): void {
  * upright at the left until a reload).
  */
 export function onViewChange(fn: () => void): void {
+  watchers.add(fn);
   window.addEventListener('resize', fn);
   window.addEventListener('orientationchange', () => window.setTimeout(fn, 150));
   window.matchMedia?.('(pointer: coarse)').addEventListener?.('change', fn);

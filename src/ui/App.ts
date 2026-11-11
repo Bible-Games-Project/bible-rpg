@@ -22,7 +22,7 @@ import { funScreen, mainMenuScreen, moreGamesScreen, storyMapScreen } from './sc
 import { openSettings } from './SettingsPanel';
 import { TouchControls } from './TouchControls';
 import { pixelRatio } from '../game/display';
-import { applyOrientation, onViewChange, viewSize } from './orientation';
+import { applyOrientation, onViewChange, usingMouse, viewSize } from './orientation';
 
 /**
  * The application shell: DOM screens (menu, story path, Fun, More Games),
@@ -166,7 +166,7 @@ export class App {
    */
   private preGame(): Promise<void> {
     return new Promise((resolve) => {
-      const touch = input.lastDevice === 'touch' || window.matchMedia('(pointer: coarse)').matches;
+      const touch = !usingMouse() && (input.lastDevice === 'touch' || window.matchMedia('(pointer: coarse)').matches);
       const el = h('div', { class: 'pregame', role: 'dialog', 'aria-modal': 'true' });
       this.host.append(el);
       const layer: InputLayer = { modal: true, allowMovement: false, captureKeys: true, onAction: () => true };

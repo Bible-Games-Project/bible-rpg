@@ -2,7 +2,7 @@ import { input } from '../core/input';
 import { settings } from '../core/settings';
 import { t } from '../core/i18n';
 import { h } from './dom';
-import { toApp } from './orientation';
+import { toApp, usingMouse } from './orientation';
 
 /**
  * On-screen stick and buttons for touch screens. Shown automatically on
@@ -81,7 +81,8 @@ export class TouchControls {
 
   private refresh(): void {
     const mode = settings.get().touchControls;
-    const touch = input.lastDevice === 'touch' || window.matchMedia?.('(pointer: coarse)').matches;
+    // a mouse click says it is a computer, even when the browser still calls the pointer coarse
+    const touch = !usingMouse() && (input.lastDevice === 'touch' || window.matchMedia?.('(pointer: coarse)').matches);
     const show = this.active && (mode === 'on' || (mode === 'auto' && touch));
     this.root.hidden = !show;
     // the HUD keeps its prompts clear of the pad (see .touch-ui in main.css)
