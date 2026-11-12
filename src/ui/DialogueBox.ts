@@ -29,8 +29,8 @@ export interface Line {
  * revealed progressively and goes on by itself: once its recorded voice has
  * been said (instead of the reveal's blips), or after the time to read it.
  * It cannot be skipped (the maintainer, 2026-11-10). The player can walk
- * meanwhile (the scene slows them and holds them in cutscenes); one who
- * walks away pauses it before the next line (`setAway`). A narrated line
+ * meanwhile (the scene stops their running and holds them in cutscenes);
+ * walking away never pauses it (the maintainer, 2026-11-12). A narrated line
  * can also be told without holding the player (`narrate`).
  */
 export class DialogueBox {
@@ -64,8 +64,6 @@ export class DialogueBox {
   narrating = false;
   /** who is saying the line on screen (a character id, 'narrator'), or null */
   speaker: string | null = null;
-  /** the player has walked away from whoever they are talking with: the next line waits */
-  private away = false;
 
   constructor(host: HTMLElement, private onPause: () => void) {
     this.frame = h('div', { class: 'portrait-frame panel' }, this.portrait.canvas);
@@ -195,7 +193,7 @@ export class DialogueBox {
     void this.tell(line, no);
   }
 
-  /** A line of a dialogue, then the next by itself, never while the player is away. */
+  /** A line of a dialogue, then the next by itself. */
   private async tell(line: Line, no: number): Promise<void> {
     const started = performance.now();
     const said = await this.present(line, no);
@@ -204,18 +202,7 @@ export class DialogueBox {
     if (no !== this.lineNo) return;
     if (this.revealing) this.finishLine();
     await sleep(LINE_GAP);
-    while (this.away && no === this.lineNo) await sleep(100);
     if (no === this.lineNo) this.nextLine();
-  }
-
-  /**
-   * The player walked away from `name` (the one they are talking with), or
-   * came back (null): the box says so, and the next line waits for them.
-   */
-  setAway(name: string | null): void {
-    this.away = !!name;
-    this.root.classList.toggle('away', this.away);
-    this.hintEl.textContent = name ? t('dialogue.comeBack', { name }) : '';
   }
 
   /** Shows a line, revealing its text; resolves once its voice has been
@@ -324,7 +311,6 @@ export class DialogueBox {
     this.lineNo++;
     this.open = false;
     this.speaker = null;
-    this.setAway(null);
     this.conceal();
     input.remove(this.layer);
     this.portrait.stop();

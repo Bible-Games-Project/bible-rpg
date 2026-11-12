@@ -1,12 +1,5 @@
-import { t } from '../../core/i18n';
-import { CHARACTERS } from '../../data/characters';
 import { ui } from '../bridge';
 import type { Actor } from './Actor';
-
-/** this far from the one they talk with, the conversation waits… */
-const AWAY = 240;
-/** …until they come this close again */
-const BACK = 150;
 
 /** Someone the player can talk with: an actor, or a figure like Adam sitting by the house. */
 export interface Talker {
@@ -18,9 +11,8 @@ export interface Talker {
 
 /**
  * A conversation the player can walk in (the maintainer, 2026-11-10): the
- * lines go on by themselves and cannot be skipped; walking off too far
- * pauses it before the next line, the box says to come back and the
- * objective arrow points at the one they were talking with (`away`).
+ * lines go on by themselves and cannot be skipped, wherever the player
+ * walks (no pause when they walk off: the maintainer, 2026-11-12).
  * Whoever is speaking, and the one they talk with, turn to look at a
  * player who walks about. In
  * cutscenes the player is held instead (the scenes' `mayWalk`).
@@ -28,29 +20,12 @@ export interface Talker {
 export class Conversation {
   /** the one the player is talking with (the scene's `lines` sets it) */
   partner: Talker | null = null;
-  /** the player walked away from them: the arrow points back */
-  away: Talker | null = null;
   private moved = false;
-  /** the player has been close to the partner in this conversation: only then can walking off pause it
-   * (God calling from afar, or a held cinematic, must not wait for them) */
-  private near: Talker | null = null;
 
   /** Every frame; `cast` gives the actor of a speaker's id. */
   update(player: Actor, cast: (id: string) => Actor | null): void {
     const d = ui().dialogue;
     const partner = d.open && this.partner?.visible ? this.partner : null;
-    let away = false;
-    if (partner) {
-      const dist = Math.hypot(player.x - partner.x, player.y - partner.y);
-      if (dist <= AWAY) this.near = partner;
-      away = this.near === partner && (this.away ? dist > BACK : dist > AWAY);
-    } else {
-      this.near = null;
-    }
-    if (away !== !!this.away) {
-      this.away = away ? partner : null;
-      d.setAway(away && partner ? t(CHARACTERS[partner.id]?.nameKey ?? partner.id) : null);
-    }
     if (!d.open) {
       this.moved = false;
       return;

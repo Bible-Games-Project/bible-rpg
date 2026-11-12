@@ -278,8 +278,7 @@
   "dialogue": {
     "next": "Next",
     "skipHint": "{key} to continue",
-    "tapHint": "Tap to continue",
-    "comeBack": "Come back to {name} to go on talking"
+    "tapHint": "Tap to continue"
   },
   "puzzle": {
     "title": "Name the Animal",

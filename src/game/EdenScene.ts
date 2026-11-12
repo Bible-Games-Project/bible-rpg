@@ -1380,9 +1380,6 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   /** Where the objective is (`at`) and where its arrow points (`mark`). */
   private objectivePoints(): { at: Pt; mark: Pt }[] {
     const toPt = (v: Pt | Actor) => (Array.isArray(v) ? { at: v, mark: v } : { at: [v.x, v.y] as Pt, mark: [v.x, v.topY() - 4] as Pt });
-    // walked away from a conversation: back to the one they were talking with
-    const away = this.talk.away;
-    if (away) return [away instanceof Actor ? toPt(away) : { at: [away.x, away.y], mark: [away.x, away.y - 90] }];
     const tg = this.objectiveTarget;
     if (!tg) return [];
     if (typeof tg === 'function') return tg().map(toPt);
@@ -1392,7 +1389,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private updateObjectiveIndicator(time: number): void {
     const pts = this.objectivePoints();
     const hud = ui().hud;
-    if (!pts.length || (!this.canMove() && !this.talk.away)) {
+    if (!pts.length || !this.canMove()) {
       hud.setArrow(null);
       this.markers.hide(time);
       return;

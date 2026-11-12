@@ -371,13 +371,8 @@ $1 play at `WALK_FPS` 15 at the player's
   `w.cutscene(true, true)` (Eden: Adam asleep in m04, the eating of the
   fruit in m06, the end in m10; the creation has its own screen; Cain and
   Abel none). Walking off in a cutscene brings the camera back
-  (`keepInView`). Walking more than 240 px from the one they talk with
-  (the first speaker in the scene other than the player,
-  `Conversation.partnerOf`; Adam sitting counts), once they have been
-  within 240 px of them in that conversation, pauses it before the next
-  line: the box dims and says `dialogue.comeBack`, the objective arrow
-  points at that person, and it goes on once the player is back within
-  150 px (`world/talk.ts`, `DialogueBox.setAway`). NPCs never walk after
+  (`keepInView`). Walking off never pauses a conversation (a pause until
+  the player came back was dropped, 2026-11-12: "que fluya"). NPCs never walk after
   the player; the one speaking and the one spoken to turn to look at them.
 - What Adam picks up he carries in his hand until it has served (the stick,
   the seeds, the gourd empty then full) and then sets it down beside him
