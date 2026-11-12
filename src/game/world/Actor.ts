@@ -21,6 +21,12 @@ const HELD_BELOW_FIST = 3;
 const WALK_CARRY_AHEAD = 11;
 /** how much further ahead a carried thing is held when running from the side (world px) */
 const RUN_CARRY_AHEAD = 6;
+/** Abel's staff (placeStaff): from the side it leans this far forward (radians) and this much more per px the hand swings ahead; the hand coming up lifts it at most this much (px) */
+const STAFF_LEAN = 0.06;
+const STAFF_SWING = 0.014;
+/** running, he carries it off the ground (px) */
+const STAFF_RUN_LIFT = 4;
+const STAFF_LIFT = 6;
 /** How much one axis must outweigh the other before a walker turns from a
  * side view to a front/back view or back (see faceVector). */
 const FACING_HOLD = 1.3;
@@ -450,8 +456,8 @@ export class Actor {
     // a character with its own running frames (Cain's trot) uses them
     // when going clearly faster than its walk
     const pace = this.stridePace ?? (this.charId ? CHARACTERS[this.charId]?.speed || WALK_PACE : WALK_PACE);
-    // (once running, it keeps running down to a little slower: Abel following at about that speed flickered between walk and run, stuck on one leg)
-    const running = !!this.charId && this.moving && this.pace > pace * (this.running ? 1.12 : 1.3) && anims.exists(`${tex}:run`);
+    // (from 1.15 its walk speed, so Abel following Cain running runs too; once running, it keeps running down to a little slower: Abel following at about that speed flickered between walk and run, stuck on one leg)
+    const running = !!this.charId && this.moving && this.pace > pace * (this.running ? 1 : 1.15) && anims.exists(`${tex}:run`);
     this.running = running;
     if (this.charId) {
       anim = `${tex}:${running ? 'run' : this.moving ? 'walk' : 'idle'}`;
@@ -572,17 +578,18 @@ export class Actor {
   }
 
   /**
-   * `staff` (Abel's crook): its foot planted on the ground beside the feet
-   * (a little ahead, from the side), leaning so the shaft passes through the
-   * hand; from the side it rocks with the arm instead of floating with it
-   * (the maintainer: the staff looked badly anchored). `origin` is its foot.
+   * `staff` (Abel's crook): the shaft always passes through his hand, its
+   * foot at the ground beside the feet. Walking and running it goes with the
+   * hand (the maintainer: it did not match the movement): carried forward and
+   * back with the arm, tilting with it, lifted a little as the hand comes up.
+   * With something in the other hand it is planted ahead instead. `origin` is
+   * its foot.
    */
   private placeStaff(x: number, y: number): void {
     const s = this.heldSprite!;
     const side = this.facing === 'left' ? -1 : this.facing === 'right' ? 1 : 0;
-    const fist = this.fist();
     let foot: [number, number];
-    let hand: [number, number];
+    let lean: number;
     // with something in the other hand, the staff is in the far hand: planted
     // ahead of the body, behind it and the near arm
     const far = !!this.offSprite && !!side;
@@ -590,16 +597,22 @@ export class Actor {
       // it goes with the body as it steps into a blow
       const [bx] = this.blowOffset();
       foot = [side * 9 + bx, -1];
-      hand = [side * 6 + bx, -34];
-    } else if (side) {
-      foot = [side * 3, 1];
-      hand = fist ?? [side * 7, -34];
+      const hand = [side * 6 + bx, -34];
+      lean = Phaser.Math.Clamp(0.7 * Math.atan2(hand[0] - foot[0], foot[1] - hand[1]), -0.2, 0.2);
     } else {
+      // the hand of this frame, and of the standing frame
+      const i = this.facing === 'down' ? 0 : 1;
+      const now = side ? this.fist() : this.frontHand(i);
+      const rest = side ? this.fist(0) : this.frontHand(i, 0);
       const k = this.facing === 'down' ? -1 : 1;
-      foot = [k * 13, this.facing === 'down' ? 2 : -2];
-      hand = [k * 12, -34];
+      const hand: [number, number] = now ?? (side ? [side * 7, -34] : [k * 12, -34]);
+      const swing = now && rest ? now[0] - rest[0] : 0;
+      const raised = (now && rest ? Phaser.Math.Clamp(rest[1] - now[1], 0, STAFF_LIFT) : 0) + (this.lastAnim.endsWith(':run') ? STAFF_RUN_LIFT : 0);
+      // from the side it leans a little forward, and more as the arm swings forward
+      lean = side ? Phaser.Math.Clamp(side * STAFF_LEAN + swing * STAFF_SWING, -0.24, 0.24) : 0;
+      const fy = (side ? 1 : this.facing === 'down' ? 2 : -2) - raised;
+      foot = [hand[0] - Math.tan(lean) * (fy - hand[1]), fy];
     }
-    const lean = Phaser.Math.Clamp(0.7 * Math.atan2(hand[0] - foot[0], foot[1] - hand[1]), -0.2, 0.2);
     // the crook faces the way they look
     const flip = this.facing === 'left';
     if (s.flipX !== flip) s.setFlipX(flip).setOrigin(1 - s.originX, s.originY);
@@ -640,11 +653,11 @@ export class Actor {
 
   /** From the front or back, the bottom of a hand (0 the left of the picture, 1 the right)
    * in the current frame (world px from the feet), when the sheet records it. */
-  private frontHand(i: 0 | 1): [number, number] | null {
+  private frontHand(i: 0 | 1, frame?: number): [number, number] | null {
     const parts = this.sprite.texture.key.split(':');
     if (parts[0] !== 'char') return null;
     const a = MANIFEST.characters[parts[1]]?.[parts[2]]?.[parts[3] as Direction];
-    const p = a?.sideHands?.[Number(this.sprite.frame.name) || 0]?.[this.sprite.flipX ? 1 - i : i];
+    const p = a?.sideHands?.[frame ?? (Number(this.sprite.frame.name) || 0)]?.[this.sprite.flipX ? 1 - i : i];
     if (!a || !p) return null;
     const s = a.scale ?? 1;
     const dx = (p[0] - a.anchorX) * s;
@@ -653,11 +666,11 @@ export class Actor {
 
   /** The bottom of the near fist in the current frame (world px from the
    * feet), when the sheet records it (side views of Adam and Eve). */
-  private fist(): [number, number] | null {
+  private fist(frame?: number): [number, number] | null {
     const parts = this.sprite.texture.key.split(':');
     if (parts[0] !== 'char') return null;
     const a = MANIFEST.characters[parts[1]]?.[parts[2]]?.[parts[3] as Direction];
-    const p = a?.hands?.[Number(this.sprite.frame.name) || 0];
+    const p = a?.hands?.[frame ?? (Number(this.sprite.frame.name) || 0)];
     if (!a || !p) return null;
     const s = a.scale ?? 1;
     const dx = (p[0] - a.anchorX) * s;

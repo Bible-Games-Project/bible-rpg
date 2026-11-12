@@ -50,6 +50,8 @@ const DASH_SLOWER = 20;
 const STAGGER = 0.3;
 const DASH = 0.65;
 const DASH_SPEED = 190;
+/** in the chase Abel's legs keep this walking pace (px/s): fleeing faster he runs */
+const ABEL_FLEE_STRIDE = 80;
 /** Abel's blood (the maintainer): drops flying from each blow, wounds that grow, a trail more frequent the more he is hurt */
 const BLOOD = 0x9a1f2c;
 const BLOOD_DARK = 0x6b1420;
@@ -1286,6 +1288,8 @@ export class CainScene extends Phaser.Scene {
     }
     this.updateFollower(dt);
     this.talk.update(p, (id) => (this.chaseState ? null : this.castOf(id)));
+    // fleeing, Abel runs (the maintainer); badly hurt (slower than this pace ×1.15) he only walks
+    this.abel.stridePace = this.chaseState ? ABEL_FLEE_STRIDE : undefined;
     this.updateChase(dt);
     this.updateFlock(dt);
     for (const a of [this.cain, this.abel, this.god, this.eve]) if (!a.scripted) a.refresh();

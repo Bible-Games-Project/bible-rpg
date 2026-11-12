@@ -66,8 +66,11 @@ const RUN = {
 };
 /** from the front and back: the leg off the ground comes up this much more */
 const FRONT_KNEE_LIFT = 7;
+/** from the front and back the body bobs less than from the side (the maintainer: running up and down it staggered) */
+const FRONT_LIFT = [2, 1, 0, 1, 2, 1, 0, 1];
 /** from the front and back the body leans over the foot on the ground, a shoulder comes up with the pumped arm and the head bobs (the maintainer: the torso was too still) */
-const FRONT_BODY = { neck: 0.25, waist: 0.6, lean: 3, shoulder: 2 };
+// only a pixel each (the maintainer on Cain running up and down: it staggered; 3 px of lean swayed the head side to side)
+const FRONT_BODY = { neck: 0.25, waist: 0.6, lean: 1, shoulder: 1 };
 /** from the front and back the forearms pump (the maintainer: the arms did not bend running up or down) */
 const FRONT_ARMS: Record<'down' | 'up', FrontArms> = {
   down: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.5, back: 0.85, inward: 3, body: FRONT_BODY },
@@ -122,7 +125,7 @@ function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm:
     }
   } else {
     // the knees: a little under the hem
-    run = walk.map((f, i) => frontRun(frames[f], a.anchorX, Math.round(fh * 0.79), FRONT_KNEE_LIFT, RUN.lift[i], FRONT_ARMS[dir === 'up' ? 'up' : 'down']));
+    run = walk.map((f, i) => frontRun(frames[f], a.anchorX, Math.round(fh * 0.79), FRONT_KNEE_LIFT, FRONT_LIFT[i], FRONT_ARMS[dir === 'up' ? 'up' : 'down']));
   }
   // bending down to pick something up: halfway, then lowest (from the side leaning forward)
   const hip: XY = [a.anchorX + pad, Math.round(fh * STOOP.hip)];
