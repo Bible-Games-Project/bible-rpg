@@ -647,7 +647,20 @@ $1 play at `WALK_FPS` 15 at the player's
 - Mission 2 is a herding game (the maintainer): the flock starts in the
   meadow east of the fold, the dog runs `DOG_AHEAD` px ahead of Abel the
   way he walks, sheep flee it and flock (`updateHerd` in CainScene); Abel's
-  staff uses the `staff` grip in Actor (planted, leaning through the hand).
+  staff uses the `staff` grip in Actor (the shaft always through his hand,
+  moving and tilting with it walking and running; the maintainer rejected
+  both floating with the arm and staying planted). Sheep move slowly calm
+  (`CALM_HERD`) and run with quicker legs only when the dog frightened them
+  (`rush`, `RUSH_LEGS`); Abel alone only makes them walk.
+- Cain strikes with the `attack` action (left click on the canvas, the
+  touch pad's ⚔ button shown while `input.setAttack(true)`); the dog's bark
+  and other sounds with numbered slots (`bark-1..3`) play through
+  `audio.variant`, one at random, never the same twice in a row. Dirt steps
+  have five slots. Abel runs in the chase (`ABEL_FLEE_STRIDE`). Characters
+  run from 1.15× their walk speed. Conversations never pause when the
+  player walks away (the maintainer: "que fluya").
+- Cain's basket of produce is generated art (`cain-basket`); the drawn one
+  did not fit the style.
 - Images: `node tools/art/gen_images.mjs run <jobs> --jobs art/prompts/cain.json
   --quality low` (gpt-image-2, ledger with `chapter`; `spent --chapter cain`).
   Node's fetch ignores the proxy: it uses undici@6 `ProxyAgent` (undici 7
