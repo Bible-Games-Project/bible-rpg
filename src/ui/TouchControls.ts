@@ -18,7 +18,7 @@ export class TouchControls {
   constructor(host: HTMLElement) {
     this.knob = h('div', { class: 'knob' });
     this.stick = h('div', { class: 'touch-stick', 'aria-hidden': 'true' }, this.knob);
-    const btn = (label: string, aria: string, action: 'interact' | 'switch' | 'pause', extra = '') => {
+    const btn = (label: string, aria: string, action: 'interact' | 'switch' | 'pause' | 'attack', extra = '') => {
       const b = h('button', { class: `btn ${extra}`, type: 'button', 'aria-label': aria }, label);
       b.addEventListener('pointerdown', (e) => {
         e.preventDefault();
@@ -31,6 +31,7 @@ export class TouchControls {
       { class: 'touch-buttons' },
       btn('☰', t('hud.pause'), 'pause', 'small-round'),
       btn('⇄', t('hud.switch'), 'switch', 'small-round'),
+      btn('⚔', t('hud.attack'), 'attack', 'attack'),
       btn('E', t('prompt.use'), 'interact'),
     );
     this.root = h('div', { class: 'touch-controls', hidden: true }, this.stick, buttons);

@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { audio, type Mood } from '../../core/audio';
-import { input, type InputLayer } from '../../core/input';
+import { input, KEY_LABELS, type InputLayer } from '../../core/input';
 import { t, tRaw, interpolate } from '../../core/i18n';
 import { settings } from '../../core/settings';
 import { voices } from '../../core/voices';
@@ -40,6 +40,8 @@ export const HITS = 5;
 /** How close Cain must be to strike, and how often he can. */
 const REACH = 62;
 const STRIKE_COOLDOWN = 0.6;
+/** The key shown for a blow: a click, or the touch pad's ⚔. */
+const attackKey = (): string => (document.documentElement.classList.contains('touch-ui') ? '⚔' : KEY_LABELS.attack);
 /** Abel's running: his pace, slower with each blow; the stagger and the dash after it. */
 const FLEE_SPEED = 112;
 const FLEE_SLOWER = 13;
@@ -207,6 +209,7 @@ export class CainScene extends Phaser.Scene {
     this.smoke = null;
     this.npcsTalk = true;
     this.chaseState = null;
+    input.setAttack(false);
     // night: faint shadows falling toward the lower left (the maintainer)
     setShadowLight(true, NIGHT_SHADOW);
     buildCainArt(this);
@@ -266,7 +269,14 @@ export class CainScene extends Phaser.Scene {
             if (this.canMove()) this.dogBark();
             return true;
           }
-          if (this.canAct() && this.currentInteract) void this.useInteract(this.currentInteract);
+          if (this.canAct() && this.currentInteract && !this.currentInteract.attack) void this.useInteract(this.currentInteract);
+          return true;
+        }
+        if (a === 'attack') {
+          // a left click or the touch ⚔ (the maintainer): a blow when Abel is in reach, else a swing at the air
+          if (!this.canAct()) return true;
+          if (this.currentInteract?.attack) void this.useInteract(this.currentInteract);
+          else if (this.chaseState) void this.swingAir();
           return true;
         }
         return a === 'switch';
@@ -292,6 +302,7 @@ export class CainScene extends Phaser.Scene {
     audio.setMood('none');
     this.runner?.stop();
     this.chaseState = null;
+    input.setAttack(false);
   }
 
   private applyZoom(): void {
@@ -993,8 +1004,25 @@ export class CainScene extends Phaser.Scene {
         prompt: () => t('cain.prompts.strike'),
         enabled: () => !!this.chaseState && this.chaseState.cooldown <= 0 && this.chaseState.mode !== 'down' && this.chaseState.mode !== 'reset',
         onUse: () => this.strike(),
+        attack: true,
       });
+      input.setAttack(true);
     });
+  }
+
+  /** A click with Abel out of reach: Cain swings the jawbone at the air. */
+  private async swingAir(): Promise<void> {
+    const s = this.chaseState;
+    if (!s || s.cooldown > 0 || s.mode === 'down' || s.mode === 'reset' || this.busy) return;
+    s.cooldown = STRIKE_COOLDOWN;
+    this.busy = true;
+    this.cain.stop();
+    audio.play('swing', { volume: 0.7 });
+    try {
+      await this.cain.attack('swing');
+    } finally {
+      this.busy = false;
+    }
   }
 
   /** Cain swings the jawbone (the maintainer: a real blow); it lands as it comes down. */
@@ -1034,6 +1062,7 @@ export class CainScene extends Phaser.Scene {
       this.healthBar.setVisible(false);
       this.chaseState = null;
       this.interactions = this.interactions.filter((i) => i.id !== 'strike');
+      input.setAttack(false);
       s.resolve();
       return;
     }
@@ -1651,7 +1680,7 @@ export class CainScene extends Phaser.Scene {
     }
     if (best !== this.currentInteract) {
       this.currentInteract = best;
-      ui().hud.setPrompt(best ? best.prompt() : null);
+      ui().hud.setPrompt(best ? best.prompt() : null, best?.attack ? attackKey() : undefined);
     }
   }
 

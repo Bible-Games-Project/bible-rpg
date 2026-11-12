@@ -2419,3 +2419,13 @@ select:focus-visible {
     font-size: var(--fs-l);
   }
 }
+
+/* the attack button only while there is something to strike (input.setAttack) */
+.touch-buttons .btn.attack {
+  display: none;
+}
+
+:root.can-attack .touch-buttons .btn.attack {
+  display: block;
+  color: #f0c8b8;
+}

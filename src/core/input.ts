@@ -6,7 +6,7 @@
  * the pressed actions, so movement can never leak into dialogue or menus.
  */
 
-export type Action = 'up' | 'down' | 'left' | 'right' | 'interact' | 'cancel' | 'pause' | 'switch' | 'run';
+export type Action = 'up' | 'down' | 'left' | 'right' | 'interact' | 'cancel' | 'pause' | 'switch' | 'run' | 'attack';
 
 const KEYMAP: Record<string, Action> = {
   ArrowUp: 'up',
@@ -41,6 +41,7 @@ export const KEY_LABELS: Record<Action, string> = {
   pause: 'Esc',
   switch: 'Tab',
   run: 'Shift',
+  attack: 'Click',
 };
 
 export interface InputLayer {
@@ -65,6 +66,12 @@ class InputManager {
     window.addEventListener('keyup', (e) => this.handleKey(e, false));
     window.addEventListener('blur', () => this.down.clear());
     window.addEventListener('touchstart', () => (this.lastDevice = 'touch'), { passive: true });
+    // a left click on the game itself attacks (the maintainer: Cain strikes with the mouse)
+    window.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0 || (e.target as HTMLElement | null)?.tagName !== 'CANVAS') return;
+      this.lastDevice = 'keyboard';
+      this.dispatch('attack');
+    });
   }
 
   private isTyping(e: KeyboardEvent): boolean {
@@ -149,6 +156,11 @@ class InputManager {
     this.virtual.x = x;
     this.virtual.y = y;
     if (x || y) this.lastDevice = 'touch';
+  }
+
+  /** Whether the world has something to attack: the touch pad shows its attack button. */
+  setAttack(on: boolean): void {
+    document.documentElement.classList.toggle('can-attack', on);
   }
 
   releaseAll(): void {

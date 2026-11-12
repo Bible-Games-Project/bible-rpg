@@ -175,6 +175,7 @@
     "pause": "Menu",
     "missions": "Missions",
     "switch": "Switch",
+    "attack": "Attack",
     "playingAs": "Playing as {name}",
     "switchTo": "Switch to {name}",
     "saved": "Progress saved",

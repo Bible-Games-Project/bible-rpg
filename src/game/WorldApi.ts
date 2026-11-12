@@ -13,6 +13,8 @@ export interface InteractSpec {
   prompt: () => string;
   enabled?: () => boolean;
   onUse: () => void | Promise<void>;
+  /** used with the attack action (a left click, the touch ⚔), not E: Cain's blows */
+  attack?: boolean;
 }
 
 /** Target(s) of the objective indicator. */
