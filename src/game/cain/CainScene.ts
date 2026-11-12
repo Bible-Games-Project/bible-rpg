@@ -89,7 +89,12 @@ const SHEEP_STRIDE = 26;
  * what they hold sits in the hand, not under it */
 const HAND_HEIGHT = 41;
 const LAMB_STRIDE = 20;
-const GRAZE_SPEED = 16;
+/** the sheep and lambs grazing, and the flock moving with no dog after it (the maintainer: slower) */
+const GRAZE_SPEED = 11;
+/** herded sheep frightened only by Abel (no bark) go this share of the dog-driven pace */
+const CALM_HERD = 0.55;
+/** how much quicker the legs of a sheep running from the dog play (share of its stride pace taken off) */
+const RUSH_LEGS = 0.35;
 
 const ITEM_ICONS: Record<string, string> = {
   produce: 'cain-basket',
@@ -110,6 +115,8 @@ interface Grazer {
   frozen: boolean;
   /** herding: how frightened it is (0 calm, 1 fleeing), fading after a bark */
   fright: number;
+  /** herding: how much of that fright comes from the dog (its bark, or the dog Abel sends): only then does it run fast, legs quicker still (the maintainer) */
+  rush: number;
   /** herding: its current speed, and whether it is in the fold */
   vx: number;
   vy: number;
@@ -794,7 +801,7 @@ export class CainScene extends Phaser.Scene {
   private flock(): void {
     const grazer = (id: string, sheet: string, at: Pt, range: number, speed: number, stridePace: number) => {
       const actor = new Actor(this, { id, x: at[0], y: at[1], sheet, body: { w: 22, h: 10 }, facing: Math.random() < 0.5 ? 'left' : 'right', stridePace });
-      return { actor, home: at, range, speed, target: null, wait: Math.random() * 3, frozen: false, fright: 0, vx: 0, vy: 0, penned: false, stuck: 0, side: 0, was: [at[0], at[1]] as Pt };
+      return { actor, home: at, range, speed, target: null, wait: Math.random() * 3, frozen: false, fright: 0, rush: 0, vx: 0, vy: 0, penned: false, stuck: 0, side: 0, was: [at[0], at[1]] as Pt };
     };
     SHEEP.forEach((p, i) => this.sheep.push(grazer(`sheep${i}`, 'animal-sheep', p, 45, GRAZE_SPEED + 6, SHEEP_STRIDE)));
     LAMBS.forEach((p, i) => this.lambs.push(grazer(`lamb${i}`, 'cain-lamb', p, 35, GRAZE_SPEED + 12, LAMB_STRIDE)));
@@ -1425,6 +1432,7 @@ export class CainScene extends Phaser.Scene {
       // the dog Abel sends ahead scares them; the dog the player runs only when it barks
       const scare = this.driving ? 1 - Phaser.Math.Clamp((this.time.now - this.barkedAt) / BARK_SCARE, 0, 1) : 1;
       if (scare > 0) away(dog.x, dog.y, this.driving ? BARK_REACH : DOG_FEAR, 2.4 * (0.4 + 0.6 * scare));
+      g.rush = Math.max(alarm, g.rush - dt * 0.7);
       away(abel.x, abel.y, ABEL_FEAR, 1.1);
       // fright fades over a second or two; frightened sheep near it frighten it a little
       g.fright = Math.max(alarm, g.fright - dt * 0.7);
@@ -1440,6 +1448,7 @@ export class CainScene extends Phaser.Scene {
           ax += o.vx * o.fright;
           ay += o.vy * o.fright;
           g.fright = Math.max(g.fright, o.fright * 0.55);
+          g.rush = Math.max(g.rush, o.rush * 0.55);
         }
       }
       const al = Math.hypot(ax, ay);
@@ -1527,13 +1536,17 @@ export class CainScene extends Phaser.Scene {
       if (td > 420 && !view.contains(a.x, a.y)) fx += (tx / td) * 1.5;
       const speed = HERD_SPEED * (g.speed > GRAZE_SPEED + 8 ? 1.1 : 1);
       const f = Math.hypot(fx, fy);
+      // running from the dog its legs go quicker still than its pace alone would make them (the maintainer)
+      const rush = Math.min(1, g.rush * 1.5);
+      a.stridePace = (g.speed > GRAZE_SPEED + 8 ? LAMB_STRIDE : SHEEP_STRIDE) * (1 - RUSH_LEGS * rush);
       let wx = 0;
       let wy = 0;
       if (f > 0.05) {
         // frightened it runs; calm it only ambles back when it has strayed
         // from the others (the maintainer: calm sheep stay almost still)
         const calm = g.fright < 0.05;
-        const sp = calm ? (td > 170 ? GRAZE_SPEED : 0) : Math.min(1, f) * speed * (0.45 + 0.55 * Math.min(1, g.fright * 1.5));
+        // (only the dog makes it run: frightened by Abel alone it goes at a walk, the maintainer)
+        const sp = calm ? (td > 170 ? GRAZE_SPEED : 0) : Math.min(1, f) * speed * (0.45 + 0.55 * Math.min(1, g.fright * 1.5)) * (CALM_HERD + (1 - CALM_HERD) * rush);
         wx = (fx / f) * sp;
         wy = (fy / f) * sp;
       }
