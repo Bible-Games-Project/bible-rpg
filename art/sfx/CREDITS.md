@@ -36,6 +36,7 @@ option names in `options.json` (all CC0, from Freesound).
 | `cherubim-land.mp3` | `impact-2`, 11 s with a 7 s fade | DiArchangeli | [Thunder](https://freesound.org/people/DiArchangeli/sounds/128307/) | the cherubim land |
 | `river.mp3` | `river-1`, 20 s from 9 s in | VKProduktion | [Creek 06 (loop)](https://freesound.org/people/VKProduktion/sounds/231536/) | the river, looped |
 | `step-dirt-1.mp3`, `step-dirt-2.mp3` | `step-dirt-2`, `step-dirt-3` | monte32 | [Footsteps_6_Dirt_shoe](https://freesound.org/people/monte32/sounds/353799/) | footsteps on dirt |
+| `step-dirt-3.mp3` … `step-dirt-5.mp3` | `step-dirt-10` … `step-dirt-12` | bruno.auzet | [bare foot on a summer path](https://freesound.org/people/bruno.auzet/sounds/720441/) | footsteps on dirt (five, at random) |
 | `step-water-1.mp3` … `step-water-3.mp3` | `step-water-1` … `step-water-3` | aglinder | [Footsteps Water 01](https://freesound.org/people/aglinder/sounds/265582/) | footsteps in water (the fords) |
 
 ## Options in the maintainer's library

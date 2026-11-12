@@ -48,7 +48,7 @@ export const SOUND_SLOTS: SoundSlot[] = [
   { id: 'fill', group: 'water', category: 'water', sound: sfx('fill'), gain: 0.5 },
   { id: 'pour', group: 'water', category: 'water', sound: sfx('pour'), gain: 0.5 },
   ...steps('grass', [1, 2, 3, 4, 5].map((i) => sfx(`step-${i}`))),
-  ...steps('dirt', [1, 2].map((i) => sfx(`step-dirt-${i}`))),
+  ...steps('dirt', [1, 2, 3, 4, 5].map((i) => sfx(`step-dirt-${i}`))),
   ...steps('water', [1, 2, 3].map((i) => sfx(`step-water-${i}`))),
   { id: 'bite', group: 'other', category: 'other', sound: sfx('bite'), gain: 0.55 },
   { id: 'seed', group: 'other', category: 'other', sound: sfx('seed'), gain: 0.5 },
@@ -56,7 +56,9 @@ export const SOUND_SLOTS: SoundSlot[] = [
   { id: 'leaves', group: 'other', category: 'other', sound: sfx('sew-leaves'), gain: 0.5 },
   { id: 'drop', group: 'other', category: 'other', sound: sfx('drop'), gain: 0.45 },
   // Cain and Abel: synthesised (free) until the maintainer chooses recordings
-  ...(['cut', 'hit', 'swing', 'whistle', 'bark', 'flame'] as const).map((id) => ({ id, group: 'cain' as const, category: `cain-${id}`, sound: null, gain: 0.5 })),
+  ...(['cut', 'hit', 'swing', 'whistle', 'flame'] as const).map((id) => ({ id, group: 'cain' as const, category: `cain-${id}`, sound: null, gain: 0.5 })),
+  // the dog's bark: three slots, one at random each time, never the same twice running (the maintainer); synthesised with none filled
+  ...['bark-6', 'bark-1', 'bark-2'].map((f, i) => ({ id: `bark-${i + 1}`, group: 'cain' as const, category: 'cain-bark', sound: `assets/sfx/cain/${f}.mp3`, gain: 0.5 })),
   // recordings only (ElevenLabs, tools/audio/build_cain_sfx.mjs): Abel's cry when struck, and the burial heard over black
   ...(['hurt', 'dig', 'drag', 'stones'] as const).map((id) => ({ id, group: 'cain' as const, category: `cain-${id}`, sound: `assets/sfx/cain/${id}-1.mp3`, gain: id === 'hurt' ? 0.55 : 0.5 })),
   // Abel's last cry, at the blow that kills him: chosen among the same cries (the maintainer: the second)

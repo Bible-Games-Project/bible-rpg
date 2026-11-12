@@ -197,7 +197,7 @@ const MISSIONS: CainMission[] = [
       // Abel whistles, and from then the player is the dog (the maintainer)
       audio.play('whistle');
       // and the dog answers it
-      w.time.delayedCall(1150, () => audio.play('bark'));
+      w.time.delayedCall(1150, () => audio.variant('bark'));
       w.driveDog(true);
       w.toast(C('hints.herd'));
       const count = () => {

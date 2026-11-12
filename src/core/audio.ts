@@ -409,6 +409,20 @@ class AudioManager {
   }
 
   private lastStep = '';
+  private lastVariant: Record<string, string> = {};
+
+  /** One of a sound's numbered slots (`bark-1`, `bark-2`…) at random, never
+   * the same twice in a row; its synthesised sound when none is filled. */
+  variant(name: Sfx, opts: { pitch?: number; volume?: number } = {}): void {
+    const ctx = this.unlocked ? this.ensure() : null;
+    if (!ctx || ctx.state !== 'running') return;
+    const slots = SOUND_SLOTS.filter((x) => x.id.startsWith(`${name}-`) && this.samples.has(x.id));
+    if (!slots.length) return this.play(name, opts);
+    const others = slots.length > 1 ? slots.filter((x) => x.id !== this.lastVariant[name]) : slots;
+    const slot = others[Math.floor(Math.random() * others.length)];
+    this.lastVariant[name] = slot.id;
+    this.playBuffer(this.samples.get(slot.id)!, slot.gain * (opts.volume ?? 1), opts.pitch ?? 1);
+  }
 
   /** A slot that only has recordings (no synthesised sound): its chosen one,
    * if any. Returns how long it lasts (s), 0 when nothing plays. */

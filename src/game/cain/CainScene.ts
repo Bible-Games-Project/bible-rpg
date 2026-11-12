@@ -1388,7 +1388,7 @@ export class CainScene extends Phaser.Scene {
   /** The player makes the dog bark (E): the sheep near it run from it. */
   private dogBark(): void {
     if (this.time.now < this.barkAt) return;
-    audio.play('bark', { pitch: 0.95 + Math.random() * 0.1 });
+    audio.variant('bark', { pitch: 0.95 + Math.random() * 0.1 });
     this.barkAt = this.time.now + 400;
     this.barkedAt = this.time.now;
   }
