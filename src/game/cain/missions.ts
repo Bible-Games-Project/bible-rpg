@@ -116,7 +116,17 @@ const MISSIONS: CainMission[] = [
     active: 'cain',
     async intro(w) {
       w.music('wonder');
-      await w.scripture('keeper');
+      // a cinematic while the verse is told (the maintainer): the world comes
+      // up on Abel's flock, and the camera goes down over the land to Cain
+      w.cutscene(true, true);
+      const told = w.scripture('keeper');
+      w.cameraAt([POINTS.abelFlock[0], POINTS.abelFlock[1] - 20]);
+      await w.wait(900);
+      void w.fade(0, 1600);
+      await w.wait(1400);
+      await w.cameraTo(w.cain, 6500);
+      await told;
+      w.cameraFollow();
     },
     async run(w) {
       w.cutscene(true);

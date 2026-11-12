@@ -602,6 +602,13 @@ export class CainScene extends Phaser.Scene {
     cam.setScroll(scrollX, scrollY);
   }
 
+  /** The camera put at a point at once, following no one (a cinematic starts there). */
+  cameraAt(at: Pt): void {
+    const cam = this.cameras.main;
+    cam.stopFollow();
+    cam.centerOn(at[0], at[1]);
+  }
+
   cameraSnap(): void {
     const p = this.player();
     const cam = this.cameras.main;
