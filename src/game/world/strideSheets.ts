@@ -87,7 +87,8 @@ const ATTACK = {
     raise: { arm: -135, elbow: 20, lean: -4 },
     strike: { arm: 55, elbow: 10, lean: 7, step: 14 },
     draw: { arm: -35, elbow: 75, lean: -3 },
-    thrust: { arm: 78, elbow: 6, lean: 7, step: 14 },
+    // the thrust goes forward and down, at a lamb (the maintainer: level it stabbed the sky)
+    thrust: { arm: 42, elbow: 4, lean: 11, step: 14 },
   } satisfies Record<(typeof ATTACK_POSES)[number], SidePose>,
   front: { raise: 0.9, out: 5, strike: 0.6, thrust: 0.35 },
 };

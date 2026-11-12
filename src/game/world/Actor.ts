@@ -316,7 +316,8 @@ export class Actor {
     // with the sheet's own poses the arm carries it up and down; else the held thing moves alone
     const posed = this.blowFrame() !== undefined;
     const wind = swing ? { lunge: -3, turn: -2.5, lift: posed ? 0 : -24, aim: 0 } : { lunge: -4, turn: -0.25, lift: posed ? 0 : -3, aim: 1 };
-    const land = swing ? { lunge: 8, turn: 1.1, lift: posed ? 0 : 4, aim: 0 } : { lunge: 10, turn: 0.15, lift: posed ? 0 : 6, aim: 1 };
+    // a stab ends with the blade down and forward, at something smaller (a lamb: the maintainer)
+    const land = swing ? { lunge: 8, turn: 1.1, lift: posed ? 0 : 4, aim: 0 } : { lunge: 10, turn: 0.65, lift: posed ? 0 : 10, aim: 1 };
     const step = (props: Partial<typeof b>, duration: number, ease: string, delay = 0) =>
       new Promise<void>((done) => this.scene.tweens.add({ targets: b, ...props, duration, ease, delay, onComplete: () => done(), onStop: () => done() }));
     this.refresh();
@@ -544,8 +545,8 @@ export class Actor {
       dy += by * 1.3 + b.lift;
       turn = side ? side * b.turn : (this.facing === 'down' ? 1 : -1) * (b.aim * Math.PI * 0.5 + b.turn * 0.4);
     }
-    // from behind, the hand without the staff (Abel's knife) and a raised arm show beside the body
-    const behind = this.facing === 'up' && !other && !(b && this.blowFrame() !== undefined);
+    // from behind, what is in the hand is hidden by the body, the knife too while Abel stabs (the maintainer saw it through his back); a raised arm shows
+    const behind = this.facing === 'up' && !(b && b.kind === 'swing' && this.blowFrame() !== undefined);
     s.setPosition(x + dx, y + dy).setRotation(turn).setDepth(behind ? y - 1 : y + 1);
   }
 
