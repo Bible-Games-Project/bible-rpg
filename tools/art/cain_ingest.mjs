@@ -62,6 +62,8 @@ const SHEETS = {
     { name: 'dog-1', w: 70 },
   ],
   'cain-grave': [{ name: 'grave', w: 150 }],
+  // the basket Cain carries and lays on his altar (the maintainer: the drawn one did not fit the style)
+  'cain-basket': [{ name: 'basket', w: 40 }],
   // Adam sitting, in his sprite's pixels (scaled like his other frames, not ART)
   'cain-adam-sitting': [{ name: 'adam-sitting', h: 116 }],
 };

@@ -49,6 +49,15 @@
     "art/reference/cain/adam-tunic-side.png"
    ],
    "prompt": "One single figure in the middle of the image, about two thirds of the image tall: the young man of the second reference image, seen exactly from the side and facing right, SITTING on an invisible low seat (a log at knee height, not drawn). His back is upright and relaxed, his thighs are horizontal pointing right, his knees bent at a right angle, his shins vertical, both bare feet flat on the ground; the near leg in front, the far leg just behind it. His tunic hangs over his lap and thighs. His hands rest on his knees. Whole body visible from hair to feet, nothing cut off. Natural human proportions: the thigh as long as the shin, the upper body not stretched."
+  },
+  {
+   "id": "cain-basket",
+   "title": "Cain's basket of the fruit of the ground",
+   "size": "1024x1024",
+   "references": [
+    "art/reference/v2/style-scene.webp"
+   ],
+   "prompt": "One single sprite in the middle of the image, about a third of the image wide: a farmer's basket in the first age of the world, seen from the top-down three-quarter view of the reference scene. A round, fairly shallow basket of woven golden-tan straw with a thick twisted rim, wider at the top, full of the fruit of the ground: two small ribbed yellow-orange gourds, a bunch of ears of ripe wheat standing up at the back, and a few dark green leafy greens spilling over the rim. Simple, humble and natural, soft colours, no handle, no cloth, no apples, no grapes."
   }
  ],
  "styleCharacter": "STYLE RULES: Soft, modern pixel art exactly like the reference character (the second image): the same small soft pixel blocks, the same colours for his skin, curly brown hair and torn tan hide tunic with its rope belt, gentle shading with light from the upper left, NO dark outlines. Draw this same young man again in a new pose; keep his face, hair, tunic, proportions and size exactly. No cast shadow, no ground, no grass, no seat, no scenery. BACKGROUND: one flat solid magenta colour (#FF00FF) everywhere around him, with no glow or texture. No text, letters, numbers, labels, borders or frames."

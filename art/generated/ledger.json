@@ -2427,5 +2427,27 @@
    "total_tokens": 2509
   },
   "at": "20261109-155858"
+ },
+ {
+  "job": "cain-basket",
+  "chapter": "cain",
+  "file": "art/generated/cain-basket/20261112-161754-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0195,
+  "usage": {
+   "input_tokens": 1816,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 308
+   },
+   "output_tokens": 196,
+   "output_tokens_details": {
+    "image_tokens": 196,
+    "text_tokens": 0
+   },
+   "total_tokens": 2012
+  },
+  "at": "20261112-161754"
  }
 ]

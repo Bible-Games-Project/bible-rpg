@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAsset, type SheetAsset } from '../manifest';
 import { Pixels, ramp, type RGB } from './pixels';
 import { DOG_RIG, DOG_RUN_SCALE, dogGallop, enlarge, scaledRig } from './dogRun';
-import { drawAnger, drawCainBasket, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
+import { drawAnger, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
 import { nightPixels } from './palette';
 import GEN from '../../data/cain/generatedArt.json';
 
@@ -65,13 +65,13 @@ function gen(scene: Phaser.Scene, name: GenName, mirror = false): Pixels {
 }
 
 /** A generated prop with its base point (sunk `sink` px into the ground). */
-function addGen(scene: Phaser.Scene, key: string, name: GenName, o: { mirror?: boolean; icon?: boolean; sink?: number; centre?: boolean; wood?: boolean; tone?: RGB[] } = {}): void {
+function addGen(scene: Phaser.Scene, key: string, name: GenName, o: { mirror?: boolean; icon?: boolean; sink?: number; centre?: boolean; wood?: boolean; tone?: RGB[]; natural?: boolean } = {}): void {
   const g = GEN[name];
   const p = gen(scene, name, o.mirror);
   const tone = o.tone ?? (o.wood ? WOOD : undefined);
   if (tone) onTone(p, tone);
   const ax = o.mirror ? g.w - 1 - g.ax : g.ax;
-  addSheet(scene, key, [p], o.centre ? g.w / 2 : ax, o.centre ? g.h / 2 : g.ay - (o.sink ?? 1), ART, o.icon, !!tone);
+  addSheet(scene, key, [p], o.centre ? g.w / 2 : ax, o.centre ? g.h / 2 : g.ay - (o.sink ?? 1), ART, o.icon, !!tone || o.natural);
 }
 
 /** plain brown wood, as the knife's haft and the brothers' tunics (the maintainer: Abel's staff came out pink in the night palette) */
@@ -330,7 +330,7 @@ export function buildCainArt(scene: Phaser.Scene): void {
   addGen(scene, 'cain-jawbone', 'jawbone', { icon: true, sink: 2 });
   // in its own colours, like the basket of produce (at night it was lost on the stone)
   addDrawing(scene, 'cain-fat', drawFat(), true, true);
-  addDrawing(scene, 'cain-basket', drawCainBasket(), true, true);
+  addGen(scene, 'cain-basket', 'basket', { icon: true, sink: 2, natural: true });
   addDrawing(scene, 'cain-knife', drawKnife(), false, true);
   addGen(scene, 'cain-staff', 'staff', { wood: true });
   addGen(scene, 'cain-grave', 'grave');
