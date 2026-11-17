@@ -15,8 +15,8 @@
   #short-root .cap span{display:inline-block;margin:0 .14em}
   #short-root .cap span.on{color:#ffd84a;transform:scale(1.12)}
   #short-root .label{position:absolute;transform:translate(-50%,-100%);font-size:24px;font-weight:700;padding:4px 12px;background:#fff6dc;color:#3a2a12;border:3px solid #3a2a12;border-radius:10px;white-space:nowrap;box-shadow:0 4px 0 rgba(0,0,0,.3)}
-  #short-root .end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:150px;text-align:center;
-    background:linear-gradient(rgba(10,8,4,0) 55%,rgba(10,8,4,.8)),var(--bg) center/cover}
+  #short-root .end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:90px;text-align:center;
+    background:linear-gradient(rgba(10,8,4,0) 70%,rgba(10,8,4,.85)),var(--bg) center/cover}
   #short-root .end .t{font-size:58px;font-weight:700;color:#ffe08a;text-shadow:0 5px 0 #3a2508,0 0 20px rgba(0,0,0,.6)}
   #short-root .end .s{font-size:26px;margin-top:14px;text-shadow:0 3px 0 #1a1208}
   #short-root .end .c{font-size:22px;margin-top:34px;padding:10px 20px;border:3px solid #e8c467;border-radius:12px;background:rgba(22,16,8,.8);color:#f6e7b8}
@@ -98,7 +98,7 @@
       const e = ease((t - c.endAt) / 0.5);
       const end = this.el('.end');
       end.style.opacity = String(e);
-      end.style.backgroundSize = `auto ${(1.08 - 0.08 * ease((t - c.endAt) / 2.5)) * 100}%`;
+      end.style.backgroundSize = `100% 100%, auto ${(1.08 - 0.08 * ease((t - c.endAt) / 2.5)) * 100}%`;
       end.querySelector('.c').style.transform = `scale(${0.6 + 0.4 * pop((t - c.endAt - 0.4) / 0.5)})`;
       this.el('.labels').style.opacity = String(1 - e);
     },
