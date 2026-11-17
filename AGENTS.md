@@ -674,11 +674,24 @@ $1 play at `WALK_FPS` 15 at the player's
   `art.ts` recolours them to the night (`TREE_ART` maps the world's tree ids;
   trees are split trunk/crown at the lowest leafy row). If a sheet is
   regenerated, check that the subject count and order still match.
-  Eden can't run in the console's headless Chromium (memory cap); Cain and
-  Abel can (open `/?debug` on `vite preview` of a fresh build for
-  `window.bibleRpg`). Never add `sourcemap: true` to vite.config (the
+  Both chapters run in the console's headless Chromium (open `/?debug` on
+  `node tools/shorts/serve.mjs` of a fresh build for `window.bibleRpg`;
+  Eden needs the args without single-process/no-zygote, and Enter ×3 past
+  the pregame). Stop Chromium and the server before `bun run build` or the
+  build is killed. Never add `sourcemap: true` to vite.config (the
   build core-dumps).
 - Dev tools (`src/core/dev.ts`): the main menu shows Voices and a "Game Dev
   Debug" switch (every playable chapter opens on the story map) on
   `*.pages.dev`, in `bun run dev` and after `#dev`; never in the published
   app. The maintainer asked that they never reach players.
+- Shorts (YouTube/Instagram, 1080×1920, ~20 s, English): `tools/shorts/`.
+  `shorts.json` holds each short's question and narration; `voice.mjs <id>`
+  speaks it with the game's narrator (ElevenLabs, word timings) into
+  `art/shorts/<id>/`; `scenes/<id>.js` scripts the game scene (cast,
+  camera keys, cues, labels, chimes); `record.mjs <id>` steps the game
+  frame by frame headless (deterministic, ~0.6 s per frame) with the
+  captions overlay (`overlay.js`) into `/tmp/shorts/<id>/frames`;
+  `make.mjs <id>` adds the synthesized music bed and writes
+  `public/shorts/<id>.mp4`. This Chromium ignores CSS web fonts: the
+  recorder loads Pixelify Sans with `FontFace` from the woff2 and sets
+  `FONTCONFIG_PATH`. ffmpeg: `npm i @ffmpeg-installer/ffmpeg` in /tmp/tools.
