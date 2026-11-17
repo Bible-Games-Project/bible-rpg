@@ -1,0 +1,7 @@
+// A small static server for the built game (lighter than vite preview, which leaves less memory to the browser): node tools/shorts/serve.mjs
+import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path';
+const root = new URL('../../dist', import.meta.url).pathname.replace(/\/$/, ''); const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.webp': 'image/webp', '.mp3': 'audio/mpeg', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.ogg': 'audio/ogg', '.wav': 'audio/wav' };
+http.createServer((q, s) => { let p = decodeURIComponent(new URL(q.url, 'http://x').pathname); let f = path.join(root, p); if (!f.startsWith(root)) return s.end(); if (fs.existsSync(f) && fs.statSync(f).isDirectory()) f = path.join(f, 'index.html'); if (!fs.existsSync(f)) f = path.join(root, 'index.html');
+  const st = fs.statSync(f); const range = q.headers.range; const type = types[path.extname(f)] || 'application/octet-stream';
+  if (range) { const [a, b] = range.replace('bytes=', '').split('-'); const start = +a, end = b ? +b : st.size - 1; s.writeHead(206, { 'Content-Type': type, 'Content-Range': `bytes ${start}-${end}/${st.size}`, 'Accept-Ranges': 'bytes', 'Content-Length': end - start + 1 }); fs.createReadStream(f, { start, end }).pipe(s); }
+  else { s.writeHead(200, { 'Content-Type': type, 'Content-Length': st.size, 'Accept-Ranges': 'bytes' }); fs.createReadStream(f).pipe(s); } }).listen(4173);
