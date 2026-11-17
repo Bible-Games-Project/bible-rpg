@@ -12,7 +12,7 @@
   #short-root .ref{position:absolute;left:50%;top:9%;transform:translateX(-50%);font-size:20px;padding:6px 14px;background:rgba(22,16,8,.75);border:2px solid #e8c467;border-radius:10px;color:#f6e7b8;white-space:nowrap}
   #short-root .cap{position:absolute;left:5%;right:5%;top:63%;text-align:center;font-size:44px;font-weight:700;line-height:1.15;
     text-shadow:0 4px 0 #1a1208,3px 3px 0 #1a1208,-3px 3px 0 #1a1208,3px -3px 0 #1a1208,-3px -3px 0 #1a1208,0 0 14px rgba(0,0,0,.6)}
-  #short-root .cap span{display:inline-block;margin:0 .14em}
+  #short-root .cap span{display:inline-block;margin:0 .2em}
   #short-root .cap span.on{color:#ffd84a;transform:scale(1.12)}
   #short-root .label{position:absolute;transform:translate(-50%,-100%);font-size:24px;font-weight:700;padding:4px 12px;background:#fff6dc;color:#3a2a12;border:3px solid #3a2a12;border-radius:10px;white-space:nowrap;box-shadow:0 4px 0 rgba(0,0,0,.3)}
   #short-root .end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:90px;text-align:center;
@@ -82,6 +82,7 @@
         const g = this.groups[i];
         const next = this.groups[i + 1];
         const end = next ? next[0].s : g[g.length - 1].e + 0.5;
+        if (g[0].s < c.hookEnd) continue; // the hook says it
         if (t >= g[0].s - 0.05 && t < end) {
           html = g.map((w, k) => `<span class="${t >= w.s && t < (g[k + 1]?.s ?? end) ? 'on' : ''}">${w.w}</span>`).join('');
           break;
