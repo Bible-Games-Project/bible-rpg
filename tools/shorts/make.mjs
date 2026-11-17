@@ -21,10 +21,10 @@ mkdirSync(`${root}public/shorts`, { recursive: true });
 const out = `${root}public/shorts/${id}.mp4`;
 const delay = Math.round((scene.voiceAt ?? 0) * 1000);
 const audio = [
-  `[1:a]adelay=${delay}|${delay},apad,asplit=2[v1][v2]`,
-  `[2:a]volume=0.9[m]`,
+  `[1:a]adelay=${delay}|${delay},apad,aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,asplit=2[v1][v2]`,
+  `[2:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=0.4[m]`,
   `[m][v1]sidechaincompress=threshold=0.03:ratio=5:attack=40:release=500[duck]`,
-  `[duck][v2]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11[a]`,
+  `[duck][v2]amix=inputs=2:duration=first,volume=2,loudnorm=I=-14:TP=-1.5:LRA=11[a]`,
 ].join(';');
 execFileSync(FF, [
   '-y', '-hide_banner', '-loglevel', 'error',
@@ -33,7 +33,7 @@ execFileSync(FF, [
   '-i', music,
   '-filter_complex', audio,
   '-map', '0:v', '-map', '[a]',
-  '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-pix_fmt', 'yuv420p',
+  '-c:v', 'libx264', '-preset', 'slow', '-crf', '23', '-pix_fmt', 'yuv420p',
   '-c:a', 'aac', '-b:a', '160k', '-ar', '48000',
   '-t', String(scene.length), '-movflags', '+faststart',
   out,

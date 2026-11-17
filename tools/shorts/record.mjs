@@ -78,7 +78,7 @@ const length = await page.evaluate(
     const scene = new Function(`return (\n${sceneSrc}\n)`)();
     window.SC = scene;
     window.X = {};
-    SHORT.init({ ...short, ...scene, endBg: '/assets/ui/menu-background.webp', endTitle: 'Eden to Heaven', endSub: 'A Bible adventure game', endCall: 'Play the story · link in bio' }, words);
+    SHORT.init({ ...short, ...scene, endBg: '/assets/ui/menu-background.webp', endTitle: '', endSub: 'A Bible adventure game', endCall: 'Play the story · link in bio' }, words);
     scene.setup(S, X);
     window.BASE = S.cameras.main.zoom;
     bibleRpg.game.loop.sleep();
