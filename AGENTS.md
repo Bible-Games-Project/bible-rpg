@@ -697,7 +697,9 @@ $1 play at `WALK_FPS` 15 at the player's
   `FONTCONFIG_PATH`. ffmpeg: `npm i @ffmpeg-installer/ffmpeg` in /tmp/tools.
   Background music: the maintainer's tracks (`art/shorts/music/tracks.json`),
   one per short in turn (a short's `music` picks one). The narrator
-  (`art/shorts/narrator/<name>.png` + `.json` face notes; `narrator.mjs`
-  draws mouth and blink layers) shows in the scene's `narrator` spans,
+  (`art/shorts/narrator/<name>.png` + `.json` face notes, plus
+  `<name>-mouth1/2.png`: half-open and open mouth, made with a masked
+  OpenAI edit of a 2× face crop and pasted back by `mouth-paste.mjs`; drawn
+  mouths were rejected as ugly. `narrator.mjs` adds the blink layer) shows in the scene's `narrator` spans,
   his mouth following the voice's loudness. The first frame is the
   thumbnail (hook in full, narrator in), saved as `public/shorts/<id>.jpg`.
