@@ -20,7 +20,7 @@
   #short-root .end .t{font-size:58px;font-weight:700;color:#ffe08a;text-shadow:0 5px 0 #3a2508,0 0 20px rgba(0,0,0,.6)}
   #short-root .end .s{font-size:26px;margin-top:14px;text-shadow:0 3px 0 #1a1208}
   #short-root .end .c{font-size:22px;margin-top:34px;padding:10px 20px;border:3px solid #e8c467;border-radius:12px;background:rgba(22,16,8,.8);color:#f6e7b8}
-  #short-root .narr{position:absolute;left:-3%;bottom:0;width:60%;filter:drop-shadow(0 0 12px rgba(0,0,0,.5))}
+  #short-root .narr{position:absolute;left:8%;bottom:0;width:84%;filter:drop-shadow(0 0 12px rgba(0,0,0,.5))}
   #short-root .narr img{position:absolute;left:0;top:0;width:100%}
   #short-root .narr img.base{position:relative;display:block}
   `;
@@ -115,7 +115,8 @@
         }
         const f = Math.round(t * 30);
         const m = y < 100 ? c.narr.mouth[f] ?? 0 : 0;
-        n.style.transform = `translateY(${y + Math.sin(t * 2.4) * 0.6 - m * 0.25}%)`;
+        // breathing only ever sinks him a little: his bottom edge stays on the frame's
+        n.style.transform = `translateY(${y + (1 + Math.sin(t * 2.4)) * 0.4}%)`;
         n.style.visibility = y >= 110 ? 'hidden' : 'visible';
         for (const k of [1, 2, 3]) n.querySelector(`.mouth${k}`).style.visibility = m === k ? 'visible' : 'hidden';
         let blink = false;

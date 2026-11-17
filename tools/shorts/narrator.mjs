@@ -1,11 +1,11 @@
 // The narrator's talking portrait for the shorts: from one PNG and its face
 // notes (art/shorts/narrator/<name>.json: the mouth line, the eyes) it draws
-// the open-mouth layers (3 sizes) and the closed-eyes layer, pixel by pixel
+// the open-mouth portraits (3 sizes, the jaw dropping) and the closed-eyes layer, pixel by pixel
 // in the portrait's own blocky style, as transparent PNGs of the same size.
 // The overlay stacks them over the portrait while the voice plays.
 //
 //   node tools/shorts/narrator.mjs <name> [outDir]   (default /tmp/shorts/narrator/<name>)
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 
 const require = createRequire((process.env.HEADLESS_TOOLS || '/tmp/tools') + '/package.json');
@@ -20,6 +20,13 @@ const W = src.width, H = src.height, B = face.block;
 mkdirSync(dir, { recursive: true });
 
 const layer = () => new PNG({ width: W, height: H });
+/** The portrait cut to its figure, with a straight bottom edge (it stands on the frame's bottom). */
+const [cx0, cy0, cx1, cy1] = face.crop;
+function crop(png) {
+  const out = new PNG({ width: cx1 - cx0, height: cy1 - cy0 });
+  PNG.bitblt(png, out, cx0, cy0, cx1 - cx0, cy1 - cy0, 0, 0);
+  return out;
+}
 /** Fills one art pixel (a B×B block on the portrait's grid). */
 function block(png, bx, by, [r, g, b]) {
   for (let y = Math.round(by * B); y < Math.round((by + 1) * B) && y < H; y++)
@@ -40,23 +47,37 @@ function lineY(x) {
   return m.at(-1)[1];
 }
 
-// open mouths: under the lip line, a dark opening deepest in the middle, the
-// tongue at the bottom of the wider ones, the lower lip under it
+// open mouths: the jaw drops. Under the lip line each column of the chin
+// and beard moves down (most in the middle of the mouth, nothing at its
+// corners), the opening shows dark with the upper teeth, and the neck under
+// the beard takes up the drop, so the jacket and the Bible stay still.
 const x0 = face.mouth[0][0], x1 = face.mouth.at(-1)[0];
+const px = (png, x, y) => (y * W + x) * 4;
 [1, 2, 3].forEach((size) => {
   const png = layer();
-  for (let bx = Math.floor(x0 / B); bx <= Math.floor(x1 / B); bx++) {
-    const cx = bx * B + B / 2;
-    const k = (cx - x0) / (x1 - x0);
-    if (k < 0 || k > 1) continue;
-    const depth = Math.round(size * Math.pow(Math.sin(Math.PI * k), 0.6) * face.open);
-    const top = Math.floor(lineY(cx) / B);
-    for (let j = 0; j <= depth; j++) {
-      const c = j === 0 ? face.lip : j === depth && depth > 1 ? face.lowerLip : j === depth - 1 && depth > 2 ? face.tongue : face.inside;
-      block(png, bx, top + j, c);
+  src.data.copy(png.data);
+  for (let x = Math.ceil(x0); x <= x1; x++) {
+    const bx = Math.floor(x / B);
+    const k = (bx * B + B / 2 - x0) / (x1 - x0);
+    if (k <= 0 || k >= 1) continue;
+    const h = Math.round(Math.round(size * face.open * Math.pow(Math.sin(Math.PI * k), 0.8)) * B);
+    if (h <= 0) continue;
+    const split = Math.round(lineY(x)) - face.lipUp;
+    const chin = face.chin, end = face.neck;
+    for (let y = split; y < end; y++) {
+      const d = px(png, x, y);
+      if (y < split + h) {
+        // the opening: teeth along the top in the middle of wider mouths, dark below
+        const teeth = h >= 3 * B && y < split + B * 0.8 && k > 0.22 && k < 0.78;
+        const c = teeth ? face.teeth : face.inside;
+        png.data[d] = c[0]; png.data[d + 1] = c[1]; png.data[d + 2] = c[2]; png.data[d + 3] = 255;
+        continue;
+      }
+      const sy = y < chin + h ? y - h : Math.round(chin + ((y - chin - h) * (end - chin)) / (end - chin - h));
+      src.data.copy(png.data, d, px(src, x, sy), px(src, x, sy) + 4);
     }
   }
-  writeFileSync(`${dir}/mouth${size}.png`, PNG.sync.write(png));
+  writeFileSync(`${dir}/mouth${size}.png`, PNG.sync.write(crop(png)));
 });
 
 // closed eyes: the eye under the lid in skin colour, the lashes a soft curve
@@ -73,6 +94,6 @@ for (const e of face.eyes) {
     block(blink, bx, Math.floor((e.y + e.ry * 0.25 + dx * dx * e.ry * 0.35) / B), face.lash);
   }
 }
-writeFileSync(`${dir}/blink.png`, PNG.sync.write(blink));
-copyFileSync(`${root}art/shorts/narrator/${name}.png`, `${dir}/base.png`);
+writeFileSync(`${dir}/blink.png`, PNG.sync.write(crop(blink)));
+writeFileSync(`${dir}/base.png`, PNG.sync.write(crop(src)));
 console.log(`${dir}: base, mouth1-3, blink`);
