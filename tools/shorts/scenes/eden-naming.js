@@ -5,6 +5,7 @@
 ({
   mission: 'eden.m03',
   voiceAt: 0.4,
+  narrator: [[0, 4.25]], // the narrator in front (from, to)
   hookEnd: 4.15,
   endAt: 18.1,
   length: 20.8,

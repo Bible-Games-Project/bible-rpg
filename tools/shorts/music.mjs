@@ -4,10 +4,13 @@
 // at each `chimes` time of the scene (the animal names popping up, ...).
 // Synthesized here, so free of any copyright.
 //
-//   node tools/shorts/music.mjs <id> <out.wav>
+//   node tools/shorts/music.mjs <id> <out.wav> [--fx]
+// --fx: only a soft pop at each chime (to lay over one of the maintainer's
+// tracks, whose key the bells could clash with).
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const [id, out] = process.argv.slice(2);
+const fxOnly = process.argv.includes('--fx');
 if (!id || !out) throw new Error('usage: music.mjs <id> <out.wav>');
 const scene = new Function(`return (\n${readFileSync(new URL(`./scenes/${id}.js`, import.meta.url), 'utf8')}\n)`)();
 const mood = scene.music ?? 'peaceful';
@@ -77,7 +80,7 @@ function bell(f, t, peak, pan) {
 }
 
 // the music: one tick per beat, as in the game
-for (let step = 0, t = 0.15; t < len; step++, t += cfg.beat) {
+for (let step = 0, t = 0.15; !fxOnly && t < len; step++, t += cfg.beat) {
   if (step % 8 === 0) for (const s of [0, 7]) pad(cfg.root / 2 * Math.pow(2, s / 12), t, cfg.beat * 8 + 1, 0.05);
   if (rnd() < cfg.density) {
     const deg = cfg.scale[Math.floor(rnd() * cfg.scale.length)];
@@ -87,7 +90,12 @@ for (let step = 0, t = 0.15; t < len; step++, t += cfg.beat) {
 }
 
 // a bell for each chime, climbing the scale
+/** A soft pop: a short sine falling in pitch, with a click of breath. */
+function popSound(t, peak, pan) {
+  add(t, 0.12, pan, (x) => peak * Math.exp(-x / 0.035) * Math.sin(2 * Math.PI * (900 * x - 2600 * x * x)));
+}
 (scene.chimes ?? []).forEach((t, i) => {
+  if (fxOnly) return popSound(t, 0.5, i % 2 ? 0.25 : -0.25);
   const deg = cfg.scale[i % cfg.scale.length] + 12 * Math.floor(i / cfg.scale.length);
   bell(cfg.root * 4 * Math.pow(2, deg / 12), t, 0.09, i % 2 ? 0.3 : -0.3);
 });

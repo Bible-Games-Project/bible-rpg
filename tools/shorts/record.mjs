@@ -7,6 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { execFileSync } from 'node:child_process';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..');
 const TOOLS = process.env.HEADLESS_TOOLS || '/tmp/tools';
@@ -22,6 +23,32 @@ const short = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/shorts/shorts.js
 const sceneSrc = fs.readFileSync(path.join(ROOT, `tools/shorts/scenes/${id}.js`), 'utf8');
 const words = JSON.parse(fs.readFileSync(path.join(ROOT, `art/shorts/${id}/words.json`), 'utf8'));
 const out = `/tmp/shorts/${id}/frames`;
+const scene0 = new Function(`return (\n${sceneSrc}\n)`)();
+
+// the narrator: his portrait layers (narrator.mjs) and how open his mouth is
+// at each frame, from the loudness of the voice around it
+const FF = process.env.FFMPEG ?? path.join(TOOLS, 'node_modules/@ffmpeg-installer/linux-x64/ffmpeg');
+let narr = null;
+if (scene0.narrator) {
+  const who = short.narrator ?? 'grandpa-bible';
+  const dir = `/tmp/shorts/narrator/${who}`;
+  execFileSync('node', [path.join(ROOT, 'tools/shorts/narrator.mjs'), who, dir], { stdio: 'inherit' });
+  const img = (f) => `data:image/png;base64,${fs.readFileSync(`${dir}/${f}.png`).toString('base64')}`;
+  const SR = 16000;
+  const pcm = execFileSync(FF, ['-v', 'error', '-i', path.join(ROOT, `art/shorts/${id}/voice.mp3`), '-ac', '1', '-ar', String(SR), '-f', 's16le', '-'], { maxBuffer: 1 << 28 });
+  const n = pcm.length / 2;
+  const rms = [];
+  for (let f = 0; f <= Math.ceil(scene0.length * FPS); f++) {
+    const c = Math.round((f / FPS - (scene0.voiceAt ?? 0)) * SR);
+    let q = 0, k = 0;
+    for (let i = Math.max(0, c - 400); i < Math.min(n, c + 800); i++, k++) q += (pcm.readInt16LE(i * 2) / 32768) ** 2;
+    rms.push(k ? Math.sqrt(q / k) : 0);
+  }
+  const loud = rms.filter((r) => r > 0.01).sort((a, b) => a - b);
+  const top = loud[Math.floor(loud.length * 0.9)] || 1;
+  const mouth = rms.map((r) => (r / top < 0.12 ? 0 : r / top < 0.4 ? 1 : r / top < 0.75 ? 2 : 3));
+  narr = { imgs: Object.fromEntries(['base', 'mouth1', 'mouth2', 'mouth3', 'blink'].map((f) => [f, img(f)])), mouth, spans: scene0.narrator };
+}
 fs.mkdirSync(out, { recursive: true });
 
 const browser = await puppeteer.launch({
@@ -65,7 +92,7 @@ await page.evaluate(async (fonts) => {
 const overlay = fs.readFileSync(path.join(ROOT, 'tools/shorts/overlay.js'), 'utf8');
 await page.evaluate(overlay);
 const length = await page.evaluate(
-  (sceneSrc, short, words) => {
+  (sceneSrc, short, words, narr) => {
     const S = bibleRpg.game.scene.getScene('eden');
     window.S = S;
     S.halt();
@@ -78,7 +105,7 @@ const length = await page.evaluate(
     const scene = new Function(`return (\n${sceneSrc}\n)`)();
     window.SC = scene;
     window.X = {};
-    SHORT.init({ ...short, ...scene, endBg: '/shorts/end-card.jpg', endTitle: '', endSub: 'A Bible adventure game · coming soon', endCall: 'Add it to your wishlist · link in bio' }, words);
+    SHORT.init({ ...short, ...scene, endBg: '/shorts/end-card.jpg', endTitle: '', endSub: 'A Bible adventure game · coming soon', endCall: 'Add it to your wishlist · link in bio', narr }, words);
     scene.setup(S, X);
     window.BASE = S.cameras.main.zoom;
     bibleRpg.game.loop.sleep();
@@ -89,6 +116,7 @@ const length = await page.evaluate(
   sceneSrc,
   short,
   words,
+  narr,
 );
 // the game layer must be visible: show its ancestors again
 await page.evaluate(() => {

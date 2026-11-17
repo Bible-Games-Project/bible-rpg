@@ -20,6 +20,9 @@
   #short-root .end .t{font-size:58px;font-weight:700;color:#ffe08a;text-shadow:0 5px 0 #3a2508,0 0 20px rgba(0,0,0,.6)}
   #short-root .end .s{font-size:26px;margin-top:14px;text-shadow:0 3px 0 #1a1208}
   #short-root .end .c{font-size:22px;margin-top:34px;padding:10px 20px;border:3px solid #e8c467;border-radius:12px;background:rgba(22,16,8,.8);color:#f6e7b8}
+  #short-root .narr{position:absolute;left:-3%;bottom:0;width:60%;filter:drop-shadow(0 0 12px rgba(0,0,0,.5))}
+  #short-root .narr img{position:absolute;left:0;top:0;width:100%}
+  #short-root .narr img.base{position:relative;display:block}
   `;
   const ease = (k) => (k <= 0 ? 0 : k >= 1 ? 1 : k * k * (3 - 2 * k));
   // ease out with a little overshoot (a pop)
@@ -47,6 +50,12 @@
       root.id = 'short-root';
       root.innerHTML = `<div class="hook"><small>${cfg.kicker || 'Did you know?'}</small><b>${cfg.question}</b></div><div class="ref">${cfg.reference}</div><div class="cap"></div><div class="labels"></div>
         <div class="end" style="--bg:url('${cfg.endBg}')">${cfg.endTitle ? `<div class="t">${cfg.endTitle}</div>` : ""}<div class="s">${cfg.endSub}</div><div class="c">${cfg.endCall}</div></div>`;
+      if (cfg.narr) {
+        const n = document.createElement('div');
+        n.className = 'narr';
+        n.innerHTML = Object.entries(cfg.narr.imgs).map(([k, src]) => `<img class="${k}" src="${src}">`).join('');
+        root.append(n);
+      }
       document.body.append(root);
       this.el = (s) => root.querySelector(s);
       this.labels = [];
@@ -63,10 +72,9 @@
       const c = this.cfg;
       // the hook, then the reference
       const hook = this.el('.hook');
-      const hi = ease((t - 0.05) / 0.35);
+      const hi = 1;
       const ho = ease((t - c.hookEnd) / 0.35);
       hook.style.opacity = String(hi * (1 - ho));
-      hook.style.transform = `scale(${0.85 + 0.15 * pop((t - 0.05) / 0.45)})`;
       this.el('.ref').style.opacity = String(ease((t - c.hookEnd - 0.2) / 0.4) * (1 - ease((t - c.endAt) / 0.4)));
       // captions
       let html = '';
@@ -93,6 +101,25 @@
         l.d.style.top = `${sy}px`;
         l.d.style.opacity = k < 0 ? '0' : String(Math.min(1, k / 0.12));
         l.d.style.transform = `translate(-50%,-100%) scale(${k < 0 ? 0 : 0.6 + 0.4 * pop(k / 0.3)})`;
+      }
+      // the narrator: in from below for each of his spans (already there at 0,
+      // so the first frame shows him), talking with the voice, blinking now and then
+      if (c.narr) {
+        const n = this.el('.narr');
+        let y = 110;
+        for (const [a, b] of c.narr.spans) {
+          if (t < a - 0.01 || t > b + 0.4) continue;
+          const inK = a <= 0 ? 1 : pop((t - a) / 0.45);
+          y = 110 * (1 - inK) + 110 * ease((t - b) / 0.35);
+        }
+        const f = Math.round(t * 30);
+        const m = y < 100 ? c.narr.mouth[f] ?? 0 : 0;
+        n.style.transform = `translateY(${y + Math.sin(t * 2.4) * 0.6 - m * 0.25}%)`;
+        n.style.visibility = y >= 110 ? 'hidden' : 'visible';
+        for (const k of [1, 2, 3]) n.querySelector(`.mouth${k}`).style.visibility = m === k ? 'visible' : 'hidden';
+        let blink = false;
+        for (let i = 0, bt = 1.1; bt < t + 1; i++, bt += 2.4 + ((i * 7) % 5) * 0.35) if (t >= bt && t < bt + 0.13) blink = true;
+        n.querySelector('.blink').style.visibility = blink ? 'visible' : 'hidden';
       }
       // the end card
       const e = ease((t - c.endAt) / 0.5);
