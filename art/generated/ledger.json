@@ -2449,5 +2449,49 @@
    "total_tokens": 2012
   },
   "at": "20261112-161754"
+ },
+ {
+  "job": "narrator-mouth-half",
+  "chapter": "shorts",
+  "file": "art/generated/narrator-mouth-half/20261117-155741-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0613,
+  "usage": {
+   "input_tokens": 1114,
+   "input_tokens_details": {
+    "image_tokens": 1024,
+    "text_tokens": 90
+   },
+   "output_tokens": 1756,
+   "output_tokens_details": {
+    "image_tokens": 1756,
+    "text_tokens": 0
+   },
+   "total_tokens": 2870
+  },
+  "at": "20261117-155741"
+ },
+ {
+  "job": "narrator-mouth-open",
+  "chapter": "shorts",
+  "file": "art/generated/narrator-mouth-open/20261117-155743-medium.png",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "cost": 0.0614,
+  "usage": {
+   "input_tokens": 1131,
+   "input_tokens_details": {
+    "image_tokens": 1024,
+    "text_tokens": 107
+   },
+   "output_tokens": 1756,
+   "output_tokens_details": {
+    "image_tokens": 1756,
+    "text_tokens": 0
+   },
+   "total_tokens": 2887
+  },
+  "at": "20261117-155743"
  }
 ]
