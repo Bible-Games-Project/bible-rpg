@@ -41,7 +41,7 @@ const audio = [
   `[1:a]adelay=${delay}|${delay},apad,${fmt},asplit=2[v1][v2]`,
   game
     ? `[2:a]${fmt},volume=0.4[m]`
-    : `[2:a]${fmt},afade=t=in:d=0.4,afade=t=out:st=${len - 1.8}:d=1.8,volume=0.5[m]`,
+    : `[2:a]${fmt},afade=t=in:d=0.4,afade=t=out:st=${len - 1.8}:d=1.8,volume=0.3[m]`,
   `[m][v1]sidechaincompress=threshold=0.03:ratio=6:attack=40:release=450[duck]`,
   game
     ? `[duck][v2]amix=inputs=2:duration=first,volume=2,loudnorm=I=-14:TP=-1.5:LRA=11[a]`

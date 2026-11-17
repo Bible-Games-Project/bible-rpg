@@ -695,3 +695,9 @@ $1 play at `WALK_FPS` 15 at the player's
   `public/shorts/<id>.mp4`. This Chromium ignores CSS web fonts: the
   recorder loads Pixelify Sans with `FontFace` from the woff2 and sets
   `FONTCONFIG_PATH`. ffmpeg: `npm i @ffmpeg-installer/ffmpeg` in /tmp/tools.
+  Background music: the maintainer's tracks (`art/shorts/music/tracks.json`),
+  one per short in turn (a short's `music` picks one). The narrator
+  (`art/shorts/narrator/<name>.png` + `.json` face notes; `narrator.mjs`
+  draws mouth and blink layers) shows in the scene's `narrator` spans,
+  his mouth following the voice's loudness. The first frame is the
+  thumbnail (hook in full, narrator in), saved as `public/shorts/<id>.jpg`.
