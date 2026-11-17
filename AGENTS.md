@@ -698,8 +698,10 @@ $1 play at `WALK_FPS` 15 at the player's
   Background music: the maintainer's tracks (`art/shorts/music/tracks.json`),
   one per short in turn (a short's `music` picks one). The narrator
   (`art/shorts/narrator/<name>.png` + `.json` face notes, plus
-  `<name>-mouth1/2.png`: half-open and open mouth, made with a masked
-  OpenAI edit of a 2× face crop and pasted back by `mouth-paste.mjs`; drawn
-  mouths were rejected as ugly. `narrator.mjs` adds the blink layer) shows in the scene's `narrator` spans,
+  `<name>-mouth.png`: the open mouth, a masked OpenAI edit of a 2× face crop
+  pasted back by `mouth-paste.mjs` (mouth and skin only, never the beard:
+  a pasted patch shows). `narrator.mjs` closes it by the jaw into 3 sizes
+  of one shape (different shapes per size looked jumpy; drawn mouths were
+  rejected as ugly). `narrator.mjs` adds the blink layer) shows in the scene's `narrator` spans,
   his mouth following the voice's loudness. The first frame is the
   thumbnail (hook in full, narrator in), saved as `public/shorts/<id>.jpg`.
