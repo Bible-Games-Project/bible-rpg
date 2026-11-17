@@ -35,13 +35,29 @@ function block(png, bx, by, [r, g, b]) {
       png.data[i] = r; png.data[i + 1] = g; png.data[i + 2] = b; png.data[i + 3] = 255;
     }
 }
-// open mouths: the portrait with its mouth half open (<name>-mouth1.png) and
-// open (<name>-mouth2.png), redrawn by the image AI on the mouth alone and
-// pasted back with tools/shorts/mouth-paste.mjs; the widest size reuses the open one.
-[1, 2, 3].forEach((size) => {
-  const png = PNG.sync.read(readFileSync(`${root}art/shorts/narrator/${name}-mouth${Math.min(size, 2)}.png`));
-  writeFileSync(`${dir}/mouth${size}.png`, PNG.sync.write(crop(png)));
-});
+// open mouths: the portrait with its mouth open (<name>-mouth.png, redrawn
+// by the image AI on the mouth alone and pasted back with
+// tools/shorts/mouth-paste.mjs), and from it two smaller openings: in each
+// column of the mouth (face.jaw: x0..x1) the rows below `y` move up by d
+// (most in the middle, none at the corners), and the rows down to `end`
+// stretch to fill, so the jaw comes up and the lips nearly meet.
+const open = PNG.sync.read(readFileSync(`${root}art/shorts/narrator/${name}-mouth.png`));
+const { x0, x1, y: jy, end, d: jd } = face.jaw;
+function shut(f) {
+  const png = layer();
+  open.data.copy(png.data);
+  for (let x = x0; x <= x1; x++) {
+    const d = Math.round(jd * f * Math.sqrt(Math.sin((Math.PI * (x - x0)) / (x1 - x0))));
+    if (d <= 0) continue;
+    for (let y = jy; y < end; y++) {
+      const span = end - jy - d;
+      const sy = y < jy + span / 2 ? y + d : Math.round(jy + span / 2 + d + ((y - jy - span / 2) * (end - jy - span / 2 - d)) / (end - jy - span / 2));
+      open.data.copy(png.data, (y * W + x) * 4, (sy * W + x) * 4, (sy * W + x) * 4 + 4);
+    }
+  }
+  return png;
+}
+[[1, 0.85], [2, 0.45], [3, 0]].forEach(([size, f]) => writeFileSync(`${dir}/mouth${size}.png`, PNG.sync.write(crop(shut(f)))));
 
 // closed eyes: the eye under the lid in skin colour, the lashes a soft curve
 const blink = layer();

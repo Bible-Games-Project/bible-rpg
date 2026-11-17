@@ -46,7 +46,17 @@ if (scene0.narrator) {
   }
   const loud = rms.filter((r) => r > 0.01).sort((a, b) => a - b);
   const top = loud[Math.floor(loud.length * 0.9)] || 1;
-  const mouth = rms.map((r) => (r / top < 0.12 ? 0 : r / top < 0.4 ? 1 : r / top < 0.75 ? 2 : 3));
+  // smoothed over 3 frames, then moving one size at a time and holding each
+  // for at least 2 frames, so the mouth opens and closes through its sizes
+  const want = rms.map((_, i) => (rms[i - 1] ?? 0) / 4 + rms[i] / 2 + (rms[i + 1] ?? 0) / 4)
+    .map((r) => (r / top < 0.12 ? 0 : r / top < 0.4 ? 1 : r / top < 0.75 ? 2 : 3));
+  const mouth = [];
+  let cur = 0, held = 0;
+  for (const w of want) {
+    if (w !== cur && held >= 2) { cur += Math.sign(w - cur); held = 0; }
+    held++;
+    mouth.push(cur);
+  }
   narr = { imgs: Object.fromEntries(['base', 'mouth1', 'mouth2', 'mouth3', 'blink'].map((f) => [f, img(f)])), mouth, spans: scene0.narrator };
 }
 fs.mkdirSync(out, { recursive: true });
