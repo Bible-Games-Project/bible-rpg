@@ -704,6 +704,7 @@ $1 play at `WALK_FPS` 15 at the player's
   only quiet has one so far. `narrator.mjs` takes the open mouth from the
   open drawing round the mouth only (the two drawings differ slightly
   elsewhere; assenyala is shifted and openhands is another size, so check
-  they line up) and draws the blink. He shows in the scene's `narrator` spans,
+  they line up), makes a half-open mouth from it (`jaw` in the json) and
+  draws the blink. The mouth follows each syllable (shut in the dips). He shows in the scene's `narrator` spans,
   his mouth following the voice's loudness. The first frame is the
   thumbnail (hook in full, narrator in), saved as `public/shorts/<id>.jpg`.
