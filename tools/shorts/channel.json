@@ -2,7 +2,7 @@
   "account": "biblequiz.truechrist@gmail.com",
   "key": "UPLOAD_POST_API_KEY",
   "profile": "default",
-  "platforms": ["youtube"],
+  "platforms": ["youtube", "instagram"],
   "timezone": "Europe/Madrid",
   "slots": [{ "day": 2, "time": "18:00" }, { "day": 5, "time": "18:00" }],
   "game": "Eden to Heaven",

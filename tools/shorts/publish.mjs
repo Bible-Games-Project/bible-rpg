@@ -3,7 +3,8 @@
 // in tools/shorts/channel.json; what has been scheduled, in published.json).
 //
 //   node tools/shorts/publish.mjs check              the key's account and profiles
-//   node tools/shorts/publish.mjs schedule <id> [--at 2026-11-20T18:00]   (local time; default: next free slot)
+//   node tools/shorts/publish.mjs schedule <id> [--at 2026-11-20T18:00] [--platforms youtube,instagram]
+//     (--at in the channel's local time; default: the next free slot, on channel.json's platforms)
 //   node tools/shorts/publish.mjs list               the posts waiting at Upload-Post
 //
 // The key is read from the environment variable named in channel.json and
@@ -35,13 +36,13 @@ const call = async (p, init = {}) => {
 };
 
 /** The key's account must be the game's, with its profile on every platform. */
-async function check() {
+async function check(platforms = ch.platforms) {
   const me = await call('/uploadposts/me');
   if (me.email !== ch.account) throw new Error(`the key belongs to ${me.email}, not ${ch.account}: not uploading`);
   const { profiles } = await call('/uploadposts/users');
   const prof = profiles.find((p) => p.username === ch.profile);
   if (!prof) throw new Error(`no profile ${ch.profile}`);
-  for (const pl of ch.platforms) if (!prof.social_accounts?.[pl]) throw new Error(`${pl} is not connected in ${ch.profile}`);
+  for (const pl of platforms) if (!prof.social_accounts?.[pl]) throw new Error(`${pl} is not connected in ${ch.profile}`);
   return { me, prof };
 }
 
@@ -84,9 +85,11 @@ if (cmd === 'check') {
 } else if (cmd === 'schedule') {
   const short = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/shorts/shorts.json'), 'utf8')).find((s) => s.id === id);
   if (!short) throw new Error('unknown short ' + id);
-  if (log().some((e) => e.id === id)) throw new Error(`${id} is already scheduled (published.json)`);
+  const platforms = opt('--platforms')?.split(',') ?? ch.platforms;
+  const dup = platforms.filter((pl) => log().some((e) => e.id === id && e.platforms.includes(pl)));
+  if (dup.length) throw new Error(`${id} is already scheduled on ${dup.join(', ')} (published.json)`);
   const video = path.join(ROOT, `public/shorts/${id}.mp4`);
-  await check();
+  await check(platforms);
   let at = nextSlot();
   if (opt('--at')) {
     const [d, t] = opt('--at').split('T');
@@ -96,11 +99,20 @@ if (cmd === 'check') {
   }
   const title = `${short.title} #Shorts`;
   const description = `${short.narration}\n\n📖 ${short.reference}\n\n🎮 ${ch.game}: a Bible adventure game, coming soon. Add it to your wishlist!\n\n#Bible #BibleStories #DidYouKnow #Christian`;
+  // Instagram's caption: the hook, then the rest (its own title field, and the
+  // title itself when YouTube is not in the upload)
+  const caption = `${short.title}\n\n${description}\n\n#Reels #Faith #Jesus`;
   const form = new FormData();
   form.set('user', ch.profile);
-  for (const pl of ch.platforms) form.append('platform[]', pl);
+  for (const pl of platforms) form.append('platform[]', pl);
   form.set('video', new Blob([fs.readFileSync(video)], { type: 'video/mp4' }), `${id}.mp4`);
-  form.set('title', title);
+  form.set('title', platforms.includes('youtube') ? title : caption);
+  if (platforms.includes('instagram')) {
+    form.set('instagram_title', caption);
+    form.set('media_type', 'REELS');
+    form.set('share_to_feed', 'true');
+    form.set('thumb_offset', '0');
+  }
   form.set('description', description);
   for (const t of ch.tags) form.append('tags[]', t);
   form.set('categoryId', ch.categoryId);
@@ -112,8 +124,8 @@ if (cmd === 'check') {
   const r = await call('/upload', { method: 'POST', body: form });
   console.log(JSON.stringify(r).slice(0, 1500));
   const l = log();
-  l.push({ id, at: at.toISOString(), title, platforms: ch.platforms, job: r.job_id ?? r.request_id ?? null, scheduledAt: new Date().toISOString() });
+  l.push({ id, at: at.toISOString(), title, platforms, job: r.job_id ?? r.request_id ?? null, scheduledAt: new Date().toISOString() });
   fs.writeFileSync(LOG, JSON.stringify(l, null, 1) + '\n');
 } else {
-  console.log('usage: check | schedule <id> [--at YYYY-MM-DDTHH:MM] | list');
+  console.log('usage: check | schedule <id> [--at YYYY-MM-DDTHH:MM] [--platforms a,b] | list');
 }
