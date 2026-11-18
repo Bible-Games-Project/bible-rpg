@@ -1,0 +1,11 @@
+{
+  "account": "biblequiz.truechrist@gmail.com",
+  "key": "UPLOAD_POST_API_KEY",
+  "profile": "default",
+  "platforms": ["youtube"],
+  "timezone": "Europe/Madrid",
+  "slots": [{ "day": 2, "time": "18:00" }, { "day": 5, "time": "18:00" }],
+  "game": "Eden to Heaven",
+  "categoryId": "27",
+  "tags": ["Bible", "Bible stories", "Did you know", "Christian", "Genesis", "pixel art", "Shorts"]
+}
