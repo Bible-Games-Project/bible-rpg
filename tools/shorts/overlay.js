@@ -118,7 +118,7 @@
         // breathing only ever sinks him a little: his bottom edge stays on the frame's
         n.style.transform = `translateY(${y + (1 + Math.sin(t * 2.4)) * 0.4}%)`;
         n.style.visibility = y >= 110 ? 'hidden' : 'visible';
-        for (const k of [1, 2, 3]) n.querySelector(`.mouth${k}`).style.visibility = m === k ? 'visible' : 'hidden';
+        n.querySelector('.mouth').style.visibility = m ? 'visible' : 'hidden';
         let blink = false;
         for (let i = 0, bt = 1.1; bt < t + 1; i++, bt += 2.4 + ((i * 7) % 5) * 0.35) if (t >= bt && t < bt + 0.13) blink = true;
         n.querySelector('.blink').style.visibility = blink ? 'visible' : 'hidden';

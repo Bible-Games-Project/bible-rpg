@@ -696,12 +696,14 @@ $1 play at `WALK_FPS` 15 at the player's
   recorder loads Pixelify Sans with `FontFace` from the woff2 and sets
   `FONTCONFIG_PATH`. ffmpeg: `npm i @ffmpeg-installer/ffmpeg` in /tmp/tools.
   Background music: the maintainer's tracks (`art/shorts/music/tracks.json`),
-  one per short in turn (a short's `music` picks one). The narrator
-  (`art/shorts/narrator/<name>.png` + `.json` face notes, plus
-  `<name>-mouth.png`: the open mouth, a masked OpenAI edit of a 2× face crop
-  pasted back by `mouth-paste.mjs` (mouth and skin only, never the beard:
-  a pasted patch shows). `narrator.mjs` closes it by the jaw into 3 sizes
-  of one shape (different shapes per size looked jumpy; drawn mouths were
-  rejected as ugly). `narrator.mjs` adds the blink layer) shows in the scene's `narrator` spans,
+  one per short in turn (a short's `music` picks one). The narrator: the
+  maintainer's poses in `art/shorts/narrator/poses/` (quiet, assenyala =
+  pointing, openhands; each `<pose>-closed.png` / `-open.png`, keep them),
+  one pose per short (`narrator` in shorts.json). A pose needs
+  `<pose>.json` (mouth ellipse, eyes, skin, crop with a straight bottom);
+  only quiet has one so far. `narrator.mjs` takes the open mouth from the
+  open drawing round the mouth only (the two drawings differ slightly
+  elsewhere; assenyala is shifted and openhands is another size, so check
+  they line up) and draws the blink. He shows in the scene's `narrator` spans,
   his mouth following the voice's loudness. The first frame is the
   thumbnail (hook in full, narrator in), saved as `public/shorts/<id>.jpg`.
