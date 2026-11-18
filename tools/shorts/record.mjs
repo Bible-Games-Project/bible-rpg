@@ -81,15 +81,18 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const GAME = 'http://localhost:4173/?debug';
 
 // open the mission straight from a save, past the headphones and controls notes
-const mission = new Function(`return (\n${sceneSrc}\n)`)().mission;
+// the chapter is the mission's prefix (eden.m03, cain.m02); who is played, the scene's `active`
+const mission = scene0.mission;
+const chapter = mission.split('.')[0];
+const active = scene0.active ?? (chapter === 'cain' ? 'cain' : 'adam');
 await page.goto(GAME, { waitUntil: 'networkidle0' });
-await page.evaluate((m) => {
+await page.evaluate((m, ch, who) => {
   const now = Date.now();
-  localStorage.setItem('bible-rpg.save.v1', JSON.stringify({ version: 1, chapters: { eden: { currentMission: m, completedMissions: [], flags: {}, inventory: {}, activeCharacter: 'adam', completed: false, startedAt: now, updatedAt: now } }, unlocked: ['eden'], updatedAt: now }));
-}, mission);
+  localStorage.setItem('bible-rpg.save.v1', JSON.stringify({ version: 1, chapters: { [ch]: { currentMission: m, completedMissions: [], flags: {}, inventory: {}, activeCharacter: who, completed: false, startedAt: now, updatedAt: now } }, unlocked: ['eden', 'cain'], updatedAt: now }));
+}, mission, chapter, active);
 await page.goto(GAME, { waitUntil: 'networkidle0' });
 await sleep(800);
-await page.evaluate(() => setTimeout(() => window.bibleRpg.startChapter('eden', 'continue'), 30));
+await page.evaluate((ch) => setTimeout(() => window.bibleRpg.startChapter(ch, 'continue'), 30), chapter);
 for (let k = 0; k < 3; k++) {
   await sleep(1500);
   await page.keyboard.press('Enter');
@@ -109,8 +112,8 @@ await page.evaluate(async (fonts) => {
 const overlay = fs.readFileSync(path.join(ROOT, 'tools/shorts/overlay.js'), 'utf8');
 await page.evaluate(overlay);
 const length = await page.evaluate(
-  (sceneSrc, short, words, narr) => {
-    const S = bibleRpg.game.scene.getScene('eden');
+  (sceneSrc, short, words, narr, chapter) => {
+    const S = bibleRpg.game.scene.getScene(chapter);
     window.S = S;
     S.halt();
     S.cutscene(true);
@@ -134,6 +137,7 @@ const length = await page.evaluate(
   short,
   words,
   narr,
+  chapter,
 );
 // the game layer must be visible: show its ancestors again
 await page.evaluate(() => {

@@ -149,7 +149,12 @@
     const cam = S.cameras.main;
     cam.stopFollow();
     cam.panEffect?.reset?.();
-    S.setView(base * z);
+    // Eden fits its screen-wide layers in setView; Cain only zooms and resizes its atmosphere
+    if (S.setView) S.setView(base * z);
+    else {
+      cam.setZoom(base * z);
+      S.atmosphere?.resize?.(S.scale.width, S.scale.height, base * z);
+    }
     cam.centerOn(x, y);
   };
 })();
