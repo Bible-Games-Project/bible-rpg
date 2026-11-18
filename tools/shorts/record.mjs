@@ -26,7 +26,7 @@ const out = `/tmp/shorts/${id}/frames`;
 const scene0 = new Function(`return (\n${sceneSrc}\n)`)();
 
 // the narrator: his portrait layers in the short's pose (narrator.mjs) and
-// whether his mouth is open at each frame, from the voice's loudness around it
+// how open his mouth is at each frame, from the voice's loudness around it
 const FF = process.env.FFMPEG ?? path.join(TOOLS, 'node_modules/@ffmpeg-installer/linux-x64/ffmpeg');
 let narr = null;
 if (scene0.narrator) {
@@ -37,26 +37,34 @@ if (scene0.narrator) {
   const SR = 16000;
   const pcm = execFileSync(FF, ['-v', 'error', '-i', path.join(ROOT, `art/shorts/${id}/voice.mp3`), '-ac', '1', '-ar', String(SR), '-f', 's16le', '-'], { maxBuffer: 1 << 28 });
   const n = pcm.length / 2;
+  // loudness over 50 ms round each frame
   const rms = [];
   for (let f = 0; f <= Math.ceil(scene0.length * FPS); f++) {
     const c = Math.round((f / FPS - (scene0.voiceAt ?? 0)) * SR);
     let q = 0, k = 0;
-    for (let i = Math.max(0, c - 400); i < Math.min(n, c + 800); i++, k++) q += (pcm.readInt16LE(i * 2) / 32768) ** 2;
+    for (let i = Math.max(0, c - 400); i < Math.min(n, c + 400); i++, k++) q += (pcm.readInt16LE(i * 2) / 32768) ** 2;
     rms.push(k ? Math.sqrt(q / k) : 0);
   }
   const loud = rms.filter((r) => r > 0.01).sort((a, b) => a - b);
   const top = loud[Math.floor(loud.length * 0.9)] || 1;
-  // smoothed over 3 frames, open while loud enough, each state held at least
-  // 3 frames so the mouth does not flicker
-  const want = rms.map((_, i) => ((rms[i - 1] ?? 0) / 4 + rms[i] / 2 + (rms[i + 1] ?? 0) / 4) / top > 0.3 ? 1 : 0);
+  // each syllable: against the loudest moment within ±5 frames the mouth is
+  // open near the peak, half open on the way, shut in the dips between
+  // syllables and in silence. It moves one size per frame (shut → half →
+  // open), holding shut and open at least 2 frames.
+  const want = rms.map((r, i) => {
+    let peak = top * 0.3;
+    for (let j = Math.max(0, i - 5); j <= Math.min(rms.length - 1, i + 5); j++) peak = Math.max(peak, rms[j]);
+    const rel = r / peak;
+    return r < top * 0.08 ? 0 : rel > 0.72 ? 2 : rel > 0.4 ? 1 : 0;
+  });
   const mouth = [];
   let cur = 0, held = 0;
   for (const w of want) {
-    if (w !== cur && held >= 3) { cur = w; held = 0; }
+    if (w !== cur && (held >= 2 || cur === 1)) { cur += Math.sign(w - cur); held = 0; }
     held++;
     mouth.push(cur);
   }
-  narr = { imgs: Object.fromEntries(['base', 'mouth', 'blink'].map((f) => [f, img(f)])), mouth, spans: scene0.narrator };
+  narr = { imgs: Object.fromEntries(['base', 'mouth1', 'mouth2', 'blink'].map((f) => [f, img(f)])), mouth, spans: scene0.narrator };
 }
 fs.mkdirSync(out, { recursive: true });
 

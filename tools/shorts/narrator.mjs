@@ -3,7 +3,7 @@
 // -open.png, the same drawing with the mouth shut and open) and its notes
 // (<pose>.json: the mouth and eyes, the crop): the portrait with the mouth
 // shut, the open mouth (taken from the open drawing round the mouth only, so
-// the rest never flickers) and the closed-eyes layer, drawn in the portrait's
+// the rest never flickers), a half-open one made from it and the closed-eyes layer, drawn in the portrait's
 // blocky style. All cut to the figure with a straight bottom edge (it stands
 // on the frame's bottom). The overlay stacks them while the voice plays.
 //
@@ -43,7 +43,23 @@ for (let y = Math.floor(m.y - m.ry); y <= m.y + m.ry; y++)
     const i = (y * W + x) * 4;
     for (let c = 0; c < 4; c++) talk.data[i + c] = Math.round(src.data[i + c] * (1 - k) + open.data[i + c] * k);
   }
-writeFileSync(`${dir}/mouth.png`, PNG.sync.write(crop(talk)));
+writeFileSync(`${dir}/mouth2.png`, PNG.sync.write(crop(talk)));
+
+// the half-open mouth, from the open one: in each column of the mouth
+// (face.jaw: x0..x1) the rows below `y` move up by d (most in the middle,
+// none at the corners) and the rows down to `end` stretch to fill, so the
+// jaw comes halfway up
+const { x0: jx0, x1: jx1, y: jy, end: jend, d: jd } = face.jaw;
+const half = new PNG({ width: W, height: H });
+talk.data.copy(half.data);
+for (let x = jx0; x <= jx1; x++) {
+  const d = Math.round(jd * Math.sqrt(Math.sin((Math.PI * (x - jx0)) / (jx1 - jx0))));
+  for (let y = jy; y < jend && d > 0; y++) {
+    const sy = Math.min(jend - 1, Math.round(jy + d + ((y - jy) * (jend - jy - d)) / (jend - jy)));
+    talk.data.copy(half.data, (y * W + x) * 4, (sy * W + x) * 4, (sy * W + x) * 4 + 4);
+  }
+}
+writeFileSync(`${dir}/mouth1.png`, PNG.sync.write(crop(half)));
 
 // closed eyes: the eye (a rounded box, so its corners are covered too) in
 // skin colour, the shut lid a soft curve across it in art pixels of half size
@@ -71,4 +87,4 @@ for (const e of face.eyes) {
 }
 writeFileSync(`${dir}/blink.png`, PNG.sync.write(crop(blink)));
 writeFileSync(`${dir}/base.png`, PNG.sync.write(crop(src)));
-console.log(`${dir}: base, mouth, blink`);
+console.log(`${dir}: base, mouth1-2, blink`);
