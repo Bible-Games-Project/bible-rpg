@@ -713,6 +713,7 @@ $1 play at `WALK_FPS` 15 at the player's
   account (biblequiz.truechrist@gmail.com, YouTube "Bible Quiz"), key env
   name and Tuesday/Friday 18:00 Madrid slots are in `channel.json`; it
   refuses a key of another account (each game has its own Upload-Post
-  account: 10 free uploads a month). Scheduled posts go in `published.json`.
+  account: 10 free uploads a month; YouTube and Instagram connected,
+  LinkedIn not yet). Scheduled posts go in `published.json`.
   Every short is a "Did you know…?" curiosity from a finished chapter (check
   for new chapters before a batch).
