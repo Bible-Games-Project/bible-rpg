@@ -692,7 +692,12 @@ $1 play at `WALK_FPS` 15 at the player's
   frame by frame headless (deterministic, ~0.6 s per frame) with the
   captions overlay (`overlay.js`) into `/tmp/shorts/<id>/frames`;
   `make.mjs <id>` adds the synthesized music bed and writes
-  `public/shorts/<id>.mp4`. This Chromium ignores CSS web fonts: the
+  `public/shorts/<id>.mp4`. A scene's `mission` picks the chapter by its
+  prefix (`eden.m04`, `cain.m03`; Cain's save/menu id is `cain-abel`) and
+  `active` who is played. CainScene has no `face()`/`setView()`: call
+  `actor.face()`; the camera falls back to `setZoom`. The Cain world looks
+  dusk-blue in every mission. Preview framing cheaply with
+  `record.mjs <id> --every 60` and an ffmpeg `tile` sheet. This Chromium ignores CSS web fonts: the
   recorder loads Pixelify Sans with `FontFace` from the woff2 and sets
   `FONTCONFIG_PATH`. ffmpeg: `npm i @ffmpeg-installer/ffmpeg` in /tmp/tools.
   Background music: the maintainer's tracks (`art/shorts/music/tracks.json`),
