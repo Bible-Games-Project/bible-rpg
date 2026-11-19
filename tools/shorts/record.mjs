@@ -83,21 +83,25 @@ const GAME = 'http://localhost:4173/?debug';
 // open the mission straight from a save, past the headphones and controls notes
 // the chapter is the mission's prefix (eden.m03, cain.m02); who is played, the scene's `active`
 const mission = scene0.mission;
-const chapter = mission.split('.')[0];
+const chapter = mission.split('.')[0]; // the Phaser scene's key
+const saveId = { cain: 'cain-abel' }[chapter] ?? chapter; // the chapter's id in the save and the menus
 const active = scene0.active ?? (chapter === 'cain' ? 'cain' : 'adam');
 await page.goto(GAME, { waitUntil: 'networkidle0' });
-await page.evaluate((m, ch, who) => {
+await page.evaluate((m, id, who) => {
   const now = Date.now();
-  localStorage.setItem('bible-rpg.save.v1', JSON.stringify({ version: 1, chapters: { [ch]: { currentMission: m, completedMissions: [], flags: {}, inventory: {}, activeCharacter: who, completed: false, startedAt: now, updatedAt: now } }, unlocked: ['eden', 'cain'], updatedAt: now }));
-}, mission, chapter, active);
+  localStorage.setItem('bible-rpg.save.v1', JSON.stringify({ version: 1, chapters: { [id]: { currentMission: m, completedMissions: [], flags: {}, inventory: {}, activeCharacter: who, completed: false, startedAt: now, updatedAt: now } }, unlocked: ['eden', 'cain-abel'], updatedAt: now }));
+}, mission, saveId, active);
 await page.goto(GAME, { waitUntil: 'networkidle0' });
 await sleep(800);
-await page.evaluate((ch) => setTimeout(() => window.bibleRpg.startChapter(ch, 'continue'), 30), chapter);
+await page.evaluate((id) => setTimeout(() => window.bibleRpg.startChapter(id, 'continue'), 30), saveId);
 for (let k = 0; k < 3; k++) {
   await sleep(1500);
   await page.keyboard.press('Enter');
 }
 await sleep(6000);
+// Cain's chapter builds its portraits and art first: wait for its scene to be running
+await page.waitForFunction((ch) => { const S = window.bibleRpg.game.scene.getScene(ch); return S?.sys.isActive() && S.player?.(); }, { timeout: 120000, polling: 500 }, chapter);
+await sleep(3000);
 
 // the pixel font, given straight to the page (this browser does not load web fonts from CSS)
 const fonts = ['400', '600'].map((w) => [w, fs.readFileSync(path.join(ROOT, `src/assets/fonts/pixelify-sans-latin-${w}-normal.woff2`)).toString('base64')]);
