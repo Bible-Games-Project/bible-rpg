@@ -82,22 +82,6 @@
   "account": "biblequiz.truechrist@gmail.com"
  },
  {
-  "id": "cain-shepherd",
-  "account": "biblegamesproject@gmail.com",
-  "profile": "Brand_1_RPG",
-  "at": "2026-11-26T17:00:00.000Z",
-  "title": "Did you know Abel was the first shepherd? 🐑 | Bible Story #Shorts",
-  "platforms": [
-   "youtube",
-   "instagram",
-   "facebook",
-   "tiktok",
-   "pinterest"
-  ],
-  "job": "777290a9f69c4b7c80c4a448a3c55f86",
-  "scheduledAt": "2026-11-20T11:30:29.878Z"
- },
- {
   "id": "eden-figleaves",
   "account": "biblegamesproject@gmail.com",
   "profile": "Brand_1_RPG",
@@ -160,5 +144,21 @@
   ],
   "job": "1025406ad5c841709544442dfa43c009",
   "scheduledAt": "2026-11-20T11:31:49.158Z"
+ },
+ {
+  "id": "cain-shepherd",
+  "account": "biblegamesproject@gmail.com",
+  "profile": "Brand_1_RPG",
+  "at": "2026-11-26T17:00:00.000Z",
+  "title": "Did you know Abel was the first shepherd? 🐑 | Bible Story #Shorts",
+  "platforms": [
+   "youtube",
+   "instagram",
+   "facebook",
+   "tiktok",
+   "pinterest"
+  ],
+  "job": "13f2e3d67c0148e888c20473b16fd889",
+  "scheduledAt": "2026-11-20T11:31:55.611Z"
  }
 ]
