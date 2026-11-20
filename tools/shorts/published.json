@@ -82,22 +82,6 @@
   "account": "biblequiz.truechrist@gmail.com"
  },
  {
-  "id": "eden-naming",
-  "account": "biblegamesproject@gmail.com",
-  "profile": "Brand_1_RPG",
-  "at": "2026-11-22T17:00:00.000Z",
-  "title": "Did you know Adam named the animals? 🦁 | Bible Story #Shorts",
-  "platforms": [
-   "youtube",
-   "instagram",
-   "facebook",
-   "tiktok",
-   "pinterest"
-  ],
-  "job": "bb79eee05db042aeacca1b60a3ac36df",
-  "scheduledAt": "2026-11-20T11:29:51.602Z"
- },
- {
   "id": "eden-rib",
   "account": "biblegamesproject@gmail.com",
   "profile": "Brand_1_RPG",
@@ -160,5 +144,21 @@
   ],
   "job": "7335ddbc28f94dc1b1e58d48873eec97",
   "scheduledAt": "2026-11-20T11:30:46.324Z"
+ },
+ {
+  "id": "eden-naming",
+  "account": "biblegamesproject@gmail.com",
+  "profile": "Brand_1_RPG",
+  "at": "2026-11-22T17:00:00.000Z",
+  "title": "Did you know Adam named the animals? 🦁 | Bible Story #Shorts",
+  "platforms": [
+   "youtube",
+   "instagram",
+   "facebook",
+   "tiktok",
+   "pinterest"
+  ],
+  "job": "ce69ad0d978a4c25a82f1ab30c1b053e",
+  "scheduledAt": "2026-11-20T11:31:26.274Z"
  }
 ]

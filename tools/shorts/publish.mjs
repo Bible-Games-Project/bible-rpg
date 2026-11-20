@@ -165,7 +165,9 @@ if (cmd === 'check') {
   form.set('categoryId', t.youtube.category);
   form.set('privacyStatus', 'public');
   form.set('selfDeclaredMadeForKids', 'false');
+  // Instagram and TikTok keep a title and a caption apart: both get their own text
   form.set('instagram_title', t.instagram);
+  form.set('instagram_description', t.instagram);
   form.set('media_type', 'REELS');
   form.set('share_to_feed', 'true');
   form.set('thumb_offset', '0');
@@ -174,6 +176,7 @@ if (cmd === 'check') {
   if (ch.facebookPage) form.set('facebook_page_id', ch.facebookPage);
   form.set('facebook_media_type', 'REELS');
   form.set('tiktok_title', t.tiktok);
+  form.set('tiktok_description', t.tiktok);
   form.set('privacy_level', 'PUBLIC_TO_EVERYONE');
   form.set('pinterest_title', t.pinterest.title);
   form.set('pinterest_description', t.pinterest.description);
