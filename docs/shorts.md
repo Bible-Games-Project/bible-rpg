@@ -155,7 +155,7 @@ The script is `tools/shorts/publish.mjs`, which uses the Upload-Post API. Upload
 
 **The account**
 - Upload-Post premium account **biblegamesproject@gmail.com**.
-- One profile per game. Eden to Heaven is the profile **Brand_1_RPG** (`profile` in `tools/shorts/channel.json`): YouTube "Bible Games Project", Instagram and TikTok biblegamesproject, the Facebook page "Bible Games Project" and the Pinterest board "Bible Games", with YouTube, Instagram, Facebook, TikTok and Pinterest connected to it.
+- One profile per game. Eden to Heaven is the profile **Brand_1_RPG** (`profile` in `tools/shorts/channel.json`): YouTube "Bible Games Project", Instagram and TikTok biblegamesproject, the Facebook page "Bible Games Project" and the Pinterest board "Bible Games".
 - The API key is read only from the environment variable `UPLOAD_POST_BGP_API_KEY`, never from a file. The script refuses a key that belongs to another account.
 
 **The calendar**
