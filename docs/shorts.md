@@ -175,13 +175,13 @@ The script is `tools/shorts/publish.mjs`, which uses the Upload-Post API. Upload
   - Tags: Bible, Bible stories, Bible facts, Bible game, Christian game, Genesis, Did you know, Sunday school, Eden to Heaven, plus the names seen in the video (`names` in `shorts.json`: Adam, Eve, Cain, Abel…).
 - **Instagram and Facebook**
   - The title (question and emoji), then `📖 <reference>`, then the wishlist line, then `#BibleStories #BibleFacts #ChristianGames #Genesis #EdenToHeaven`.
-  - On Instagram the wishlist line ends with "Link in bio."; on Facebook it ends with the wishlist link, once there is one.
+  - On Instagram the wishlist line ends with "Link in bio."; on Facebook it ends with the link https://www.biblegamesproject.com/.
 - **TikTok**
   - The same, ending with "Link in bio.", then `#BibleTok #ChristianTikTok #BibleStories #DidYouKnow #EdenToHeaven`.
 - **Pinterest**
   - Title: `Bible Story: <question>`.
   - Description: the narration, then `📖 <reference> · Bible story, Bible facts, Sunday school, Christian game, <names>, Genesis, Eden to Heaven.`
-  - Link: the game's wishlist page (`wishlist` in `channel.json`).
+  - Link: https://www.biblegamesproject.com/ (`wishlist` in `channel.json`; the game has no store page yet).
 
 The `#Genesis` hashtag is the book of the reference, so it changes when a short comes from another book.
 
