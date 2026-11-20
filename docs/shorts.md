@@ -185,6 +185,8 @@ The script is `tools/shorts/publish.mjs`, which uses the Upload-Post API. Upload
 
 The `#Genesis` hashtag is the book of the reference, so it changes when a short comes from another book.
 
+Upload-Post keeps a title and a caption for each network. The script sends both for every network (e.g. `instagram_title` and `instagram_description`), or Instagram and TikTok would take YouTube's description.
+
 **The record:** every scheduled post is noted in `tools/shorts/published.json`, with its account, profile, date and job id.
 
 ## 12. The videos made so far (20 November 2026)
@@ -198,5 +200,6 @@ The `#Genesis` hashtag is the book of the reference, so it changes when a short 
 | cain-offering | Did you know why God accepted Abel's offering? 🔥 | Genesis 4:3–5 · Hebrews 11:4 | Mon 30 Nov 2026 |
 
 **Status:**
-- **New account** (biblegamesproject@gmail.com, all 5 networks): these dates are **waiting for the maintainer's go-ahead**. Nothing is scheduled there yet.
-- **Old account** (biblequiz.truechrist@gmail.com, profile "default", YouTube "Bible Quiz" and Instagram biblequiz.truechrist): the first schedule, paused by moving it to 1–5 November 2027. None of these has been published.
+- **New account** (biblegamesproject@gmail.com, profile Brand_1_RPG): **all 5 are scheduled** on YouTube, Instagram, Facebook, TikTok and Pinterest at these dates (one Upload-Post job per short, scheduled on 20 November 2026; job ids in `tools/shorts/published.json`).
+- The next short goes on Wednesday 2 December 2026 at 18:00, then every two days.
+- **Old account** (biblequiz.truechrist@gmail.com, profile "default", YouTube "Bible Quiz" and Instagram biblequiz.truechrist): the first schedule, paused by moving it to 1–5 November 2027. None of these has been published. Its API key no longer works, so those posts can only be deleted from the Upload-Post website.
