@@ -202,4 +202,4 @@ Upload-Post keeps a title and a caption for each network. The script sends both 
 **Status:**
 - **New account** (biblegamesproject@gmail.com, profile Brand_1_RPG): **all 5 are scheduled** on YouTube, Instagram, Facebook, TikTok and Pinterest at these dates (one Upload-Post job per short, scheduled on 20 November 2026; job ids in `tools/shorts/published.json`).
 - The next short goes on Wednesday 2 December 2026 at 18:00, then every two days.
-- **Old account** (biblequiz.truechrist@gmail.com, profile "default", YouTube "Bible Quiz" and Instagram biblequiz.truechrist): the first schedule, paused by moving it to 1–5 November 2027. None of these has been published. Its API key no longer works, so those posts can only be deleted from the Upload-Post website.
+- **Old account** (biblequiz.truechrist@gmail.com, profile "default", YouTube "Bible Quiz" and Instagram biblequiz.truechrist): the first schedule, paused and then **cancelled** on 20 November 2026. Nothing was ever published there, and nothing is scheduled there now.
