@@ -684,7 +684,9 @@ $1 play at `WALK_FPS` 15 at the player's
   Debug" switch (every playable chapter opens on the story map) on
   `*.pages.dev`, in `bun run dev` and after `#dev`; never in the published
   app. The maintainer asked that they never reach players.
-- Shorts (YouTube/Instagram, 1080×1920, ~20 s, English): `tools/shorts/`.
+- Shorts (YouTube/Instagram, 1080×1920, ~20 s, English): `tools/shorts/`; the
+  full recipe for people and other agents (voice, narrator, end card, texts) is
+  `docs/shorts.md`, keep it up to date.
   `shorts.json` holds each short's question and narration; `voice.mjs <id>`
   speaks it with the game's narrator (ElevenLabs, word timings) into
   `art/shorts/<id>/`; `scenes/<id>.js` scripts the game scene (cast,
