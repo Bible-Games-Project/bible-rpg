@@ -1,11 +1,15 @@
 {
-  "account": "biblequiz.truechrist@gmail.com",
-  "key": "UPLOAD_POST_API_KEY",
-  "profile": "default",
-  "platforms": ["youtube", "instagram"],
+  "account": "biblegamesproject@gmail.com",
+  "key": "UPLOAD_POST_BGP_API_KEY",
+  "profile": null,
+  "platforms": ["youtube", "instagram", "facebook", "tiktok", "pinterest"],
   "timezone": "Europe/Madrid",
-  "slots": [{ "day": 2, "time": "18:00" }, { "day": 5, "time": "18:00" }],
+  "everyDays": 2,
+  "time": "18:00",
   "game": "Eden to Heaven",
+  "wishlist": null,
+  "facebookPage": null,
+  "pinterestBoard": null,
   "categoryId": "27",
-  "tags": ["Bible", "Bible stories", "Did you know", "Christian", "Genesis", "pixel art", "Shorts"]
+  "tags": ["Bible", "Bible stories", "Bible facts", "Bible game", "Christian game", "Genesis", "Did you know", "Sunday school", "Eden to Heaven"]
 }

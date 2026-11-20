@@ -1,7 +1,7 @@
 # How we make the "Did you know…?" shorts (Eden to Heaven)
 
 This is the full recipe for the game's short vertical videos for YouTube Shorts,
-Instagram Reels, TikTok and Facebook. Give it to anyone, person or agent, who
+Instagram Reels, TikTok, Facebook and Pinterest. Give it to anyone, person or agent, who
 makes more of them, so every video looks and sounds the same.
 
 Repository: `Bible-Games-Project/bible-rpg`, branch `main`. All the paths
@@ -151,28 +151,52 @@ AGENTS.md has the technical details of the headless browser, ffmpeg and the Cain
 
 ## 11. Publishing
 
-The script is `tools/shorts/publish.mjs`, which uses the Upload-Post API.
+The script is `tools/shorts/publish.mjs`, which uses the Upload-Post API. Upload-Post publishes each video by itself at its time.
 
+**The account**
+- Upload-Post premium account **biblegamesproject@gmail.com**.
+- One profile per game. Eden to Heaven's profile is set in `tools/shorts/channel.json` (`profile`), with YouTube, Instagram, Facebook, TikTok and Pinterest connected to it.
+- The API key is read only from the environment variable `UPLOAD_POST_BGP_API_KEY`, never from a file. The script refuses a key that belongs to another account.
+
+**The calendar**
+- One short **every two days at 18:00 Madrid time**, on all 5 networks at once (`everyDays` and `time` in `channel.json`).
+- Each new short goes 2 days after the last one scheduled.
+
+**The texts** (in English; `node tools/shorts/publish.mjs preview <id>` prints them without sending anything)
 - **YouTube**
-  - Title: the title plus " #Shorts".
-  - Description: the narration, then "📖 <reference>", then "🎮 Eden to Heaven: a Bible adventure game, coming soon. Add it to your wishlist!", then #Bible #BibleStories #DidYouKnow #Christian.
-  - Category 27 (Education), with the tags from `tools/shorts/channel.json`.
-- **Instagram**
-  - Caption: the title, then the same description, then #Reels #Faith #Jesus.
-- **Schedule:** 2 shorts a week, Tuesday and Friday at 18:00 Madrid time (`channel.json`).
-- **Record:** every scheduled post is noted in `tools/shorts/published.json`.
+  - Title: `<question> <emoji> | Bible Story #Shorts`, at most 70 characters. When it doesn't fit, it drops " | Bible Story": `<question> <emoji> #Shorts`.
+  - Description:
+    1. `<question> The Bible story from <reference>, from Eden to Heaven, a Bible adventure game.`
+    2. the narration;
+    3. `📖 <reference>`;
+    4. `🎮 Eden to Heaven: a Bible adventure game, coming soon. Add it to your wishlist!`;
+    5. `#Bible #BibleStories #DidYouKnow #BibleGame #Genesis`.
+  - Category 27 (Education).
+  - Tags: Bible, Bible stories, Bible facts, Bible game, Christian game, Genesis, Did you know, Sunday school, Eden to Heaven, plus the names seen in the video (`names` in `shorts.json`: Adam, Eve, Cain, Abel…).
+- **Instagram and Facebook**
+  - The title (question and emoji), then `📖 <reference>`, then the wishlist line, then `#BibleStories #BibleFacts #ChristianGames #Genesis #EdenToHeaven`.
+  - On Instagram the wishlist line ends with "Link in bio."; on Facebook it ends with the wishlist link, once there is one.
+- **TikTok**
+  - The same, ending with "Link in bio.", then `#BibleTok #ChristianTikTok #BibleStories #DidYouKnow #EdenToHeaven`.
+- **Pinterest**
+  - Title: `Bible Story: <question>`.
+  - Description: the narration, then `📖 <reference> · Bible story, Bible facts, Sunday school, Christian game, <names>, Genesis, Eden to Heaven.`
+  - Link: the game's wishlist page (`wishlist` in `channel.json`).
+
+The `#Genesis` hashtag is the book of the reference, so it changes when a short comes from another book.
+
+**The record:** every scheduled post is noted in `tools/shorts/published.json`, with its account, profile, date and job id.
 
 ## 12. The videos made so far (20 November 2026)
 
-| id | Question | Reference |
-|---|---|---|
-| eden-naming | Did you know Adam named the animals? 🦁 | Genesis 2:19–20 |
-| eden-rib | Did you know Eve was made from Adam's rib? 🦴 | Genesis 2:21–23 |
-| cain-shepherd | Did you know Abel was the first shepherd? 🐑 | Genesis 4:2–4 |
-| eden-figleaves | Did you know the first clothes were fig leaves? 🍃 | Genesis 3:7, 21 |
-| cain-offering | Did you know why God accepted Abel's offering? 🔥 | Genesis 4:3–5 · Hebrews 11:4 |
+| id | Question | Reference | New calendar (18:00 Madrid) |
+|---|---|---|---|
+| eden-naming | Did you know Adam named the animals? 🦁 | Genesis 2:19–20 | Sun 22 Nov 2026 |
+| eden-rib | Did you know Eve was made from Adam's rib? 🦴 | Genesis 2:21–23 | Tue 24 Nov 2026 |
+| cain-shepherd | Did you know Abel was the first shepherd? 🐑 | Genesis 4:2–4 | Thu 26 Nov 2026 |
+| eden-figleaves | Did you know the first clothes were fig leaves? 🍃 | Genesis 3:7, 21 | Sat 28 Nov 2026 |
+| cain-offering | Did you know why God accepted Abel's offering? 🔥 | Genesis 4:3–5 · Hebrews 11:4 | Mon 30 Nov 2026 |
 
-**Where they are scheduled:**
-- In the Upload-Post account biblequiz.truechrist@gmail.com (profile "default"), for YouTube "Bible Quiz" (@biblequiz-b5j) and Instagram biblequiz.truechrist.
-- They were due between 20 November and 4 December 2026, but the maintainer **paused** them. Upload-Post has no pause, so they were moved to 1–5 November 2027. None has been published.
-- **Next step:** move to an Upload-Post account under Bible Games Project, with one profile per game, each with its own YouTube, Instagram, Facebook and TikTok, and 3 shorts a week per game.
+**Status:**
+- **New account** (biblegamesproject@gmail.com, all 5 networks): these dates are **waiting for the maintainer's go-ahead**. Nothing is scheduled there yet.
+- **Old account** (biblequiz.truechrist@gmail.com, profile "default", YouTube "Bible Quiz" and Instagram biblequiz.truechrist): the first schedule, paused by moving it to 1–5 November 2027. None of these has been published.

@@ -715,12 +715,14 @@ $1 play at `WALK_FPS` 15 at the player's
   draws the blink. The mouth follows each syllable (shut in the dips). He shows in the scene's `narrator` spans,
   his mouth following the voice's loudness. The first frame is the
   thumbnail (hook in full, narrator in), saved as `public/shorts/<id>.jpg`.
-  Publishing: `tools/shorts/publish.mjs` (check | schedule <id> | list)
-  schedules a short on Upload-Post, which posts it by itself. The game's
-  account (biblequiz.truechrist@gmail.com, YouTube "Bible Quiz"), key env
-  name and Tuesday/Friday 18:00 Madrid slots are in `channel.json`; it
-  refuses a key of another account (each game has its own Upload-Post
-  account: 10 free uploads a month; YouTube and Instagram connected,
-  LinkedIn not yet). Scheduled posts go in `published.json`.
+  Publishing: `tools/shorts/publish.mjs` (preview <id> | check | schedule <id>
+  | list) schedules a short on Upload-Post, which posts it by itself, on the
+  game profile of the premium account biblegamesproject@gmail.com (YouTube,
+  Instagram, Facebook, TikTok, Pinterest; key env `UPLOAD_POST_BGP_API_KEY`,
+  profile, Facebook page, Pinterest board, wishlist link and calendar in
+  `channel.json`; it refuses a key of another account). The texts of each
+  network are in docs/shorts.md section 11; show them to the maintainer
+  before scheduling. Scheduled posts go in `published.json` (with their
+  account: the old biblequiz.truechrist one has the first 5, paused to 2027).
   Every short is a "Did you know…?" curiosity from a finished chapter (check
   for new chapters before a batch).
