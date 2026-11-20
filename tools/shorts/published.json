@@ -82,22 +82,6 @@
   "account": "biblequiz.truechrist@gmail.com"
  },
  {
-  "id": "cain-offering",
-  "account": "biblegamesproject@gmail.com",
-  "profile": "Brand_1_RPG",
-  "at": "2026-11-30T17:00:00.000Z",
-  "title": "Did you know why God accepted Abel's offering? 🔥 | Bible Story #Shorts",
-  "platforms": [
-   "youtube",
-   "instagram",
-   "facebook",
-   "tiktok",
-   "pinterest"
-  ],
-  "job": "7335ddbc28f94dc1b1e58d48873eec97",
-  "scheduledAt": "2026-11-20T11:30:46.324Z"
- },
- {
   "id": "eden-naming",
   "account": "biblegamesproject@gmail.com",
   "profile": "Brand_1_RPG",
@@ -160,5 +144,21 @@
   ],
   "job": "2772d43d6e234d98a96a1d746e957460",
   "scheduledAt": "2026-11-20T11:32:00.207Z"
+ },
+ {
+  "id": "cain-offering",
+  "account": "biblegamesproject@gmail.com",
+  "profile": "Brand_1_RPG",
+  "at": "2026-11-30T17:00:00.000Z",
+  "title": "Did you know why God accepted Abel's offering? 🔥 | Bible Story #Shorts",
+  "platforms": [
+   "youtube",
+   "instagram",
+   "facebook",
+   "tiktok",
+   "pinterest"
+  ],
+  "job": "9b75178086964000aacbbdb803d611ea",
+  "scheduledAt": "2026-11-20T11:32:18.948Z"
  }
 ]
