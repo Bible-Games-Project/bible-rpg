@@ -1,15 +1,15 @@
 {
   "account": "biblegamesproject@gmail.com",
   "key": "UPLOAD_POST_BGP_API_KEY",
-  "profile": null,
+  "profile": "Brand_1_RPG",
   "platforms": ["youtube", "instagram", "facebook", "tiktok", "pinterest"],
   "timezone": "Europe/Madrid",
   "everyDays": 2,
   "time": "18:00",
   "game": "Eden to Heaven",
   "wishlist": "https://www.biblegamesproject.com/",
-  "facebookPage": null,
-  "pinterestBoard": null,
+  "facebookPage": "101337102374541",
+  "pinterestBoard": "883057508124639017",
   "categoryId": "27",
   "tags": ["Bible", "Bible stories", "Bible facts", "Bible game", "Christian game", "Genesis", "Did you know", "Sunday school", "Eden to Heaven"]
 }
