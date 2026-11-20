@@ -82,22 +82,6 @@
   "account": "biblequiz.truechrist@gmail.com"
  },
  {
-  "id": "eden-rib",
-  "account": "biblegamesproject@gmail.com",
-  "profile": "Brand_1_RPG",
-  "at": "2026-11-24T17:00:00.000Z",
-  "title": "Did you know Eve was made from Adam's rib? 🦴 | Bible Story #Shorts",
-  "platforms": [
-   "youtube",
-   "instagram",
-   "facebook",
-   "tiktok",
-   "pinterest"
-  ],
-  "job": "9eb1005dfc6942bf800744c6df2df65d",
-  "scheduledAt": "2026-11-20T11:30:10.190Z"
- },
- {
   "id": "cain-shepherd",
   "account": "biblegamesproject@gmail.com",
   "profile": "Brand_1_RPG",
@@ -160,5 +144,21 @@
   ],
   "job": "ce69ad0d978a4c25a82f1ab30c1b053e",
   "scheduledAt": "2026-11-20T11:31:26.274Z"
+ },
+ {
+  "id": "eden-rib",
+  "account": "biblegamesproject@gmail.com",
+  "profile": "Brand_1_RPG",
+  "at": "2026-11-24T17:00:00.000Z",
+  "title": "Did you know Eve was made from Adam's rib? 🦴 | Bible Story #Shorts",
+  "platforms": [
+   "youtube",
+   "instagram",
+   "facebook",
+   "tiktok",
+   "pinterest"
+  ],
+  "job": "1025406ad5c841709544442dfa43c009",
+  "scheduledAt": "2026-11-20T11:31:49.158Z"
  }
 ]
