@@ -1,66 +1,78 @@
 [
  {
   "id": "eden-naming",
-  "at": "2026-11-20T17:00:00.000Z",
+  "at": "2027-11-01T17:00:00.000Z",
   "title": "Did you know Adam named the animals? 🦁 #Shorts",
   "platforms": [
    "youtube"
   ],
   "job": "6e6a7ac2f98d4f29ba6fa58086a38a30",
-  "scheduledAt": "2026-11-18T14:18:17.734Z"
+  "scheduledAt": "2026-11-18T14:18:17.734Z",
+  "pausedFrom": "2026-11-20T17:00:00.000Z",
+  "paused": "2026-11-20: maintainer paused them (moved a year ahead at Upload-Post; it has no pause)"
  },
  {
   "id": "eden-naming",
-  "at": "2026-11-20T17:00:00.000Z",
+  "at": "2027-11-01T17:00:00.000Z",
   "title": "Did you know Adam named the animals? 🦁 #Shorts",
   "platforms": [
    "instagram"
   ],
   "job": "c79b75ce21d64089b7eaa70699db3f2b",
-  "scheduledAt": "2026-11-18T14:25:32.434Z"
+  "scheduledAt": "2026-11-18T14:25:32.434Z",
+  "pausedFrom": "2026-11-20T17:00:00.000Z",
+  "paused": "2026-11-20: maintainer paused them (moved a year ahead at Upload-Post; it has no pause)"
  },
  {
   "id": "eden-rib",
-  "at": "2026-11-24T17:00:00.000Z",
+  "at": "2027-11-02T17:00:00.000Z",
   "title": "Did you know Eve was made from Adam's rib? 🦴 #Shorts",
   "platforms": [
    "youtube",
    "instagram"
   ],
   "job": "dc4cc0e047da42589a31d9ff21fc50b2",
-  "scheduledAt": "2026-11-19T08:57:28.438Z"
+  "scheduledAt": "2026-11-19T08:57:28.438Z",
+  "pausedFrom": "2026-11-24T17:00:00.000Z",
+  "paused": "2026-11-20: maintainer paused them (moved a year ahead at Upload-Post; it has no pause)"
  },
  {
   "id": "eden-figleaves",
-  "at": "2026-12-01T17:00:00.000Z",
+  "at": "2027-11-04T17:00:00.000Z",
   "title": "Did you know the first clothes were fig leaves? 🍃 #Shorts",
   "platforms": [
    "youtube",
    "instagram"
   ],
   "job": "0292ac605a9e47dd9889c601cb4b7dcf",
-  "scheduledAt": "2026-11-19T08:57:33.758Z"
+  "scheduledAt": "2026-11-19T08:57:33.758Z",
+  "pausedFrom": "2026-12-01T17:00:00.000Z",
+  "paused": "2026-11-20: maintainer paused them (moved a year ahead at Upload-Post; it has no pause)"
  },
  {
   "id": "cain-offering",
-  "at": "2026-12-04T17:00:00.000Z",
+  "at": "2027-11-05T17:00:00.000Z",
   "title": "Did you know why God accepted Abel's offering? 🔥 #Shorts",
   "platforms": [
    "youtube",
    "instagram"
   ],
   "job": "6495f634b4ee487aa3a097208f9565d8",
-  "scheduledAt": "2026-11-19T08:57:37.943Z"
+  "scheduledAt": "2026-11-19T08:57:37.943Z",
+  "pausedFrom": "2026-12-04T17:00:00.000Z",
+  "paused": "2026-11-20: maintainer paused them (moved a year ahead at Upload-Post; it has no pause)"
  },
  {
   "id": "cain-shepherd",
-  "at": "2026-11-27T17:00:00.000Z",
+  "at": "2027-11-03T17:00:00.000Z",
   "title": "Did you know Abel was the first shepherd? 🐑 #Shorts",
   "platforms": [
    "youtube",
    "instagram"
   ],
   "job": "89d030603cc9415583c7c6465df3cf37",
-  "scheduledAt": "2026-11-19T09:00:42.104Z"
+  "scheduledAt": "2026-11-19T09:00:42.104Z",
+  "pausedFrom": "2026-11-27T17:00:00.000Z",
+  "paused": "2026-11-20: maintainer paused them (moved a year ahead at Upload-Post; it has no pause)"
  }
 ]
