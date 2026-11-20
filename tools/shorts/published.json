@@ -80,5 +80,21 @@
   "pausedFrom": "2026-11-27T17:00:00.000Z",
   "paused": "2026-11-20: maintainer paused them (moved a year ahead at Upload-Post; it has no pause)",
   "account": "biblequiz.truechrist@gmail.com"
+ },
+ {
+  "id": "eden-naming",
+  "account": "biblegamesproject@gmail.com",
+  "profile": "Brand_1_RPG",
+  "at": "2026-11-22T17:00:00.000Z",
+  "title": "Did you know Adam named the animals? 🦁 | Bible Story #Shorts",
+  "platforms": [
+   "youtube",
+   "instagram",
+   "facebook",
+   "tiktok",
+   "pinterest"
+  ],
+  "job": "bb79eee05db042aeacca1b60a3ac36df",
+  "scheduledAt": "2026-11-20T11:29:51.602Z"
  }
 ]
