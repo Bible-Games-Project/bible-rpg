@@ -12,8 +12,11 @@
   setup(S, X) {
     // no drifting clouds over the characters
     for (const c of S.atmosphere?.clouds ?? []) c.setVisible(false);
+    S.ambience?.cloud.setVisible(false);
+    S.ambience?.cloudShadow.setVisible(false);
     S.setTime('evening');
     S.hide(S.god);
+    S.serpent.setVisible(false); // mission 9 brings it out
     S.setOutfit('fig');
     S.show(S.adam, [2420, 2470], 'down');
     S.show(S.eve, [2460, 2480], 'down');
@@ -34,6 +37,7 @@
     [19.3, 2420, 2460, 3.8],
   ],
   cues: [
+    [0.5, (S) => S.serpent.setVisible(false)],
     [1.0, (S) => { S.adam.emote('drop', 1600); S.eve.emote('drop', 1600); }],
     [4.4, (S) => void S.appear(S.god, [2150, 2230], 'right', { ms: 800 })],
     [5.4, (S) => void S.walk(S.god, [2470, 2230], 60)],

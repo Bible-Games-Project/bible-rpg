@@ -12,6 +12,8 @@
   setup(S, X) {
     // no drifting clouds over the characters
     for (const c of S.atmosphere?.clouds ?? []) c.setVisible(false);
+    S.ambience?.cloud.setVisible(false);
+    S.ambience?.cloudShadow.setVisible(false);
     S.hide(S.god);
     S.serpentPose('hidden');
     S.show(S.adam, [2790, 1520], 'up');
