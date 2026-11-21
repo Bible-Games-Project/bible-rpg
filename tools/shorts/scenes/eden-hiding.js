@@ -10,6 +10,8 @@
   length: 19.3,
   chimes: [16.0],
   setup(S, X) {
+    // no drifting clouds over the characters
+    for (const c of S.atmosphere?.clouds ?? []) c.setVisible(false);
     S.setTime('evening');
     S.hide(S.god);
     S.setOutfit('fig');

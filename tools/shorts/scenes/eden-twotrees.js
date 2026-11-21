@@ -10,6 +10,8 @@
   length: 19.5,
   chimes: [12.9, 15.0],
   setup(S, X) {
+    // no drifting clouds over the characters
+    for (const c of S.atmosphere?.clouds ?? []) c.setVisible(false);
     S.hide(S.god);
     S.serpentPose('hidden');
     S.show(S.adam, [2790, 1520], 'up');

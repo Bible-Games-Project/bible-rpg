@@ -10,14 +10,16 @@
   length: 21.5,
   chimes: [16.9],
   setup(S, X) {
+    // no drifting clouds over the characters
+    for (const c of S.atmosphere?.clouds ?? []) c.setVisible(false);
     S.hide(S.god);
     S.serpentPose('tree');
     S.show(S.eve, [2980, 1660], 'up');
     S.show(S.adam, [3080, 1700], 'left');
   },
   camera: [
-    [0, 3010, 1475, 2.3],
-    [5.4, 3010, 1475, 2.5],
+    [0, 3010, 1503, 2.3],
+    [5.4, 3010, 1503, 2.5],
     [5.4, 2990, 1600, 2.4, 'cut'],
     [7.9, 2990, 1600, 2.55],
     [7.9, 3010, 1460, 3.2, 'cut'],

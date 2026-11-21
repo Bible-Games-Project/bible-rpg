@@ -10,6 +10,8 @@
   length: 22.5,
   chimes: [17.0, 18.9],
   setup(S, X) {
+    // no drifting clouds over the characters
+    for (const c of S.atmosphere?.clouds ?? []) c.setVisible(false);
     S.setTime('evening');
     S.setOutfit('fig');
     S.serpentPose('ground');
