@@ -199,10 +199,10 @@ Upload-Post keeps a title and a caption for each network. The script sends both 
 | cain-shepherd | Did you know Abel was the first shepherd? 🐑 | Genesis 4:2–4 | Thu 26 Nov 2026 |
 | eden-figleaves | Did you know the first clothes were fig leaves? 🍃 | Genesis 3:7, 21 | Sat 28 Nov 2026 |
 | cain-offering | Did you know why God accepted Abel's offering? 🔥 | Genesis 4:3–5 · Hebrews 11:4 | Mon 30 Nov 2026 |
-| eden-cherubim | Did you know angels guarded Eden's gate? ⚔️ (narrator: assenyala) | Genesis 3:22–24 | not scheduled yet |
-| cain-keeper | Did you know Cain asked: Am I my brother's keeper? 🌾 (narrator: openhands) | Genesis 4:9–16 | not scheduled yet |
+| eden-cherubim | Did you know angels guarded Eden's gate? ⚔️ (narrator: assenyala) | Genesis 3:22–24 | Wed 2 Dec 2026 |
+| cain-keeper | Did you know Cain asked: Am I my brother's keeper? 🌾 (narrator: openhands) | Genesis 4:9–16 | Fri 4 Dec 2026 |
 
 **Status:**
 - **New account** (biblegamesproject@gmail.com, profile Brand_1_RPG): **all 5 are scheduled** on YouTube, Instagram, Facebook, TikTok and Pinterest at these dates (one Upload-Post job per short, scheduled on 20 November 2026; job ids in `tools/shorts/published.json`).
-- The next short goes on Wednesday 2 December 2026 at 18:00, then every two days.
+- eden-cherubim and cain-keeper were scheduled on 21 November 2026. The next short goes on Sunday 6 December 2026 at 18:00, then every two days.
 - **Old account** (biblequiz.truechrist@gmail.com, profile "default", YouTube "Bible Quiz" and Instagram biblequiz.truechrist): the first schedule, paused and then **cancelled** on 20 November 2026. Nothing was ever published there, and nothing is scheduled there now.
