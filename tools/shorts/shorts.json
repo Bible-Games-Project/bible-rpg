@@ -43,5 +43,23 @@
     "narration": "Did you know the Bible tells us why God accepted Abel's offering? Cain brought the fruit of the ground, and Abel brought the firstlings of his flock. The LORD had respect unto Abel and his offering. And Hebrews says: by faith, Abel offered a more excellent sacrifice.",
     "narrator": "quiet",
     "names": ["Cain", "Abel"]
+  },
+  {
+    "id": "eden-cherubim",
+    "title": "Did you know angels guarded Eden's gate? ⚔️",
+    "question": "Did you know angels guarded Eden's gate?",
+    "reference": "Genesis 3:22–24",
+    "narration": "Did you know angels guarded the gate of the Garden of Eden? After Adam and Eve were sent out, the LORD God placed cherubim at the east of the garden, and a flaming sword which turned every way, to keep the way of the tree of life.",
+    "narrator": "assenyala",
+    "names": ["Adam", "Eve"]
+  },
+  {
+    "id": "cain-keeper",
+    "title": "Did you know Cain asked: Am I my brother's keeper? 🌾",
+    "question": "Did you know Cain asked: Am I my brother's keeper?",
+    "reference": "Genesis 4:9–16",
+    "narration": "Did you know the words “Am I my brother’s keeper?” come from Cain? After Abel was gone, the LORD asked him: Where is Abel thy brother? Cain answered: I know not. Am I my brother's keeper? But God knew, and Cain became a wanderer in the land of Nod.",
+    "narrator": "openhands",
+    "names": ["Cain", "Abel"]
   }
 ]
