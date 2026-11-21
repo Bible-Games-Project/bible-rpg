@@ -14,7 +14,7 @@
     S.hide(S.god);
     S.show(S.eve, [1600, 2310], 'left');
     S.show(S.cain, [1480, 2360], 'up');
-    S.show(S.abel, [1540, 2380], 'up');
+    S.show(S.abel, [1540, 2380], 'right');
   },
   camera: [
     [0, 1470, 2300, 1.9],
