@@ -2,7 +2,7 @@
 // evening as in mission 8: the LORD God walks in the garden and calls Adam.
 // Word times: art/shorts/eden-hiding/words.json.
 ({
-  mission: 'eden.m08',
+  mission: 'eden.m09', // m08's own script starts the hiding game when Adam stands in the grove
   voiceAt: 0.4,
   narrator: [[0, 4.3]],
   hookEnd: 4.2,
