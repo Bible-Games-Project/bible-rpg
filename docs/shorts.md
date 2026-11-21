@@ -69,12 +69,13 @@ The rules for writing them:
 ## 5. The narrator (the old man in the corner)
 
 - **The images** are 6 drawings by the maintainer. **Keep them, never replace them.** They are in `art/shorts/narrator/poses/`:
-  - `quiet-closed.png` and `quiet-open.png`: standing calmly. **This is the pose we use.**
+  - `quiet-closed.png` and `quiet-open.png`: standing calmly.
   - `assenyala-closed.png` and `assenyala-open.png`: pointing.
   - `openhands-closed.png` and `openhands-open.png`: open hands.
 
   Each pose is the same drawing twice, with the mouth shut and with it open.
-- **The notes for a pose** are in `art/shorts/narrator/poses/quiet.json`. They say where the mouth and eyes are, the skin and lash colours, and the crop. Only `quiet` has notes so far; a new pose needs its own json before it can be used.
+- **The poses take turns**, one per short: quiet → assenyala → openhands → quiet… (the maintainer). All three open and shut the mouth and blink.
+- **The notes for a pose** are in `art/shorts/narrator/poses/<pose>.json`. They say where the mouth and eyes are, the skin and lash colours, and the crop. `open` says where the open drawing lies over the shut one (assenyala is shifted and openhands is another size).
 - **The talking animation:** `tools/shorts/narrator.mjs` builds the layers from these files:
   - the portrait with the mouth shut;
   - the open mouth, cut from the open drawing round the mouth only;
@@ -189,7 +190,7 @@ Upload-Post keeps a title and a caption for each network. The script sends both 
 
 **The record:** every scheduled post is noted in `tools/shorts/published.json`, with its account, profile, date and job id.
 
-## 12. The videos made so far (20 November 2026)
+## 12. The videos made so far (21 November 2026)
 
 | id | Question | Reference | New calendar (18:00 Madrid) |
 |---|---|---|---|
@@ -198,6 +199,8 @@ Upload-Post keeps a title and a caption for each network. The script sends both 
 | cain-shepherd | Did you know Abel was the first shepherd? 🐑 | Genesis 4:2–4 | Thu 26 Nov 2026 |
 | eden-figleaves | Did you know the first clothes were fig leaves? 🍃 | Genesis 3:7, 21 | Sat 28 Nov 2026 |
 | cain-offering | Did you know why God accepted Abel's offering? 🔥 | Genesis 4:3–5 · Hebrews 11:4 | Mon 30 Nov 2026 |
+| eden-cherubim | Did you know angels guarded Eden's gate? ⚔️ (narrator: assenyala) | Genesis 3:22–24 | not scheduled yet |
+| cain-keeper | Did you know Cain asked: Am I my brother's keeper? 🌾 (narrator: openhands) | Genesis 4:9–16 | not scheduled yet |
 
 **Status:**
 - **New account** (biblegamesproject@gmail.com, profile Brand_1_RPG): **all 5 are scheduled** on YouTube, Instagram, Facebook, TikTok and Pinterest at these dates (one Upload-Post job per short, scheduled on 20 November 2026; job ids in `tools/shorts/published.json`).

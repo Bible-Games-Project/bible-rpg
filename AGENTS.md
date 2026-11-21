@@ -706,12 +706,12 @@ $1 play at `WALK_FPS` 15 at the player's
   one per short in turn (a short's `music` picks one). The narrator: the
   maintainer's poses in `art/shorts/narrator/poses/` (quiet, assenyala =
   pointing, openhands; each `<pose>-closed.png` / `-open.png`, keep them),
-  one pose per short (`narrator` in shorts.json). A pose needs
-  `<pose>.json` (mouth ellipse, eyes, skin, crop with a straight bottom);
-  only quiet has one so far. `narrator.mjs` takes the open mouth from the
-  open drawing round the mouth only (the two drawings differ slightly
-  elsewhere; assenyala is shifted and openhands is another size, so check
-  they line up), makes a half-open mouth from it (`jaw` in the json) and
+  one pose per short (`narrator` in shorts.json), in turn quiet →
+  assenyala → openhands (the maintainer). Each pose has `<pose>.json` (mouth
+  ellipse, eyes, skin, crop with a straight bottom; `open` = where the open
+  drawing lies: x*sx+dx, y*sy+dy, since assenyala is shifted and openhands is
+  another size). `narrator.mjs` takes the open mouth from the open drawing
+  round the mouth only (the two drawings differ slightly elsewhere), makes a half-open mouth from it (`jaw` in the json) and
   draws the blink. The mouth follows each syllable (shut in the dips). He shows in the scene's `narrator` spans,
   his mouth following the voice's loudness. The first frame is the
   thumbnail (hook in full, narrator in), saved as `public/shorts/<id>.jpg`.
