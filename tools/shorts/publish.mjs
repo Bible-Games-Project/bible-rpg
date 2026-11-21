@@ -35,6 +35,8 @@ function texts(short) {
   const emoji = short.title.slice(q.length).trim();
   const book = ref.split(/\s/)[0];
   const game = ch.game;
+  // what people search for: the story's own name (Adam and Eve, Cain and Abel)
+  const story = short.id.startsWith('cain') ? { tag: 'CainAndAbel', words: ['Cain and Abel', 'Cain and Abel story'] } : { tag: 'AdamAndEve', words: ['Adam and Eve', 'Garden of Eden'] };
   const wish = `🎮 ${game}: a Bible adventure game, coming soon. Add it to your wishlist!`;
   let ytTitle = `${q} ${emoji} | Bible Story #Shorts`;
   if (len(ytTitle) > 70) ytTitle = `${q} ${emoji} #Shorts`;
@@ -46,13 +48,13 @@ function texts(short) {
   return {
     youtube: {
       title: ytTitle,
-      description: `${q} The Bible story from ${ref}, from ${game}, a Bible adventure game.\n\n${short.narration}\n\n📖 ${ref}\n\n${wish}\n\n#Bible #BibleStories #DidYouKnow #BibleGame #${book}`,
-      tags: [...ch.tags, ...(short.names ?? [])],
+      description: `${q} The Bible story from ${ref}, from ${game}, a Bible adventure game.\n\n${short.narration}\n\n📖 ${ref}\n\n${wish}\n\n#Bible #BibleStories #${story.tag} #DidYouKnow #BibleGame #${book}`,
+      tags: [...new Set([...ch.tags, ...story.words, ...(short.names ?? [])])],
       category: ch.categoryId,
     },
-    instagram: social(`#BibleStories #BibleFacts #ChristianGames #${book} #EdenToHeaven`, 'Link in bio.'),
-    facebook: social(`#BibleStories #BibleFacts #ChristianGames #${book} #EdenToHeaven`, ch.wishlist),
-    tiktok: social(`#BibleTok #ChristianTikTok #BibleStories #DidYouKnow #EdenToHeaven`, 'Link in bio.'),
+    instagram: social(`#BibleStories #BibleFacts #${story.tag} #ChristianGames #${book} #EdenToHeaven`, 'Link in bio.'),
+    facebook: social(`#BibleStories #BibleFacts #${story.tag} #ChristianGames #${book} #EdenToHeaven`, ch.wishlist),
+    tiktok: social(`#BibleTok #ChristianTikTok #BibleStories #${story.tag} #DidYouKnow #EdenToHeaven`, 'Link in bio.'),
     pinterest: { title: pinTitle, description: pinDesc, link: ch.wishlist },
   };
 }

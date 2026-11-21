@@ -201,17 +201,17 @@ Upload-Post keeps a title and a caption for each network. The script sends both 
 | cain-offering | Did you know why God accepted Abel's offering? 🔥 | Genesis 4:3–5 · Hebrews 11:4 | Mon 30 Nov 2026 |
 | eden-cherubim | Did you know angels guarded Eden's gate? ⚔️ (narrator: assenyala) | Genesis 3:22–24 | Wed 2 Dec 2026 |
 | cain-keeper | Did you know Cain asked: Am I my brother's keeper? 🌾 (narrator: openhands) | Genesis 4:9–16 | Fri 4 Dec 2026 |
-| eden-gardener | Did you know Adam's first job was gardening? 🌱 (narrator: quiet) | Genesis 2:15 | Sun 6 Dec 2026 (planned) |
-| cain-warning | Did you know God warned Cain before he sinned? 🚪 (narrator: assenyala) | Genesis 4:5–7 | Tue 8 Dec 2026 (planned) |
-| eden-twotrees | Did you know Eden had two special trees? 🌳 (narrator: openhands) | Genesis 2:9 | Thu 10 Dec 2026 (planned) |
-| cain-mark | Did you know God put a mark on Cain? ✋ (narrator: quiet) | Genesis 4:13–15 | Sat 12 Dec 2026 (planned) |
-| eden-serpent | Did you know the serpent twisted God's words? 🐍 (narrator: assenyala) | Genesis 3:1–6 | Mon 14 Dec 2026 (planned) |
-| cain-brothers | Did you know Cain was the first baby ever born? 👶 (narrator: openhands) | Genesis 4:1–2 | Wed 16 Dec 2026 (planned) |
-| eden-hiding | Did you know Adam and Eve hid from God? 🙈 (narrator: quiet) | Genesis 3:8–9 | Fri 18 Dec 2026 (planned) |
-| eden-promise | Did you know the first promise of Jesus is in Genesis? ✝️ (narrator: assenyala) | Genesis 3:15 | Sun 20 Dec 2026 (planned) |
+| eden-gardener | Did you know Adam's first job was gardening? 🌱 (narrator: quiet) | Genesis 2:15 | Sun 6 Dec 2026 |
+| cain-warning | Did you know God warned Cain before he sinned? 🚪 (narrator: assenyala) | Genesis 4:5–7 | Tue 8 Dec 2026 |
+| eden-twotrees | Did you know Eden had two special trees? 🌳 (narrator: openhands) | Genesis 2:9 | Thu 10 Dec 2026 |
+| cain-mark | Did you know God put a mark on Cain? ✋ (narrator: quiet) | Genesis 4:13–15 | Sat 12 Dec 2026 |
+| eden-serpent | Did you know the serpent twisted God's words? 🐍 (narrator: assenyala) | Genesis 3:1–6 | Mon 14 Dec 2026 |
+| cain-brothers | Did you know Cain was the first baby ever born? 👶 (narrator: openhands) | Genesis 4:1–2 | Wed 16 Dec 2026 |
+| eden-hiding | Did you know Adam and Eve hid from God? 🙈 (narrator: quiet) | Genesis 3:8–9 | Fri 18 Dec 2026 |
+| eden-promise | Did you know the first promise of Jesus is in Genesis? ✝️ (narrator: assenyala) | Genesis 3:15 | Sun 20 Dec 2026 |
 
 **Status:**
 - **New account** (biblegamesproject@gmail.com, profile Brand_1_RPG): **all 5 are scheduled** on YouTube, Instagram, Facebook, TikTok and Pinterest at these dates (one Upload-Post job per short, scheduled on 20 November 2026; job ids in `tools/shorts/published.json`).
 - eden-cherubim and cain-keeper were scheduled on 21 November 2026. The next short goes on Sunday 6 December 2026 at 18:00, then every two days.
-- The 8 shorts from 6 to 20 December are made (21 November 2026) but **not scheduled yet**: the maintainer sees them first.
+- The 8 shorts from 6 to 20 December were approved and scheduled on 21 November 2026 (all 5 networks). Their texts also carry the story's own name, which people search for: the hashtag #AdamAndEve or #CainAndAbel, and the YouTube tags "Adam and Eve, Garden of Eden" or "Cain and Abel". The next free slot is Tuesday 22 December 2026 at 18:00.
 - **Old account** (biblequiz.truechrist@gmail.com, profile "default", YouTube "Bible Quiz" and Instagram biblequiz.truechrist): the first schedule, paused and then **cancelled** on 20 November 2026. Nothing was ever published there, and nothing is scheduled there now.
