@@ -61,5 +61,77 @@
     "narration": "Did you know the words “Am I my brother’s keeper?” come from Cain? After Abel was gone, the LORD asked him: Where is Abel thy brother? Cain answered: I know not. Am I my brother's keeper? But God knew, and Cain became a wanderer in the land of Nod.",
     "narrator": "openhands",
     "names": ["Cain", "Abel"]
+  },
+  {
+    "id": "eden-gardener",
+    "title": "Did you know Adam's first job was gardening? 🌱",
+    "question": "Did you know Adam's first job was gardening?",
+    "reference": "Genesis 2:15",
+    "narration": "Did you know the very first job in the Bible was gardening? The LORD God took the man, and put him into the garden of Eden to dress it and to keep it. Before anything went wrong, God gave Adam good work to do: caring for the trees and the plants.",
+    "narrator": "quiet",
+    "names": ["Adam"]
+  },
+  {
+    "id": "cain-warning",
+    "title": "Did you know God warned Cain before he sinned? 🚪",
+    "question": "Did you know God warned Cain before he sinned?",
+    "reference": "Genesis 4:5–7",
+    "narration": "Did you know God warned Cain before he did anything wrong? When Cain was very angry and his face fell, the LORD asked him: Why art thou wroth? If thou doest well, shalt thou not be accepted? Sin lieth at the door, but thou shalt rule over it.",
+    "narrator": "assenyala",
+    "names": ["Cain", "Abel"]
+  },
+  {
+    "id": "eden-twotrees",
+    "title": "Did you know Eden had two special trees? 🌳",
+    "question": "Did you know Eden had two special trees?",
+    "reference": "Genesis 2:9",
+    "narration": "Did you know there were two special trees in the middle of Eden? The LORD God made every tree grow that is pleasant to the sight and good for food. And in the midst of the garden stood the tree of life, and the tree of the knowledge of good and evil.",
+    "narrator": "openhands",
+    "names": ["Adam", "Eve"]
+  },
+  {
+    "id": "cain-mark",
+    "title": "Did you know God put a mark on Cain? ✋",
+    "question": "Did you know God put a mark on Cain?",
+    "reference": "Genesis 4:13–15",
+    "narration": "Did you know God put a mark on Cain to protect him? When Cain was sent away, he was afraid and said: every one that findeth me shall slay me. But the LORD set a mark upon Cain, so that no one who found him would kill him. God still showed mercy.",
+    "narrator": "quiet",
+    "names": ["Cain"]
+  },
+  {
+    "id": "eden-serpent",
+    "title": "Did you know the serpent twisted God's words? 🐍",
+    "question": "Did you know the serpent twisted God's words?",
+    "reference": "Genesis 3:1–6",
+    "narration": "Did you know the Bible calls the serpent more subtle than any beast of the field? It came to Eve and asked: Yea, hath God said, Ye shall not eat of every tree of the garden? It twisted God's words, and soon Eve was looking at the forbidden fruit.",
+    "narrator": "assenyala",
+    "names": ["Eve", "Adam"]
+  },
+  {
+    "id": "cain-brothers",
+    "title": "Did you know Cain was the first baby ever born? 👶",
+    "question": "Did you know Cain was the first baby ever born?",
+    "reference": "Genesis 4:1–2",
+    "narration": "Did you know Cain was the very first baby born in the Bible? When Eve had her son, she said: I have gotten a man from the LORD. Then she had another son, his brother Abel. They were the first brothers ever, growing up with Adam and Eve outside Eden.",
+    "narrator": "openhands",
+    "names": ["Cain", "Abel", "Adam", "Eve"]
+  },
+  {
+    "id": "eden-hiding",
+    "title": "Did you know Adam and Eve hid from God? 🙈",
+    "question": "Did you know Adam and Eve hid from God?",
+    "reference": "Genesis 3:8–9",
+    "narration": "Did you know Adam and Eve tried to hide from God? They heard the voice of the LORD God walking in the garden in the cool of the day, and they hid themselves among the trees. But the LORD God called unto Adam, and said unto him: Where art thou?",
+    "narrator": "quiet",
+    "names": ["Adam", "Eve"]
+  },
+  {
+    "id": "eden-promise",
+    "title": "Did you know the first promise of Jesus is in Genesis? ✝️",
+    "question": "Did you know the first promise of Jesus is in Genesis?",
+    "reference": "Genesis 3:15",
+    "narration": "Did you know the first promise of a Saviour is in Genesis? After the serpent deceived Eve, God told it: I will put enmity between thee and the woman, and between thy seed and her seed. It shall bruise thy head. Christians see here the first promise of Jesus.",
+    "narrator": "assenyala",
+    "names": ["Adam", "Eve"]
   }
 ]
