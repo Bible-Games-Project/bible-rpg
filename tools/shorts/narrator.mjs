@@ -20,8 +20,21 @@ const dir = process.argv[3] ?? `/tmp/shorts/narrator/${pose}`;
 const at = `${root}art/shorts/narrator/poses/${pose}`;
 const face = JSON.parse(readFileSync(`${at}.json`, 'utf8'));
 const src = PNG.sync.read(readFileSync(`${at}-closed.png`));
-const open = PNG.sync.read(readFileSync(`${at}-open.png`));
+const openSrc = PNG.sync.read(readFileSync(`${at}-open.png`));
 const W = src.width, H = src.height, B = face.block;
+// the open drawing in the closed one's frame: some poses were drawn again a
+// little shifted or at another size (face.open: x*sx+dx, y*sy+dy, found by
+// matching the glasses and eyes of the two drawings)
+const open = new PNG({ width: W, height: H });
+{
+  const o = face.open ?? { sx: 1, sy: 1, dx: 0, dy: 0 };
+  for (let y = 0; y < H; y++)
+    for (let x = 0; x < W; x++) {
+      const ox = Math.round(x * o.sx + o.dx), oy = Math.round(y * o.sy + o.dy);
+      if (ox < 0 || oy < 0 || ox >= openSrc.width || oy >= openSrc.height) continue;
+      openSrc.data.copy(open.data, (y * W + x) * 4, (oy * openSrc.width + ox) * 4, (oy * openSrc.width + ox) * 4 + 4);
+    }
+}
 mkdirSync(dir, { recursive: true });
 
 const [cx0, cy0, cx1, cy1] = face.crop;
