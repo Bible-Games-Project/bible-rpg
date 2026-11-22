@@ -47,7 +47,7 @@
     [10.3, (S) => S.eve.emote('exclaim', 1400)],
     [12.1, (S) => SHORT.label(S.eve, 'Eve', 12.2)],
     [12.5, (S) => S.face(S.eve, S.serpent)],
-    [12.8, (S, X) => SHORT.label(X.at(2640, 2275), 'Serpent', 12.8)],
+    [12.8, () => SHORT.label({ x: 2640, y: 2275, topY: () => 2275 - 20 }, 'Serpent', 12.8)],
     [13.4, (S) => { S.sfx('hiss'); S.eve.emote('exclaim', 1400); }],
     [15.9, (S) => { S.adam.emote('drop', 1800); S.eve.emote('drop', 1800); }],
     [16.5, (S) => S.face(S.god, 'down')],
