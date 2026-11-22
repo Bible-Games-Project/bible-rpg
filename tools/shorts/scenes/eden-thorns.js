@@ -41,6 +41,15 @@
     [5.6, (S) => SHORT.label(S.adam, 'Adam', 5.7)],
     [7.4, (S) => S.adam.emote('drop', 1800)],
     [9.3, (S) => { S.thorns(true); S.sfx('grow'); }],
+    [10.0, (S, X) => {
+      // label the nearest thorn and thistle the LORD God's words grew
+      const near = (key) => S.thornSprites.filter((s) => s.texture.key === key).sort((a, b) => Math.hypot(a.x - 2470, a.y - 2290) - Math.hypot(b.x - 2470, b.y - 2290))[0];
+      const pt = (s) => s && { x: s.x, y: s.y, topY: () => s.y - s.displayHeight };
+      const th = pt(near('thorns'));
+      if (th) SHORT.label(th, 'Thorns', 10.0);
+      X.thistle = pt(near('thistle'));
+    }],
+    [10.7, (S, X) => { if (X.thistle) SHORT.label(X.thistle, 'Thistles', 10.7); }],
     [10.6, (S) => { S.adam.emote('exclaim', 1400); S.eve.emote('exclaim', 1400); }],
     [13.2, (S) => {
       S.hide(S.god);
