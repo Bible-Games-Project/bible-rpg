@@ -134,7 +134,8 @@ const length = await page.evaluate(
     window.BASE = S.cameras.main.zoom;
     // tweens (walks, appear, fades) keep their own real-time clock: make each
     // recorded frame advance them by exactly one frame, like the rest of the game
-    S.tweens.setLagSmooth(1, 1000 / 30);
+    S.tweens.maxLag = 1; // (setLagSmooth would cap the step at the limit)
+    S.tweens.lagSkip = 1000 / 30;
     bibleRpg.game.loop.sleep();
     window.CLOCK = performance.now();
     window.DONE = 0;
