@@ -133,5 +133,131 @@
     "narration": "Did you know the first promise of a Saviour is in Genesis? After the serpent deceived Eve, God told it: I will put enmity between thee and the woman, and between thy seed and her seed. It shall bruise thy head. Christians see here the first promise of Jesus.",
     "narrator": "assenyala",
     "names": ["Adam", "Eve"]
+  },
+  {
+    "id": "eden-dust",
+    "title": "Did you know Adam was made from dust? ✨",
+    "question": "Did you know Adam was made from dust?",
+    "reference": "Genesis 2:7",
+    "narration": "Did you know the first man was made from dust? In Genesis chapter two, the LORD God formed man of the dust of the ground, and breathed into his nostrils the breath of life. And man became a living soul. Every breath we take is a gift from God.",
+    "narrator": "assenyala",
+    "names": ["Adam"]
+  },
+  {
+    "id": "cain-farmer",
+    "title": "Did you know Cain was the first farmer? 🧺",
+    "question": "Did you know Cain was the first farmer?",
+    "reference": "Genesis 4:2–3",
+    "narration": "Did you know Cain was the first farmer in the Bible? Genesis chapter four says Abel was a keeper of sheep, but Cain was a tiller of the ground. He worked the fields outside Eden, and in time he brought of the fruit of the ground as an offering unto the LORD.",
+    "narrator": "openhands",
+    "names": ["Cain", "Abel"]
+  },
+  {
+    "id": "eden-river",
+    "title": "Did you know a river flowed out of Eden? 🌊",
+    "question": "Did you know a river flowed out of Eden?",
+    "reference": "Genesis 2:10–14",
+    "narration": "Did you know a river flowed out of the garden of Eden? Genesis chapter two says it watered the garden, and from there it parted into four rivers: Pishon, Gihon, Hiddekel and Euphrates. Two of them still flow today: the Tigris and the Euphrates.",
+    "narrator": "assenyala",
+    "names": ["Adam", "Euphrates", "Tigris"]
+  },
+  {
+    "id": "cain-seth",
+    "title": "Did you know Adam and Eve had a third son? 🌅",
+    "question": "Did you know Adam and Eve had a third son?",
+    "reference": "Genesis 4:25",
+    "narration": "Did you know Adam and Eve had a third son? After Abel was gone, Eve bore a son and called his name Seth. For God, she said, hath appointed me another seed instead of Abel. Through Seth's family, the story of God's promise went on.",
+    "narrator": "openhands",
+    "names": ["Seth", "Adam", "Eve", "Abel"]
+  },
+  {
+    "id": "eden-alone",
+    "title": "Did you know the first thing God called not good? 💞",
+    "question": "Did you know the first thing God called not good?",
+    "reference": "Genesis 2:18",
+    "narration": "Did you know the first thing God called not good? Everything He made was good, but in Genesis chapter two the LORD God said: It is not good that the man should be alone; I will make him an help meet for him. And so God made Eve.",
+    "narrator": "openhands",
+    "names": ["Adam", "Eve"]
+  },
+  {
+    "id": "cain-music",
+    "title": "Did you know the first musician is in Genesis? 🎵",
+    "question": "Did you know the first musician is in Genesis?",
+    "reference": "Genesis 4:21",
+    "narration": "Did you know the first musician appears in Genesis chapter four? Among the families who came after Cain was a man called Jubal. The Bible says he was the father of all such as handle the harp and organ. Music has been part of human life almost from the beginning.",
+    "narrator": "quiet",
+    "names": ["Jubal", "Cain"]
+  },
+  {
+    "id": "eden-mist",
+    "title": "Did you know there was no rain at first? ☁️",
+    "question": "Did you know there was no rain at first?",
+    "reference": "Genesis 2:5–6",
+    "narration": "Did you know there was no rain at the beginning? Genesis chapter two says the LORD God had not caused it to rain upon the earth. Instead, there went up a mist from the earth, and watered the whole face of the ground. God cared for every plant.",
+    "narrator": "assenyala",
+    "names": ["Eden"]
+  },
+  {
+    "id": "cain-righteous",
+    "title": "Did you know Jesus called Abel righteous? ⭐",
+    "question": "Did you know Jesus called Abel righteous?",
+    "reference": "Matthew 23:35",
+    "narration": "Did you know Jesus himself spoke about Abel? In Matthew chapter twenty-three, Jesus called him righteous Abel. Abel was a keeper of sheep who brought God the firstlings of his flock with a faithful heart. Thousands of years later, his faith is still remembered even today.",
+    "narrator": "openhands",
+    "names": ["Abel", "Jesus"]
+  },
+  {
+    "id": "eden-freely",
+    "title": "Did you know Adam could eat from almost every tree? 🍎",
+    "question": "Did you know Adam could eat from almost every tree?",
+    "reference": "Genesis 2:16–17",
+    "narration": "Did you know God gave Adam almost every tree to eat from? The LORD God said: Of every tree of the garden thou mayest freely eat. Only one tree was kept back, the tree of the knowledge of good and evil. God's gifts were many; His rule was only one.",
+    "narrator": "quiet",
+    "names": ["Adam"]
+  },
+  {
+    "id": "eden-blame",
+    "title": "Did you know Adam blamed Eve? 👉",
+    "question": "Did you know Adam blamed Eve?",
+    "reference": "Genesis 3:11–13",
+    "narration": "Did you know the first blame game is in Genesis? When God asked Adam about the fruit, he said: The woman whom thou gavest to be with me, she gave me of the tree. And Eve said: The serpent beguiled me. Each one blamed someone else.",
+    "narrator": "assenyala",
+    "names": ["Adam", "Eve"]
+  },
+  {
+    "id": "cain-nod",
+    "title": "Did you know Cain built the first city? 🧱",
+    "question": "Did you know Cain built the first city?",
+    "reference": "Genesis 4:16–17",
+    "narration": "Did you know the first city in the Bible was built by Cain? After he left the presence of the LORD, Cain dwelt in the land of Nod, on the east of Eden. There he builded a city, and called it after the name of his son, Enoch.",
+    "narrator": "openhands",
+    "names": ["Cain", "Enoch", "Nod"]
+  },
+  {
+    "id": "cain-callupon",
+    "title": "Did you know when people began to call on God's name? 🙏",
+    "question": "Did you know when people began to call on God's name?",
+    "reference": "Genesis 4:26",
+    "narration": "Did you know when people began to call on the name of the LORD? Genesis chapter four ends with Seth's son, Enos. And then, the Bible says, began men to call upon the name of the LORD. After all the sorrow of Cain and Abel, there was prayer again.",
+    "narrator": "quiet",
+    "names": ["Seth", "Enos", "Adam", "Eve"]
+  },
+  {
+    "id": "eden-thorns",
+    "title": "Did you know thorns first appear after the fall? 🌵",
+    "question": "Did you know thorns first appear after the fall?",
+    "reference": "Genesis 3:17–19",
+    "narration": "Did you know thorns appear in the Bible only after the fall? God told Adam: Cursed is the ground for thy sake. Thorns also and thistles shall it bring forth to thee. In the sweat of thy face shalt thou eat bread. From then on, work became hard.",
+    "narrator": "assenyala",
+    "names": ["Adam"]
+  },
+  {
+    "id": "eden-evename",
+    "title": "Did you know what Eve's name means? 💛",
+    "question": "Did you know what Eve's name means?",
+    "reference": "Genesis 3:20",
+    "narration": "Did you know what the name Eve means? Genesis chapter three says Adam called his wife's name Eve, because she was the mother of all living. Even after they had sinned, her name was full of hope: life would go on, and God's promise with it.",
+    "narrator": "openhands",
+    "names": ["Eve", "Adam"]
   }
 ]
