@@ -18,11 +18,10 @@
     S.showGrave(true);
     S.setAltars({ cain: false, abel: false, fire: 'embers' });
     S.show(S.eve, [2300, 2010], 'up');
-    X.adam = { x: 1296, y: 2338, topY: () => 2338 - 44 };
   },
   camera: [
-    [0, 2300, 2075, 2.6],
-    [4.4, 2300, 2075, 2.8],
+    [0, 2300, 2030, 2.6],
+    [4.4, 2300, 2030, 2.8],
     [4.4, 1450, 2290, 1.8, 'cut'],
     [8.4, 1450, 2290, 1.95],
     [8.4, 2300, 1960, 3.0, 'cut'],
@@ -36,7 +35,6 @@
   cues: [
     [1.2, (S) => S.fx('sparkle', [2340, 1880])],
     [4.4, (S) => S.show(S.eve, [1600, 2310], 'left')],
-    [6.6, (S, X) => SHORT.label(X.adam, 'Adam', 6.7)],
     [8.4, (S) => { S.show(S.eve, [2300, 2010], 'up'); S.setAltars({ cain: false, abel: false, fire: 'burning' }); }],
     [9.0, (S) => SHORT.label(S.eve, 'Eve', 9.1)],
     [10.6, (S) => { S.fx('holy', [2340, 1900]); S.sfx('flame'); }],
