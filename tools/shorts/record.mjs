@@ -132,6 +132,9 @@ const length = await page.evaluate(
     SHORT.init({ ...short, ...scene, endBg: '/shorts/end-card.jpg', endTitle: '', endSub: 'A Bible adventure game · coming soon', endCall: 'Add it to your wishlist · link in bio', narr }, words);
     scene.setup(S, X);
     window.BASE = S.cameras.main.zoom;
+    // tweens (walks, appear, fades) keep their own real-time clock: make each
+    // recorded frame advance them by exactly one frame, like the rest of the game
+    S.tweens.setLagSmooth(1, 1000 / 30);
     bibleRpg.game.loop.sleep();
     window.CLOCK = performance.now();
     window.DONE = 0;
