@@ -1,5 +1,6 @@
 // Narration for a short: ElevenLabs text-to-speech with timestamps, so the
-// captions follow the words. Uses ELEVENLABS_API_KEY from the environment.
+// captions follow the words. Uses ELEVENLABS_API_KEY_2 (the second paid
+// account, Nov 2026) or else ELEVENLABS_API_KEY, from the environment.
 //   node tools/shorts/voice.mjs <short-id>   -> art/shorts/<id>/voice.mp3 + words.json
 import fs from 'node:fs';
 import path from 'node:path';
@@ -21,7 +22,7 @@ const shorts = JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/shorts/shorts.j
 const short = shorts.find((s) => s.id === id);
 if (!short) throw new Error(`no short ${id}`);
 const text = Object.entries(SPOKEN).reduce((s, [a, b]) => s.replaceAll(a, b), short.narration);
-const key = process.env.ELEVENLABS_API_KEY;
+const key = process.env.ELEVENLABS_API_KEY_2 || process.env.ELEVENLABS_API_KEY;
 if (!key) throw new Error('ELEVENLABS_API_KEY is not set');
 const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE}/with-timestamps?output_format=mp3_44100_128`, {
   method: 'POST',
