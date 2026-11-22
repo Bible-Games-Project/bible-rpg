@@ -35,7 +35,7 @@
     [1.2, (S) => S.abel.emote('heart', 1800)],
     [6.3, (S) => SHORT.label(S.abel, 'Abel', 6.4)],
     [7.4, (S) => { S.fx('holy', [1880, 1120]); S.sfx('holy'); }],
-    [9.2, (S) => void S.walk(S.abel, [[1840, 1170], [1960, 1210]], 80)],
+    [9.2, (S) => void S.walk(S.abel, [1930, 1190], 80)],
     [11.2, (S) => { S.show(S.abel, [2350, 2010], 'up'); S.setAltars({ cain: false, abel: true, fire: 'none' }); }],
     [12.6, (S) => S.fx('sparkle', [2340, 1890])],
     [14.2, (S) => { S.fx('holy', [2340, 1880]); S.sfx('holy'); S.abel.emote('heart', 2000); }],

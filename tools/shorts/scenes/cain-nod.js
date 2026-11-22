@@ -34,10 +34,10 @@
     [4.6, (S) => {
       S.show(S.god, [970, 3850], 'right');
       S.show(S.cain, [1030, 3870], 'right');
-      void S.walk(S.cain, [1180, 3880], 50);
+      void S.walk(S.cain, [1130, 3875], 50);
     }],
     [5.8, (S) => void S.vanish(S.god, 1000)],
-    [7.1, (S) => { S.show(S.cain, [2560, 3460], 'right'); void S.walk(S.cain, [2800, 3445], 60); }],
+    [7.1, (S) => { S.show(S.cain, [2560, 3460], 'right'); void S.walk(S.cain, [2780, 3447], 60); }],
     [7.6, (S) => SHORT.label(S.cain, 'Cain', 7.7)],
     [8.7, (S, X) => SHORT.label(X.at(2830, 3380), 'Land of Nod', 8.7)],
     [10.9, (S) => {
