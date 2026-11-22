@@ -190,6 +190,8 @@ Upload-Post keeps a title and a caption for each network. The script sends both 
 
 **The record:** every scheduled post is noted in `tools/shorts/published.json`, with its account, profile, date and job id.
 
+**Replying to comments (automatic).** Every day at 18:00 UTC (19:00 Madrid in winter, one hour after the posts), the GitHub Actions workflow `.github/workflows/reply-comments.yml` runs `tools/shorts/reply-comments.mjs`. It reads the comments of the profile's posts (YouTube, Instagram, Facebook, TikTok) through Upload-Post, has Claude (`claude-opus-5-5`) write a short, kind reply in the commenter's language, as the creator, and posts it. Spam, scams and hate get no reply. Upload-Post can't read Pinterest comments nor give likes. The answered ids are kept in the Actions cache (`tools/shorts/.replied.json`, not committed). It needs two repository secrets: `UPLOAD_POST_BGP_API_KEY` and `ANTHROPIC_API_KEY`. `--dry` shows the replies without sending them (also an option of "Run workflow"). The format of the comments Upload-Post returns hadn't been seen yet when the script was written (no comments existed): check the first runs' logs.
+
 ## 12. The videos made so far (21 November 2026)
 
 | id | Question | Reference | New calendar (18:00 Madrid) |
