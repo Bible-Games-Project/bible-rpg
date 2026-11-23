@@ -470,7 +470,54 @@ export function handsOf(p: Px, mid: number, inner: number, y0: number, y1: numbe
  * the hip leans forward by `angle` degrees (positive: towards the right of
  * the picture), coming down with the hips, which go `back` px the other way.
  */
-export function stoopFrame(p: Px, hip: XY, angle: number, squash: number, back = 0): Px {
+/**
+ * Where a point above the hips goes when the body leans `angle` degrees
+ * forward (to the right) bending along a curve: the spine turns little by
+ * little over its first `curve` px above the hips, then goes straight.
+ * The maintainer saw the torso cut at the waist when it turned whole.
+ */
+export function bendPoint(q: XY, angle: number, hip: XY, curve: number): XY {
+  const t = (angle * Math.PI) / 180;
+  const u = q[0] - hip[0];
+  const len = hip[1] - q[1];
+  const at = Math.abs(t) < 1e-4 || curve <= 0 ? 1 : Math.min(1, Math.max(0, len / curve));
+  const th = t * at;
+  let px: number;
+  let py: number;
+  if (Math.abs(t) < 1e-4 || curve <= 0) {
+    px = len * Math.sin(t);
+    py = -len * Math.cos(t);
+  } else {
+    const arc = Math.min(len, curve);
+    const r = curve / t;
+    px = r * (1 - Math.cos((t * arc) / curve));
+    py = -r * Math.sin((t * arc) / curve);
+    if (len > curve) {
+      px += (len - curve) * Math.sin(t);
+      py -= (len - curve) * Math.cos(t);
+    }
+  }
+  return [hip[0] + px + u * Math.cos(th), hip[1] + py + u * Math.sin(th)];
+}
+
+/** A layer bent over as bendPoint (sampled finely so the stretched back has no holes). */
+function bendPart(p: Px, angle: number, hip: XY, curve: number, k = 3): Px {
+  const out = blank(p.w, p.h);
+  for (let y = 0; y < p.h; y++)
+    for (let x = 0; x < p.w; x++) {
+      if (!alpha(p, x, y)) continue;
+      for (let j = 0; j < k; j++)
+        for (let i = 0; i < k; i++) {
+          const [dx, dy] = bendPoint([x + (i + 0.5) / k, y + (j + 0.5) / k], angle, hip, curve);
+          const tx = Math.floor(dx);
+          const ty = Math.floor(dy);
+          if (tx >= 0 && ty >= 0 && tx < p.w && ty < p.h) copyPx(out, p, tx, ty, x, y);
+        }
+    }
+  return out;
+}
+
+export function stoopFrame(p: Px, hip: XY, angle: number, squash: number, back = 0, curve = 0): Px {
   const hy = Math.round(hip[1]);
   let feet = hy;
   for (let y = hy; y < p.h; y++) for (let x = 0; x < p.w; x++) if (alpha(p, x, y)) feet = y;
@@ -487,7 +534,7 @@ export function stoopFrame(p: Px, hip: XY, angle: number, squash: number, back =
   const top = blank(p.w, p.h);
   for (let y = 0; y < hy; y++) for (let x = 0; x < p.w; x++) if (alpha(p, x, y)) copyPx(top, p, x, y, x, y);
   // the hips go back as the body leans over
-  const bent = rotatePart(top, -angle, hip);
+  const bent = curve ? bendPart(top, angle, hip, curve) : rotatePart(top, -angle, hip);
   const moved = blank(p.w, p.h);
   for (let y = 0; y < p.h; y++) for (let x = 0; x < p.w; x++) if (alpha(bent, x, y) && x - dx >= 0 && x - dx < p.w) copyPx(moved, bent, x - dx, y, x, y);
   over(out, moved, drop);
@@ -752,7 +799,7 @@ export function sitFrame(stand: Px, band: ArmBand, lap = 88, drape = 70): { fram
  * ahead of the feet, the far one a little behind it. `k` is how far down
  * (0.5 halfway, 1 lowest). Returns the frame and the bottom of the near fist.
  */
-export function sideStoop(stand: Px, band: ArmBand, o: { lean: number; squash: number; back: number; reach: number; elbow: number; waist: number }, k: number): { frame: Px; hand: XY } {
+export function sideStoop(stand: Px, band: ArmBand, o: { lean: number; squash: number; back: number; reach: number; elbow: number; waist: number; curve: number }, k: number): { frame: Px; hand: XY } {
   const { w, h, leg, body, arm, hip: legTop, figBottom } = splitSide(stand, band);
   // it bends at the waist, above the skirt (from the hip joint the skirt turned with the body)
   const hip: XY = [legTop[0], Math.round(o.waist * h)];
@@ -776,23 +823,27 @@ export function sideStoop(stand: Px, band: ArmBand, o: { lean: number; squash: n
   over(figure, body);
   const squash = 1 - (1 - o.squash) * k;
   const back = Math.round(o.back * k);
-  const bent = stoopFrame(figure, hip, lean, squash, back);
+  const bent = stoopFrame(figure, hip, lean, squash, back, o.curve);
   // the arms go with the upper body, whole (stoopFrame would squash what hangs below the hips)
   const legs = figBottom - Math.round(hip[1]);
   const drop = Math.round(legs * (1 - squash));
-  const carried = (p: Px, angle = lean): Px => {
-    const r = rotatePart(p, -angle, hip);
+  // the arms hang from the shoulders, which the curve of the back brings a little lower and back
+  const sh = bendPoint(shoulder, lean, hip, o.curve);
+  const rigid = turnPoint(shoulder, -lean, hip);
+  const sx = Math.round(sh[0] - rigid[0]) - back;
+  const sy = Math.round(sh[1] - rigid[1]);
+  const carried = (p: Px): Px => {
+    const r = rotatePart(p, -lean, hip);
     const m = blank(w, h);
-    for (let y = 0; y < h; y++) for (let x = back; x < w; x++) if (alpha(r, x, y)) copyPx(m, r, x - back, y, x, y);
+    for (let y = 0; y < h; y++)
+      for (let x = 0; x < w; x++) if (alpha(r, x, y) && x + sx >= 0 && x + sx < w && y + sy >= 0 && y + sy < h) copyPx(m, r, x + sx, y + sy, x, y);
     return m;
   };
   const frame = blank(w, h);
   over(frame, carried(far), drop);
-  // the waist turned halfway fills the wedge the turn opens at the back
-  over(frame, carried(rows(figure, hip[1] - 6, hip[1] + 2), lean / 2), drop);
   over(frame, bent);
   over(frame, carried(near), drop);
   let hand = turnPoint(turnPoint(fist, bend, elbow), turn, shoulder);
   hand = turnPoint(hand, -lean, hip);
-  return { frame, hand: [hand[0] - back, hand[1] + drop] };
+  return { frame, hand: [hand[0] + sx, hand[1] + sy + drop] };
 }

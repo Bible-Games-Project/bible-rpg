@@ -87,7 +87,7 @@ const FRONT_ARMS: Record<'down' | 'up', FrontArms> = {
 /** bending down (stoopFrame): the hip (share of the frame height), the lean from the side (degrees), how far the hips go back (px) and how far the knees give */
 const STOOP = { hip: 0.5, frontSquash: 0.7 };
 /** from the side (sideStoop): the lean from the hips, the knees, the hips going back, the waist (share of the frame height), how far ahead the arm reaches down (degrees from straight down) and the elbow */
-const SIDE_STOOP = { lean: 40, squash: 0.78, back: 6, reach: 22, elbow: 6, waist: 0.45 };
+const SIDE_STOOP = { lean: 40, squash: 0.78, back: 6, reach: 22, elbow: 6, waist: 0.45, curve: 16 };
 /** from the front, nothing nearer the middle than this is a hand (px): the tunic is about this wide */
 const HAND_INNER = 8;
 /** room on each side of the side frames for the run's longer strides */
