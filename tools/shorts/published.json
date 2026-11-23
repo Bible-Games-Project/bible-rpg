@@ -550,5 +550,18 @@
   ],
   "job": "cef029a1f7b649dab32c3faf2ecdb90f",
   "scheduledAt": "2026-11-23T07:49:59.215Z"
+ },
+ {
+  "id": "eden-dust",
+  "account": "biblegamesproject@gmail.com",
+  "profile": "Brand_1_RPG",
+  "at": "2026-11-23T20:05:00.000Z",
+  "title": "Did you know Adam was made from dust? ✨ | Bible Story #Shorts",
+  "platforms": [
+   "youtube"
+  ],
+  "job": "c361399fc1a545ad9b6c6aa19f10e68b",
+  "scheduledAt": "2026-11-23T19:59:10.685Z",
+  "retry": "the first upload failed on youtube"
  }
 ]

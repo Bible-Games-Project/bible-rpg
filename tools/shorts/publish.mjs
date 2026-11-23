@@ -8,6 +8,7 @@
 //   node tools/shorts/publish.mjs check              the key's account, its profiles, Facebook pages and Pinterest boards
 //   node tools/shorts/publish.mjs schedule <id> [--at 2026-11-22T18:00] [--platforms youtube,tiktok]
 //     (--at in the channel's local time; default: the next day of the calendar)
+//     --retry: send it again to networks where it failed (YouTube's upload limit)
 //   node tools/shorts/publish.mjs list               the posts waiting at Upload-Post
 //
 // The key is read from the environment variable named in channel.json and
@@ -142,7 +143,7 @@ if (cmd === 'check') {
   const short = findShort(id);
   const platforms = opt('--platforms')?.split(',') ?? ch.platforms;
   const dup = platforms.filter((pl) => mine().some((e) => e.id === id && e.platforms.includes(pl)));
-  if (dup.length) throw new Error(`${id} is already scheduled on ${dup.join(', ')} (published.json)`);
+  if (dup.length && !process.argv.includes('--retry')) throw new Error(`${id} is already scheduled on ${dup.join(', ')} (published.json)`);
   if (platforms.includes('facebook') && !ch.facebookPage) throw new Error('no facebookPage in channel.json (see: check)');
   if (platforms.includes('pinterest') && !(ch.pinterestBoard && ch.wishlist)) throw new Error('no pinterestBoard or wishlist link in channel.json');
   const t = texts(short);
@@ -190,7 +191,7 @@ if (cmd === 'check') {
   const r = await call('/upload', { method: 'POST', body: form });
   console.log(JSON.stringify(r).slice(0, 1500));
   const l = log();
-  l.push({ id, account: ch.account, profile: ch.profile, at: at.toISOString(), title: t.youtube.title, platforms, job: r.job_id ?? r.request_id ?? null, scheduledAt: new Date().toISOString() });
+  l.push({ id, account: ch.account, profile: ch.profile, at: at.toISOString(), title: t.youtube.title, platforms, job: r.job_id ?? r.request_id ?? null, scheduledAt: new Date().toISOString(), ...(dup.length ? { retry: 'the first upload failed on ' + dup.join(', ') } : {}) });
   fs.writeFileSync(LOG, JSON.stringify(l, null, 1) + '\n');
 } else {
   console.log('usage: preview <id> | check | schedule <id> [--at YYYY-MM-DDTHH:MM] [--platforms a,b] | list');
