@@ -167,7 +167,7 @@ The script is `tools/shorts/publish.mjs`, which uses the Upload-Post API. Upload
 - The API key is read only from the environment variable `UPLOAD_POST_BGP_API_KEY`, never from a file. The script refuses a key that belongs to another account.
 
 **The calendar**
-- One short **every day at 18:00 Madrid time** (every two days until 22 November 2026), on all 5 networks at once (`everyDays` and `time` in `channel.json`).
+- One short **every day at 17:52 Madrid time** (every two days until 22 November 2026), on all 5 networks at once (`everyDays` and `time` in `channel.json`). It was 18:00 until 23 November 2026. The maintainer moved it off the hour because many scheduled posts reach YouTube at round hours, and eden-dust hit YouTube's upload limit at 18:00. `publish.mjs retime` moved every waiting post to the new time on its own day.
 - Each new short goes 2 days after the last one scheduled.
 
 **The texts** (in English; `node tools/shorts/publish.mjs preview <id>` prints them without sending anything)
@@ -199,11 +199,11 @@ Upload-Post keeps a title and a caption for each network. The script sends both 
 
 **When a network fails.** A post can fail on one network and go out on the others. Check it with Upload-Post's `GET /api/uploadposts/status?job_id=<job>`. On 23 November 2026, eden-dust failed on YouTube with `youtube_rate_limited`; the other four networks published it. It was sent again to YouTube alone with `schedule eden-dust --platforms youtube --at <a few minutes ahead> --retry`.
 
-**Replying to comments (automatic).** Every day at 18:00 UTC (19:00 Madrid in winter, one hour after the posts), the GitHub Actions workflow `.github/workflows/reply-comments.yml` runs `tools/shorts/reply-comments.mjs`. It reads the comments of the profile's posts (YouTube, Instagram, Facebook, TikTok) through Upload-Post, has Claude (`claude-opus-5-5`) write a short, kind reply in the commenter's language, as the creator, and posts it. Spam, scams and hate get no reply. Upload-Post can't read Pinterest comments nor give likes. The answered ids are kept in the Actions cache (`tools/shorts/.replied.json`, not committed). It needs two repository secrets: `UPLOAD_POST_BGP_API_KEY` and `ANTHROPIC_API_KEY`. `--dry` shows the replies without sending them (also an option of "Run workflow"). The format of the comments Upload-Post returns hadn't been seen yet when the script was written (no comments existed): check the first runs' logs.
+**Replying to comments (automatic).** Every day at 18:00 UTC (19:00 Madrid in winter, about an hour after the posts), the GitHub Actions workflow `.github/workflows/reply-comments.yml` runs `tools/shorts/reply-comments.mjs`. It reads the comments of the profile's posts (YouTube, Instagram, Facebook, TikTok) through Upload-Post, has Claude (`claude-opus-5-5`) write a short, kind reply in the commenter's language, as the creator, and posts it. Spam, scams and hate get no reply. Upload-Post can't read Pinterest comments nor give likes. The answered ids are kept in the Actions cache (`tools/shorts/.replied.json`, not committed). It needs two repository secrets: `UPLOAD_POST_BGP_API_KEY` and `ANTHROPIC_API_KEY`. `--dry` shows the replies without sending them (also an option of "Run workflow"). The format of the comments Upload-Post returns hadn't been seen yet when the script was written (no comments existed): check the first runs' logs.
 
 ## 12. The videos made so far (23 November 2026)
 
-| id | Question | Reference | New calendar (18:00 Madrid) |
+| id | Question | Reference | New calendar (17:52 Madrid from 24 Nov) |
 |---|---|---|---|
 | eden-naming | Did you know Adam named the animals? 🦁 | Genesis 2:19–20 | Sun 22 Nov 2026 |
 | eden-rib | Did you know Eve was made from Adam's rib? 🦴 | Genesis 2:21–23 | Tue 24 Nov 2026 |
@@ -239,5 +239,5 @@ Upload-Post keeps a title and a caption for each network. The script sends both 
 - **New account** (biblegamesproject@gmail.com, profile Brand_1_RPG): **all 5 are scheduled** on YouTube, Instagram, Facebook, TikTok and Pinterest at these dates (one Upload-Post job per short, scheduled on 20 November 2026; job ids in `tools/shorts/published.json`).
 - eden-cherubim and cain-keeper were scheduled on 21 November 2026. The next short goes on Sunday 6 December 2026 at 18:00, then every two days.
 - The 8 shorts from 6 to 20 December were approved and scheduled on 21 November 2026 (all 5 networks). Their texts also carry the story's own name, which people search for: the hashtag #AdamAndEve or #CainAndAbel, and the YouTube tags "Adam and Eve, Garden of Eden" or "Cain and Abel".
-- From 23 November 2026 one short goes out **every day**: the 14 shorts on the odd days from 23 November to 19 December (in the table, after eden-promise) were approved and scheduled on 23 November 2026, between the ones already on the even days. Their voices were made with the second ElevenLabs key (`ELEVENLABS_API_KEY_2`). The next free slot is Monday 21 December 2026 at 18:00, then every day.
+- From 23 November 2026 one short goes out **every day**: the 14 shorts on the odd days from 23 November to 19 December (in the table, after eden-promise) were approved and scheduled on 23 November 2026, between the ones already on the even days. Their voices were made with the second ElevenLabs key (`ELEVENLABS_API_KEY_2`). The next free slot is Monday 21 December 2026 at 17:52, then every day.
 - **Old account** (biblequiz.truechrist@gmail.com, profile "default", YouTube "Bible Quiz" and Instagram biblequiz.truechrist): the first schedule, paused and then **cancelled** on 20 November 2026. Nothing was ever published there, and nothing is scheduled there now.

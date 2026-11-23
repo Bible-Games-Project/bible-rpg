@@ -9,6 +9,7 @@
 //   node tools/shorts/publish.mjs schedule <id> [--at 2026-11-22T18:00] [--platforms youtube,tiktok]
 //     (--at in the channel's local time; default: the next day of the calendar)
 //     --retry: send it again to networks where it failed (YouTube's upload limit)
+//   node tools/shorts/publish.mjs retime [--dry]    moves every post still waiting to channel.json's time, on its own day
 //   node tools/shorts/publish.mjs list               the posts waiting at Upload-Post
 //
 // The key is read from the environment variable named in channel.json and
@@ -83,7 +84,7 @@ if (!key) throw new Error(`no ${ch.key} in the environment`);
 const headers = { Authorization: `Apikey ${key}` };
 const clean = (t) => t.split(key).join('<key>');
 const call = async (p, init = {}) => {
-  const r = await fetch(API + p, { ...init, headers });
+  const r = await fetch(API + p, { ...init, headers: { ...headers, ...init.headers } });
   const text = clean(await r.text());
   let j;
   try { j = JSON.parse(text); } catch { j = { raw: text.slice(0, 500) }; }
@@ -139,6 +140,24 @@ if (cmd === 'check') {
   if (ch.profile) console.log('next slot', nextSlot().toISOString());
 } else if (cmd === 'list') {
   console.log(JSON.stringify(await call('/uploadposts/schedule'), null, 1).slice(0, 4000));
+} else if (cmd === 'retime') {
+  // the maintainer moved the posts off the hour (18:00 → 17:52): at round
+  // hours many scheduled posts reach YouTube at once (eden-dust hit its limit)
+  const [h, mi] = ch.time.split(':').map(Number);
+  const { scheduled_posts: waiting = [] } = await call('/uploadposts/schedule');
+  const ids = new Set(waiting.map((p) => p.job_id));
+  const l = log();
+  for (const e of l) {
+    if (e.account !== ch.account || !ids.has(e.job) || +new Date(e.at) < Date.now() + 10 * 60e3) continue;
+    const d = ymd(new Date(e.at));
+    const at = zoned(d.year, d.month, d.day, h, mi);
+    if (+at === +new Date(e.at)) continue;
+    console.log(`${e.id}: ${e.at} → ${at.toISOString()}`);
+    if (process.argv.includes('--dry')) continue;
+    await call(`/uploadposts/schedule/${e.job}`, { method: 'PATCH', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ scheduled_date: at.toISOString() }) });
+    e.at = at.toISOString();
+    fs.writeFileSync(LOG, JSON.stringify(l, null, 1) + '\n');
+  }
 } else if (cmd === 'schedule') {
   const short = findShort(id);
   const platforms = opt('--platforms')?.split(',') ?? ch.platforms;
