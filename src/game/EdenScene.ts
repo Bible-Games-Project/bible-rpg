@@ -679,7 +679,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     audio.play(name as never);
   }
 
-  fx(name: 'sparkle' | 'mist' | 'splash' | 'leaves' | 'holy', at: Pt): void {
+  fx(name: 'sparkle' | 'mist' | 'splash' | 'leaves' | 'holy' | 'dirt', at: Pt): void {
     const [x, y] = at;
     const rm = settings.get().reduceMotion;
     if (name === 'sparkle') {
@@ -696,6 +696,15 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       for (let i = 0; i < 10; i++) {
         const m = this.add.image(x + (Math.random() - 0.5) * 160, y + (Math.random() - 0.5) * 60, 'fx-mist').setDepth(DEPTH_OVERLAY - 150).setAlpha(0);
         this.tweens.add({ targets: m, alpha: 0.9, y: m.y - 20, duration: 1400, yoyo: true, hold: 600, onComplete: () => m.destroy() });
+      }
+    } else if (name === 'dirt') {
+      // clods thrown up where the digging stick goes in
+      for (let i = 0; i < (rm ? 3 : 7); i++) {
+        const c = this.add.rectangle(x + (Math.random() - 0.5) * 6, y, 1.6 + Math.random() * 1.4, 1.6 + Math.random(), Math.random() < 0.5 ? 0x6b4a2e : 0x8a6440).setDepth(y + 2);
+        const dx = (Math.random() - 0.5) * 22;
+        const up = 6 + Math.random() * 10;
+        this.tweens.add({ targets: c, x: c.x + dx, duration: 420, ease: 'Linear' });
+        this.tweens.add({ targets: c, y: y - up, duration: 180, ease: 'Quad.easeOut', yoyo: true, onComplete: () => this.tweens.add({ targets: c, alpha: 0, duration: 300, delay: 250, onComplete: () => c.destroy() }) });
       }
     } else if (name === 'leaves') {
       for (let i = 0; i < 8; i++) {

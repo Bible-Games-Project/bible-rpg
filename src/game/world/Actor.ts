@@ -17,6 +17,10 @@ export const PLAYER_WALK = 0.75;
 /** How far below the bottom of the fist a held thing ends (world px): the
  * fist closes around its lower part. */
 const HELD_BELOW_FIST = 3;
+/** where the digging stick is gripped to dig (its picture lies from lower left to upper right): near the upper end */
+const DIG_GRIP: [number, number] = [0.85, 0.15];
+/** where the gourd is held to pour: round its middle */
+const POUR_GRIP: [number, number] = [0.5, 0.6];
 /** how far ahead a carried thing is held walking from the side (world px) */
 const WALK_CARRY_AHEAD = 11;
 /** how much further ahead a carried thing is held when running from the side (world px) */
@@ -74,6 +78,8 @@ export class Actor {
   pace = 0;
   /** bending down to pick something up (stoop()): 0 standing, 1 lowest */
   private stooping: { k: number } | null = null;
+  /** garden work in progress (work()): the sheet's pose, and how far the held thing is tipped (0 to 1) */
+  private task: { kind: 'pour' | 'dig'; pose: 'pour' | 'lift' | 'dig' | null; tip: number } | null = null;
   /** a side-drawn animal leaning the way it goes (see refresh) */
   charId?: string;
   outfit?: string;
@@ -358,6 +364,78 @@ export class Actor {
   }
 
   /**
+   * Garden work with what is in the hand (the maintainer: watering, working
+   * the garden). `pour`: the gourd held out and tipped, water running from
+   * it for `ms`. `dig`: the digging stick lifted and driven into the ground
+   * `strikes` times, `onStrike` with where it goes in. Resolves when done.
+   */
+  async work(kind: 'pour' | 'dig', o: { ms?: number; strikes?: number; onStrike?: (at: [number, number]) => void } = {}): Promise<void> {
+    const t = { kind, pose: null as 'pour' | 'lift' | 'dig' | null, tip: 0 };
+    this.task = t;
+    this.stop();
+    this.refresh(true);
+    this.sprite.anims.pause();
+    const wait = (ms: number) => new Promise<void>((done) => this.scene.time.delayedCall(ms, done));
+    const tween = (tip: number, duration: number) =>
+      new Promise<void>((done) => this.scene.tweens.add({ targets: t, tip, duration, ease: 'Sine.easeInOut', onUpdate: () => this.refresh(), onComplete: () => done(), onStop: () => done() }));
+    const set = (pose: typeof t.pose) => {
+      t.pose = pose;
+      this.refresh();
+    };
+    const grip = (g: [number, number]) => this.heldSprite?.setOrigin(this.heldSprite.flipX ? 1 - g[0] : g[0], g[1]);
+    if (kind === 'pour') {
+      // held round the middle, so it tips in the hand
+      grip(POUR_GRIP);
+      set('pour');
+      await tween(1, 320);
+      const drops = this.scene.time.addEvent({ delay: 45, loop: true, callback: () => this.task === t && this.drop() });
+      await wait(o.ms ?? 1300);
+      drops.remove();
+      await tween(0, 280);
+      grip(this.heldArgs?.[2] ?? [0.5, 1]);
+    } else {
+      // gripped by its top end (DIG_GRIP), the rest of it below the fist
+      grip(DIG_GRIP);
+      for (let i = 0; i < (o.strikes ?? 2); i++) {
+        set('lift');
+        await wait(300);
+        set('dig');
+        const side = this.facing === 'left' ? -1 : this.facing === 'right' ? 1 : 0;
+        o.onStrike?.([this.feet.x + side * 20, this.feet.y + (this.facing === 'down' ? 8 : this.facing === 'up' ? -4 : 3)]);
+        await wait(340);
+      }
+      grip(this.heldArgs?.[2] ?? [0.5, 1]);
+    }
+    if (this.task !== t) return;
+    this.task = null;
+    this.sprite.anims.resume();
+    this.refresh(true);
+  }
+
+  /** A drop of water running from the mouth of the tipped gourd to the ground. */
+  private drop(): void {
+    const s = this.heldSprite;
+    if (!s) return;
+    // the mouth: the top middle of the picture, turned with it about the grip
+    const len = s.displayHeight * (s.originY - 0.08);
+    const mx = s.x + Math.sin(s.rotation) * len;
+    const my = s.y - Math.cos(s.rotation) * len;
+    const ground = this.feet.y - 3 + Math.random() * 3;
+    const d = this.scene.add.rectangle(mx + (Math.random() - 0.5) * 2, my, 1.4, 2.6, 0xa8dcff, 0.9).setDepth(this.feet.y + 2);
+    this.scene.tweens.add({
+      targets: d,
+      y: ground,
+      x: d.x + (Math.random() - 0.5) * 3,
+      duration: Math.max(120, (ground - my) * 6),
+      ease: 'Quad.easeIn',
+      onComplete: () => {
+        d.setSize(3, 1.2).setAlpha(0.6);
+        this.scene.tweens.add({ targets: d, alpha: 0, scaleX: 1.6, duration: 220, onComplete: () => d.destroy() });
+      },
+    });
+  }
+
+  /**
    * Bends down to the ground and straightens again (Cain picking the
    * produce, the maintainer), with the sheet's bending frames (else a
    * crouch). Resolves when the hands are lowest; the rise goes on after.
@@ -504,6 +582,17 @@ export class Actor {
         this.sprite.setScale(base, base * (1 - 0.2 * k));
       }
     }
+    if (this.task?.pose) {
+      const parts = tex.split(':');
+      const set = parts[0] === 'char' ? MANIFEST.characters[parts[1]]?.[parts[2]]?.[parts[3] as Direction]?.work : undefined;
+      const list = set?.[this.task.pose];
+      if (list?.length) {
+        // from the front and back, the arm of the hand that holds it
+        const f = list[list.length > 1 && this.facing === 'up' ? 1 : 0];
+        if (this.sprite.frame.name !== String(f)) this.sprite.setFrame(f);
+        this.syncShadow();
+      }
+    }
     // side-drawn animals (the sheep) neither bob nor lean as they go: the
     // maintainer saw them hop, and did not like the lean
     this.placeHeld();
@@ -551,6 +640,15 @@ export class Actor {
       dx += side * b.lift * 0.3;
       dy += by * 1.3 + b.lift;
       turn = side ? side * b.turn : (this.facing === 'down' ? 1 : -1) * (b.aim * Math.PI * 0.5 + b.turn * 0.4);
+    }
+    const job = this.task;
+    if (job && s === this.heldSprite && !arms) {
+      const side = this.facing === 'left' ? -1 : this.facing === 'right' ? 1 : 0;
+      const out = side || (dx < 0 ? -1 : 1);
+      // the gourd tipped forward (or outward, from the front) until it pours
+      if (job.kind === 'pour') turn = out * job.tip * (side ? 1.95 : 1.4);
+      // the stick held by its top end, pointing down, then driven in ahead
+      else if (job.pose) turn = side ? side * (job.pose === 'dig' ? -1.3 : -1.1) : -1.0;
     }
     // from behind, what is in the hand is hidden by the body, the knife too while Abel stabs (the maintainer saw it through his back); a raised arm shows
     const behind = this.facing === 'up' && !(b && b.kind === 'swing' && this.blowFrame() !== undefined);

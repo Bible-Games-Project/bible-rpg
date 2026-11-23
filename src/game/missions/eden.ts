@@ -74,13 +74,32 @@ function pickUp(w: WorldApi, propId: string, at: Pt, item: string, n = 1): Promi
   });
 }
 
-/** The player bends down to what lies at `at` (as Cain picks his crops, the
- * maintainer); resolves with the hands lowest, they straighten up after. */
-function bendFor(w: WorldApi, at: Pt): Promise<void> {
+/** The player steps up beside what lies at `at` and bends down to it (as
+ * Cain picks his crops, the maintainer; and the hand must reach it, the
+ * maintainer saw things picked up from a step away); resolves with the
+ * hands lowest, they straighten up after. */
+async function bendFor(w: WorldApi, at: Pt): Promise<void> {
   const p = w.player();
-  p.face({ x: at[0], y: at[1] });
+  const side = p.x <= at[0] ? 1 : -1;
+  const to: Pt = [at[0] - side * STOOP_REACH, at[1] + 2];
+  if (Math.hypot(p.x - to[0], p.y - to[1]) > 4) await p.walkTo(to[0], to[1], 90);
+  p.face(side > 0 ? 'right' : 'left');
   return p.stoop();
 }
+/** how far ahead of the feet the hands come down, bending (world px) */
+const STOOP_REACH = 20;
+
+/** The player steps beside patch `i` and turns to it (to dig or water it,
+ * the maintainer: working the garden, watering), from the side they are on. */
+async function besidePatch(w: WorldApi, i: number, job: keyof typeof PATCH_REACH): Promise<void> {
+  const p = w.player();
+  const [x, y] = PLOT_PATCHES[i];
+  const side = p.x <= x ? 1 : -1;
+  await p.walkTo(x - side * PATCH_REACH[job], y + 6, 90);
+  p.face(side > 0 ? 'right' : 'left');
+}
+/** how far beside a patch the player stands to work it (world px): where the stick goes in, where the gourd's water falls */
+const PATCH_REACH = { dig: 24, pour: 36 };
 
 /** Leave a carried item on the ground beside the player once it has served
  * (the maintainer wanted tools held in the hand until used, then set down). */
@@ -113,6 +132,7 @@ async function plotTask(
   sfx: string,
   toastKey: string,
   each?: (i: number) => void | Promise<void>,
+  work?: (i: number) => Promise<void>,
 ): Promise<void> {
   const done = new Set<number>();
   const total = PLOT_PATCHES.length;
@@ -128,8 +148,10 @@ async function plotTask(
         enabled: () => !done.has(i),
         onUse: async () => {
           done.add(i);
-          w.setPlot(i, state);
+          // the sound with the work (the water poured, the ground dug)
           w.sfx(sfx);
+          await work?.(i);
+          w.setPlot(i, state);
           w.toast(E(`toasts.${toastKey}`));
           await each?.(i);
           update();
@@ -244,7 +266,10 @@ const m01: MissionDef = {
     await pickUp(w, 'stick', POINTS.stick, 'stick');
     w.player().hold('digging-stick');
 
-    await plotTask(w, 'till', 'till', 'tilled', 'dig', 'tilled', (i) => w.fx('leaves', PLOT_PATCHES[i]));
+    await plotTask(w, 'till', 'till', 'tilled', 'dig', 'tilled', (i) => w.fx('leaves', PLOT_PATCHES[i]), async (i) => {
+      await besidePatch(w, i, 'dig');
+      await w.player().work('dig', { onStrike: () => w.fx('dirt', PLOT_PATCHES[i]) });
+    });
     putDown(w, 'stick', 'stick');
 
     // a seed for each patch, one handful at a time
@@ -265,7 +290,7 @@ const m01: MissionDef = {
         },
       });
     }
-    await plotTask(w, 'plant', 'plant', 'seeded', 'plant', 'planted', () => w.take('seeds'));
+    await plotTask(w, 'plant', 'plant', 'seeded', 'plant', 'planted', () => w.take('seeds'), (i) => bendFor(w, PLOT_PATCHES[i]));
     w.player().hold(null);
 
     w.objective(step('m01', 'gourd'), POINTS.gourd);
@@ -287,7 +312,10 @@ const m01: MissionDef = {
       },
     });
 
-    await plotTask(w, 'water', 'water', 'watered', 'pour', 'watered', (i) => w.fx('splash', [PLOT_PATCHES[i][0], PLOT_PATCHES[i][1] + 6]));
+    await plotTask(w, 'water', 'water', 'watered', 'pour', 'watered', (i) => w.fx('splash', [PLOT_PATCHES[i][0], PLOT_PATCHES[i][1] + 6]), async (i) => {
+      await besidePatch(w, i, 'pour');
+      await w.player().work('pour', { ms: 1100 });
+    });
     // the gourd is empty again: he sets it down
     w.give('gourd');
     putDown(w, 'gourd', 'gourd');

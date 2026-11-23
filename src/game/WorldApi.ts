@@ -73,7 +73,7 @@ export interface WorldApi {
   setTime(t: TimeOfDay): void;
   music(mood: 'none' | 'peaceful' | 'wonder' | 'solemn' | 'tension' | 'sorrow'): void;
   sfx(name: string): void;
-  fx(name: 'sparkle' | 'mist' | 'splash' | 'leaves' | 'holy', at: Pt): void;
+  fx(name: 'sparkle' | 'mist' | 'splash' | 'leaves' | 'holy' | 'dirt', at: Pt): void;
   /** The closest point in the river's water to `at` (within 200 px). */
   waterNear(at: Pt): Pt;
   /** `beam`: his column of light, only for his first appearance. */

@@ -742,3 +742,55 @@ export function sitFrame(stand: Px, band: ArmBand, lap = 88, drape = 70): { fram
   over(f, out, h - 1 - low);
   return { frame: f, hip: [hip[0], hip[1] + h - 1 - low] };
 }
+
+/**
+ * Bending down to pick something up, from the side (the maintainer: the
+ * hands hung behind the skirt and what was picked up floated): the knees
+ * bend, the body leans over from the hips, and the near arm reaches down
+ * ahead of the feet, the far one a little behind it. `k` is how far down
+ * (0.5 halfway, 1 lowest). Returns the frame and the bottom of the near fist.
+ */
+export function sideStoop(stand: Px, band: ArmBand, o: { lean: number; squash: number; back: number; reach: number; elbow: number; waist: number }, k: number): { frame: Px; hand: XY } {
+  const { w, h, leg, body, arm, hip: legTop, figBottom } = splitSide(stand, band);
+  // it bends at the waist, above the skirt (from the hip joint the skirt turned with the body)
+  const hip: XY = [legTop[0], Math.round(o.waist * h)];
+  const [x0, x1, y0, y1] = band;
+  const shoulder: XY = [(x0 + x1) / 2, y0 + 2];
+  const fist: XY = [(x0 + x1) / 2, y1];
+  const elbowY = Math.round(y0 + 0.46 * (y1 - y0));
+  const elbow: XY = [middleAt(arm, elbowY, (x0 + x1) / 2), elbowY + 0.5];
+  const upper = rows(arm, 0, elbowY + 2);
+  const fore = rows(arm, elbowY - 1, h);
+  const lean = o.lean * k;
+  // the arm turned forward from the body: it hangs toward the ground as the body leans
+  const turn = (lean + o.reach * k);
+  const bend = o.elbow * k;
+  const near = blank(w, h);
+  over(near, turnSteps(fore, [{ angle: bend, pivot: elbow }, { angle: turn, pivot: shoulder }]));
+  over(near, turnSteps(upper, [{ angle: turn, pivot: shoulder }]));
+  const far = darker(turnSteps(arm, [{ angle: turn - 12 * k, pivot: shoulder }]));
+  const figure = blank(w, h);
+  over(figure, leg);
+  over(figure, body);
+  const squash = 1 - (1 - o.squash) * k;
+  const back = Math.round(o.back * k);
+  const bent = stoopFrame(figure, hip, lean, squash, back);
+  // the arms go with the upper body, whole (stoopFrame would squash what hangs below the hips)
+  const legs = figBottom - Math.round(hip[1]);
+  const drop = Math.round(legs * (1 - squash));
+  const carried = (p: Px): Px => {
+    const r = rotatePart(p, -lean, hip);
+    const m = blank(w, h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (x - back >= 0 && alpha(r, x - back, y)) copyPx(m, r, x, y, x - back, y);
+    return m;
+  };
+  const frame = blank(w, h);
+  over(frame, carried(far), drop);
+  // the waist itself, unturned, fills the wedge the turn opens at the back
+  over(frame, rows(figure, hip[1] - 12, hip[1] + 1), drop);
+  over(frame, bent);
+  over(frame, carried(near), drop);
+  let hand = turnPoint(turnPoint(fist, bend, elbow), turn, shoulder);
+  hand = turnPoint(hand, -lean, hip);
+  return { frame, hand: [hand[0] + back, hand[1] + drop] };
+}

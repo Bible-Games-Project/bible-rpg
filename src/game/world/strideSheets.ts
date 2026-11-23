@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { MANIFEST, charKey, shadowKey, type Direction, type SheetAsset } from '../manifest';
 import { castShadows } from './castShadow';
-import { frameOf, frontRaise, frontRun, frontThrust, handsOf, padded, sidePoses, stoopFrame, sideRun, sideStride, type FrontArms, type Px, type SidePose, type XY, type ArmBand } from './stride';
+import { frameOf, frontRaise, frontRun, frontThrust, handsOf, padded, sidePoses, sideStoop, stoopFrame, sideRun, sideStride, type FrontArms, type Px, type SidePose, type XY, type ArmBand } from './stride';
 
 /**
  * Everyone walks, runs and bends down as Cain does (the maintainer,
@@ -85,7 +85,9 @@ const FRONT_ARMS: Record<'down' | 'up', FrontArms> = {
   up: { elbow: 0.42, hand: 0.64, inner: 14, pump: 0.4, back: 0.9, inward: 1, body: FRONT_BODY },
 };
 /** bending down (stoopFrame): the hip (share of the frame height), the lean from the side (degrees), how far the hips go back (px) and how far the knees give */
-const STOOP = { hip: 0.5, lean: 36, back: 8, sideSquash: 0.82, frontSquash: 0.7 };
+const STOOP = { hip: 0.5, frontSquash: 0.7 };
+/** from the side (sideStoop): the lean from the hips, the knees, the hips going back, the waist (share of the frame height), how far ahead the arm reaches down (degrees from straight down) and the elbow */
+const SIDE_STOOP = { lean: 40, squash: 0.78, back: 6, reach: 22, elbow: 6, waist: 0.45 };
 /** from the front, nothing nearer the middle than this is a hand (px): the tunic is about this wide */
 const HAND_INNER = 8;
 /** room on each side of the side frames for the run's longer strides */
@@ -102,6 +104,22 @@ const ATTACK = {
     thrust: { arm: 42, elbow: 4, lean: 11, step: 14 },
   } satisfies Record<(typeof ATTACK_POSES)[number], SidePose>,
   front: { raise: 0.9, out: 5, strike: 0.6, thrust: 0.35 },
+};
+
+const WORK_POSES = ['pour', 'lift', 'dig'] as const;
+/**
+ * Garden work (Actor.work; the maintainer: watering, working the garden):
+ * from the side, the arm held out to tip the gourd (pour), the digging stick
+ * lifted before the chest (lift) and driven down ahead of the feet (dig);
+ * from the front and back the forearm coming toward us (shorter) or down.
+ */
+const WORK = {
+  side: {
+    pour: { arm: 62, elbow: 28, lean: 3 },
+    lift: { arm: 18, elbow: 85, lean: -2 },
+    dig: { arm: 34, elbow: 6, lean: 12, step: 10 },
+  } satisfies Record<(typeof WORK_POSES)[number], SidePose>,
+  front: { pour: 0.55, lift: 0.4 },
 };
 
 /** One direction of a sheet: from the side the walk with more arm swing and
@@ -137,7 +155,14 @@ function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm:
   }
   // bending down to pick something up: halfway, then lowest (from the side leaning forward)
   const hip: XY = [a.anchorX + pad, Math.round(fh * STOOP.hip)];
-  const stoop = [0.5, 1].map((k) => stoopFrame(frames[0], hip, side ? STOOP.lean * k : 0, 1 - (1 - (side ? STOOP.sideSquash : STOOP.frontSquash)) * k, side ? STOOP.back * k : 0));
+  let stoop: Px[];
+  let stoopHands: XY[] = [];
+  if (side) {
+    const band: ArmBand = [arm![0] + pad, arm![1] + pad, arm![2], arm![3], arm![4]];
+    const bent = [0.5, 1].map((k) => sideStoop(frames[0], band, SIDE_STOOP, k));
+    stoop = bent.map((b) => b.frame);
+    stoopHands = bent.map((b) => b.hand);
+  } else stoop = [0.5, 1].map((k) => stoopFrame(frames[0], hip, 0, 1 - (1 - STOOP.frontSquash) * k, 0));
   // a blow (Actor.attack; the maintainer: the arm must come up): raised and brought down, drawn back and thrust
   const poses = ATTACK_POSES.map(() => [] as Px[]);
   let poseHands: XY[] = [];
@@ -158,7 +183,22 @@ function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm:
       poses[3].push(frontThrust(frames[0], a.anchorX, k, arms, ATTACK.front.thrust, 3));
     }
   }
-  const all = [...frames, ...run, ...stoop, ...poses.flat()];
+  const work = WORK_POSES.map(() => [] as Px[]);
+  let workHands: XY[] = [];
+  if (side) {
+    const band: ArmBand = [arm![0] + pad, arm![1] + pad, arm![2], arm![3], arm![4]];
+    const r = sidePoses(frames[0], band, WORK_POSES.map((k) => WORK.side[k]));
+    r.frames.forEach((f, i) => work[i].push(f));
+    workHands = r.hands;
+  } else {
+    const arms = FRONT_ARMS[dir === 'up' ? 'up' : 'down'];
+    for (const k of [-1, 1]) {
+      work[0].push(frontThrust(frames[0], a.anchorX, k, arms, WORK.front.pour, 2));
+      work[1].push(frontThrust(frames[0], a.anchorX, k, arms, WORK.front.lift, 3));
+      work[2].push(frames[0]);
+    }
+  }
+  const all = [...frames, ...run, ...stoop, ...poses.flat(), ...work.flat()];
   // from the front and back, where each hand is in each frame (the maintainer: the fat
   // carried up or down did not move with the hand)
   let sideHands: [XY, XY][] | undefined;
@@ -170,10 +210,12 @@ function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm:
     const at = frames.length + run.length + stoop.length;
     raisedHands.forEach((h, k) => (sideHands![at + k][k] = h));
   }
-  // the fists in the poses of a blow (none in the bending frames)
+  // the fists bending down and in the poses of a blow (the maintainer: what is picked up must stay in the hand)
   if (hands && side) {
-    const at = frames.length + run.length + stoop.length;
-    poseHands.forEach((h, i) => (hands![at + i] = h));
+    const at = frames.length + run.length;
+    stoopHands.forEach((h, i) => (hands![at + i] = h));
+    poseHands.forEach((h, i) => (hands![at + stoop.length + i] = h));
+    workHands.forEach((h, i) => (hands![at + stoop.length + poseHands.length + i] = h));
   }
   const W = fw + pad * 2;
   const c = document.createElement('canvas');
@@ -185,6 +227,7 @@ function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm:
   const firstPose = first + run.length + stoop.length;
   let n = firstPose;
   const [raise, strike, draw, thrust] = poses.map((list) => list.map(() => n++));
-  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, sideHands, run: run.map((_, i) => first + i), runFps: 16, stoop: stoop.map((_, i) => first + run.length + i), attack: { raise, strike, draw, thrust } }, all];
+  const [pour, lift, dig] = work.map((list) => list.map(() => n++));
+  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, sideHands, run: run.map((_, i) => first + i), runFps: 16, stoop: stoop.map((_, i) => first + run.length + i), attack: { raise, strike, draw, thrust }, work: { pour, lift, dig } }, all];
 }
 
