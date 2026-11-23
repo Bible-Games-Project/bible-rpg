@@ -440,7 +440,8 @@ export class Actor {
    * produce, the maintainer), with the sheet's bending frames (else a
    * crouch). Resolves when the hands are lowest; the rise goes on after.
    */
-  stoop(): Promise<void> {
+  /** `hold`: how long it stays down (ms) before standing up again */
+  stoop(hold = 220): Promise<void> {
     const st = { k: 0 };
     this.stooping = st;
     this.stop();
@@ -450,7 +451,7 @@ export class Actor {
       new Promise<void>((done) => this.scene.tweens.add({ targets: st, k, duration, ease, delay, onUpdate: () => this.refresh(), onComplete: () => done(), onStop: () => done() }));
     const low = step(1, 240, 'Quad.easeOut');
     void low
-      .then(() => step(0, 260, 'Sine.easeInOut', 220))
+      .then(() => step(0, 260, 'Sine.easeInOut', hold))
       .then(() => {
         if (this.stooping !== st) return;
         this.stooping = null;

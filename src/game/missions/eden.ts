@@ -78,14 +78,16 @@ function pickUp(w: WorldApi, propId: string, at: Pt, item: string, n = 1): Promi
  * Cain picks his crops, the maintainer; and the hand must reach it, the
  * maintainer saw things picked up from a step away); resolves with the
  * hands lowest, they straighten up after. */
-async function bendFor(w: WorldApi, at: Pt): Promise<void> {
+async function bendFor(w: WorldApi, at: Pt, reach = STOOP_REACH, hold?: number): Promise<void> {
   const p = w.player();
   const side = p.x <= at[0] ? 1 : -1;
-  const to: Pt = [at[0] - side * STOOP_REACH, at[1] + 2];
+  const to: Pt = [at[0] - side * reach, at[1] + 2];
   if (Math.hypot(p.x - to[0], p.y - to[1]) > 4) await p.walkTo(to[0], to[1], 90);
   p.face(side > 0 ? 'right' : 'left');
-  return p.stoop();
+  return p.stoop(hold);
 }
+/** how far from the deep water (waterNear) the player stands to fill the gourd: the hands reach the river's edge */
+const RIVER_REACH = 24;
 /** how far ahead of the feet the hands come down, bending (world px) */
 const STOOP_REACH = 20;
 
@@ -303,9 +305,13 @@ const m01: MissionDef = {
       at: POINTS.riverFill,
       radius: 90,
       prompt: () => t('prompt.fill'),
-      onUse: () => {
+      onUse: async () => {
+        // he kneels at the bank facing the river and dips the gourd (the maintainer)
+        const water = w.waterNear(POINTS.riverFill);
+        await bendFor(w, water, RIVER_REACH, 650);
+        const p = w.player();
         w.sfx('fill');
-        w.fx('splash', w.waterNear(POINTS.riverFill));
+        w.fx('splash', [p.x + (p.facing === 'left' ? -1 : 1) * (STOOP_REACH + 6), p.y]);
         w.take('gourd');
         w.give('water');
         w.player().hold('gourd-full');
