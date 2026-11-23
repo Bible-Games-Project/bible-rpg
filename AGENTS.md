@@ -169,6 +169,12 @@ bgp-admin at `templates/agent-docs/`, so ask before adding it.
   same way (`ANIMAL_SHADOW_LIFT`). Things lying on the ground (`LYING`: the log, rocks, the crawling
   serpent) cast from each column's own lowest pixel, so the shadow touches
   them along their length.
+  Adam's and Eve's sheets are rebuilt at boot (`world/strideSheets.ts`), so
+  their pipeline shadows no longer match the frames: `world/castShadow.ts`
+  casts a new strip for every rebuilt sheet, the same way as `cast_shadow`
+  (the maintainer saw the run's shadow stand still). Change both together.
+  Leaf-skirt outfits mark their arm band `bare` (`ArmBand`), so the skirt's
+  green stays with the body when the arm swings.
 - The cherub faces east with the flaming sword in hand (`flame` marks the
   blade for a flickering glow); the floating sword is gone. In mission 10
   the cherubim drop fast from the sky, each landing with a heavy thud
