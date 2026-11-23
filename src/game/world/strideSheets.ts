@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import { MANIFEST, charKey, type Direction, type SheetAsset } from '../manifest';
+import { MANIFEST, charKey, shadowKey, type Direction, type SheetAsset } from '../manifest';
+import { castShadows } from './castShadow';
 import { frameOf, frontRaise, frontRun, frontThrust, handsOf, padded, sidePoses, stoopFrame, sideRun, sideStride, type FrontArms, type Px, type SidePose, type XY, type ArmBand } from './stride';
 
 /**
@@ -27,9 +28,15 @@ export function strideCharacters(scene: Phaser.Scene): void {
         c.getContext('2d')!.drawImage(img, 0, 0);
         const made = strideSheet(c, a, dir, SIDE_ARMS[`${id}-${outfit}`]);
         if (!made) continue;
-        const [canvas, asset] = made;
+        const [canvas, asset, all] = made;
         scene.textures.remove(key);
         scene.textures.addSpriteSheet(key, canvas as unknown as HTMLImageElement, { frameWidth: asset.frameWidth, frameHeight: asset.frameHeight });
+        // every frame casts its own shadow (the maintainer: the run's shadow
+        // stood still under a running Adam)
+        const [strip, shadow] = castShadows(all, asset.anchorX, asset.anchorY);
+        if (scene.textures.exists(shadowKey(key))) scene.textures.remove(shadowKey(key));
+        scene.textures.addSpriteSheet(shadowKey(key), strip as unknown as HTMLImageElement, { frameWidth: shadow.frameWidth, frameHeight: shadow.frameHeight });
+        asset.shadow = shadow;
         dirs[dir] = asset;
       }
     }
@@ -100,7 +107,7 @@ const ATTACK = {
 /** One direction of a sheet: from the side the walk with more arm swing and
  * a run with bent knees and elbows; from the front and back a run with the
  * knees coming higher, bobbing; bending down; the poses of a blow. */
-function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm: ArmBand | undefined): [HTMLCanvasElement, SheetAsset] | null {
+function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm: ArmBand | undefined): [HTMLCanvasElement, SheetAsset, Px[]] | null {
   const walk = a.walk ?? [];
   if (walk.length !== 8 || (dir === 'right' && !arm)) return null;
   const fw = a.frameWidth;
@@ -178,6 +185,6 @@ function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm:
   const firstPose = first + run.length + stoop.length;
   let n = firstPose;
   const [raise, strike, draw, thrust] = poses.map((list) => list.map(() => n++));
-  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, sideHands, run: run.map((_, i) => first + i), runFps: 16, stoop: stoop.map((_, i) => first + run.length + i), attack: { raise, strike, draw, thrust } }];
+  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, sideHands, run: run.map((_, i) => first + i), runFps: 16, stoop: stoop.map((_, i) => first + run.length + i), attack: { raise, strike, draw, thrust } }, all];
 }
 
