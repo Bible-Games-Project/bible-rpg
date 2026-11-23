@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { MANIFEST, charKey, type Direction, type SheetAsset } from '../manifest';
-import { frameOf, frontRaise, frontRun, frontThrust, handsOf, padded, sidePoses, stoopFrame, sideRun, sideStride, type FrontArms, type Px, type SidePose, type XY } from './stride';
+import { frameOf, frontRaise, frontRun, frontThrust, handsOf, padded, sidePoses, stoopFrame, sideRun, sideStride, type FrontArms, type Px, type SidePose, type XY, type ArmBand } from './stride';
 
 /**
  * Everyone walks, runs and bends down as Cain does (the maintainer,
@@ -41,14 +41,15 @@ export function strideCharacters(scene: Phaser.Scene): void {
  * shoulder to the bottom of the fist), as from_generated.py's SIDE_ARMS
  * (the fig ones it finds by the hand): with Adam's arm swing these give the
  * sheets' own walks (pixel for pixel for the tunic, a few pixels off for
- * the others). Measure again if a sheet is redrawn.
+ * the others). Measure again if a sheet is redrawn. `true` last: a bare arm
+ * over a leaf skirt, whose green stays with the body.
  */
-const SIDE_ARMS: Record<string, [number, number, number, number]> = {
+const SIDE_ARMS: Record<string, ArmBand> = {
   'adam-tunic': [22, 32, 41, 92],
-  'adam-leaves': [25, 33, 41, 92],
+  'adam-leaves': [25, 33, 41, 92, true],
   'adam-fig': [19, 28, 40, 92],
   'eve-tunic': [26, 33, 45, 94],
-  'eve-leaves': [30, 38, 42, 91],
+  'eve-leaves': [30, 38, 42, 91, true],
   'eve-fig': [26, 34, 39, 90],
 };
 const WALK_CYCLE = [18, 9, 0, -9, -18, -9, 0, 9];
@@ -99,7 +100,7 @@ const ATTACK = {
 /** One direction of a sheet: from the side the walk with more arm swing and
  * a run with bent knees and elbows; from the front and back a run with the
  * knees coming higher, bobbing; bending down; the poses of a blow. */
-function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm: [number, number, number, number] | undefined): [HTMLCanvasElement, SheetAsset] | null {
+function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm: ArmBand | undefined): [HTMLCanvasElement, SheetAsset] | null {
   const walk = a.walk ?? [];
   if (walk.length !== 8 || (dir === 'right' && !arm)) return null;
   const fw = a.frameWidth;
@@ -112,7 +113,7 @@ function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm:
   let hands = a.hands ? a.hands.map(([x, y]) => [x + pad, y] as [number, number]) : undefined;
   let run: Px[];
   if (side) {
-    const band: [number, number, number, number] = [arm![0] + pad, arm![1] + pad, arm![2], arm![3]];
+    const band: ArmBand = [arm![0] + pad, arm![1] + pad, arm![2], arm![3], arm![4]];
     const stand = frames[0];
     const w = sideStride(stand, band, { cycle: WALK_CYCLE, armSwing: ARM_SWING });
     const r = sideRun(stand, band, RUN);
@@ -135,7 +136,7 @@ function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm:
   let poseHands: XY[] = [];
   const raisedHands: XY[] = [];
   if (side) {
-    const band: [number, number, number, number] = [arm![0] + pad, arm![1] + pad, arm![2], arm![3]];
+    const band: ArmBand = [arm![0] + pad, arm![1] + pad, arm![2], arm![3], arm![4]];
     const r = sidePoses(frames[0], band, ATTACK_POSES.map((k) => ATTACK.side[k]));
     r.frames.forEach((f, i) => poses[i].push(f));
     poseHands = r.hands;

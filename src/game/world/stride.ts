@@ -16,6 +16,15 @@ export interface Px {
 
 export type XY = [number, number];
 
+/**
+ * The near arm of a side frame: [x0, x1, y0, y1] in sheet pixels, from the
+ * shoulder to the bottom of the fist; `bare` when the arm is skin over green
+ * clothes (a leaf skirt or top): green pixels in the box are then the
+ * clothes behind the arm and stay with the body (the maintainer saw green
+ * on Adam's forearm running, the skirt carried along with the arm).
+ */
+export type ArmBand = [number, number, number, number, boolean?];
+
 const blank = (w: number, h: number): Px => ({ w, h, d: new Uint8ClampedArray(w * h * 4) });
 const alpha = (p: Px, x: number, y: number) => (x >= 0 && y >= 0 && x < p.w && y < p.h ? p.d[(y * p.w + x) * 4 + 3] : 0);
 
@@ -152,7 +161,7 @@ export interface SideStride {
  * the bottom of the fist). Returns the frames and where the fist is in each
  * (the bottom of it, for what the hand holds).
  */
-export function sideStride(stand: Px, band: [number, number, number, number], o: SideStride): { frames: Px[]; hands: XY[] } {
+export function sideStride(stand: Px, band: ArmBand, o: SideStride): { frames: Px[]; hands: XY[] } {
   const { w, h, leg, body, arm, hip, figBottom } = splitSide(stand, band);
   const farLeg = darker(leg);
   const farArm = darker(arm);
@@ -225,7 +234,7 @@ function rows(p: Px, from: number, to: number): Px {
  * as the leg comes through, straightening to land; the arms are held bent
  * and pump against the legs. The body stays upright and bobs.
  */
-export function sideRun(stand: Px, band: [number, number, number, number], o: SideRun): { frames: Px[]; hands: XY[] } {
+export function sideRun(stand: Px, band: ArmBand, o: SideRun): { frames: Px[]; hands: XY[] } {
   const { w, h, leg, body, arm, hip, figBottom } = splitSide(stand, band);
   const [x0, x1, y0, y1] = band;
   const kneeY = Math.round(hip[1] + 0.52 * (figBottom - hip[1]));
@@ -500,9 +509,15 @@ interface SideParts {
   figBottom: number;
 }
 
+/** Leaves, not skin: skin and hair are always redder than green. */
+function greenAt(p: Px, x: number, y: number): boolean {
+  const i = (y * p.w + x) * 4;
+  return p.d[i + 1] > p.d[i] + 4;
+}
+
 /** The standing side frame in layers: the near leg (joined up to the hip
  * under the clothes), the near arm, and the body with the arm taken out. */
-function splitSide(stand: Px, band: [number, number, number, number]): SideParts {
+function splitSide(stand: Px, band: ArmBand): SideParts {
   const { w, h } = stand;
   let figTop = h;
   let figBottom = 0;
@@ -548,9 +563,11 @@ function splitSide(stand: Px, band: [number, number, number, number]): SideParts
   for (let y = hip[1]; y < top; y++) for (let x = 0; x < w; x++) if (legMask[top * w + x]) copyPx(leg, stand, x, y, x, top);
   // the arm on its own; the body behind it filled from beside it in the row
   const arm = blank(w, h);
+  const bare = band[4] === true;
   for (let y = y0; y < y1; y++)
     for (let x = x0; x < x1; x++) {
       if (!alpha(stand, x, y)) continue;
+      if (bare && greenAt(stand, x, y)) continue;
       copyPx(arm, stand, x, y, x, y);
       body.d.fill(0, (y * w + x) * 4, (y * w + x) * 4 + 4);
       for (const sx of [2 * x1 - 1 - x, 2 * x0 - 1 - x, x1, x0 - 1]) {
@@ -596,7 +613,7 @@ export interface SidePose {
  * and bent at the elbow, the legs a little apart as they step into it.
  * Returns the frames and where the fist is in each (its bottom).
  */
-export function sidePoses(stand: Px, band: [number, number, number, number], poses: SidePose[]): { frames: Px[]; hands: XY[] } {
+export function sidePoses(stand: Px, band: ArmBand, poses: SidePose[]): { frames: Px[]; hands: XY[] } {
   const { w, h, leg, body, arm, hip, figBottom } = splitSide(stand, band);
   const [x0, x1, y0, y1] = band;
   const shoulder: XY = [(x0 + x1) / 2, y0 + 2];
@@ -700,7 +717,7 @@ export function frontThrust(p: Px, mid: number, side: number, a: FrontArms, squa
  * tunic laid over the thigh. Returns the frame (the feet on its bottom row)
  * and the seat (the hip, where the log is under him).
  */
-export function sitFrame(stand: Px, band: [number, number, number, number], lap = 88, drape = 70): { frame: Px; hip: XY } {
+export function sitFrame(stand: Px, band: ArmBand, lap = 88, drape = 70): { frame: Px; hip: XY } {
   const { w, h, leg, body, arm, hip, figBottom } = splitSide(stand, band);
   const kneeY = Math.round(hip[1] + 0.52 * (figBottom - hip[1]));
   const knee: XY = [middleAt(leg, kneeY, hip[0]), kneeY + 0.5];
