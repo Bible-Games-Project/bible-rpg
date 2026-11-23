@@ -477,16 +477,18 @@ export function stoopFrame(p: Px, hip: XY, angle: number, squash: number, back =
   const legs = feet - hy;
   const drop = Math.round(legs * (1 - squash));
   const out = blank(p.w, p.h);
+  const dx = Math.round(back);
   for (let y = hy + drop; y <= feet; y++) {
     const sy = Math.min(feet, hy + Math.round(((y - hy - drop) * legs) / Math.max(1, legs - drop)));
-    for (let x = 0; x < p.w; x++) if (alpha(p, x, sy)) copyPx(out, p, x, y, x, sy);
+    // the feet stay put and the hips go back with the body: the legs slant, still joined to it
+    const sh = Math.round((dx * (feet - y)) / Math.max(1, feet - hy - drop));
+    for (let x = 0; x < p.w; x++) if (alpha(p, x, sy) && x - sh >= 0) copyPx(out, p, x - sh, y, x, sy);
   }
   const top = blank(p.w, p.h);
   for (let y = 0; y < hy; y++) for (let x = 0; x < p.w; x++) if (alpha(p, x, y)) copyPx(top, p, x, y, x, y);
   // the hips go back as the body leans over
   const bent = rotatePart(top, -angle, hip);
   const moved = blank(p.w, p.h);
-  const dx = Math.round(back);
   for (let y = 0; y < p.h; y++) for (let x = 0; x < p.w; x++) if (alpha(bent, x, y) && x - dx >= 0 && x - dx < p.w) copyPx(moved, bent, x - dx, y, x, y);
   over(out, moved, drop);
   return out;
@@ -778,19 +780,19 @@ export function sideStoop(stand: Px, band: ArmBand, o: { lean: number; squash: n
   // the arms go with the upper body, whole (stoopFrame would squash what hangs below the hips)
   const legs = figBottom - Math.round(hip[1]);
   const drop = Math.round(legs * (1 - squash));
-  const carried = (p: Px): Px => {
-    const r = rotatePart(p, -lean, hip);
+  const carried = (p: Px, angle = lean): Px => {
+    const r = rotatePart(p, -angle, hip);
     const m = blank(w, h);
-    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (x - back >= 0 && alpha(r, x - back, y)) copyPx(m, r, x, y, x - back, y);
+    for (let y = 0; y < h; y++) for (let x = back; x < w; x++) if (alpha(r, x, y)) copyPx(m, r, x - back, y, x, y);
     return m;
   };
   const frame = blank(w, h);
   over(frame, carried(far), drop);
-  // the waist itself, unturned, fills the wedge the turn opens at the back
-  over(frame, rows(figure, hip[1] - 12, hip[1] + 1), drop);
+  // the waist turned halfway fills the wedge the turn opens at the back
+  over(frame, carried(rows(figure, hip[1] - 6, hip[1] + 2), lean / 2), drop);
   over(frame, bent);
   over(frame, carried(near), drop);
   let hand = turnPoint(turnPoint(fist, bend, elbow), turn, shoulder);
   hand = turnPoint(hand, -lean, hip);
-  return { frame, hand: [hand[0] + back, hand[1] + drop] };
+  return { frame, hand: [hand[0] - back, hand[1] + drop] };
 }
