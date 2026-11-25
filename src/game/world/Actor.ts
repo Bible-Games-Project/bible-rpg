@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { CHARACTERS } from '../../data/characters';
-import { MANIFEST, charKey, shadowOf, sized, textureScale, type Direction } from '../manifest';
+import { MANIFEST, charKey, gripKey, shadowOf, sized, textureScale, type Direction } from '../manifest';
 import { addShadow, fitShadow, shadowStrength, shadowsMirrored } from './shadows';
 
 export type Facing = 'down' | 'up' | 'left' | 'right';
@@ -31,6 +31,8 @@ const CARRY_SCALE = 0.82;
 const CARRY_BELOW_HANDS = 9;
 /** Abel's staff (placeStaff): from the side it leans this far forward (radians) and this much more per px the hand swings ahead; the hand coming up lifts it at most this much (px) */
 const STAFF_LEAN = 0.06;
+/** held ahead in the staff frames: nearly upright */
+const STAFF_HELD_LEAN = 0.03;
 const STAFF_SWING = 0.014;
 /** running, he carries it off the ground (px) */
 const STAFF_RUN_LIFT = 4;
@@ -285,7 +287,8 @@ export class Actor {
     this.heldSprite = null;
     this.grip = grip;
     this.heldArgs = key ? [key, grip, origin] : null;
-    if (!key) return;
+    // (back to the frames without the staff)
+    if (!key) return void this.refresh();
     this.heldSprite = sized(this.scene.add.image(this.x, this.y - 36, key).setOrigin(origin[0], origin[1]).setDepth(this.y + 1)).setVisible(this.sprite.visible);
     if (grip === 'carry') this.heldSprite.setScale(this.heldSprite.scaleX * CARRY_SCALE, this.heldSprite.scaleY * CARRY_SCALE);
     this.refresh();
@@ -550,7 +553,10 @@ export class Actor {
     const running = !!this.charId && this.moving && this.pace > pace * (this.running ? 1 : 1.15) && anims.exists(`${tex}:run`);
     this.running = running;
     if (this.charId) {
-      anim = `${tex}:${running ? 'run' : this.moving ? 'walk' : 'idle'}`;
+      const kind = running ? 'run' : this.moving ? 'walk' : 'idle';
+      anim = `${tex}:${kind}`;
+      // a staff in the near hand, from the side: the sheet's frames with the hand held ahead round it
+      if (this.staffHeld() && anims.exists(`${tex}:staff:${kind}`)) anim = `${tex}:staff:${kind}`;
     } else if (this.sheet) {
       anim = this.lift > 4 && anims.exists(`${tex}:fly`) ? `${tex}:fly` : `${tex}:${this.moving ? 'walk' : 'idle'}`;
       if (!anims.exists(anim)) anim = anims.exists(`${tex}:loop`) ? `${tex}:loop` : '';
@@ -696,6 +702,11 @@ export class Actor {
    * With something in the other hand it is planted ahead instead. `origin` is
    * its foot.
    */
+  /** Abel's crook in the near hand from the side (the sheet's staff frames hold it). */
+  private staffHeld(): boolean {
+    return this.grip === 'staff' && !!this.heldSprite && !this.offSprite && (this.facing === 'left' || this.facing === 'right');
+  }
+
   private placeStaff(x: number, y: number): void {
     const s = this.heldSprite!;
     const side = this.facing === 'left' ? -1 : this.facing === 'right' ? 1 : 0;
@@ -714,13 +725,14 @@ export class Actor {
       // the hand of this frame, and of the standing frame
       const i = this.facing === 'down' ? 0 : 1;
       const now = side ? this.fist() : this.frontHand(i);
-      const rest = side ? this.fist(0) : this.frontHand(i, 0);
+      const still = this.sheetAsset()?.staff?.idle[0];
+      const rest = side ? this.fist(this.lastAnim.includes(':staff:') ? still : 0) : this.frontHand(i, 0);
       const k = this.facing === 'down' ? -1 : 1;
       const hand: [number, number] = now ?? (side ? [side * 7, -34] : [k * 12, -34]);
       const swing = now && rest ? now[0] - rest[0] : 0;
       const raised = (now && rest ? Phaser.Math.Clamp(rest[1] - now[1], 0, STAFF_LIFT) : 0) + (this.lastAnim.endsWith(':run') ? STAFF_RUN_LIFT : 0);
       // from the side it leans a little forward, and more as the arm swings forward
-      lean = side ? Phaser.Math.Clamp(side * STAFF_LEAN + swing * STAFF_SWING, -0.24, 0.24) : 0;
+      lean = side ? Phaser.Math.Clamp(side * (this.lastAnim.includes(':staff:') ? STAFF_HELD_LEAN : STAFF_LEAN) + swing * STAFF_SWING, -0.24, 0.24) : 0;
       const fy = (side ? 1 : this.facing === 'down' ? 2 : -2) - raised;
       foot = [hand[0] - Math.tan(lean) * (fy - hand[1]), fy];
     }
@@ -730,7 +742,7 @@ export class Actor {
     const behind = this.facing === 'up' || far;
     s.setPosition(x + foot[0], y + foot[1]).setRotation(lean).setDepth(behind ? y - 1 : y + 1);
     // in front of the body the staff covered the hand holding it (the maintainer: badly anchored)
-    this.placeGrip(behind ? null : side ? 'side' : this.facing === 'down' ? 0 : 1, y + 1.5);
+    this.placeGrip(behind ? null : side ? (this.lastAnim.includes(':staff:') ? 'fist' : null) : this.facing === 'down' ? 0 : 1, y + 1.5);
   }
 
   /**
@@ -738,26 +750,29 @@ export class Actor {
    * the body's own frame around the hand (`hand`: the side fist, or the front
    * hand 0 or 1), so the fingers are in front of the shaft. Null hides it.
    */
-  private placeGrip(hand: 'side' | 0 | 1 | null, depth: number): void {
+  private placeGrip(hand: 'fist' | 0 | 1 | null, depth: number): void {
     const b = this.sprite;
-    const parts = b.texture.key.split(':');
-    const a = parts[0] === 'char' ? MANIFEST.characters[parts[1]]?.[parts[2]]?.[parts[3] as Direction] : undefined;
+    const a = this.sheetAsset();
     const frame = Number(b.frame.name) || 0;
-    const p = hand === null || !a ? undefined : hand === 'side' ? a.hands?.[frame] : a.sideHands?.[frame]?.[b.flipX ? 1 - hand : hand];
-    if (!p || !a) {
+    // from the side, the sheet's fist alone (a crop of the frame took a piece of the body or arm with it: the maintainer saw a cut-off arm)
+    const fist = hand === 'fist' && this.scene.textures.exists(gripKey(b.texture.key));
+    const p = hand === null || hand === 'fist' || !a ? undefined : a.sideHands?.[frame]?.[b.flipX ? 1 - hand : hand];
+    if (!a || (!p && !fist)) {
       this.gripSprite?.setVisible(false);
       return;
     }
     const g = (this.gripSprite ??= this.scene.add.sprite(b.x, b.y, b.texture.key));
-    g.setTexture(b.texture.key, b.frame.name).setOrigin(b.originX, b.originY).setPosition(b.x, b.y);
+    g.setTexture(fist ? gripKey(b.texture.key) : b.texture.key, b.frame.name).setOrigin(b.originX, b.originY).setPosition(b.x, b.y);
     g.setScale(b.scaleX, b.scaleY).setRotation(b.rotation).setFlipX(b.flipX).setAlpha(b.alpha).setDepth(depth);
     if (b.isTinted) {
       g.setTint(b.tintTopLeft, b.tintTopRight, b.tintBottomLeft, b.tintBottomRight);
       g.tintFill = b.tintFill;
     } else g.clearTint();
-    // the hand: about GRIP_W art px wide round its centre, GRIP_H up from its bottom
-    const cx = b.flipX ? a.frameWidth - 1 - p[0] : p[0];
-    g.setCrop(Math.round(cx - (GRIP_W - 1) / 2), Math.round(p[1] - GRIP_H + 1), GRIP_W, GRIP_H);
+    // from the front and back: the hand, about GRIP_W art px wide round its centre, GRIP_H up from its bottom
+    if (p) {
+      const cx = b.flipX ? a.frameWidth - 1 - p[0] : p[0];
+      g.setCrop(Math.round(cx - (GRIP_W - 1) / 2), Math.round(p[1] - GRIP_H + 1), GRIP_W, GRIP_H);
+    } else g.setCrop();
     g.setVisible(b.visible);
   }
 
@@ -812,6 +827,12 @@ export class Actor {
 
   /** The bottom of the near fist in the current frame (world px from the
    * feet), when the sheet records it (side views of Adam and Eve). */
+  /** The sheet the sprite shows now (characters only). */
+  private sheetAsset() {
+    const parts = this.sprite.texture.key.split(':');
+    return parts[0] === 'char' ? MANIFEST.characters[parts[1]]?.[parts[2]]?.[parts[3] as Direction] : undefined;
+  }
+
   private fist(frame?: number): [number, number] | null {
     const parts = this.sprite.texture.key.split(':');
     if (parts[0] !== 'char') return null;

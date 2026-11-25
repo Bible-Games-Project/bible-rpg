@@ -153,6 +153,57 @@ export interface SideStride {
   lean?: number;
   /** the body lifted off the ground per frame (pixels) */
   lift?: number[];
+  /** the near arm holding something upright ahead (a staff) instead of swinging */
+  hold?: HoldArm;
+}
+
+/**
+ * The near arm bent, the hand held ahead at the waist (Abel's crook: the
+ * maintainer saw it badly anchored in the hanging, swinging hand and over
+ * his face): the upper arm at `arm` degrees from hanging (forward positive),
+ * the forearm `elbow` more, and `swing` of the stride's arm swing kept.
+ */
+export interface HoldArm {
+  arm: number;
+  elbow: number;
+  swing: number;
+}
+
+/** The near arm split at the elbow, to bend it. `hand`: the middle of the fist. */
+function bendable(arm: Px, band: ArmBand) {
+  const [x0, x1, y0, y1] = band;
+  const elbowY = Math.round(y0 + 0.46 * (y1 - y0));
+  const elbow: XY = [middleAt(arm, elbowY, (x0 + x1) / 2), elbowY + 0.5];
+  const upper = rows(arm, 0, elbowY + 2);
+  const fore = rows(arm, elbowY - 1, arm.h);
+  const shoulder: XY = [(x0 + x1) / 2, y0 + 2];
+  const fist: XY = [(x0 + x1) / 2, y1 - GRIP_UP];
+  return {
+    /** the forearm and the upper arm, turned */
+    at: (up: Px, fo: Px, swing: number, bend: number): Px[] => [
+      turnSteps(fo, [{ angle: bend, pivot: elbow }, { angle: swing, pivot: shoulder }]),
+      turnSteps(up, [{ angle: swing, pivot: shoulder }]),
+    ],
+    hand: (swing: number, bend: number) => turnPoint(turnPoint(fist, bend, elbow), swing, shoulder),
+    upper,
+    fore,
+  };
+}
+
+/** a held thing goes through the fist this far above its bottom (px) */
+const GRIP_UP = 4;
+
+/**
+ * Only the fist of a turned forearm, around `hand`, lowered `dy`: drawn
+ * again over what the hand holds so the fingers close round it.
+ */
+function fistOnly(fore: Px, hand: XY, dy: number): Px {
+  const cut = blank(fore.w, fore.h);
+  for (let y = Math.max(0, Math.floor(hand[1] - 6)); y < Math.min(fore.h, Math.ceil(hand[1] + 6)); y++)
+    for (let x = Math.max(0, Math.floor(hand[0] - 6)); x < Math.min(fore.w, Math.ceil(hand[0] + 6)); x++) if (alpha(fore, x, y)) copyPx(cut, fore, x, y, x, y);
+  const out = blank(fore.w, fore.h);
+  over(out, cut, dy);
+  return out;
 }
 
 /**
@@ -161,7 +212,7 @@ export interface SideStride {
  * the bottom of the fist). Returns the frames and where the fist is in each
  * (the bottom of it, for what the hand holds).
  */
-export function sideStride(stand: Px, band: ArmBand, o: SideStride): { frames: Px[]; hands: XY[] } {
+export function sideStride(stand: Px, band: ArmBand, o: SideStride): { frames: Px[]; hands: XY[]; fists: Px[] } {
   const { w, h, leg, body, arm, hip, figBottom } = splitSide(stand, band);
   const farLeg = darker(leg);
   const farArm = darker(arm);
@@ -170,11 +221,15 @@ export function sideStride(stand: Px, band: ArmBand, o: SideStride): { frames: P
   const fist: XY = [(x0 + x1) / 2, y1];
   const frames: Px[] = [];
   const hands: XY[] = [];
+  const fists: Px[] = [];
+  const held = o.hold && bendable(arm, band);
   o.cycle.forEach((angle, i) => {
     const swing = -angle * o.armSwing;
     let out = blank(w, h);
-    for (const layer of [rotatePart(farArm, -swing, shoulder), rotatePart(farLeg, -angle, hip), rotatePart(leg, angle, hip), body, rotatePart(arm, swing, shoulder)]) over(out, layer);
-    let hand = turnPoint(fist, swing, shoulder);
+    const hs = held ? o.hold!.arm + swing * o.hold!.swing : 0;
+    const near = held ? held.at(held.upper, held.fore, hs, o.hold!.elbow) : [rotatePart(arm, swing, shoulder)];
+    for (const layer of [rotatePart(farArm, -swing, shoulder), rotatePart(farLeg, -angle, hip), rotatePart(leg, angle, hip), body, ...near]) over(out, layer);
+    let hand = held ? held.hand(hs, o.hold!.elbow) : turnPoint(fist, swing, shoulder);
     // leaning into the run, about the feet
     if (o.lean) {
       const feet: XY = [hip[0], figBottom];
@@ -188,8 +243,9 @@ export function sideStride(stand: Px, band: ArmBand, o: SideStride): { frames: P
     over(f, out, dy);
     frames.push(f);
     hands.push([hand[0], hand[1] + dy]);
+    fists.push(held && !o.lean ? fistOnly(near[0], hand, dy) : blank(w, h));
   });
-  return { frames, hands };
+  return { frames, hands, fists };
 }
 
 export interface SideRun {
@@ -204,6 +260,8 @@ export interface SideRun {
   elbow: number;
   /** the body lifted off the ground per frame (pixels) */
   lift: number[];
+  /** the near arm holding something upright ahead (a staff) instead of pumping */
+  hold?: HoldArm;
 }
 
 /** Where a part's row `y` crosses it: the middle of its pixels there. */
@@ -234,7 +292,7 @@ function rows(p: Px, from: number, to: number): Px {
  * as the leg comes through, straightening to land; the arms are held bent
  * and pump against the legs. The body stays upright and bobs.
  */
-export function sideRun(stand: Px, band: ArmBand, o: SideRun): { frames: Px[]; hands: XY[] } {
+export function sideRun(stand: Px, band: ArmBand, o: SideRun): { frames: Px[]; hands: XY[]; fists: Px[] } {
   const { w, h, leg, body, arm, hip, figBottom } = splitSide(stand, band);
   const [x0, x1, y0, y1] = band;
   const kneeY = Math.round(hip[1] + 0.52 * (figBottom - hip[1]));
@@ -263,20 +321,24 @@ export function sideRun(stand: Px, band: ArmBand, o: SideRun): { frames: Px[]; h
   ];
   const frames: Px[] = [];
   const hands: XY[] = [];
+  const fists: Px[] = [];
+  const held = o.hold && bendable(arm, band);
   for (let i = 0; i < o.frames; i++) {
     const ph = (i / o.frames) * Math.PI * 2;
     const swing = -o.thigh * Math.cos(ph) * o.armSwing;
     const out = blank(w, h);
+    const hs = held ? o.hold!.arm + swing * o.hold!.swing : 0;
+    const near = held ? held.at(held.upper, held.fore, hs, o.hold!.elbow) : armAt(upper, fore, swing);
     const layers = [
       // the far arm mostly behind the body
       ...armAt(dark.upper, dark.fore, -swing * 0.6),
       ...legAt(dark.thigh, dark.shin, ph + Math.PI),
       ...legAt(thigh, shin, ph),
       body,
-      ...armAt(upper, fore, swing),
+      ...near,
     ];
     for (const layer of layers) over(out, layer);
-    const hand = turnPoint(turnPoint(fist, bendAt(swing), elbow), swing, shoulder);
+    const hand = held ? held.hand(hs, o.hold!.elbow) : turnPoint(turnPoint(fist, bendAt(swing), elbow), swing, shoulder);
     let low = 0;
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (out.d[(y * w + x) * 4 + 3]) low = y;
     const dy = figBottom - low - (o.lift[i] ?? 0);
@@ -284,8 +346,9 @@ export function sideRun(stand: Px, band: ArmBand, o: SideRun): { frames: Px[]; h
     over(f, out, dy);
     frames.push(f);
     hands.push([hand[0], hand[1] + dy]);
+    fists.push(held ? fistOnly(near[0], hand, dy) : blank(w, h));
   }
-  return { frames, hands };
+  return { frames, hands, fists };
 }
 
 /**

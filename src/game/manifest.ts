@@ -37,6 +37,8 @@ export interface SheetAsset {
   attack?: { raise: number[]; strike: number[]; draw: number[]; thrust: number[] };
   /** garden work (Actor.work): tipping the gourd, the digging stick lifted and driven down; frames as attack's */
   work?: { pour: number[]; lift: number[]; dig: number[] };
+  /** side views: standing, walking and running with the near hand held ahead at the waist, round an upright staff (Abel's crook); the hand's fist alone in the same frames of `gripKey` */
+  staff?: { idle: number[]; walk: number[]; run: number[] };
   fly?: number[];
   /** world pixels per art pixel (sprites drawn with more detail than the world grid) */
   scale?: number;
@@ -136,6 +138,11 @@ export function sized<T extends { texture: { key: string }; setScale(x: number, 
 
 export function shadowKey(textureKey: string): string {
   return `shadow:${textureKey}`;
+}
+
+/** The near fist alone, frame by frame, of a side sheet with `staff` frames (drawn over the staff). */
+export function gripKey(textureKey: string): string {
+  return `grip:${textureKey}`;
 }
 
 /** The shadow of a texture, if it casts one. */

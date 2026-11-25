@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAsset, type SheetAsset } from '../manifest';
+import { MANIFEST, assetUrl, charKey, gripKey, shadowKey, type Direction, type PortraitAsset, type SheetAsset } from '../manifest';
 import { Pixels, ramp, type RGB } from './pixels';
 import { DOG_RIG, DOG_RUN_SCALE, dogGallop, enlarge, scaledRig } from './dogRun';
 import { drawAnger, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
@@ -488,6 +488,19 @@ function buildBrothers(scene: Phaser.Scene): void {
       if (a.shadow && scene.textures.exists(shadowKey(from))) {
         const sh = scene.textures.get(shadowKey(from)).getSourceImage() as HTMLImageElement;
         scene.textures.addSpriteSheet(shadowKey(key), sh, { frameWidth: a.shadow.frameWidth, frameHeight: a.shadow.frameHeight });
+      }
+      // the fist alone over the staff (Actor.placeGrip), in the same colours
+      if (scene.textures.exists(gripKey(from))) {
+        const fi = scene.textures.get(gripKey(from)).getSourceImage() as HTMLImageElement;
+        const fc = recolor(fi, fi.width, fi.height, a.frameHeight, who);
+        if (who === 'cain') toneByLight(fc, BASE, CAIN_BASE);
+        scene.textures.addSpriteSheet(gripKey(key), fc as unknown as HTMLImageElement, { frameWidth: asset.frameWidth, frameHeight: asset.frameHeight });
+      }
+      if (asset.staff) {
+        const fr = (list: number[]) => scene.anims.generateFrameNumbers(key, { frames: list });
+        scene.anims.create({ key: `${key}:staff:idle`, frames: fr(asset.staff.idle), frameRate: 1.4, repeat: -1 });
+        scene.anims.create({ key: `${key}:staff:walk`, frames: fr(asset.staff.walk), frameRate: (a.walkFps ?? 8) * (who === 'cain' ? CAIN_WALK_RATE : 1), repeat: -1 });
+        scene.anims.create({ key: `${key}:staff:run`, frames: fr(asset.staff.run), frameRate: asset.runFps ?? 22, repeat: -1 });
       }
       set[dir] = asset;
       scene.anims.create({ key: `${key}:idle`, frames: scene.anims.generateFrameNumbers(key, { frames: a.idle ?? [0] }), frameRate: 1.4, repeat: -1 });

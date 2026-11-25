@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { MANIFEST, charKey, shadowKey, type Direction, type SheetAsset } from '../manifest';
+import { MANIFEST, charKey, gripKey, shadowKey, type Direction, type SheetAsset } from '../manifest';
 import { castShadows } from './castShadow';
 import { frameOf, frontRaise, frontRun, frontThrust, handsOf, padded, sidePoses, sideStoop, stoopFrame, sideRun, sideStride, type FrontArms, type Px, type SidePose, type XY, type ArmBand } from './stride';
 
@@ -26,9 +26,13 @@ export function strideCharacters(scene: Phaser.Scene): void {
         c.width = img.width;
         c.height = img.height;
         c.getContext('2d')!.drawImage(img, 0, 0);
-        const made = strideSheet(c, a, dir, SIDE_ARMS[`${id}-${outfit}`]);
+        const made = strideSheet(c, a, dir, SIDE_ARMS[`${id}-${outfit}`], STAFF_SHEETS.includes(`${id}-${outfit}`));
         if (!made) continue;
-        const [canvas, asset, all] = made;
+        const [canvas, asset, all, fists] = made;
+        if (fists) {
+          if (scene.textures.exists(gripKey(key))) scene.textures.remove(gripKey(key));
+          scene.textures.addSpriteSheet(gripKey(key), fists as unknown as HTMLImageElement, { frameWidth: asset.frameWidth, frameHeight: asset.frameHeight });
+        }
         scene.textures.remove(key);
         scene.textures.addSpriteSheet(key, canvas as unknown as HTMLImageElement, { frameWidth: asset.frameWidth, frameHeight: asset.frameHeight });
         // every frame casts its own shadow (the maintainer: the run's shadow
@@ -60,6 +64,10 @@ const SIDE_ARMS: Record<string, ArmBand> = {
   'eve-fig': [26, 34, 39, 90],
 };
 const WALK_CYCLE = [18, 9, 0, -9, -18, -9, 0, 9];
+/** the sheets that also get frames holding a staff upright (Abel's, recoloured from Adam's tunic) */
+const STAFF_SHEETS = ['adam-tunic'];
+/** holding the staff: the upper arm a little forward, the forearm about level, the hand ahead at the waist; walking it hardly swings, running a little more */
+const STAFF_HOLD = { arm: 10, elbow: 75, walk: 0.2, run: 0.25 };
 /** the sheets' own walks swing the arms 0.45 of the legs' angle; Cain's walk, now everyone's, more */
 const ARM_SWING = 0.85;
 /** the run (the maintainer, on Cain: bent knees and elbows, upright, a real trot) */
@@ -125,7 +133,7 @@ const WORK = {
 /** One direction of a sheet: from the side the walk with more arm swing and
  * a run with bent knees and elbows; from the front and back a run with the
  * knees coming higher, bobbing; bending down; the poses of a blow. */
-function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm: ArmBand | undefined): [HTMLCanvasElement, SheetAsset, Px[]] | null {
+function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm: ArmBand | undefined, staff = false): [HTMLCanvasElement, SheetAsset, Px[], HTMLCanvasElement | null] | null {
   const walk = a.walk ?? [];
   if (walk.length !== 8 || (dir === 'right' && !arm)) return null;
   const fw = a.frameWidth;
@@ -198,7 +206,17 @@ function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm:
       work[2].push(frames[0]);
     }
   }
-  const all = [...frames, ...run, ...stoop, ...poses.flat(), ...work.flat()];
+  // holding a staff (from the side only): standing, walking, running
+  let held: { frames: Px[]; hands: XY[]; fists: Px[] } | null = null;
+  if (side && staff) {
+    const band: ArmBand = [arm![0] + pad, arm![1] + pad, arm![2], arm![3], arm![4]];
+    const hold = (swing: number) => ({ arm: STAFF_HOLD.arm, elbow: STAFF_HOLD.elbow, swing });
+    const st = sideStride(frames[0], band, { cycle: [0], armSwing: ARM_SWING, hold: hold(0) });
+    const w = sideStride(frames[0], band, { cycle: WALK_CYCLE, armSwing: ARM_SWING, hold: hold(STAFF_HOLD.walk) });
+    const r = sideRun(frames[0], band, { ...RUN, hold: hold(STAFF_HOLD.run) });
+    held = { frames: [...st.frames, ...w.frames, ...r.frames], hands: [...st.hands, ...w.hands, ...r.hands], fists: [...st.fists, ...w.fists, ...r.fists] };
+  }
+  const all = [...frames, ...run, ...stoop, ...poses.flat(), ...work.flat(), ...(held?.frames ?? [])];
   // from the front and back, where each hand is in each frame (the maintainer: the fat
   // carried up or down did not move with the hand)
   let sideHands: [XY, XY][] | undefined;
@@ -216,6 +234,7 @@ function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm:
     stoopHands.forEach((h, i) => (hands![at + i] = h));
     poseHands.forEach((h, i) => (hands![at + stoop.length + i] = h));
     workHands.forEach((h, i) => (hands![at + stoop.length + poseHands.length + i] = h));
+    if (held) hands.push(...held.hands);
   }
   const W = fw + pad * 2;
   const c = document.createElement('canvas');
@@ -228,6 +247,17 @@ function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm:
   let n = firstPose;
   const [raise, strike, draw, thrust] = poses.map((list) => list.map(() => n++));
   const [pour, lift, dig] = work.map((list) => list.map(() => n++));
-  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, sideHands, run: run.map((_, i) => first + i), runFps: 16, stoop: stoop.map((_, i) => first + run.length + i), attack: { raise, strike, draw, thrust }, work: { pour, lift, dig } }, all];
+  let fists: HTMLCanvasElement | null = null;
+  let staffFrames: SheetAsset['staff'];
+  if (held) {
+    const at = all.length - held.frames.length;
+    staffFrames = { idle: [at], walk: walk.map((_, i) => at + 1 + i), run: run.map((_, i) => at + 1 + walk.length + i) };
+    fists = document.createElement('canvas');
+    fists.width = c.width;
+    fists.height = fh;
+    const fc = fists.getContext('2d')!;
+    held.fists.forEach((f, i) => fc.putImageData(new ImageData(new Uint8ClampedArray(f.d), f.w, f.h), (at + i) * W, 0));
+  }
+  return [c, { ...a, frameWidth: W, anchorX: a.anchorX + pad, frames: all.length, hands, sideHands, run: run.map((_, i) => first + i), runFps: 16, stoop: stoop.map((_, i) => first + run.length + i), attack: { raise, strike, draw, thrust }, work: { pour, lift, dig }, staff: staffFrames }, all, fists];
 }
 
