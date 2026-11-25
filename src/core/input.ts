@@ -18,6 +18,8 @@ const KEYMAP: Record<string, Action> = {
   ArrowRight: 'right',
   KeyD: 'right',
   KeyE: 'interact',
+  // the maintainer didn't find how to strike: F (or a left click) attacks
+  KeyF: 'attack',
   Enter: 'interact',
   NumpadEnter: 'interact',
   Space: 'interact',
@@ -41,7 +43,7 @@ export const KEY_LABELS: Record<Action, string> = {
   pause: 'Esc',
   switch: 'Tab',
   run: 'Shift',
-  attack: 'Click',
+  attack: 'F',
 };
 
 export interface InputLayer {

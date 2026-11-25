@@ -278,10 +278,14 @@ export class CainScene extends Phaser.Scene {
             if (this.canMove()) this.dogBark();
             return true;
           }
-          if (this.canAct() && this.currentInteract && !this.currentInteract.attack) void this.useInteract(this.currentInteract);
-          return true;
+          if (this.canAct() && this.currentInteract && !this.currentInteract.attack) {
+            void this.useInteract(this.currentInteract);
+            return true;
+          }
+          // during the chase E strikes too (the maintainer pressed E and nothing happened)
+          if (!this.chaseState && !this.currentInteract?.attack) return true;
         }
-        if (a === 'attack') {
+        if (a === 'attack' || a === 'interact') {
           // a left click or the touch ⚔ (the maintainer): a blow when Abel is in reach, else a swing at the air
           if (!this.canAct()) return true;
           if (this.currentInteract?.attack) void this.useInteract(this.currentInteract);
