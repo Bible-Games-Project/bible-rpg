@@ -3,7 +3,7 @@ import { MANIFEST, assetUrl, charKey, shadowKey, type Direction, type PortraitAs
 import { Pixels, ramp, type RGB } from './pixels';
 import { DOG_RIG, DOG_RUN_SCALE, dogGallop, enlarge, scaledRig } from './dogRun';
 import { drawAnger, drawFat, drawFire, drawKnife, drawShadow, type Drawing } from './drawings';
-import { nightPixels } from './palette';
+import { NIGHT_RAMPS, nightPixels, rampAt } from './palette';
 import GEN from '../../data/cain/generatedArt.json';
 
 /**
@@ -65,13 +65,14 @@ function gen(scene: Phaser.Scene, name: GenName, mirror = false): Pixels {
 }
 
 /** A generated prop with its base point (sunk `sink` px into the ground). */
-function addGen(scene: Phaser.Scene, key: string, name: GenName, o: { mirror?: boolean; icon?: boolean; sink?: number; centre?: boolean; wood?: boolean; tone?: RGB[]; natural?: boolean } = {}): void {
+function addGen(scene: Phaser.Scene, key: string, name: GenName, o: { mirror?: boolean; icon?: boolean; sink?: number; centre?: boolean; wood?: boolean; tone?: RGB[]; natural?: boolean; paint?: (p: Pixels) => void } = {}): void {
   const g = GEN[name];
   const p = gen(scene, name, o.mirror);
   const tone = o.tone ?? (o.wood ? WOOD : undefined);
   if (tone) onTone(p, tone);
+  o.paint?.(p);
   const ax = o.mirror ? g.w - 1 - g.ax : g.ax;
-  addSheet(scene, key, [p], o.centre ? g.w / 2 : ax, o.centre ? g.h / 2 : g.ay - (o.sink ?? 1), ART, o.icon, !!tone || o.natural);
+  addSheet(scene, key, [p], o.centre ? g.w / 2 : ax, o.centre ? g.h / 2 : g.ay - (o.sink ?? 1), ART, o.icon, !!tone || !!o.paint || o.natural);
 }
 
 /** plain brown wood, as the knife's haft and the brothers' tunics (the maintainer: Abel's staff came out pink in the night palette) */
@@ -105,6 +106,27 @@ function onTone(p: Pixels, tone: RGB[]): void {
     const c = tone[Math.min(tone.length - 1, Math.round(k * (tone.length - 1)))];
     [d[i], d[i + 1], d[i + 2]] = c;
   }
+}
+
+/**
+ * Cain's basket toned by hand for the night (the maintainer: in its own
+ * colours it did not fit the chapter; the general night palette turned the
+ * gourds into wicker): the wicker and the wheat on the straw ramp, the two
+ * gourds coral, the greens blue like the field's.
+ */
+function basketTone(p: Pixels): void {
+  const d = p.data;
+  const { STRAW, ACCENT, GRASS } = NIGHT_RAMPS;
+  const gourd = (x: number, y: number) =>
+    ((x - 11) / 6.5) ** 2 + ((y - 14) / 5) ** 2 < 1 || ((x - 18.5) / 6) ** 2 + ((y - 19.5) / 4.5) ** 2 < 1;
+  for (let y = 0; y < p.h; y++)
+    for (let x = 0; x < p.w; x++) {
+      const i = (y * p.w + x) * 4;
+      if (!d[i + 3]) continue;
+      const lum = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / 255;
+      const c = leafy(d, i) ? rampAt(GRASS, lum * 1.6) : gourd(x, y) ? rampAt(ACCENT, lum * 0.95) : rampAt(STRAW, lum * 0.95);
+      [d[i], d[i + 1], d[i + 2]] = c;
+    }
 }
 
 const leafy = (d: Uint8ClampedArray, i: number) => d[i + 3] > 0 && d[i + 1] > d[i] + 2 && d[i + 1] >= d[i + 2];
@@ -328,9 +350,9 @@ export function buildCainArt(scene: Phaser.Scene): void {
   addGen(scene, 'cain-gourds', 'gourds', { sink: 2 });
   addGen(scene, 'cain-gourds-picked', 'gourds-picked', { sink: 2 });
   addGen(scene, 'cain-jawbone', 'jawbone', { icon: true, sink: 2 });
-  // in its own colours, like the basket of produce (at night it was lost on the stone)
+  // in its own colours (at night it was lost on the stone)
   addDrawing(scene, 'cain-fat', drawFat(), true, true);
-  addGen(scene, 'cain-basket', 'basket', { icon: true, sink: 2, natural: true });
+  addGen(scene, 'cain-basket', 'basket', { icon: true, sink: 2, paint: basketTone });
   addDrawing(scene, 'cain-knife', drawKnife(), false, true);
   addGen(scene, 'cain-staff', 'staff', { wood: true });
   addGen(scene, 'cain-grave', 'grave');

@@ -25,6 +25,10 @@ const POUR_GRIP: [number, number] = [0.5, 0.6];
 const WALK_CARRY_AHEAD = 11;
 /** how much further ahead a carried thing is held when running from the side (world px) */
 const RUN_CARRY_AHEAD = 6;
+/** a carried thing (Cain's basket) is drawn this much smaller, so that from the front the hands hold its sides instead of hiding behind it (the maintainer) */
+const CARRY_SCALE = 0.82;
+/** from the front, how far the bottom of a carried thing is below the hands (world px): they hold it by the rim */
+const CARRY_BELOW_HANDS = 9;
 /** Abel's staff (placeStaff): from the side it leans this far forward (radians) and this much more per px the hand swings ahead; the hand coming up lifts it at most this much (px) */
 const STAFF_LEAN = 0.06;
 const STAFF_SWING = 0.014;
@@ -277,6 +281,7 @@ export class Actor {
     this.heldArgs = key ? [key, grip, origin] : null;
     if (!key) return;
     this.heldSprite = sized(this.scene.add.image(this.x, this.y - 36, key).setOrigin(origin[0], origin[1]).setDepth(this.y + 1)).setVisible(this.sprite.visible);
+    if (grip === 'carry') this.heldSprite.setScale(this.heldSprite.scaleX * CARRY_SCALE, this.heldSprite.scaleY * CARRY_SCALE);
     this.refresh();
   }
 
@@ -721,8 +726,8 @@ export class Actor {
   /**
    * `carry` (Cain and Abel): carried in front with both hands, moving with
    * them. From the side it hangs from the fists of the current frame (pulled
-   * a little toward the chest, both arms hold it); from the front it rides
-   * up and down with each step.
+   * a little toward the chest, both arms hold it); from the front and back
+   * the hands of the current frame hold it by the rim.
    */
   private placeCarried(x: number, y: number): void {
     const s = this.heldSprite!;
@@ -736,6 +741,10 @@ export class Actor {
       // walking, the arms hold it out in front instead of swinging it back with the near arm
       dx = this.lastAnim.endsWith(':run') ? fist[0] * 0.75 + ahead * RUN_CARRY_AHEAD : fist[0] * 0.25 + ahead * WALK_CARRY_AHEAD;
       dy = fist[1] + 7;
+    } else if (this.frontHand(0) && this.frontHand(1)) {
+      const [l, r] = [this.frontHand(0)!, this.frontHand(1)!];
+      dx = (l[0] + r[0]) / 2;
+      dy = (l[1] + r[1]) / 2 + CARRY_BELOW_HANDS;
     } else {
       const a = this.sprite.anims;
       const n = a.currentAnim?.frames.length ?? 1;

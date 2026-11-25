@@ -41,6 +41,16 @@ const STONE = ramp('#181826', '#222234', '#2e2d42', '#3b3950', '#4a465f', '#5b55
 const ACCENT = ramp('#3a1424', '#6e2338', '#a33a50', '#d8586b', '#F67280', '#F8B195', '#fbd3bd');
 const BLUE = ramp('#121b2e', '#1b2a45', '#253a5b', '#2f4a6d', '#355C7D', '#4d7393', '#6a8ba8');
 
+/** Some of the ramps above, for art toned by hand (Cain's basket). */
+export const NIGHT_RAMPS = { GRASS, STRAW, ACCENT } as const;
+
+/** The colour at `t` (0–1) along one of the ramps. */
+export function rampAt(stops: V3[], t: number): V3 {
+  const o: V3 = [0, 0, 0];
+  onRamp(stops, t, o, 1);
+  return [Math.round(o[0]), Math.round(o[1]), Math.round(o[2])];
+}
+
 /** Colours the chapter used before, kept to go back to (the maintainer). */
 export const PREVIOUS = {
   /** paths and the field until 2026-11-09: the purple grey #6C5B7B */
