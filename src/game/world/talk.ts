@@ -48,6 +48,26 @@ export class Conversation {
     }
   }
 
+  /**
+   * Where the conversation showing is (the maintainer: walking off, an arrow
+   * should point to it): whoever is speaking, unless it is the player, else
+   * the one the player talks with. Null when no dialogue shows, or the
+   * narrator alone speaks.
+   */
+  place(player: Actor, cast: (id: string) => Talker | null): Talker | null {
+    const d = ui().dialogue;
+    if (!d.open) return null;
+    const speaker = d.speaker ? cast(d.speaker) : null;
+    if (speaker && speaker !== player && speaker.visible) return speaker;
+    return this.partner?.visible && this.partner !== player ? this.partner : null;
+  }
+
+  /** The point over a talker's head to point an arrow at. */
+  static mark(t: Talker): [number, number] {
+    const top = (t as Partial<Actor>).topY;
+    return [t.x, typeof top === 'function' ? top.call(t) - 4 : t.y - 60];
+  }
+
   /** The one the player talks with in these lines: the first speaker in the scene other than the player. */
   static partnerOf(speakers: string[], player: Actor, cast: (id: string) => Talker | null): Talker | null {
     for (const id of speakers) {

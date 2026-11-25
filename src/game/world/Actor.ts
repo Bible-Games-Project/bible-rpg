@@ -35,6 +35,9 @@ const STAFF_SWING = 0.014;
 /** running, he carries it off the ground (px) */
 const STAFF_RUN_LIFT = 4;
 const STAFF_LIFT = 6;
+/** the crop of the hand drawn over the staff (placeGrip), in art px */
+const GRIP_W = 7;
+const GRIP_H = 9;
 /** How much one axis must outweigh the other before a walker turns from a
  * side view to a front/back view or back (see faceVector). */
 const FACING_HOLD = 1.3;
@@ -95,6 +98,8 @@ export class Actor {
   private heldSprite: Phaser.GameObjects.Image | null = null;
   /** a thing in the other hand (Abel's knife, the staff still in the first: the maintainer) */
   private offSprite: Phaser.GameObjects.Image | null = null;
+  /** the hand that holds the staff, drawn again over it so the fingers close round the shaft (placeGrip) */
+  private gripSprite: Phaser.GameObjects.Sprite | null = null;
   private anchorY = 1;
   private lastAnim = '';
   private grip: 'hand' | 'arms' | 'carry' | 'staff' = 'hand';
@@ -173,6 +178,7 @@ export class Actor {
     this.shadow?.setVisible(v);
     this.heldSprite?.setVisible(v);
     this.offSprite?.setVisible(v);
+    if (!v) this.gripSprite?.setVisible(false);
     this.body.enable = v && !this.scripted;
     return this;
   }
@@ -613,6 +619,7 @@ export class Actor {
   private placeHeld(): void {
     const x = this.feet.x;
     const y = this.feet.y;
+    if (this.grip !== 'staff' || !this.heldSprite) this.gripSprite?.setVisible(false);
     if (this.offSprite) this.placeInHand(this.offSprite, x, y, false, this.grip === 'staff');
     if (!this.heldSprite) return;
     if (this.grip === 'carry') return this.placeCarried(x, y);
@@ -720,7 +727,38 @@ export class Actor {
     // the crook faces the way they look
     const flip = this.facing === 'left';
     if (s.flipX !== flip) s.setFlipX(flip).setOrigin(1 - s.originX, s.originY);
-    s.setPosition(x + foot[0], y + foot[1]).setRotation(lean).setDepth(this.facing === 'up' || far ? y - 1 : y + 1);
+    const behind = this.facing === 'up' || far;
+    s.setPosition(x + foot[0], y + foot[1]).setRotation(lean).setDepth(behind ? y - 1 : y + 1);
+    // in front of the body the staff covered the hand holding it (the maintainer: badly anchored)
+    this.placeGrip(behind ? null : side ? 'side' : this.facing === 'down' ? 0 : 1, y + 1.5);
+  }
+
+  /**
+   * The hand holding the staff drawn once more, over the staff: a crop of
+   * the body's own frame around the hand (`hand`: the side fist, or the front
+   * hand 0 or 1), so the fingers are in front of the shaft. Null hides it.
+   */
+  private placeGrip(hand: 'side' | 0 | 1 | null, depth: number): void {
+    const b = this.sprite;
+    const parts = b.texture.key.split(':');
+    const a = parts[0] === 'char' ? MANIFEST.characters[parts[1]]?.[parts[2]]?.[parts[3] as Direction] : undefined;
+    const frame = Number(b.frame.name) || 0;
+    const p = hand === null || !a ? undefined : hand === 'side' ? a.hands?.[frame] : a.sideHands?.[frame]?.[b.flipX ? 1 - hand : hand];
+    if (!p || !a) {
+      this.gripSprite?.setVisible(false);
+      return;
+    }
+    const g = (this.gripSprite ??= this.scene.add.sprite(b.x, b.y, b.texture.key));
+    g.setTexture(b.texture.key, b.frame.name).setOrigin(b.originX, b.originY).setPosition(b.x, b.y);
+    g.setScale(b.scaleX, b.scaleY).setRotation(b.rotation).setFlipX(b.flipX).setAlpha(b.alpha).setDepth(depth);
+    if (b.isTinted) {
+      g.setTint(b.tintTopLeft, b.tintTopRight, b.tintBottomLeft, b.tintBottomRight);
+      g.tintFill = b.tintFill;
+    } else g.clearTint();
+    // the hand: about GRIP_W art px wide round its centre, GRIP_H up from its bottom
+    const cx = b.flipX ? a.frameWidth - 1 - p[0] : p[0];
+    g.setCrop(Math.round(cx - (GRIP_W - 1) / 2), Math.round(p[1] - GRIP_H + 1), GRIP_W, GRIP_H);
+    g.setVisible(b.visible);
   }
 
   /**
@@ -816,5 +854,6 @@ export class Actor {
     this.emoteSprite?.destroy();
     this.heldSprite?.destroy();
     this.offSprite?.destroy();
+    this.gripSprite?.destroy();
   }
 }

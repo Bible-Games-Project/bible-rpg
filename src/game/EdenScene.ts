@@ -1401,6 +1401,13 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
   private updateObjectiveIndicator(time: number): void {
     const pts = this.objectivePoints();
     const hud = ui().hud;
+    // a conversation the player walked away from: the arrow points to it
+    const talk = this.mayWalk() ? this.talk.place(this.player(), (id) => this.castOf(id)) : null;
+    if (talk) {
+      this.markers.hide(time);
+      this.edgeArrow(Conversation.mark(talk));
+      return;
+    }
     if (!pts.length || !this.canMove()) {
       hud.setArrow(null);
       this.markers.hide(time);
@@ -1418,7 +1425,17 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     // an arrow over each target in view, except the one being reached
     const marked = (this.objectiveAll ? pts : [best]).filter((q) => inView(q.mark) && dist(q.at) >= 90);
     this.markers.show(marked.map((q) => q.mark), time, cam.zoom, dpr, settings.get().reduceMotion);
-    if (inView(best.mark)) {
+    this.edgeArrow(best.mark);
+  }
+
+  /** The arrow at the screen edge toward a point out of view (none when it is in view). */
+  private edgeArrow(mark: Pt): void {
+    const hud = ui().hud;
+    const cam = this.cameras.main;
+    const view = cam.worldView;
+    const dpr = pixelRatio();
+    const margin = (30 * dpr) / cam.zoom;
+    if (mark[0] > view.x + margin && mark[0] < view.right - margin && mark[1] > view.y + margin && mark[1] < view.bottom - margin) {
       hud.setArrow(null);
       return;
     }
@@ -1428,8 +1445,8 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     const sh = this.scale.height / dpr;
     const cx = sw / 2;
     const cy = sh / 2;
-    const tx = ((best.mark[0] - view.x) * cam.zoom) / dpr;
-    const ty = ((best.mark[1] - view.y) * cam.zoom) / dpr;
+    const tx = ((mark[0] - view.x) * cam.zoom) / dpr;
+    const ty = ((mark[1] - view.y) * cam.zoom) / dpr;
     const ang = Math.atan2(ty - cy, tx - cx);
     const padX = 38;
     const padTop = 120;

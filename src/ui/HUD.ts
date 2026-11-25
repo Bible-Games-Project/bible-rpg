@@ -114,6 +114,7 @@ export class HUD {
 
   show(v: boolean): void {
     this.root.hidden = !v;
+    document.documentElement.classList.toggle('screen-dark', v && Number(this.fader.style.opacity || 0) > 0.85);
   }
 
   /**
@@ -331,6 +332,8 @@ export class HUD {
   fade(to: number, ms = 600, color = '#000'): Promise<void> {
     this.fader.style.background = color;
     this.fader.style.transitionDuration = `${ms}ms`;
+    // on a dark screen the dialogue and narration sit in its middle (the maintainer)
+    document.documentElement.classList.toggle('screen-dark', to > 0.85);
     return new Promise((resolve) => {
       requestAnimationFrame(() => {
         this.fader.style.opacity = String(to);

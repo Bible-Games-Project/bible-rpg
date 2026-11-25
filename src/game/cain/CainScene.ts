@@ -1725,6 +1725,13 @@ export class CainScene extends Phaser.Scene {
   private updateObjectiveIndicator(time: number): void {
     const pts = this.objectivePoints();
     const hud = ui().hud;
+    // a conversation the player walked away from: the arrow points to it
+    const talk = this.mayWalk() ? this.talk.place(this.player(), (id) => this.talkerOf(id)) : null;
+    if (talk) {
+      this.markers.hide(time);
+      this.edgeArrow(Conversation.mark(talk));
+      return;
+    }
     if (!pts.length || !this.canMove()) {
       hud.setArrow(null);
       this.markers.hide(time);
@@ -1741,7 +1748,17 @@ export class CainScene extends Phaser.Scene {
     const inView = (q: Pt) => q[0] > view.x + margin && q[0] < view.right - margin && q[1] > view.y + margin && q[1] < view.bottom - margin;
     const marked = (this.objectiveAll ? pts : [best]).filter((q) => inView(q.mark) && dist(q.at) >= 90);
     this.markers.show(marked.map((q) => q.mark), time, cam.zoom, dpr, settings.get().reduceMotion);
-    if (inView(best.mark)) {
+    this.edgeArrow(best.mark);
+  }
+
+  /** The arrow at the screen edge toward a point out of view (none when it is in view). */
+  private edgeArrow(mark: Pt): void {
+    const hud = ui().hud;
+    const cam = this.cameras.main;
+    const view = cam.worldView;
+    const dpr = pixelRatio();
+    const margin = (30 * dpr) / cam.zoom;
+    if (mark[0] > view.x + margin && mark[0] < view.right - margin && mark[1] > view.y + margin && mark[1] < view.bottom - margin) {
       hud.setArrow(null);
       return;
     }
@@ -1749,8 +1766,8 @@ export class CainScene extends Phaser.Scene {
     const sh = this.scale.height / dpr;
     const cx = sw / 2;
     const cy = sh / 2;
-    const tx = ((best.mark[0] - view.x) * cam.zoom) / dpr;
-    const ty = ((best.mark[1] - view.y) * cam.zoom) / dpr;
+    const tx = ((mark[0] - view.x) * cam.zoom) / dpr;
+    const ty = ((mark[1] - view.y) * cam.zoom) / dpr;
     const ang = Math.atan2(ty - cy, tx - cx);
     const kx = Math.cos(ang) > 0 ? (sw - 38 - cx) / Math.cos(ang) : (38 - cx) / Math.cos(ang);
     const ky = Math.sin(ang) > 0 ? (sh - 60 - cy) / Math.sin(ang) : (120 - cy) / Math.sin(ang);

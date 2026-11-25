@@ -1184,6 +1184,16 @@ select:focus-visible {
   align-items: flex-start;
   pointer-events: auto;
   z-index: 42; /* above the fader: scripture cards stay readable during night fades */
+  transition:
+    bottom 0.6s ease,
+    transform 0.6s ease;
+}
+
+/* the screen faded to black (HUD.fade): in the middle of it, gliding back
+   down as the world comes up (the maintainer) */
+:root.screen-dark .dialogue {
+  bottom: 50% !important;
+  transform: translate(-50%, 50%);
 }
 
 /* told while the player keeps moving: clicks and touches go through to the

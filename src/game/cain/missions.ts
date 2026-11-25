@@ -160,6 +160,8 @@ const MISSIONS: CainMission[] = [
               w.sfx(p.kind === 'fruit' ? 'leafPick' : p.kind === 'grain' ? 'rustle' : 'pickup');
               w.setPicked(i, true);
               w.give('produce');
+              // the basket is in his hands from the first fruit on (the maintainer)
+              if (!w.cain.holding()) w.cain.hold('cain-basket', 'carry');
               update();
               // and straightens up before going on
               await w.wait(400);
@@ -170,7 +172,6 @@ const MISSIONS: CainMission[] = [
       });
       w.clearInteractions();
       w.toast(C('toasts.basket'));
-      w.cain.hold('cain-basket', 'carry');
       w.objective(step('m01', 'altar'), POINTS.cainAltar);
       await useOnce(w, {
         id: 'altar',

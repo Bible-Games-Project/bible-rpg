@@ -65,8 +65,10 @@ export const NIGHT_SHADOW = 0.4;
 /** People and animals at night: their own colours, a little dimmer and cooler. */
 export const NIGHT_TINT = 0xc4c6e0;
 
-/** The camera's background (beyond the world's edge). */
-export const NIGHT_BACKGROUND = '#121a2b';
+/** The camera's background: the night grass's average colour, so that a
+ * hairline gap between two ground tiles does not show as a thin dark line
+ * down the screen (the maintainer saw them on the old #121a2b). */
+export const NIGHT_BACKGROUND = '#365174';
 
 function onRamp(stops: V3[], t: number, out: V3, w: number): void {
   const n = stops.length - 1;
