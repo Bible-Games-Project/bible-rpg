@@ -290,6 +290,8 @@ export class CainScene extends Phaser.Scene {
           if (!this.canAct()) return true;
           if (this.currentInteract?.attack) void this.useInteract(this.currentInteract);
           else if (this.chaseState) void this.swingAir();
+          // F or a left click strikes at any time (the maintainer), not only in the chase
+          else if (a === 'attack' && !this.driving && this.active === 'cain') void this.swingFree();
           return true;
         }
         return a === 'switch';
@@ -1031,6 +1033,21 @@ export class CainScene extends Phaser.Scene {
   }
 
   /** A click with Abel out of reach: Cain swings the jawbone at the air. */
+  private freeSwingAt = 0;
+  /** A blow at the air outside the chase; not with the basket in both hands. */
+  private async swingFree(): Promise<void> {
+    if (this.busy || this.time.now < this.freeSwingAt || this.cain.holding()?.[1] === 'carry') return;
+    this.freeSwingAt = this.time.now + STRIKE_COOLDOWN * 1000;
+    this.busy = true;
+    this.cain.stop();
+    audio.play('swing', { volume: 0.7 });
+    try {
+      await this.cain.attack('swing');
+    } finally {
+      this.busy = false;
+    }
+  }
+
   private async swingAir(): Promise<void> {
     const s = this.chaseState;
     if (!s || s.cooldown > 0 || s.mode === 'down' || s.mode === 'reset' || this.busy) return;
