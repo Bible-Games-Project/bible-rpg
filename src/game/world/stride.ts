@@ -438,9 +438,32 @@ function pumpArm(out: Px, p: Px, mid: number, side: number, a: FrontArms, squash
  * that edge, an arm is met and then a gap before the body (nearer the middle
  * than `inner` px is not arm). Where none is found, `fallback`.
  */
+/** The mean colour of row `y` from `x0` to `x1`. */
+function mean(p: Px, x0: number, x1: number, y: number): number[] {
+  const c = [0, 0, 0];
+  let n = 0;
+  for (let x = x0; x <= x1; x++) {
+    if (!alpha(p, x, y)) continue;
+    const i = (y * p.w + x) * 4;
+    for (let k = 0; k < 3; k++) c[k] += p.d[i + k];
+    n++;
+  }
+  return c.map((v) => v / Math.max(1, n));
+}
+
+/** How far the pixel's colour is from `ref` (sum of the channels; Infinity when clear). */
+function colourGap(p: Px, x: number, y: number, ref: number[]): number {
+  if (!alpha(p, x, y)) return Infinity;
+  const i = (y * p.w + x) * 4;
+  return Math.abs(p.d[i] - ref[0]) + Math.abs(p.d[i + 1] - ref[1]) + Math.abs(p.d[i + 2] - ref[2]);
+}
+
 export function handsOf(p: Px, mid: number, inner: number, y0: number, y1: number, fallback: [XY, XY]): [XY, XY] {
   const hand = (side: number): XY | null => {
     let best: XY | null = null;
+    let edge = 0;
+    let width = 0;
+    let ref: number[] | null = null;
     const limit = Math.round(mid + side * inner);
     for (let y = Math.round(y0); y <= Math.round(y1); y++) {
       let from = -1;
@@ -457,7 +480,30 @@ export function handsOf(p: Px, mid: number, inner: number, y0: number, y1: numbe
         }
         if (on) to = x;
       }
-      if (from >= 0 && gap) best = [(from + to) / 2, y];
+      if (from >= 0 && gap) {
+        best = [(from + to) / 2, y];
+        // `from` is the outer side (the scan starts outside)
+        edge = from;
+        width = Math.abs(to - from) + 1;
+        ref = mean(p, Math.min(from, to), Math.max(from, to), y);
+      }
+    }
+    // where the hand comes against the skirt or the tunic there is no gap any more: follow
+    // its outer edge down while it keeps the arm's colour (the maintainer saw what Adam held
+    // from the front float above his hand)
+    if (best && ref) {
+      for (let y = Math.round(best[1]) + 1; y <= Math.round(y1 + (y1 - y0) * 0.3); y++) {
+        let x = side < 0 ? 0 : p.w - 1;
+        while (x >= 0 && x < p.w && !alpha(p, x, y)) x -= side;
+        // (a step in of more than a pixel: the hand has ended against the clothes)
+        const inward = (x - edge) * -side;
+        if (x < 0 || x >= p.w || inward > 1 || inward < -2) break;
+        let near = Infinity;
+        for (let k = 0; k < 4; k++) near = Math.min(near, colourGap(p, x - side * k, y, ref));
+        if (near > 90) break;
+        edge = x;
+        best = [x - (side * (width - 1)) / 2, y];
+      }
     }
     return best;
   };
