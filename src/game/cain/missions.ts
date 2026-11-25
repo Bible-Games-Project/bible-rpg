@@ -81,7 +81,8 @@ function stage(w: CainScene, n: number, place: boolean): void {
   w.follow(false);
   w.hide(w.god);
   w.layStaff(false);
-  w.abel.hold(n >= 2 && n <= 4 ? STAFF[0] : null, STAFF[1], STAFF[2]);
+  // to the field he goes empty-handed (the maintainer)
+  w.abel.hold(n >= 2 && n <= 3 ? STAFF[0] : null, STAFF[1], STAFF[2]);
   w.cain.hold(null);
   w.setActive(active);
   if (!place) return;
@@ -342,6 +343,11 @@ const MISSIONS: CainMission[] = [
       w.cain.face(w.abel);
       w.abel.face(w.cain);
       await w.say('field');
+      // he leaves his staff by the altar and goes with Cain empty-handed (the maintainer)
+      if (w.abel.holding()?.[0] === STAFF[0]) {
+        w.layStaff(true);
+        w.abel.hold(null);
+      }
       w.cutscene(false);
       w.follow(true);
       w.objective(step('m04', 'field'), POINTS.fieldGate);

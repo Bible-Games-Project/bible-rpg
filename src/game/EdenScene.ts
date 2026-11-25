@@ -1274,7 +1274,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
       const v = input.moveVector();
       this.keepInView(p, v);
       // Shift: run, never while talking (the maintainer)
-      const speed = CHARACTERS[this.active].speed * (!this.talking() && input.isDown('run') ? RUN : PLAYER_WALK);
+      const speed = CHARACTERS[this.active].speed * (input.isDown('run') ? RUN : PLAYER_WALK);
       p.move(v.x * speed, v.y * speed);
       if (p.moving) {
         // in time with the feet coming down

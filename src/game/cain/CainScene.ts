@@ -1277,8 +1277,8 @@ export class CainScene extends Phaser.Scene {
     if (canMove) {
       const v = input.moveVector();
       this.keepInView(p, v);
-      // Shift: run, never while talking (the maintainer)
-      const pace = !this.talking() && input.isDown('run') ? (this.driving ? 1.25 : RUN) : this.driving ? 1 : PLAYER_WALK;
+      // Shift: run, also while talking (the maintainer changed their mind: they want to keep running)
+      const pace = input.isDown('run') ? (this.driving ? 1.25 : RUN) : this.driving ? 1 : PLAYER_WALK;
       const speed = (this.driving ? DOG_DRIVE_SPEED : CHARACTERS[this.active].speed) * pace;
       p.move(v.x * speed, v.y * speed);
       if (p.moving && !this.driving) {
@@ -1646,8 +1646,10 @@ export class CainScene extends Phaser.Scene {
       return;
     }
     const dist = Math.hypot(leader.x - f.x, leader.y - f.y);
-    if (dist > 520) {
+    // far behind he runs to catch up (the maintainer: he jumped to Cain); only stuck out of sight is he put back beside him
+    if (dist > 520 && this.followStuck > 3 && !this.cameras.main.worldView.contains(f.x, f.y)) {
       f.setPosition(leader.x - 30, leader.y + 12);
+      this.followStuck = 0;
       return;
     }
     const side = f.x < leader.x ? -1 : 1;
@@ -1659,7 +1661,7 @@ export class CainScene extends Phaser.Scene {
     // starts after the leader when he is a little away, stops once beside him
     if (dist > 64 || gap > (f.moving ? 16 : 30)) {
       // the speed eases from one to the next (jumping between them, Abel's legs flickered between walk and run)
-      const want = Math.max(CHARACTERS[f.id].speed * PLAYER_WALK, leader.pace) * (dist > 160 ? 1.1 : gap < 60 ? 0.75 : 0.95);
+      const want = Math.max(CHARACTERS[f.id].speed * (dist > 200 ? RUN : PLAYER_WALK), leader.pace) * (dist > 160 ? 1.1 : gap < 60 ? 0.75 : 0.95);
       this.followSpeed += (want - this.followSpeed) * Math.min(1, dt * 4);
       const sp = Math.max(this.followSpeed, CHARACTERS[f.id].speed * 0.6);
       const before = { x: f.x, y: f.y };
