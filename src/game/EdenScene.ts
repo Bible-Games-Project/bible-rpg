@@ -172,7 +172,10 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     const cam = this.cameras.main;
     cam.setBounds(0, 0, WORLD_W, WORLD_H);
     cam.setRoundPixels(false);
-    cam.setBackgroundColor('#1d3c1a');
+    // the grass's own average colour: where two ground tiles meet at a
+    // fraction of a screen pixel, a hairline of background can show through
+    // (the maintainer saw thin dark lines down the screen with the old dark green)
+    cam.setBackgroundColor('#bfd237');
     this.applyZoom();
     this.scale.on('resize', this.applyZoom, this);
     this.cameraFollow();
