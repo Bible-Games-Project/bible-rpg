@@ -2603,5 +2603,27 @@
    "total_tokens": 2161
   },
   "at": "20261126-101032"
+ },
+ {
+  "job": "noah-portraits-more",
+  "chapter": "noah",
+  "file": "art/generated/noah-portraits-more/20261126-113929-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0202,
+  "usage": {
+   "input_tokens": 2176,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 640
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 2334
+  },
+  "at": "20261126-113929"
  }
 ]
