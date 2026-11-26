@@ -2493,5 +2493,71 @@
    "total_tokens": 2887
   },
   "at": "20261117-155743"
+ },
+ {
+  "job": "noah-ark",
+  "chapter": "noah",
+  "file": "art/generated/noah-ark/20261126-080240-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0186,
+  "usage": {
+   "input_tokens": 1862,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 354
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 2020
+  },
+  "at": "20261126-080240"
+ },
+ {
+  "job": "noah-city",
+  "chapter": "noah",
+  "file": "art/generated/noah-city/20261126-080255-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0187,
+  "usage": {
+   "input_tokens": 1889,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 381
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 2047
+  },
+  "at": "20261126-080255"
+ },
+ {
+  "job": "noah-work",
+  "chapter": "noah",
+  "file": "art/generated/noah-work/20261126-080310-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0187,
+  "usage": {
+   "input_tokens": 1887,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 379
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 2045
+  },
+  "at": "20261126-080310"
  }
 ]

@@ -1,0 +1,33 @@
+{
+ "chapter": "noah",
+ "style": "STYLE RULES: Soft, modern pixel art exactly in the style of the reference images (the meadow scene and Adam): small soft pixel blocks, gentle painterly shading with light from the upper left, natural colours, smooth flat areas with little texture noise, and NO dark outlines: shapes are separated only by colour and light. Top-down three-quarter view like the reference scene. Each subject stands alone, with NO cast shadow, ground patch, grass or scenery under or around it. The references show the style and scale only: draw new subjects, do not copy or edit the references. BACKGROUND: one flat solid magenta colour (#FF00FF) everywhere around the subjects, with no glow or texture on it. Leave wide clear magenta space between separate subjects; subjects never touch or overlap. No text, letters, numbers, labels, borders or frames.",
+ "jobs": [
+  {
+   "id": "noah-ark",
+   "title": "The finished ark",
+   "size": "1536x1024",
+   "references": [
+    "art/reference/v2/style-scene.webp"
+   ],
+   "prompt": "One single big sprite filling most of the image width: Noah’s ark, finished, standing on the ground on a few low wooden blocks, seen from the top-down three-quarter view of the reference scene, its long side facing the viewer and its bow to the right. A huge, plain, box-like wooden vessel of long horizontal planks of warm brown gopher wood sealed with dark pitch in the seams, a gently curved hull with a flat bottom, three decks shown by two faint lines of planks along the side, a low pitched roof of planks running along the top with a narrow row of small window openings just under the roof, and one big closed square door in the middle of the side near the ground with a wooden ramp leading up to it. No sails, no masts, no figures, no animals, no water, no ground, no grass."
+  },
+  {
+   "id": "noah-city",
+   "title": "City houses, well, wall, tent, stall",
+   "size": "1536x1024",
+   "references": [
+    "art/reference/v2/style-scene.webp"
+   ],
+   "prompt": "A sheet of sprites for a town of the age before the Flood, in two rows with clear space between every item, all seen from the top-down three-quarter view of the reference scene. Top row: 1) a square house of light grey dressed stone blocks with a pitched roof of red clay tiles and a dark wooden door, the biggest item; 2) a smaller square house of grey stone with a red tiled roof and one small window; 3) a round stone well with a wooden frame, a rope and a bucket; 4) a short straight piece of a town wall of big grey stone blocks, much wider than tall. Bottom row: 5) a tent of dark brown goat-hair cloth on wooden poles, its front flap open showing a dark inside; 6) a market stall: a wooden table under a red cloth awning with clay jars on it; 7) a stack of three clay storage jars; 8) a heap of grey rubble stones."
+  },
+  {
+   "id": "noah-work",
+   "title": "Axe, logs, stump, vine, food",
+   "size": "1536x1024",
+   "references": [
+    "art/reference/v2/style-scene.webp"
+   ],
+   "prompt": "A sheet of small sprites, in two rows with clear space between every item, all seen from the top-down three-quarter view of the reference scene. Top row: 1) a woodcutter’s axe with a long wooden handle and a grey iron head, lying flat, pointing right; 2) a neat pile of six cut logs of brown wood stacked in a pyramid; 3) a tree stump freshly cut flat, pale wood on top with rings, short roots; 4) one single cut log lying on its side, much wider than tall; 5) a stack of sawn wooden planks. Bottom row: 6) a grapevine growing up a wooden stake, green leaves and bunches of dark purple grapes; 7) the same vine with leaves but no grapes; 8) a sack of grain tied at the top; 9) a small bundle of hay; 10) a small olive branch with a few slender silvery green leaves."
+  }
+ ]
+}
