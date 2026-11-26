@@ -54,7 +54,8 @@ export const POINTS: Record<string, Pt> = {
   // the lumber by the ark, where the wood is brought
   lumber: [1900, 1180],
   arkWork: [1980, 1150],
-  godArk: [2000, 980],
+  // before the ark, not behind it (the maintainer: God was hidden by the ark)
+  godArk: [1690, 1150],
   // where the spirit of God begins (above the world, over the forest)
   spiritStart: [1500, 2300],
   // the city's well

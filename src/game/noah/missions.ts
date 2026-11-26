@@ -407,7 +407,7 @@ const MISSIONS: NoahMission[] = [
     reference: 'Genesis 7:1–16',
     async run(w) {
       w.cutscene(true);
-      await w.appear(w.god, POINTS.godArk, 'down', { beam: true });
+      await w.appear(w.god, POINTS.godArk, 'right', { beam: true });
       w.noah.face(w.god);
       await w.say('come-in');
       await w.vanish(w.god);
