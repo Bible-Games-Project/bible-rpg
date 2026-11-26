@@ -81,6 +81,11 @@ const PORTRAITS: Record<string, string> = {
   'wicked-c': 'noah-wicked-c',
   'wicked-woman': 'noah-wicked-woman',
   giant: 'noah-giant',
+  thief: 'noah-thief',
+  baker: 'noah-baker',
+  debtor: 'noah-debtor',
+  farmer: 'noah-farmer',
+  mocker: 'noah-mocker',
 };
 
 export type FamilyId = 'noah-wife' | 'shem' | 'ham' | 'japheth' | 'shem-wife' | 'ham-wife' | 'japheth-wife';
@@ -230,13 +235,13 @@ export class NoahScene extends Phaser.Scene {
     this.god = new Actor(this, { id: 'god', x: POINTS.godHome[0], y: POINTS.godHome[1], charId: 'god', outfit: 'robe', body: { w: 26, h: 10 } });
     this.god.setVisible(false);
     // the people of the city: two in each of the sins the spirit sees
-    const cast: Record<string, [string, string]> = { robbery: ['wicked-b', 'wicked'], violence: ['giant', 'wicked-c'], harass: ['wicked', 'wicked-woman'], lies: ['wicked-c', 'wicked-b'] };
+    const cast: Record<string, [string, string]> = { robbery: ['thief', 'baker'], violence: ['giant', 'debtor'], harass: ['wicked', 'wicked-woman'], lies: ['wicked-c', 'farmer'] };
     for (const s of SINS) {
       const [a, b] = cast[s.id];
       this.sinners[s.id] = [person(`${s.id}-a`, a, [s.at[0] - 40, s.at[1]], 'right'), person(`${s.id}-b`, b, [s.at[0] + 40, s.at[1]], 'left')];
     }
     // those who mock Noah building on dry land (inspired)
-    this.mockers = [person('mock-a', 'wicked-b', [1830, 1330], 'up'), person('mock-b', 'wicked-c', [1890, 1350], 'up')];
+    this.mockers = [person('mock-a', 'wicked-b', [1830, 1330], 'up'), person('mock-b', 'mocker', [1890, 1350], 'up')];
     this.animals();
     this.raven = new Actor(this, { id: 'raven', x: ARK_WINDOW[0], y: ARK_WINDOW[1], sheet: 'noah-raven', body: { w: 16, h: 8 }, facing: 'left' });
     this.dove = new Actor(this, { id: 'dove', x: ARK_WINDOW[0], y: ARK_WINDOW[1], sheet: 'animal-dove', body: { w: 16, h: 8 }, facing: 'left' });
@@ -488,7 +493,7 @@ export class NoahScene extends Phaser.Scene {
     for (const id of FAMILY_IDS) talk(id, this.family[id]);
     talk('noah', this.noah);
     talk('wicked-b', this.mockers[0]);
-    talk('wicked-c', this.mockers[1]);
+    talk('mocker', this.mockers[1]);
     for (const [a, b] of Object.values(this.sinners)) {
       talk(a.charId!, a);
       talk(b.charId!, b);

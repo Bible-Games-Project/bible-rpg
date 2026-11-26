@@ -131,11 +131,11 @@
       { "s": "narrator", "t": "Many generations after Adam, people filled the earth, and their hearts turned to evil.", "ref": "Genesis 6:1, 5" }
     ],
     "sin-robbery": [
-      { "s": "wicked-b", "t": "Your bread is mine now." },
-      { "s": "wicked", "t": "Thief! Give it back!" }
+      { "s": "thief", "t": "Your bread is mine now." },
+      { "s": "baker", "t": "Thief! Give it back!" }
     ],
     "sin-violence": [
-      { "s": "wicked-c", "t": "Please! I'll pay you tomorrow!" },
+      { "s": "debtor", "t": "Please! I'll pay you tomorrow!" },
       { "s": "giant", "t": "No one says no to me." }
     ],
     "sin-harass": [
@@ -144,7 +144,7 @@
     ],
     "sin-lies": [
       { "s": "wicked-c", "t": "Two sacks of wheat for your goat. A fair trade, I swear it." },
-      { "s": "wicked-b", "t": "…These sacks are full of sand!" }
+      { "s": "farmer", "t": "…These sacks are full of sand!" }
     ],
     "repent": [
       { "s": "god", "t": "I will wipe man whom I have created from the face of the earth.", "ref": "Genesis 6:7" }
@@ -157,7 +157,7 @@
     ],
     "mock": [
       { "s": "wicked-b", "t": "A boat? On a hill? Ha!" },
-      { "s": "wicked-c", "t": "Where's the sea, old man?" },
+      { "s": "mocker", "t": "Where's the sea, old man?" },
       { "s": "noah", "t": "Turn from your ways. The LORD sees everything." }
     ],
     "come-in": [
@@ -355,6 +355,26 @@
     "giant": {
       "before": ["I am a mighty man of renown. Bow down, little one.", "Who will stop me? Nobody."],
       "days": ["Rain can't hurt me."]
+    },
+    "thief": {
+      "before": ["What are you looking at? I found it.", "A loaf here, a purse there. Who's counting?"],
+      "days": ["Everyone's busy laughing at Noah. Good for business."]
+    },
+    "baker": {
+      "before": ["Up before the sun to bake, and they take it like it's theirs.", "No one in this city lifts a finger for another."],
+      "days": ["Bread for a boat? Ha. Who would buy bread on a boat?"]
+    },
+    "debtor": {
+      "before": ["I owe the giant. Everyone owes the giant.", "Please, I have nothing left."],
+      "days": ["They say the old man's God is kind. Is that true?"]
+    },
+    "farmer": {
+      "before": ["Sand! He sold me sand for my good goat.", "You can't trust a soul in this city."],
+      "days": ["Fine weather for the fields. Rain? What nonsense."]
+    },
+    "mocker": {
+      "before": ["Where's the sea, old man? Ha!", "A boat on dry land. Now I've seen everything."],
+      "days": ["Still at it, Noah? You'll be building till you die!"]
     }
   },
   "animals": {

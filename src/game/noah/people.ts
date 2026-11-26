@@ -42,6 +42,11 @@ export const PEOPLE: Record<string, Person> = {
   'wicked-c': { base: 'man-beard', hair: '#120d0b', cloth: '#7a2424', skin: [0.95, 0.9, 0.88] },
   'wicked-woman': { base: 'woman', hair: '#1a1210', cloth: '#5a3050', skin: [0.92, 0.88, 0.86] },
   giant: { base: 'man-beard', hair: '#120d0b', cloth: '#5a2a2a', skin: [0.82, 0.76, 0.72], scale: 1.45 },
+  thief: { base: 'man', hair: '#15100d', cloth: '#4a5230', skin: [0.92, 0.87, 0.84] },
+  baker: { base: 'man-beard', hair: '#7a746c', cloth: '#d8cfb8', skin: [0.95, 0.9, 0.87] },
+  debtor: { base: 'man', hair: '#8e8a84', cloth: '#7a8ea0', skin: [0.9, 0.85, 0.82] },
+  farmer: { base: 'man-beard', hair: '#4a2e1a', cloth: '#5e7a44', skin: [0.85, 0.8, 0.76] },
+  mocker: { base: 'man', hair: '#7a5230', cloth: '#c09a2a', skin: [0.98, 0.94, 0.91] },
 };
 
 const BASES: Base[] = ['man-robe', 'man-beard', 'man', 'woman'];

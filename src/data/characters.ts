@@ -34,6 +34,11 @@ export const CHARACTERS: Record<string, CharacterDef> = {
   'wicked-c': { nameKey: 'characters.wicked-c', portrait: 'noah-wicked-c', voice: 165, speed: 170 },
   'wicked-woman': { nameKey: 'characters.wicked-woman', portrait: 'noah-wicked-woman', voice: 250, speed: 170 },
   giant: { nameKey: 'characters.giant', portrait: 'noah-giant', voice: 90, speed: 130 },
+  thief: { nameKey: 'characters.thief', portrait: 'noah-thief', voice: 175, speed: 180 },
+  baker: { nameKey: 'characters.baker', portrait: 'noah-baker', voice: 125, speed: 155 },
+  debtor: { nameKey: 'characters.debtor', portrait: 'noah-debtor', voice: 145, speed: 150 },
+  farmer: { nameKey: 'characters.farmer', portrait: 'noah-farmer', voice: 120, speed: 155 },
+  mocker: { nameKey: 'characters.mocker', portrait: 'noah-mocker', voice: 185, speed: 175 },
   narrator: { nameKey: 'characters.narrator', portrait: null, voice: 180, speed: 0 },
 };
 

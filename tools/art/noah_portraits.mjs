@@ -24,8 +24,11 @@ const DEBUG = process.argv.includes('--debug');
 
 /** Each sheet's people in reading order (rows top to bottom, left to right). */
 const SHEETS = {
-  'noah-portraits-men': ['noah', 'shem', 'ham', 'japheth', 'wicked', 'wicked-b', 'wicked-c', 'giant'],
-  'noah-portraits-women': ['noah-wife', 'shem-wife', 'ham-wife', 'japheth-wife', 'wicked-woman'],
+  // (null: drawn again in a later sheet with the mouth closed, so it can open as they talk)
+  'noah-portraits-men': ['noah', 'shem', null, 'japheth', 'wicked', null, 'wicked-c', 'giant'],
+  'noah-portraits-women': ['noah-wife', 'shem-wife', null, 'japheth-wife', 'wicked-woman'],
+  // the people of the city each their own face (the maintainer: faces were repeated)
+  'noah-portraits-more': ['ham', 'wicked-b', 'thief', 'baker', 'debtor', 'farmer', 'mocker', 'ham-wife'],
 };
 
 /**
@@ -36,15 +39,20 @@ const SHEETS = {
 const FACES = {
   noah: { eyes: [[37.7, 34.9], [57, 34.9]], mouth: [47, 52, 8] },
   shem: { eyes: [[39.2, 34.2], [57.7, 34.2]], mouth: [47.5, 52, 8] },
-  ham: { eyes: [[37.7, 35.6], [57, 35.6]], mouth: [47.5, 55, 10] },
+  ham: { eyes: [[38.5, 33.5], [58.6, 33.5]], mouth: [48, 50.5, 10] },
   japheth: { eyes: [[36.3, 37.7], [56.3, 37.7]], mouth: [46.3, 54, 8] },
   wicked: { eyes: [[45.6, 34.2], [62.6, 34.2]], mouth: [55.5, 51, 8] },
-  'wicked-b': { eyes: [[38.5, 28.5], [57, 28.5]], mouth: [47.5, 53, 12] },
+  'wicked-b': { eyes: [[35.3, 30.1], [55.1, 30.1]], mouth: [45.5, 48.5, 10] },
   'wicked-c': { eyes: [[36.3, 37], [52.7, 37.3]], mouth: [45.6, 53, 8] },
   giant: { eyes: [[38.5, 28.5], [55.5, 28.5]], mouth: [47.5, 48, 8] },
+  thief: { eyes: [[37, 39.8], [56.4, 39.8]], mouth: [46.3, 57.5, 8] },
+  baker: { eyes: [[37, 31], [57, 31]], mouth: [47, 50.5, 9] },
+  debtor: { eyes: [[38.5, 33.8], [56.4, 33.8]], mouth: [47, 53.5, 9] },
+  farmer: { eyes: [[38.5, 32.9], [56.4, 32.9]], mouth: [47, 52.5, 9] },
+  mocker: { eyes: [[37.6, 35.3], [55.5, 35.3]], mouth: [46.3, 53, 9] },
   'noah-wife': { eyes: [[37.7, 36.3], [57.7, 36.3]], mouth: [47.5, 53, 8] },
   'shem-wife': { eyes: [[37.7, 43.4], [57, 43.4]], mouth: [47, 60, 7] },
-  'ham-wife': { eyes: [[34.9, 40.6], [57, 40.6]], mouth: [46.3, 57, 9] },
+  'ham-wife': { eyes: [[35.7, 38.5], [55.5, 38.5]], mouth: [45.3, 54, 9] },
   'japheth-wife': { eyes: [[37.7, 37], [58.4, 37]], mouth: [47.5, 53, 7] },
   'wicked-woman': { eyes: [[36.3, 41.9], [56.3, 41.9]], mouth: [46.9, 57.5, 8] },
 };
@@ -143,19 +151,19 @@ function blink(p, boxes) {
   return [frames, x0, y0];
 }
 
-/** Talk patches: the jaw below the mouth line dropped 1 and 2 pixels, the gap the mouth's dark inside. */
+/** Talk patches: the jaw below the mouth line dropped 1 and 3 pixels, the gap the mouth's dark inside. */
 function talk(p, m) {
   const x0 = m.x0 - 1, x1 = m.x1 + 1, y0 = m.y, h = 6;
   const w = x1 - x0 + 1;
   const inside = [70, 28, 26, 255];
-  return [1, 2].map((drop) => {
+  return [1, 3].map((drop) => {
     const o = new PNG({ width: w, height: h });
     for (let y = 0; y < h; y++)
       for (let x = 0; x < w; x++) {
         const sx = x + x0;
         const end = sx < m.x0 || sx > m.x1;
         // the corners open less
-        const dd = end ? 0 : sx === m.x0 || sx === m.x1 ? Math.min(1, drop) : drop;
+        const dd = end ? 0 : sx === m.x0 || sx === m.x1 ? Math.min(1, drop) : sx === m.x0 + 1 || sx === m.x1 - 1 ? Math.max(1, drop - 1) : drop;
         let c;
         if (y === 0) c = px(p.data, sx, y0);
         else if (y <= dd) c = sx === m.x0 || sx === m.x1 ? shade(inside, 1.2) : inside;
@@ -179,6 +187,7 @@ for (const [job, names] of Object.entries(SHEETS)) {
     process.exit(1);
   }
   names.forEach((id, n) => {
+    if (!id) return;
     const p = frame(img, found[n]);
     const save = (png, name) => {
       const file = `${OUT}/${name}.png`;
