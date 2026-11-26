@@ -370,9 +370,11 @@ $1 play at `WALK_FPS` 15 at the player's
   (a pause after `sfx('hiss')`).
 - Dialogues (the maintainer, 2026-11-10): the lines go on by themselves
   and cannot be skipped (no E, no click; `DialogueBox.tell`). The player
-  walks in every dialogue and narration, cutscenes included, at the
-  usual walk but never running (2026-11-11: half pace was dropped;
-  `mayWalk`/`talking` in both scenes);
+  walks in every dialogue and narration, cutscenes included, and may
+  always run in them too (2026-11-26, "la norma"; `mayWalk`/`talking`);
+  walking off, an arrow points to the one speaking, or for a cutscene's
+  narration to whom it is about (`Conversation.spot`, Noah); a small speech
+  bubble shows over whoever speaks in every conversation (`talk.ts`);
   between a cutscene's lines they wait. Cinematics hold them all through:
   `w.cutscene(true, true)` (Eden: Adam asleep in m04, the eating of the
   fruit in m06, the end in m10; the creation has its own screen; Cain and
@@ -556,14 +558,18 @@ $1 play at `WALK_FPS` 15 at the player's
   Python or ffmpeg; `npm i @ffmpeg-installer/linux-x64` in /tmp and pass
   `FFMPEG=` its binary) voices each line, Eden and Cain (`cain.<id>.<i>`,
   `cain.scripture.<id>`, `cain.npc.<who>.<phase>.<i>`; Cain is David Boles and
-  Abel is Adam, the maintainer's choice), with
+  Abel is Adam, the maintainer's choice; Noah's chapter `noah.<id>.<i>`,
+  `noah.scripture.<id>`, `noah.npc.<who>.<phase>.<i>`, a Voice Library voice
+  per person in `VOICES`, made with the second account's key
+  `ELEVENLABS_API_KEY_2`), with
   ElevenLabs text to speech into `public/assets/voice/<lang>/<key>.mp3`
   (`<dialogue id>.<index>`, `scripture.<id>`, `creation`) and lists its text
   in `manifest.json`; it only sends lines whose text or voice changed (each
   costs credits, `--dry-run` shows the cost). The game plays a file only
   while its manifest text is the line's text (`src/core/voices.ts`), so an
   edited line falls silent until the script is run again. Voiced lines skip
-  the reveal's blips, the portrait talks until the voice ends, the next press
+  the reveal's blips, the portrait talks until the voice ends (its mouth
+  follows the file's loudness, `voiceEnvelope`, not a timer), the next press
   cuts it off, the music dips under it, and it has its own volume
   (`voiceVolume`). Voices (Voice Library, chosen by the maintainer after
   several rounds on a listening page): W. Storytime Oxley (God), Josh
@@ -670,6 +676,12 @@ $1 play at `WALK_FPS` 15 at the player's
   hair, beard, scarf, band, gold, apron; rows down/up/right), colour-marked
   (grey cloth, blue-grey hair, green-grey extras) and coloured by
   `PEOPLE` in `noah/people.ts`; a new person needs an entry in both.
+  The family follow Noah two by two and to the side, each at its own pace
+  (`updateFollowers`, not a single file); one is called with one line, and
+  follows from its first word; one pair of animals brought, the others
+  come by themselves. Thunder with a lightning flash now and then from
+  the felling of the trees through the rain (`setStorm`); a tree's fall
+  is its own recording (`treeFall`), not the thunder.
 - Phaser reuses a Scene object between games: field initialisers run once.
   Reset every list and state in `create` (stale destroyed actors gave a
   black screen on "Erase and start again").
