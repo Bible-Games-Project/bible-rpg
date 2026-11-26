@@ -579,6 +579,1486 @@
       "speed": 1
     }
   },
+  "noah.animals-in.0": {
+    "text": "Seven pairs of the clean beasts went in, and one pair of the unclean.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.awoke.0": {
+    "text": "I know what you did, Ham. Cursed be Canaan, your son: a servant of servants shall he be to his brothers.",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.awoke.1": {
+    "text": "Blessed be the LORD God of Shem. God shall enlarge Japheth.",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.blessed.0": {
+    "text": "Be fruitful, and multiply, and fill the earth.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.call-back.0": {
+    "text": "Come back, little dove! There is no land yet.",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.call-ham-wife.0": {
+    "text": "Is Ham coming too?",
+    "voice": "Jessa",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.call-ham.0": {
+    "text": "Already? The sky is clear… Fine, fine.",
+    "voice": "Davis",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.call-japheth-wife.0": {
+    "text": "So many animals… I'll help!",
+    "voice": "Elise",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.call-japheth.0": {
+    "text": "Right behind you, father!",
+    "voice": "Ryan Kurk",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.call-noah-wife.0": {
+    "text": "Where you go, I go.",
+    "voice": "Carol",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.call-shem-wife.0": {
+    "text": "I'll bring the blankets.",
+    "voice": "Lily Wolff",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.call-shem.0": {
+    "text": "I'm coming, father. The LORD has spoken.",
+    "voice": "Lowy",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.come-in.0": {
+    "text": "Come into the ark, you and all your house: I have seen you righteous before me.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.come-in.1": {
+    "text": "Take seven pairs of every clean beast and fowl, and one pair of the unclean.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.come-in.2": {
+    "text": "And take food for you and for them. In seven days I will send rain.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.covenant.0": {
+    "text": "I make my covenant with you: never again will a flood destroy the earth.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.drowning.0": {
+    "text": "The water! It's everywhere!",
+    "voice": "Adam Dark and Tough",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.drowning.1": {
+    "text": "Noah! Open the door!",
+    "voice": "Cole",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.gather-food.0": {
+    "text": "Now the food, for us and for every beast. Help me carry it.",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.gather-food.1": {
+    "text": "We're with you, father.",
+    "voice": "Lowy",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.generations.0": {
+    "text": "Many generations after Adam, people filled the earth, and their hearts turned to evil.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.go-forth.0": {
+    "text": "Go out of the ark, you, your wife, your sons and their wives.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.go-forth.1": {
+    "text": "Bring out every living thing with you, that they may fill the earth.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.ham-saw.0": {
+    "text": "Father is drunk… and uncovered! Wait until my brothers hear this.",
+    "voice": "Davis",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.ham-tells.0": {
+    "text": "Come and see our father! He lies drunk and naked in his tent!",
+    "voice": "Davis",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.ham-tells.1": {
+    "text": "We will not look at our father's shame.",
+    "voice": "Lowy",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.ham-tells.2": {
+    "text": "Take the garment. We'll walk in backward.",
+    "voice": "Ryan Kurk",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.lion.0": {
+    "text": "One pair of the unclean, the LORD said. Come, lion. Gently.",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.make-ark.0": {
+    "text": "Noah. The end of all flesh has come before me: the earth is filled with violence.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.make-ark.1": {
+    "text": "Make an ark of gopher wood, with rooms, and pitch it inside and out.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.make-ark.2": {
+    "text": "I will bring a flood of waters on the earth. But with you I will establish my covenant.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.make-ark.3": {
+    "text": "I will do it, LORD.",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.mock.0": {
+    "text": "A boat? On a hill? Ha!",
+    "voice": "Cole",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.mock.1": {
+    "text": "Where's the sea, old man?",
+    "voice": "Gabriel Ripley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.mock.2": {
+    "text": "Turn from your ways. The LORD sees everything.",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.baker.before.0": {
+    "text": "Up before the sun to bake, and they take it like it's theirs.",
+    "voice": "Mark",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.baker.before.1": {
+    "text": "No one in this city lifts a finger for another.",
+    "voice": "Mark",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.baker.days.0": {
+    "text": "Bread for a boat? Ha. Who would buy bread on a boat?",
+    "voice": "Mark",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.debtor.before.0": {
+    "text": "I owe the giant. Everyone owes the giant.",
+    "voice": "Grampa Werthers",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.debtor.before.1": {
+    "text": "Please, I have nothing left.",
+    "voice": "Grampa Werthers",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.debtor.days.0": {
+    "text": "They say the old man's God is kind. Is that true?",
+    "voice": "Grampa Werthers",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.farmer.before.0": {
+    "text": "Sand! He sold me sand for my good goat.",
+    "voice": "Wyatt",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.farmer.before.1": {
+    "text": "You can't trust a soul in this city.",
+    "voice": "Wyatt",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.farmer.days.0": {
+    "text": "Fine weather for the fields. Rain? What nonsense.",
+    "voice": "Wyatt",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.giant.before.0": {
+    "text": "I am a mighty man of renown. Bow down, little one.",
+    "voice": "Victor",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.giant.before.1": {
+    "text": "Who will stop me? Nobody.",
+    "voice": "Victor",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.giant.days.0": {
+    "text": "Rain can't hurt me.",
+    "voice": "Victor",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.ham-wife.after.0": {
+    "text": "We were eight in the ark. Only eight.",
+    "voice": "Jessa",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.ham-wife.before.0": {
+    "text": "The city frightens me. Men there do whatever they want.",
+    "voice": "Jessa",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.ham-wife.days.0": {
+    "text": "Where is Ham? Have you seen him?",
+    "voice": "Jessa",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.ham.after.0": {
+    "text": "One hundred and fifty days of water. I never want to see a fish again.",
+    "voice": "Davis",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.ham.before.0": {
+    "text": "A boat on dry land. The neighbours think we're mad.",
+    "voice": "Davis",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.ham.before.1": {
+    "text": "I'll help… after I rest a little.",
+    "voice": "Davis",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.ham.days.0": {
+    "text": "Is it really going to rain? Not one cloud.",
+    "voice": "Davis",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.japheth-wife.after.0": {
+    "text": "Look, the olive trees are growing again!",
+    "voice": "Elise",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.japheth-wife.before.0": {
+    "text": "The neighbours stole our goat last week. Nobody did anything.",
+    "voice": "Elise",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.japheth-wife.days.0": {
+    "text": "Hay for the animals is out in the meadows.",
+    "voice": "Elise",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.japheth.after.0": {
+    "text": "The whole world is new. Where shall we go first?",
+    "voice": "Ryan Kurk",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.japheth.before.0": {
+    "text": "I want to see the animals come! Even the lion!",
+    "voice": "Ryan Kurk",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.japheth.before.1": {
+    "text": "Two by two, father says. How will they all fit?",
+    "voice": "Ryan Kurk",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.japheth.days.0": {
+    "text": "The deer are in the meadows to the south-east.",
+    "voice": "Ryan Kurk",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.mocker.before.0": {
+    "text": "Where's the sea, old man? Ha!",
+    "voice": "Gabriel Ripley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.mocker.before.1": {
+    "text": "A boat on dry land. Now I've seen everything.",
+    "voice": "Gabriel Ripley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.mocker.days.0": {
+    "text": "Still at it, Noah? You'll be building till you die!",
+    "voice": "Gabriel Ripley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.noah-wife.after.0": {
+    "text": "Dry ground! I thought I'd never walk on grass again.",
+    "voice": "Carol",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.noah-wife.after.1": {
+    "text": "So quiet after all that rain.",
+    "voice": "Carol",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.noah-wife.before.0": {
+    "text": "Noah walks with God. People laugh at him, but I don't.",
+    "voice": "Carol",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.noah-wife.before.1": {
+    "text": "An ark? Here? If the LORD says so, then build it, husband.",
+    "voice": "Carol",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.noah-wife.before.2": {
+    "text": "Be careful in the city. It's not safe anymore.",
+    "voice": "Carol",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.noah-wife.days.0": {
+    "text": "Seven days… Hurry, Noah, call the boys!",
+    "voice": "Carol",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.noah-wife.days.1": {
+    "text": "Don't forget the food. The animals will be hungry.",
+    "voice": "Carol",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.noah.after.0": {
+    "text": "The LORD kept us through the water. Never forget it, son.",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.noah.after.1": {
+    "text": "Every time it rains, look for the bow in the cloud.",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.shem-wife.after.0": {
+    "text": "The sky is so clean. Like the first morning.",
+    "voice": "Lily Wolff",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.shem-wife.before.0": {
+    "text": "My father-in-law prays every morning. The others only shout.",
+    "voice": "Lily Wolff",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.shem-wife.days.0": {
+    "text": "I'll carry what I can. We need grain for many days.",
+    "voice": "Lily Wolff",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.shem.after.0": {
+    "text": "Blessed be the LORD, who kept us alive.",
+    "voice": "Lowy",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.shem.before.0": {
+    "text": "Father says the LORD spoke to him. I believe him.",
+    "voice": "Lowy",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.shem.before.1": {
+    "text": "Gopher wood is strong. Fell it near the forest paths.",
+    "voice": "Lowy",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.shem.days.0": {
+    "text": "Seven pairs of the clean animals, father. I'll count them with you.",
+    "voice": "Lowy",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.thief.before.0": {
+    "text": "What are you looking at? I found it.",
+    "voice": "Joseph",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.thief.before.1": {
+    "text": "A loaf here, a purse there. Who's counting?",
+    "voice": "Joseph",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.thief.days.0": {
+    "text": "Everyone's busy laughing at Noah. Good for business.",
+    "voice": "Joseph",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.wicked-b.before.0": {
+    "text": "Rain? What's rain, old man?",
+    "voice": "Cole",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.wicked-b.before.1": {
+    "text": "Build your boat. We'll laugh from the hill.",
+    "voice": "Cole",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.wicked-b.days.0": {
+    "text": "Still at it, Noah? Ha!",
+    "voice": "Cole",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.wicked-c.before.0": {
+    "text": "Everyone lies. I'm just better at it.",
+    "voice": "Hale",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.wicked-c.before.1": {
+    "text": "Preaching again? Nobody's listening, Noah.",
+    "voice": "Hale",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.wicked-c.days.0": {
+    "text": "Go on, get in your box. We'll be at the feast.",
+    "voice": "Hale",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.wicked-woman.before.0": {
+    "text": "Nobody here helps anybody.",
+    "voice": "Jessica Anne Bogart Villain",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.wicked-woman.before.1": {
+    "text": "Don't trust anyone in this city.",
+    "voice": "Jessica Anne Bogart Villain",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.wicked-woman.days.0": {
+    "text": "They say old Noah built a giant boat. Strange man.",
+    "voice": "Jessica Anne Bogart Villain",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.wicked.before.0": {
+    "text": "Mind your business, stranger.",
+    "voice": "Adam Dark and Tough",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.wicked.before.1": {
+    "text": "In this city the strong take what they want.",
+    "voice": "Adam Dark and Tough",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.npc.wicked.days.0": {
+    "text": "Eat, drink, marry. Tomorrow is like today.",
+    "voice": "Adam Dark and Tough",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.raven-lost.0": {
+    "text": "The raven went to and fro, and did not come back to the ark.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.remember.0": {
+    "text": "When the bow is in the cloud, I will look on it and remember my covenant.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.repent.0": {
+    "text": "I will wipe man whom I have created from the face of the earth.",
+    "voice": "W. Storytime Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.again": {
+    "text": "And he stayed yet other seven days; and again he sent forth the dove out of the ark.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.altar": {
+    "text": "And Noah builded an altar unto the LORD; and took of every clean beast, and of every clean fowl, and offered burnt offerings on the altar.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.bow": {
+    "text": "I do set my bow in the cloud, and it shall be for a token of a covenant between me and the earth.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.built": {
+    "text": "So Noah and his sons built the ark of gopher wood, with rooms in it, and pitched it within and without with pitch.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.corrupt": {
+    "text": "The earth also was corrupt before God, and the earth was filled with violence.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.covered": {
+    "text": "And Shem and Japheth took a garment, and laid it upon both their shoulders, and went backward, and covered their father; and their faces were backward.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.did": {
+    "text": "Thus did Noah; according to all that God commanded him, so did he.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.died": {
+    "text": "All in whose nostrils was the breath of life, of all that was in the dry land, died.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.dove": {
+    "text": "Also he sent forth a dove from him, to see if the waters were abated from off the face of the ground.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.drunk": {
+    "text": "And he drank of the wine, and was drunken; and he was uncovered within his tent.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.dry": {
+    "text": "And Noah removed the covering of the ark, and looked, and, behold, the face of the ground was dry.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.enter": {
+    "text": "And Noah went in, and his sons, and his wife, and his sons' wives with him, into the ark, because of the waters of the flood.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.fountains": {
+    "text": "The same day were all the fountains of the great deep broken up, and the windows of heaven were opened. And the rain was upon the earth forty days and forty nights.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.giants": {
+    "text": "There were giants in the earth in those days.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.grace": {
+    "text": "But Noah found grace in the eyes of the LORD.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.grieved": {
+    "text": "And it repented the LORD that he had made man on the earth, and it grieved him at his heart.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.husbandman": {
+    "text": "And Noah began to be an husbandman, and he planted a vineyard.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.just": {
+    "text": "Noah was a just man and perfect in his generations, and Noah walked with God.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.lifted": {
+    "text": "And the waters increased, and bare up the ark, and it was lift up above the earth.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.no-rest": {
+    "text": "But the dove found no rest for the sole of her foot, and she returned unto him into the ark.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.not-again": {
+    "text": "And he stayed yet other seven days; and sent forth the dove; which returned not again unto him any more.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.olive": {
+    "text": "And the dove came in to him in the evening; and, lo, in her mouth was an olive leaf pluckt off: so Noah knew that the waters were abated from off the earth.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.prevailed": {
+    "text": "And the waters prevailed upon the earth an hundred and fifty days.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.remained": {
+    "text": "And Noah only remained alive, and they that were with him in the ark.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.remembered": {
+    "text": "And God remembered Noah, and every living thing… and God made a wind to pass over the earth, and the waters asswaged.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.rested": {
+    "text": "And the ark rested in the seventh month, on the seventeenth day of the month, upon the mountains of Ararat.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.savour": {
+    "text": "And the LORD smelled a sweet savour.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.scattered": {
+    "text": "These are the three sons of Noah: and of them was the whole earth overspread.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.seedtime": {
+    "text": "While the earth remaineth, seedtime and harvest, and cold and heat, and summer and winter, and day and night shall not cease.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.shut": {
+    "text": "And the LORD shut him in.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.sons": {
+    "text": "And Noah was five hundred years old: and Noah begat Shem, Ham, and Japheth.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.wicked": {
+    "text": "And GOD saw that the wickedness of man was great in the earth, and that every imagination of the thoughts of his heart was only evil continually.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.window": {
+    "text": "Noah opened the window of the ark which he had made: and he sent forth a raven.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.scripture.years": {
+    "text": "And Noah lived after the flood three hundred and fifty years. And all the days of Noah were nine hundred and fifty years: and he died.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.sin-harass.0": {
+    "text": "Leave me alone!",
+    "voice": "Jessica Anne Bogart Villain",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.sin-harass.1": {
+    "text": "Where are you going? Stay with me.",
+    "voice": "Adam Dark and Tough",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.sin-lies.0": {
+    "text": "Two sacks of wheat for your goat. A fair trade, I swear it.",
+    "voice": "Hale",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.sin-lies.1": {
+    "text": "…These sacks are full of sand!",
+    "voice": "Wyatt",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.sin-robbery.0": {
+    "text": "Your bread is mine now.",
+    "voice": "Joseph",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.sin-robbery.1": {
+    "text": "Thief! Give it back!",
+    "voice": "Mark",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.sin-violence.0": {
+    "text": "Please! I'll pay you tomorrow!",
+    "voice": "Grampa Werthers",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.sin-violence.1": {
+    "text": "No one says no to me.",
+    "voice": "Victor",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.tell-ham.0": {
+    "text": "Ham, no flood will ever destroy the earth again.",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.tell-ham.1": {
+    "text": "Good. I've had enough water for a lifetime.",
+    "voice": "Davis",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.tell-japheth.0": {
+    "text": "Japheth, the bow is God's sign. Be fruitful and fill the earth.",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.tell-japheth.1": {
+    "text": "So many colours! I'll tell my children about it.",
+    "voice": "Ryan Kurk",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.tell-shem.0": {
+    "text": "Shem, see the bow? It is the LORD's promise.",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.tell-shem.1": {
+    "text": "Blessed be the LORD. I will remember it.",
+    "voice": "Lowy",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.to-ark.0": {
+    "text": "That's all of it. Come, into the ark!",
+    "voice": "Michael Moody",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
+  "noah.too-late.0": {
+    "text": "Seven days passed, and not all were in the ark. Try again.",
+    "voice": "Spuds Oxley",
+    "model": "eleven_v4",
+    "settings": {
+      "stability": 0.3,
+      "similarity_boost": 0.75,
+      "speed": 1
+    }
+  },
   "scripture.gen2_15": {
     "text": "And the LORD God took the man, and put him into the garden of Eden to dress it and to keep it.",
     "voice": "Spuds Oxley",
