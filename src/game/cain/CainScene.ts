@@ -501,7 +501,7 @@ export class CainScene extends Phaser.Scene {
     return this.talking() || (this.control && !this.busy);
   }
 
-  /** a dialogue or a narration is showing: walking slowly, never running */
+  /** a dialogue or a narration is showing (they may walk and run in it) */
   private talking(): boolean {
     const d = ui().dialogue;
     return d.open || d.narrating;

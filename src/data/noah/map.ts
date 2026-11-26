@@ -131,9 +131,10 @@ export const FOOD: { kind: 'sack' | 'hay'; at: Pt }[] = [
   { kind: 'sack', at: [1030, 1120] },
   { kind: 'sack', at: [1080, 1100] },
   { kind: 'sack', at: [1420, 1240] },
-  { kind: 'hay', at: [2050, 2950] },
-  { kind: 'hay', at: [2600, 3450] },
-  { kind: 'hay', at: [1950, 3550] },
+  // the hay in the field below the path to the ark (the maintainer: the meadows were too far)
+  { kind: 'hay', at: [1600, 1350] },
+  { kind: 'hay', at: [1740, 1310] },
+  { kind: 'hay', at: [1480, 1410] },
 ];
 
 /** Where the family are when the seven days begin (Genesis 7:1, 7). */
@@ -141,10 +142,10 @@ export const FAMILY: Record<string, Pt> = {
   'noah-wife': [1100, 1250],
   shem: [1960, 1240],
   'shem-wife': [980, 1200],
-  ham: [1360, 2420],
+  ham: [1320, 1720],
   'ham-wife': [1500, 1290],
-  japheth: [2380, 2900],
-  'japheth-wife': [2280, 2240],
+  japheth: [2120, 1560],
+  'japheth-wife': [1700, 1520],
 };
 
 /** The vineyard: where Noah plants (Genesis 9:20). */

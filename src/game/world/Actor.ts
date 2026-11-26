@@ -64,6 +64,8 @@ export interface ActorOptions {
   /** seen from the front or back, how high the hand is (world px above the
    * feet) for what it holds in the hand; 36 if not given */
   handHeight?: number;
+  /** how high something carried in both arms (`arms`) is held; 22 if not given */
+  armsHeight?: number;
   facing?: Facing;
 }
 
@@ -111,6 +113,7 @@ export class Actor {
   /** the pace at which a sheet's walk plays at its own rate (the sheep set it lower when they run: quicker legs) */
   stridePace?: number;
   private handHeight: number;
+  private armsHeight: number;
   /** what is held (hold()'s arguments), to give it back after a while */
   private heldArgs: [string, 'hand' | 'arms' | 'carry' | 'staff', [number, number]] | null = null;
   /** a blow in progress (attack()): how far the body steps in (px), how far the held thing turns (rad) and rises (px), how much it points the way they face */
@@ -130,6 +133,7 @@ export class Actor {
     this.shadowOffset = o.shadowOffset ?? [0, 0];
     this.stridePace = o.stridePace;
     this.handHeight = o.handHeight ?? 36;
+    this.armsHeight = o.armsHeight ?? 22;
     this.sheet = o.sheet;
     this.facing = o.facing ?? 'down';
     const bw = o.body?.w ?? 22;
@@ -642,7 +646,7 @@ export class Actor {
   private placeInHand(s: Phaser.GameObjects.Image, x: number, y: number, arms: boolean, other: boolean): void {
     let dx = (arms ? { left: -9, right: 9, down: 0, up: 0 } : { left: -7, right: 7, down: -12, up: 12 })[this.facing];
     if (other && (this.facing === 'down' || this.facing === 'up')) dx = -dx;
-    let dy = arms ? -22 : -this.handHeight;
+    let dy = arms ? -this.armsHeight : -this.handHeight;
     const fist = arms ? null : this.fist();
     if (fist) [dx, dy] = [fist[0], fist[1] + HELD_BELOW_FIST];
     else if (!arms) {

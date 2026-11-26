@@ -20,6 +20,8 @@ export interface Talker {
 export class Conversation {
   /** the one the player is talking with (the scene's `lines` sets it) */
   partner: Talker | null = null;
+  /** where a narration in a cutscene is happening (whom it is about), for the arrow */
+  spot: Talker | null = null;
   private moved = false;
 
   /** Every frame; `cast` gives the actor of a speaker's id. */
@@ -56,10 +58,11 @@ export class Conversation {
    */
   place(player: Actor, cast: (id: string) => Talker | null): Talker | null {
     const d = ui().dialogue;
-    if (!d.open) return null;
+    const spot = this.spot?.visible && this.spot !== player ? this.spot : null;
+    if (!d.open) return d.narrating ? spot : null;
     const speaker = d.speaker ? cast(d.speaker) : null;
     if (speaker && speaker !== player && speaker.visible) return speaker;
-    return this.partner?.visible && this.partner !== player ? this.partner : null;
+    return this.partner?.visible && this.partner !== player ? this.partner : spot;
   }
 
   /** The point over a talker's head to point an arrow at. */

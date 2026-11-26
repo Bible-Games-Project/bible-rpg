@@ -139,7 +139,7 @@ async function sin(w: NoahScene, id: string): Promise<void> {
     await a.attack('swing');
     audio.play('hit');
     b.emote('exclaim');
-    a.hold('noah-sack', 'arms');
+    a.hold('noah-sack', 'arms', [0.5, 0.6]);
     await w.say('sin-robbery');
     void w.leave(a, 200);
     b.emote('drop');
@@ -223,8 +223,8 @@ const MISSIONS: NoahMission[] = [
       w.god.stop();
       w.noah.face(w.god);
       w.fx('sparkle', [w.noah.x, w.noah.y - 30]);
+      // one line only when God finds Noah (the maintainer)
       await w.scripture('grace');
-      await w.scripture('just');
     },
   },
 
@@ -377,6 +377,7 @@ const MISSIONS: NoahMission[] = [
       }
       w.cutscene(true, true);
       w.music('solemn');
+      await w.say('animals-in');
       await w.walk(w.noah, [ARK_DOOR, [ARK_DOOR[0] + 70, ARK_DOOR[1] - 80]], 120);
       w.hide(w.noah);
       await w.scripture('enter');
@@ -883,7 +884,7 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
       phase === 'family' ? step('m03', 'family', { day: d, n: called, total: FAMILY_IDS.length })
       : phase === 'food' ? step('m03', 'food', { day: d, n: claimed.size, total: FOOD_NEEDED })
       : phase === 'ark' ? step('m03', 'ark', { day: d })
-      : step('m03', 'animals', { day: d, n: pairsIn(), total: PAIRS.length });
+      : step('m03', 'animals', { day: d });
     w.objective(text, () => {
       if (phase === 'family') return FAMILY_IDS.filter((id) => kin().some((f) => f.actor === w.family[id] && f.state === 'wait')).map((id) => w.family[id] as Actor);
       if (phase === 'food') return w.world.food.filter((img, i) => img.visible && !claimed.has(i)).map((img) => [img.x, img.y] as Pt);
@@ -921,11 +922,12 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
         prompt: () => N('prompts.call', { name: nameOf(id) }),
         enabled: () => phase === 'family' && w.followers.some((f) => f.actor === a && f.state === 'wait'),
         onUse: async () => {
+          // they follow from the first word (the maintainer)
           a.face(w.noah);
-          await w.say(`call-${id}`);
           w.lead(a);
-          a.emote('heart', 900);
           called++;
+          a.emote('heart', 900);
+          await w.say(`call-${id}`);
           if (called >= FAMILY_IDS.length) await next('food', 'gather-food');
           else aim();
         },
@@ -945,7 +947,7 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
     await a.stoop();
     if (over) return;
     img.setVisible(false);
-    a.hold(`noah-${FOOD[i].kind}`, 'arms', [0.5, 0.75]);
+    a.hold(`noah-${FOOD[i].kind}`, 'arms', [0.5, 0.6]);
     audio.play('pickup', { volume: 0.6 });
     f.state = 'follow';
     gathered();
@@ -976,7 +978,7 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
           await w.noah.stoop();
           img.setVisible(false);
           noahCarries = true;
-          w.noah.hold(`noah-${FOOD[i].kind}`, 'arms', [0.5, 0.75]);
+          w.noah.hold(`noah-${FOOD[i].kind}`, 'arms', [0.5, 0.6]);
           audio.play('pickup');
           // the others run for the food lying near
           w.world.food.forEach((o, k) => {
@@ -1002,6 +1004,8 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
         onUse: async () => {
           w.lead(a);
           audio.play('correct');
+          // one pair brought, the others come by themselves (the maintainer)
+          PAIRS.forEach((_, k) => w.lead(w.pairActors(k)[0]));
           if (!p.clean) await w.say('lion');
         },
       }),

@@ -33,6 +33,8 @@ const VIEW_HEIGHT = 1000;
 const VIEW_MIN_WIDTH = 640;
 const MIN_ZOOM = 0.5;
 const HAND_HEIGHT = 41;
+/** the food carried in both arms, against the chest (the maintainer saw it hang at the knees) */
+const ARMS_HEIGHT = 52;
 const attackKey = (): string => (document.documentElement.classList.contains('touch-ui') ? '⚔' : KEY_LABELS.attack);
 
 /** The spirit of God and the birds fly over everything. */
@@ -90,6 +92,13 @@ const PORTRAITS: Record<string, string> = {
 
 export type FamilyId = 'noah-wife' | 'shem' | 'ham' | 'japheth' | 'shem-wife' | 'ham-wife' | 'japheth-wife';
 export const FAMILY_IDS = Object.keys(FAMILY) as FamilyId[];
+
+/** A number from 0 to 1 of its own for each one (who walks how). */
+function seedOf(id: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
+  return ((h >>> 0) % 1000) / 1000;
+}
 
 /** One who follows Noah to the ark (the family, the animals two by two). */
 export interface Follower {
@@ -229,7 +238,7 @@ export class NoahScene extends Phaser.Scene {
     this.physics.world.setBounds(BOUNDS.left, BOUNDS.top, BOUNDS.right - BOUNDS.left, BOUNDS.bottom - BOUNDS.top);
     this.world = new NoahWorld(this);
     const body = { w: 22, h: 10 };
-    const person = (id: string, charId: string, at: Pt, facing: Facing = 'down') => new Actor(this, { id, x: at[0], y: at[1], charId, outfit: 'robe', body, facing, handHeight: HAND_HEIGHT, solid: id !== 'noah' });
+    const person = (id: string, charId: string, at: Pt, facing: Facing = 'down') => new Actor(this, { id, x: at[0], y: at[1], charId, outfit: 'robe', body, facing, handHeight: HAND_HEIGHT, armsHeight: ARMS_HEIGHT, solid: id !== 'noah' });
     this.noah = person('noah', 'noah', POINTS.noahStart, 'right');
     for (const id of FAMILY_IDS) this.family[id] = person(id, id, FAMILY[id]);
     this.god = new Actor(this, { id: 'god', x: POINTS.godHome[0], y: POINTS.godHome[1], charId: 'god', outfit: 'robe', body: { w: 26, h: 10 } });
@@ -409,10 +418,20 @@ export class NoahScene extends Phaser.Scene {
   async lines(lines: Line[]): Promise<void> {
     const [first] = lines;
     const voiced = !!first?.voice && voices.has(first.voice, first.text);
-    if (lines.length && lines.every((l) => l.speaker === 'narrator') && (this.control || (lines.length === 1 && voiced))) {
-      for (const l of lines) await ui().dialogue.narrate(l);
+    // a narration in a cutscene is about whoever stands nearest: the arrow
+    // points there when the player walks off (the maintainer)
+    const narration = lines.length > 0 && lines.every((l) => l.speaker === 'narrator');
+    const spot = narration && !this.control ? this.nearestCast() : null;
+    if (narration && (this.control || (lines.length === 1 && voiced))) {
+      this.talk.spot = spot;
+      try {
+        for (const l of lines) await ui().dialogue.narrate(l);
+      } finally {
+        if (this.talk.spot === spot) this.talk.spot = null;
+      }
       return;
     }
+    this.talk.spot = spot;
     this.player().stop();
     this.talk.partner = Conversation.partnerOf(
       lines.map((l) => l.speaker),
@@ -423,7 +442,24 @@ export class NoahScene extends Phaser.Scene {
       await ui().dialogue.show(lines);
     } finally {
       this.talk.partner = null;
+      if (this.talk.spot === spot) this.talk.spot = null;
     }
+  }
+
+  /** The one of the story nearest the player (not the player), within 500 px. */
+  private nearestCast(): Actor | null {
+    const p = this.player();
+    let best: Actor | null = null;
+    let bd = 500;
+    for (const a of [this.noah, this.god, ...Object.values(this.family)]) {
+      if (a === p || !a.visible) continue;
+      const d = Math.hypot(a.x - p.x, a.y - p.y);
+      if (d < bd) {
+        bd = d;
+        best = a;
+      }
+    }
+    return best;
   }
 
   /** The actor of a speaker's id, if in the scene. */
@@ -910,31 +946,59 @@ export class NoahScene extends Phaser.Scene {
     );
   }
 
+  /**
+   * Those following walk after Noah as people do, not in a single file (the
+   * maintainer): two by two along his way, each a little to one side, at a
+   * pace of their own, drifting a little, and standing round him when he
+   * stops instead of closing up behind him.
+   */
   private updateFollowers(dt: number): void {
     const leader = this.noah;
     if (!leader.visible) return;
-    const last = this.trail[this.trail.length - 1];
+    const trail = this.trail;
+    const last = trail[trail.length - 1];
     if (!last || Math.hypot(leader.x - last[0], leader.y - last[1]) > 10) {
-      this.trail.push([leader.x, leader.y]);
-      if (this.trail.length > 240) this.trail.shift();
+      trail.push([leader.x, leader.y]);
+      if (trail.length > 400) trail.shift();
     }
     let place = 0;
     for (const f of this.followers) {
       if (f.state !== 'follow' || f.actor.scripted) continue;
       place++;
       const a = f.actor;
-      const back = Math.min(this.trail.length - 1, place * 4 + 2);
-      const target = this.trail[this.trail.length - 1 - back] ?? [leader.x, leader.y];
-      const dx = target[0] - a.x;
-      const dy = target[1] - a.y;
-      const d = Math.hypot(dx, dy);
+      const seed = seedOf(a.id);
+      // rows of two, the pair of animals side by side
+      const row = Math.ceil(place / 2);
+      const side = place % 2 ? -1 : 1;
+      const back = Math.min(trail.length - 1, row * 5 + 1 + Math.round(seed * 2));
+      const i = trail.length - 1 - back;
+      const at = trail[i] ?? [leader.x, leader.y];
+      const ahead = trail[Math.min(trail.length - 1, i + 2)] ?? at;
+      const behind = trail[Math.max(0, i - 2)] ?? at;
+      let dx = ahead[0] - behind[0];
+      let dy = ahead[1] - behind[1];
+      const dl = Math.hypot(dx, dy) || 1;
+      dx /= dl;
+      dy /= dl;
+      const wide = side * (20 + seed * 16) + Math.sin(this.time.now / (1700 + seed * 900) + seed * 6) * 7;
+      const target: Pt = [at[0] - dy * wide, at[1] + dx * wide];
+      const ox = target[0] - a.x;
+      const oy = target[1] - a.y;
+      const d = Math.hypot(ox, oy);
       if (f.flies) a.lift = 24 + Math.sin(this.time.now / 160 + place) * 3;
-      if (d > 8) {
-        const sp = Math.min(Math.max(90, d * 3.2), 300);
-        a.move((dx / d) * sp, (dy / d) * sp);
+      // they set off when left a stride behind, and stop near their place
+      const moving = a.moving ? d > 10 : d > 34;
+      if (moving) {
+        const pace = 0.88 + seed * 0.24;
+        const sp = Math.min(Math.max(80, d * 2.4), 290) * pace;
+        a.move((ox / d) * sp, (oy / d) * sp);
         // far behind (stuck out of sight): put back near
         if (d > 600 && !this.cameras.main.worldView.contains(a.x, a.y)) a.setPosition(target[0], target[1]);
-      } else a.stop();
+      } else if (a.moving) {
+        a.stop();
+        // standing, they look to Noah
+        if (f.kind === 'family') a.face(leader);
+      }
       void dt;
     }
   }
@@ -1240,7 +1304,7 @@ export class NoahScene extends Phaser.Scene {
     const canMove = this.mayWalk() && !p.scripted && input.movementAllowed(this.layer);
     if (canMove) {
       const v = input.moveVector();
-      const pace = input.isDown('run') && !this.talking() && this.ctrlKind === 'human' && !this.backward ? RUN : this.ctrlKind === 'human' ? PLAYER_WALK : 1;
+      const pace = input.isDown('run') && this.ctrlKind === 'human' && !this.backward ? RUN : this.ctrlKind === 'human' ? PLAYER_WALK : 1;
       const base = this.ctrlKind === 'spirit' ? SPIRIT_SPEED : this.ctrlKind === 'bird' ? BIRD_SPEED : CHARACTERS[p.charId ?? 'noah']?.speed ?? 150;
       const speed = base * pace * (this.backward ? 0.6 : 1);
       p.move(v.x * speed, v.y * speed);
