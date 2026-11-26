@@ -37,24 +37,24 @@ const SHEETS = {
  * them). An open smile's line is under the teeth: talking opens it further.
  */
 const FACES = {
-  noah: { eyes: [[37.7, 34.9], [57, 34.9]], mouth: [47, 52, 8] },
-  shem: { eyes: [[39.2, 34.2], [57.7, 34.2]], mouth: [47.5, 52, 8] },
-  ham: { eyes: [[38.5, 33.5], [58.6, 33.5]], mouth: [48, 50.5, 10] },
-  japheth: { eyes: [[36.3, 37.7], [56.3, 37.7]], mouth: [46.3, 54, 8] },
-  wicked: { eyes: [[45.6, 34.2], [62.6, 34.2]], mouth: [55.5, 51, 8] },
-  'wicked-b': { eyes: [[35.3, 30.1], [55.1, 30.1]], mouth: [45.5, 48.5, 10] },
-  'wicked-c': { eyes: [[36.3, 37], [52.7, 37.3]], mouth: [45.6, 53, 8] },
-  giant: { eyes: [[38.5, 28.5], [55.5, 28.5]], mouth: [47.5, 48, 8] },
-  thief: { eyes: [[37, 39.8], [56.4, 39.8]], mouth: [46.3, 57.5, 8] },
-  baker: { eyes: [[37, 31], [57, 31]], mouth: [47, 50.5, 9] },
-  debtor: { eyes: [[38.5, 33.8], [56.4, 33.8]], mouth: [47, 53.5, 9] },
-  farmer: { eyes: [[38.5, 32.9], [56.4, 32.9]], mouth: [47, 52.5, 9] },
-  mocker: { eyes: [[37.6, 35.3], [55.5, 35.3]], mouth: [46.3, 53, 9] },
-  'noah-wife': { eyes: [[37.7, 36.3], [57.7, 36.3]], mouth: [47.5, 53, 8] },
-  'shem-wife': { eyes: [[37.7, 43.4], [57, 43.4]], mouth: [47, 60, 7] },
-  'ham-wife': { eyes: [[35.7, 38.5], [55.5, 38.5]], mouth: [45.3, 54, 9] },
-  'japheth-wife': { eyes: [[37.7, 37], [58.4, 37]], mouth: [47.5, 53, 7] },
-  'wicked-woman': { eyes: [[36.3, 41.9], [56.3, 41.9]], mouth: [46.9, 57.5, 8] },
+  noah: { eyes: [[37.7, 34.9], [57, 34.9]], mouth: [47, 53, 12] },
+  shem: { eyes: [[39.2, 34.2], [57.7, 34.2]], mouth: [47.5, 52, 12] },
+  ham: { eyes: [[38.5, 33.5], [58.6, 33.5]], mouth: [47.5, 51, 12] },
+  japheth: { eyes: [[36.3, 37.7], [56.3, 37.7]], mouth: [45.5, 54, 12] },
+  wicked: { eyes: [[45.6, 34.2], [62.6, 34.2]], mouth: [54.5, 52, 10] },
+  'wicked-b': { eyes: [[35.3, 30.1], [55.1, 30.1]], mouth: [44, 49, 14] },
+  'wicked-c': { eyes: [[36.3, 37], [52.7, 37.3]], mouth: [43.5, 54, 12] },
+  giant: { eyes: [[38.5, 28.5], [55.5, 28.5]], mouth: [46.5, 48, 12] },
+  thief: { eyes: [[37, 39.8], [56.4, 39.8]], mouth: [46, 58, 12] },
+  baker: { eyes: [[37, 31], [57, 31]], mouth: [46.5, 50, 12] },
+  debtor: { eyes: [[38.5, 33.8], [56.4, 33.8]], mouth: [46.5, 53, 14] },
+  farmer: { eyes: [[38.5, 32.9], [56.4, 32.9]], mouth: [47, 52, 14] },
+  mocker: { eyes: [[37.6, 35.3], [55.5, 35.3]], mouth: [45.5, 54, 12] },
+  'noah-wife': { eyes: [[37.7, 36.3], [57.7, 36.3]], mouth: [46.5, 54, 12] },
+  'shem-wife': { eyes: [[37.7, 43.4], [57, 43.4]], mouth: [46.5, 60, 12] },
+  'ham-wife': { eyes: [[35.7, 38.5], [55.5, 38.5]], mouth: [45, 54, 13] },
+  'japheth-wife': { eyes: [[37.7, 37], [58.4, 37]], mouth: [46.5, 54, 12] },
+  'wicked-woman': { eyes: [[36.3, 41.9], [56.3, 41.9]], mouth: [46.5, 58, 12] },
 };
 
 const lum = (d, i) => 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
@@ -151,26 +151,34 @@ function blink(p, boxes) {
   return [frames, x0, y0];
 }
 
-/** Talk patches: the jaw below the mouth line dropped 1 and 3 pixels, the gap the mouth's dark inside. */
+/**
+ * Talk patches: the mouth opens on its closing line (the line itself is the
+ * first row of the gap), the upper lip lifted a pixel when wide open and the
+ * jaw below dropped, the gap narrowing to the corners like lips do. Half open
+ * is two rows, open three.
+ */
 function talk(p, m) {
-  const x0 = m.x0 - 1, x1 = m.x1 + 1, y0 = m.y, h = 6;
-  const w = x1 - x0 + 1;
-  const inside = [70, 28, 26, 255];
-  return [1, 3].map((drop) => {
+  const y0 = m.y - 2, h = 10, w = m.x1 - m.x0 + 1;
+  const inside = [62, 24, 24, 255];
+  const tongue = [118, 48, 46, 255];
+  return [[2, 0], [3, 1]].map(([g, u]) => {
     const o = new PNG({ width: w, height: h });
-    for (let y = 0; y < h; y++)
-      for (let x = 0; x < w; x++) {
-        const sx = x + x0;
-        const end = sx < m.x0 || sx > m.x1;
-        // the corners open less
-        const dd = end ? 0 : sx === m.x0 || sx === m.x1 ? Math.min(1, drop) : sx === m.x0 + 1 || sx === m.x1 - 1 ? Math.max(1, drop - 1) : drop;
+    for (let x = 0; x < w; x++) {
+      const sx = x + m.x0;
+      const e = Math.min(x, w - 1 - x);
+      const gc = Math.min(g, 1 + e);
+      const uc = gc >= g ? u : 0;
+      const top = m.y - uc, bottom = top + gc - 1;
+      for (let y = 0; y < h; y++) {
+        const r = y + y0;
         let c;
-        if (y === 0) c = px(p.data, sx, y0);
-        else if (y <= dd) c = sx === m.x0 || sx === m.x1 ? shade(inside, 1.2) : inside;
-        else c = px(p.data, sx, Math.min(H - 1, y0 + y - dd));
+        if (r < top) c = px(p.data, sx, r + uc);
+        else if (r <= bottom) c = e === 0 ? shade(inside, 1.25) : g === 3 && r === bottom && gc === g ? tongue : inside;
+        else c = px(p.data, sx, Math.min(H - 1, r - (gc - uc - 1)));
         o.data.set(c, (y * w + x) * 4);
       }
-    return { png: o, x: x0, y: y0, w, h };
+    }
+    return { png: o, x: m.x0, y: y0, w, h };
   });
 }
 
