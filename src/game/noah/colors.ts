@@ -91,7 +91,10 @@ export function day(r: number, g: number, b: number, o: DayOptions = {}): V3 {
     if (h < 0) h += 360;
   }
   const grey = 1 - smooth(0.06, 0.2, sat);
-  const leaves = band(h, 110, 62);
+  // on walls, the greyish greens of the mortar are stone too, not moss
+  const leafy = band(h, 110, 62);
+  const mossy = o.walls ? 1 - smooth(0.22, 0.4, sat) : 0;
+  const leaves = leafy * (1 - mossy);
   const blue = band(h, 215, 55);
   const warm = band(h, 18, 16);
   const straw = band(h, 40, 18);
@@ -99,7 +102,7 @@ export function day(r: number, g: number, b: number, o: DayOptions = {}): V3 {
   // saturated warm things (fruit, flowers) stay bright red
   const bright = o.ground ? 0 : smooth(0.5, 0.75, sat) * smooth(0.25, 0.45, lum);
   const stone = o.walls ? 1 - smooth(0.32, 0.48, sat) : 0;
-  const w = { leaves, earth: warm * (1 - bright) * (1 - stone), straw: straw * (1 - stone), red: red + warm * bright, blue, stone: (warm + straw) * stone };
+  const w = { leaves, earth: warm * (1 - bright) * (1 - stone), straw: straw * (1 - stone), red: red + warm * bright, blue, stone: (warm + straw) * stone + leafy * mossy };
   const sum = w.leaves + w.earth + w.straw + w.red + w.blue + w.stone || 1;
   const k = (1 - grey) / sum;
   const t = Math.pow(lum, 0.95);
