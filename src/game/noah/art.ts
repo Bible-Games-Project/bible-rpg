@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { MANIFEST, assetUrl, shadowKey } from '../manifest';
 import { castShadows } from '../world/castShadow';
 import { loadCainArt } from '../cain/art';
-import { drawShadow } from '../cain/drawings';
+import { drawFire, drawShadow } from '../cain/drawings';
 import { Pixels } from '../cain/pixels';
 import CAIN_GEN from '../../data/cain/generatedArt.json';
 import GEN from '../../data/noah/generatedArt.json';
@@ -357,5 +357,9 @@ export function buildNoahArt(scene: Phaser.Scene): void {
   buildRaven(scene);
   weather(scene);
   addSheet(scene, 'noah-shadow', [drawShadow(60, 20)], 30, 10);
+  // the fire of the burnt offerings (Genesis 8:20)
+  const fire = drawFire(2, true);
+  addSheet(scene, 'noah-fire', fire.frames, Math.round(fire.ax), Math.round(fire.ay) - 1);
+  if (!scene.anims.exists('noah-fire:loop')) scene.anims.create({ key: 'noah-fire:loop', frames: scene.anims.generateFrameNumbers('noah-fire', {}), frameRate: 7, repeat: -1 });
   buildNoahPeople(scene);
 }
