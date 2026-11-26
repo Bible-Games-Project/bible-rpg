@@ -373,7 +373,11 @@ $1 play at `WALK_FPS` 15 at the player's
   walks in every dialogue and narration, cutscenes included, and may
   always run in them too (2026-11-26, "la norma"; `mayWalk`/`talking`);
   walking off, an arrow points to the one speaking, or for a cutscene's
-  narration to whom it is about (`Conversation.spot`, Noah); a small speech
+  narration to whom it is about (`Conversation.spot`, Noah), but while the
+  narrator tells, to the current objective if there is one (2026-11-26:
+  set the next step before a narration; clear a finished one); two NPCs
+  talking with each other never turn to the player (`Conversation.among`);
+  a small speech
   bubble shows over whoever speaks in every conversation (`talk.ts`);
   between a cutscene's lines they wait. Cinematics hold them all through:
   `w.cutscene(true, true)` (Eden: Adam asleep in m04, the eating of the
@@ -668,7 +672,9 @@ $1 play at `WALK_FPS` 15 at the player's
   (`noah-portraits-men/-women` in `art/prompts/noah.json`, Adam's portrait
   as reference; the maintainer rejected Adam recoloured with beards) and cut
   by `tools/art/noah_portraits.mjs`, whose `FACES` table holds each face's
-  measured eye and mouth spots for the blink and talk patches. The spirit
+  measured eye and mouth spots for the blink and talk patches (the mouth:
+  the row of the line between the lips, its middle and full width; the
+  talk patch opens on that line, the maintainer saw holes under the lips). The spirit
   holds its idle frame and leans toward where it flies (`flySpirit`).
   Its people's full bodies must match their portraits (the maintainer):
   `tools/art/noah_people.mjs` writes three bald bodies from Adam's/Eve's
