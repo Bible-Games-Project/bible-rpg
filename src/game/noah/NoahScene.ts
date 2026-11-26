@@ -1437,13 +1437,17 @@ export class NoahScene extends Phaser.Scene {
   private updateObjectiveIndicator(time: number): void {
     const pts = this.objectivePoints();
     const hud = ui().hud;
-    const talk = this.mayWalk() ? this.talk.place(this.player(), (id) => this.talkerOf(id)) : null;
+    // while the narrator tells, the arrow already shows where to go next (the maintainer)
+    const d = ui().dialogue;
+    const narration = d.narrating || (d.open && d.speaker === 'narrator');
+    const ahead = narration && pts.length > 0;
+    const talk = this.mayWalk() && !ahead ? this.talk.place(this.player(), (id) => this.talkerOf(id)) : null;
     if (talk) {
       this.markers.hide(time);
       this.edgeArrow(Conversation.mark(talk));
       return;
     }
-    if (!pts.length || !this.canMove()) {
+    if (!pts.length || !(this.canMove() || ahead)) {
       hud.setArrow(null);
       this.markers.hide(time);
       return;

@@ -255,10 +255,11 @@ const MISSIONS: NoahMission[] = [
         if (seen.size < SINS.length && told[seen.size]) void w.scripture(told[seen.size]);
       }
       w.music('sorrow');
+      // the next step is shown already while it is told (the maintainer: an arrow during the narration)
+      w.objective(step('m01', 'noah'), w.noah);
       await w.scripture('grieved');
       await w.say('repent');
       w.music('wonder');
-      w.objective(step('m01', 'noah'), w.noah);
       void w.scripture('sons');
       await w.until(() => w.near([w.noah.x, w.noah.y], 160) && !ui().dialogue.narrating);
       w.cutscene(true);
@@ -362,6 +363,7 @@ const MISSIONS: NoahMission[] = [
         enabled: () => logs >= LOGS_NEEDED,
         onUse: async () => {
           w.cutscene(true);
+          w.objective('', null);
           w.noah.hold(null);
           w.take('log', LOGS_NEEDED);
           audio.play('drop');
@@ -391,6 +393,7 @@ const MISSIONS: NoahMission[] = [
       w.take('axe');
       w.world.axe.setVisible(true);
       w.cutscene(true);
+      w.objective('', null);
       await w.scripture('did');
     },
   },
@@ -421,6 +424,7 @@ const MISSIONS: NoahMission[] = [
         w.cutscene(false);
       }
       w.cutscene(true, true);
+      w.objective('', null);
       w.music('solemn');
       await w.say('animals-in');
       await w.walk(w.noah, [ARK_DOOR, [ARK_DOOR[0] + 70, ARK_DOOR[1] - 80]], 120);
@@ -541,6 +545,7 @@ const MISSIONS: NoahMission[] = [
         w.cutscene(false);
       }
       w.cutscene(true);
+      w.objective('', null);
       w.hide(w.dove);
       await w.scripture('no-rest');
     },
@@ -675,6 +680,7 @@ const MISSIONS: NoahMission[] = [
         },
       });
       w.cutscene(true);
+      w.objective('', null);
       w.music('wonder');
       await w.scripture('altar');
       w.fx('holy', [POINTS.altar[0], POINTS.altar[1] - 20]);
@@ -700,13 +706,14 @@ const MISSIONS: NoahMission[] = [
       w.setBow(true, 3500);
       audio.play('holy');
       await w.wait(1200);
+      // Noah tells his sons (inspired): each has his word; shown already while the bow is told
+      const told = new Set<string>();
+      const sons = ['shem', 'ham', 'japheth'] as const;
+      w.objective(step('m09', 'sons', { n: 0, total: 3 }), () => sons.filter((s) => !told.has(s)).map((s) => w.family[s]), { markAll: true });
       await w.scripture('bow');
       await w.say('remember');
       await w.vanish(w.god);
       w.cutscene(false);
-      // Noah tells his sons (inspired): each has his word
-      const told = new Set<string>();
-      const sons = ['shem', 'ham', 'japheth'] as const;
       w.objective(step('m09', 'sons', { n: 0, total: 3 }), () => sons.filter((s) => !told.has(s)).map((s) => w.family[s]), { markAll: true });
       await Promise.all(
         sons.map((s) =>
@@ -725,6 +732,7 @@ const MISSIONS: NoahMission[] = [
         ),
       );
       w.cutscene(true);
+      w.objective('', null);
       await w.scripture('scattered');
     },
   },
@@ -737,13 +745,13 @@ const MISSIONS: NoahMission[] = [
     kind: 'scripture',
     reference: 'Genesis 9:20–21',
     async run(w) {
+      let planted = 0;
+      const aim = () => w.objective(step('m10', 'plant', { n: planted, total: VINES.length }), () => w.world.vines.filter((v) => v.state === 'none').map((v) => v.at), { markAll: true });
+      aim();
       w.cutscene(true);
       await w.scripture('husbandman');
       w.cutscene(false);
       w.music('peaceful');
-      let planted = 0;
-      const aim = () => w.objective(step('m10', 'plant', { n: planted, total: VINES.length }), () => w.world.vines.filter((v) => v.state === 'none').map((v) => v.at), { markAll: true });
-      aim();
       await Promise.all(
         VINES.map((at, i) =>
           useOnce(w, {
@@ -797,6 +805,7 @@ const MISSIONS: NoahMission[] = [
       w.objective(step('m10', 'tent'), POINTS.tentDoor);
       await w.waitZone('tent');
       w.cutscene(true, true);
+      w.objective('', null);
       w.take('wine');
       await w.walk(w.noah, [POINTS.tentDoor, [POINTS.tent[0], POINTS.tent[1] - 10]], 70);
       w.hide(w.noah);
@@ -845,6 +854,7 @@ const MISSIONS: NoahMission[] = [
       });
       // Shem and Japheth: the garment on their shoulders, going backward (Genesis 9:23)
       w.cutscene(true);
+      w.objective('', null);
       await w.fade(1, 500);
       w.show(shem, [POINTS.brothers[0] - 60, POINTS.brothers[1] + 60], 'down');
       w.show(japheth, [POINTS.brothers[0] - 16, POINTS.brothers[1] + 64], 'down');
@@ -866,6 +876,7 @@ const MISSIONS: NoahMission[] = [
         prompt: () => N('prompts.cover'),
         onUse: async () => {
           w.cutscene(true, true);
+          w.objective('', null);
           await w.fade(1, 600);
           shem.hold(null);
           japheth.hold(null);
