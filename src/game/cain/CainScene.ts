@@ -282,16 +282,16 @@ export class CainScene extends Phaser.Scene {
             void this.useInteract(this.currentInteract);
             return true;
           }
-          // during the chase E strikes too (the maintainer pressed E and nothing happened)
-          if (!this.chaseState && !this.currentInteract?.attack) return true;
+          // E only interacts: striking is the left click (the maintainer, 2026-11-26)
+          return true;
         }
-        if (a === 'attack' || a === 'interact') {
+        if (a === 'attack') {
           // a left click or the touch ⚔ (the maintainer): a blow when Abel is in reach, else a swing at the air
           if (!this.canAct()) return true;
           if (this.currentInteract?.attack) void this.useInteract(this.currentInteract);
           else if (this.chaseState) void this.swingAir();
-          // F or a left click strikes at any time (the maintainer), not only in the chase
-          else if (a === 'attack' && !this.driving && this.active === 'cain') void this.swingFree();
+          // a left click (or the touch ⚔) strikes at any time (the maintainer), not only in the chase
+          else if (!this.driving && this.active === 'cain') void this.swingFree();
           return true;
         }
         return a === 'switch';
@@ -1290,6 +1290,8 @@ export class CainScene extends Phaser.Scene {
   update(time: number, delta: number): void {
     const dt = Math.min(0.1, delta / 1000);
     const p = this.controlled();
+    // the touch ⚔ shows whenever Cain can strike (phones and tablets have no mouse)
+    input.setAttack(!!this.chaseState || (this.active === 'cain' && !this.driving && this.control));
     const canMove = this.mayWalk() && !p.scripted && input.movementAllowed(this.layer);
     if (canMove) {
       const v = input.moveVector();
