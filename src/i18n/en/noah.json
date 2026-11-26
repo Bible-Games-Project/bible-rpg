@@ -23,7 +23,10 @@
       "title": "Come into the Ark",
       "desc": "In seven days the rain will come. Bring in your house, food and the animals.",
       "steps": {
-        "days": "Day {day} of 7 · Family {family}/{familyTotal} · Food {food}/{foodTotal} · Animals {pairs}/{pairsTotal}"
+        "family": "Day {day} of 7 · Call your family, one by one ({n}/{total})",
+        "food": "Day {day} of 7 · Gather the food with your family ({n}/{total})",
+        "ark": "Day {day} of 7 · Lead your family into the ark",
+        "animals": "Day {day} of 7 · Bring in the animals, two by two ({n}/{total})"
       }
     },
     "m04": {
@@ -164,6 +167,13 @@
     ],
     "too-late": [
       { "s": "narrator", "t": "Seven days passed, and not all were in the ark. Try again." }
+    ],
+    "gather-food": [
+      { "s": "noah", "t": "Now the food, for us and for every beast. Help me carry it." },
+      { "s": "shem", "t": "We're with you, father." }
+    ],
+    "to-ark": [
+      { "s": "noah", "t": "That's all of it. Come, into the ark!" }
     ],
     "call-noah-wife": [
       { "s": "noah", "t": "It's time. Come, my wife." },
@@ -367,6 +377,7 @@
     "chop": "Chop",
     "build": "Build the ark",
     "call": "Call {name}",
+    "helpCarry": "Ask {name} to carry it",
     "pair": "Lead the {name}",
     "unclean": "Lead the {name}",
     "olive": "Pluck the olive leaf",

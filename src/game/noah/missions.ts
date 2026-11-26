@@ -103,7 +103,7 @@ function stage(w: NoahScene, n: number, place: boolean): void {
   w.hide(w.raven);
   w.hide(w.dove);
   w.noah.hold(null);
-  for (const id of ['ham', 'shem', 'japheth'] as const) w.family[id].hold(null);
+  for (const id of FAMILY_IDS) w.family[id].hold(null);
   for (const m of w.mockers) (n === 2 || n === 3 ? w.show(m, [m.x, m.y], 'up') : w.hide(m));
   // the family and the animals: waiting before the flood, in the ark during it, out after it
   // after the flood the animals are out in the land again (from mission 9)
@@ -853,11 +853,22 @@ function flightObjective(w: NoahScene, m: string, s: 'land' | 'back' | 'olive'):
  * and brings the beasts two by two, before the rain. Resolves true when all
  * are in, false when the seven days are out first.
  */
+/**
+ * The seven days (Genesis 7:1–10), in order (the maintainer): Noah calls his
+ * family one by one and they follow him; they gather the food together (each
+ * one Noah takes up, the others run for the food near it); all go into the
+ * ark; then the beasts, two by two. Resolves false if the seven days end first.
+ */
 async function sevenDays(w: NoahScene): Promise<boolean> {
   w.gathering = true;
+  let phase: 'family' | 'food' | 'ark' | 'animals' = 'family';
   let food = 0;
   let family = 0;
-  let carrying: number | null = null;
+  let called = 0;
+  let noahCarries = false;
+  let over = false;
+  /** food taken up (by Noah or a helper), not yet stored */
+  const claimed = new Set<number>();
   // the days count only while the game runs (not while paused)
   let elapsed = 0;
   const clock = w.time.addEvent({ delay: 100, loop: true, callback: () => (elapsed += 100) });
@@ -865,16 +876,20 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
   const pairsIn = () => PAIRS.filter((_, i) => w.pairIn(i)).length;
   const done = () => family >= FAMILY_IDS.length && food >= FOOD_NEEDED && pairsIn() >= PAIRS.length;
   const day = () => Math.min(7, 1 + Math.floor(elapsed / DAY_MS));
+  const kin = () => w.followers.filter((f) => f.kind === 'family');
   const aim = () => {
-    const text = step('m03', 'days', { day: day(), family, familyTotal: FAMILY_IDS.length, food, foodTotal: FOOD_NEEDED, pairs: pairsIn(), pairsTotal: PAIRS.length });
+    const d = day();
+    const text =
+      phase === 'family' ? step('m03', 'family', { day: d, n: called, total: FAMILY_IDS.length })
+      : phase === 'food' ? step('m03', 'food', { day: d, n: claimed.size, total: FOOD_NEEDED })
+      : phase === 'ark' ? step('m03', 'ark', { day: d })
+      : step('m03', 'animals', { day: d, n: pairsIn(), total: PAIRS.length });
     w.objective(text, () => {
-      if (carrying !== null || w.following() > 0) return [[ARK_DOOR[0], ARK_DOOR[1] - 10] as Pt];
-      return [
-        ...FAMILY_IDS.filter((id) => !w.isIn(w.family[id])).map((id) => w.family[id] as Actor),
-        ...PAIRS.map((_, i) => i).filter((i) => !w.pairIn(i)).map((i) => w.pairActors(i)[0]),
-        ...w.world.food.filter((f) => f.visible).map((f) => [f.x, f.y] as Pt),
-      ];
-    }, { markAll: false });
+      if (phase === 'family') return FAMILY_IDS.filter((id) => kin().some((f) => f.actor === w.family[id] && f.state === 'wait')).map((id) => w.family[id] as Actor);
+      if (phase === 'food') return w.world.food.filter((img, i) => img.visible && !claimed.has(i)).map((img) => [img.x, img.y] as Pt);
+      if (phase === 'ark' || w.following() > 0) return [[ARK_DOOR[0], ARK_DOOR[1] - 10] as Pt];
+      return PAIRS.map((_, i) => i).filter((i) => !w.pairIn(i)).map((i) => w.pairActors(i)[0]);
+    }, { markAll: phase !== 'ark' });
   };
   aim();
   let lastDay = 1;
@@ -889,7 +904,13 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
       }
     },
   });
-  // the family: called, they follow Noah
+  // a step done: a word from Noah, and on to the next
+  const next = async (to: typeof phase, say?: string) => {
+    phase = to;
+    aim();
+    if (say) await w.say(say);
+  };
+  // the family: called one by one, they follow Noah
   for (const id of FAMILY_IDS) {
     const a = w.family[id];
     offs.push(
@@ -898,17 +919,77 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
         at: () => [a.x, a.y - 30],
         radius: 80,
         prompt: () => N('prompts.call', { name: nameOf(id) }),
-        enabled: () => w.followers.some((f) => f.actor === a && f.state === 'wait'),
+        enabled: () => phase === 'family' && w.followers.some((f) => f.actor === a && f.state === 'wait'),
         onUse: async () => {
           a.face(w.noah);
           await w.say(`call-${id}`);
           w.lead(a);
           a.emote('heart', 900);
+          called++;
+          if (called >= FAMILY_IDS.length) await next('food', 'gather-food');
+          else aim();
         },
       }),
     );
   }
-  // the beasts, two by two
+  // the food (Genesis 6:21): one of the family runs for it and carries it
+  const helpers = () => kin().filter((f) => f.state === 'follow' && !f.actor.holding());
+  const fetch = async (i: number, f: (typeof w.followers)[number]) => {
+    const img = w.world.food[i];
+    const a = f.actor;
+    claimed.add(i);
+    f.state = 'help';
+    await w.walk(a, [img.x + (a.x < img.x ? -14 : 14), img.y + 6], 200);
+    if (over) return;
+    a.face(a.x < img.x ? 'right' : 'left');
+    await a.stoop();
+    if (over) return;
+    img.setVisible(false);
+    a.hold(`noah-${FOOD[i].kind}`, 'arms', [0.5, 0.75]);
+    audio.play('pickup', { volume: 0.6 });
+    f.state = 'follow';
+    gathered();
+  };
+  const gathered = () => {
+    aim();
+    if (phase === 'food' && claimed.size >= FOOD_NEEDED && !w.followers.some((x) => x.state === 'help')) void next('ark', 'to-ark');
+  };
+  const nearest = (i: number) => {
+    const img = w.world.food[i];
+    return helpers().sort((p, q) => Math.hypot(p.actor.x - img.x, p.actor.y - img.y) - Math.hypot(q.actor.x - img.x, q.actor.y - img.y))[0];
+  };
+  w.world.food.forEach((img, i) => {
+    offs.push(
+      w.interact({
+        id: `food:${i}`,
+        at: [img.x, img.y - 14],
+        radius: 64,
+        prompt: () => (noahCarries ? N('prompts.helpCarry', { name: nameOf(nearest(i)?.actor.id ?? '') }) : t('prompt.pickUp', { name: N(`items.${FOOD[i].kind}`) })),
+        enabled: () => phase === 'food' && img.visible && !claimed.has(i) && (!noahCarries || !!nearest(i)),
+        onUse: async () => {
+          if (noahCarries) {
+            const f = nearest(i);
+            if (f) void fetch(i, f);
+            return;
+          }
+          claimed.add(i);
+          await w.noah.stoop();
+          img.setVisible(false);
+          noahCarries = true;
+          w.noah.hold(`noah-${FOOD[i].kind}`, 'arms', [0.5, 0.75]);
+          audio.play('pickup');
+          // the others run for the food lying near
+          w.world.food.forEach((o, k) => {
+            if (claimed.has(k) || !o.visible || Math.hypot(o.x - img.x, o.y - img.y) > 800) return;
+            const f = nearest(k);
+            if (f) void fetch(k, f);
+          });
+          gathered();
+        },
+      }),
+    );
+  });
+  // the beasts, two by two, once the house is in
   PAIRS.forEach((p, i) => {
     const [a] = w.pairActors(i);
     offs.push(
@@ -917,30 +998,11 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
         at: () => [a.x + 26, a.y - 14],
         radius: 90,
         prompt: () => N(p.clean ? 'prompts.pair' : 'prompts.unclean', { name: N(`animals.${p.species}`) }),
-        enabled: () => w.followers.some((f) => f.pair === i && f.state === 'wait'),
+        enabled: () => phase === 'animals' && w.followers.some((f) => f.pair === i && f.state === 'wait'),
         onUse: async () => {
           w.lead(a);
           audio.play('correct');
           if (!p.clean) await w.say('lion');
-        },
-      }),
-    );
-  });
-  // food (Genesis 6:21)
-  w.world.food.forEach((img, i) => {
-    offs.push(
-      w.interact({
-        id: `food:${i}`,
-        at: [img.x, img.y - 14],
-        radius: 64,
-        prompt: () => t('prompt.pickUp', { name: N(`items.${FOOD[i].kind}`) }),
-        enabled: () => img.visible && carrying === null,
-        onUse: async () => {
-          await w.noah.stoop();
-          img.setVisible(false);
-          carrying = i;
-          w.noah.hold(`noah-${FOOD[i].kind}`, 'arms', [0.5, 0.75]);
-          audio.play('pickup');
         },
       }),
     );
@@ -950,17 +1012,21 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
     delay: 150,
     loop: true,
     callback: () => {
-      if (!w.near(ARK_DOOR, 150, w.noah)) return;
-      if (carrying !== null) {
-        carrying = null;
-        food++;
+      if (phase === 'family' || phase === 'food' || !w.near(ARK_DOOR, 150, w.noah)) return;
+      if (phase === 'ark') {
+        food = FOOD_NEEDED;
+        noahCarries = false;
         w.noah.hold(null);
         audio.play('drop');
         w.toast(N('toasts.food', { n: food, total: FOOD_NEEDED }));
+        void next('animals');
       }
       if (w.following() > 0)
         void w.boardFollowers((f) => {
-          if (f.kind === 'family') family++;
+          if (f.kind === 'family') {
+            family++;
+            f.actor.hold(null);
+          }
           aim();
         });
     },
@@ -982,6 +1048,7 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
       },
     });
   });
+  over = true;
   tick.remove();
   clock.remove();
   boarding.remove();

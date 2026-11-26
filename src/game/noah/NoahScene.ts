@@ -87,12 +87,13 @@ export type FamilyId = 'noah-wife' | 'shem' | 'ham' | 'japheth' | 'shem-wife' | 
 export const FAMILY_IDS = Object.keys(FAMILY) as FamilyId[];
 
 /** One who follows Noah to the ark (the family, the animals two by two). */
-interface Follower {
+export interface Follower {
   actor: Actor;
   kind: 'family' | 'animal';
   /** a pair counts once: both of it in */
   pair?: number;
-  state: 'wait' | 'follow' | 'in';
+  /** help: gone for something (the food), back to following after */
+  state: 'wait' | 'follow' | 'help' | 'in';
   /** flies (the doves) */
   flies?: boolean;
 }
@@ -469,7 +470,7 @@ export class NoahScene extends Phaser.Scene {
         at: () => [actor.x, actor.y - 30],
         radius: 76,
         prompt: () => t('prompt.talk', { name: t(CHARACTERS[who].nameKey) }),
-        enabled: () => actor.visible && !actor.scripted && this.ctrl !== actor && this.ctrlKind === 'human' && Array.isArray(tRaw(`noah.npc.${who}.${this.phase}`)) && !this.followerOf(actor) && !(this.gathering && this.followers.some((f) => f.actor === actor && f.state === 'wait')),
+        enabled: () => actor.visible && !actor.scripted && this.ctrl !== actor && this.ctrlKind === 'human' && Array.isArray(tRaw(`noah.npc.${who}.${this.phase}`)) && !this.followerOf(actor) && !this.followers.some((f) => f.actor === actor && f.state === 'help') && !(this.gathering && this.followers.some((f) => f.actor === actor && f.state === 'wait')),
         onUse: async () => {
           const pool = tRaw<string[]>(`noah.npc.${who}.${this.phase}`);
           const list = Array.isArray(pool) ? pool : [];
