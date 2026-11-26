@@ -39,6 +39,30 @@ export const PORTRAIT_CONFIG: Record<string, Partial<PortraitConfig>> = {
   serpent: { blinkInterval: [3000, 7000], blinkDuration: 220, doubleBlinkChance: 0, mouthFrame: 110 },
 };
 
+/** milliseconds per step of a voice's loudness envelope */
+export const VOICE_STEP = 60;
+
+/**
+ * How loud a recorded line is every VOICE_STEP ms, from 0 to 1 (1 = its
+ * loud syllables), so a portrait's mouth can follow it.
+ */
+export function voiceEnvelope(buf: AudioBuffer): Float32Array {
+  const data = buf.getChannelData(0);
+  const step = Math.max(1, Math.round((buf.sampleRate * VOICE_STEP) / 1000));
+  const n = Math.ceil(data.length / step);
+  const env = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    let sum = 0;
+    const end = Math.min(data.length, (i + 1) * step);
+    for (let j = i * step; j < end; j += 4) sum += data[j] * data[j];
+    env[i] = Math.sqrt(sum / Math.max(1, (end - i * step) / 4));
+  }
+  const sorted = Array.from(env).sort((a, b) => a - b);
+  const loud = sorted[Math.floor(sorted.length * 0.9)] || 1;
+  for (let i = 0; i < n; i++) env[i] = Math.min(1, env[i] / loud);
+  return env;
+}
+
 const images = new Map<string, HTMLImageElement>();
 
 function img(file: string): HTMLImageElement {
@@ -66,6 +90,9 @@ export class PortraitAnimator {
   private cfg: PortraitConfig = DEFAULT_PORTRAIT_CONFIG;
   private talking = false;
   private mouthStep = 0;
+  /** a recorded voice's loudness (one value per VOICE_STEP ms) and when it started: the mouth follows it */
+  private voice: { env: Float32Array; start: number } | null = null;
+  private voiceMouth = 0;
   private mouthTimer = 0;
   private eyeState = 0; // 0 open, 1 half, 2 closed
   private nextBlink = 0;
@@ -102,8 +129,20 @@ export class PortraitAnimator {
   setTalking(on: boolean): void {
     if (on === this.talking) return;
     this.talking = on;
-    if (!on) this.mouthStep = 0;
+    if (!on) {
+      this.mouthStep = 0;
+      this.voice = null;
+      this.voiceMouth = 0;
+    }
     this.draw();
+  }
+
+  /**
+   * The mouth opens and closes with a recorded voice (the maintainer: in
+   * rhythm with the audio) instead of the timer, until setTalking(false).
+   */
+  setVoice(env: Float32Array | null, start = performance.now()): void {
+    this.voice = env ? { env, start } : null;
   }
 
   start(): void {
@@ -148,7 +187,16 @@ export class PortraitAnimator {
       this.eyeState = this.blinkQueue.shift()!.state;
       dirty = true;
     }
-    if (this.talking && this.asset?.mouth.length) {
+    if (this.talking && this.voice && this.asset?.mouth.length) {
+      const i = Math.floor((performance.now() - this.voice.start) / VOICE_STEP);
+      const v = i >= 0 && i < this.voice.env.length ? this.voice.env[i] : 0;
+      // closed in the pauses, half open on soft sounds, open on loud ones
+      const m = v < 0.16 ? 0 : v < 0.45 ? 1 : 2;
+      if (m !== this.voiceMouth) {
+        this.voiceMouth = m;
+        dirty = true;
+      }
+    } else if (this.talking && this.asset?.mouth.length) {
       this.mouthTimer += dt;
       const frame = this.reduceMotion ? this.cfg.mouthFrame * 1.6 : this.cfg.mouthFrame;
       if (this.mouthTimer >= frame) {
@@ -175,7 +223,7 @@ export class PortraitAnimator {
     }
     c.drawImage(base, 0, 0);
     const mouthSeq = [0, 1, 2, 1];
-    const m = this.talking ? mouthSeq[this.mouthStep] : 0;
+    const m = !this.talking ? 0 : this.voice ? this.voiceMouth : mouthSeq[this.mouthStep];
     if (m > 0 && a.mouth[m - 1]) this.patch(a.mouth[m - 1]);
     if (this.eyeState > 0 && a.eyes[this.eyeState - 1]) this.patch(a.eyes[this.eyeState - 1]);
   }

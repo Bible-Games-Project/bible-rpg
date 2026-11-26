@@ -5,7 +5,15 @@ import { settings, TEXT_SPEED_CPS } from '../core/settings';
 import { voices } from '../core/voices';
 import { CHARACTERS } from '../data/characters';
 import { h } from './dom';
-import { PortraitAnimator } from './PortraitAnimator';
+import { PortraitAnimator, voiceEnvelope } from './PortraitAnimator';
+
+const envelopes = new WeakMap<AudioBuffer, Float32Array>();
+/** a voice's loudness, worked out once per file */
+function envelopeOf(buf: AudioBuffer): Float32Array {
+  let env = envelopes.get(buf);
+  if (!env) envelopes.set(buf, (env = voiceEnvelope(buf)));
+  return env;
+}
 
 const sleep = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 
@@ -284,7 +292,10 @@ export class DialogueBox {
     this.speaking = v;
     this.voiceStart = performance.now();
     this.voiceLength = buf.duration * 1000;
-    if (talks) this.portrait.setTalking(true);
+    if (talks) {
+      this.portrait.setTalking(true);
+      this.portrait.setVoice(envelopeOf(buf));
+    }
     await v.ended;
     if (this.speaking !== v) return false;
     this.speaking = null;

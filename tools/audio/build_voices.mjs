@@ -40,6 +40,26 @@ const VOICES = {
   serpent: ['Matthew Schmitz', 'xYWUvKNK6zWCgsdAK7Wi', SETTINGS],
   cain: ['David Boles', 'y1adqrqs4jNaANXsIZnD', SETTINGS],
   abel: ['Adam', 'QIhD5ivPGEoYZQDocuHI', SETTINGS],
+  // Noah's chapter (2026-11-26: the maintainer asked for every one to be
+  // voiced; American Voice Library voices picked to fit each portrait)
+  noah: ['Michael Moody', 'PerZoH0r6nxBZXCoIPpv', SETTINGS],
+  'noah-wife': ['Carol', '5u41aNhyCU6hXOcjPPv0', SETTINGS],
+  shem: ['Lowy', '24EI9FmmGvJruwUi7TJM', SETTINGS],
+  ham: ['Davis', 'Z2fsAwk7IblvPhYzfslC', SETTINGS],
+  japheth: ['Ryan Kurk', 'rU18Fk3uSDhmg5Xh41o4', SETTINGS],
+  'shem-wife': ['Lily Wolff', 'qBDvhofpxp92JgXJxDjB', SETTINGS],
+  'ham-wife': ['Jessa', 'yj30vwTGJxSHezdAGsv9', SETTINGS],
+  'japheth-wife': ['Elise', 'EST9Ui6982FZPSi7gCHi', SETTINGS],
+  wicked: ['Adam Dark and Tough', 'IRHApOXLvnW57QJPQH2P', SETTINGS],
+  'wicked-b': ['Cole', 'Tw2LVqLUUWkxqrCfFOpw', SETTINGS],
+  'wicked-c': ['Hale', 'wWWn96OtTHu1sn8SRGEr', SETTINGS],
+  'wicked-woman': ['Jessica Anne Bogart Villain', 'flHkNRp1BlvT73UL6gyz', SETTINGS],
+  giant: ['Victor', 'cPoqAvGWCPfCfyPMwe4z', SETTINGS],
+  thief: ['Joseph', 'J5iaaqzR5zn6HFG4jV3b', SETTINGS],
+  baker: ['Mark', '1SM7GgM6IMuvQlz2BwM3', SETTINGS],
+  debtor: ['Grampa Werthers', 'MKlLqCItoCkvdhrxgtLv', SETTINGS],
+  farmer: ['Wyatt', 'YXpFCvM1S3JbWEJhoskW', SETTINGS],
+  mocker: ['Gabriel Ripley', 'o2zd9K5QOO7ppTb04Lx0', SETTINGS],
 };
 // reads the gold scripture cards, the creation verse and the short narrations
 const NARRATOR = ['Spuds Oxley', 'NOpBlnGInO9m6vDvFkFC', SETTINGS];
@@ -69,6 +89,11 @@ function lines() {
   for (const [id, list] of Object.entries(cain.dialogue)) list.forEach((l, i) => said(`cain.${id}.${i}`, l.s, l.t));
   for (const [who, phases] of Object.entries(cain.npc)) for (const [phase, list] of Object.entries(phases)) list.forEach((t, i) => said(`cain.npc.${who}.${phase}.${i}`, who, t));
   said('cain.chase.escaped', 'narrator', cain.chase.escaped);
+  // Noah (keys as NoahScene gives them)
+  const noah = read('noah.json');
+  for (const [id, v] of Object.entries(noah.scripture)) out[`noah.scripture.${id}`] = ['narrator', v.text];
+  for (const [id, list] of Object.entries(noah.dialogue)) list.forEach((l, i) => said(`noah.${id}.${i}`, l.s, l.t));
+  for (const [who, phases] of Object.entries(noah.npc)) for (const [phase, list] of Object.entries(phases)) list.forEach((t, i) => said(`noah.npc.${who}.${phase}.${i}`, who, t));
   return out;
 }
 
@@ -76,7 +101,8 @@ const voiceFor = (speaker) => (speaker === 'narrator' ? NARRATOR : VOICES[speake
 
 async function speak(voice, text) {
   for (const [word, spoken] of Object.entries(SPOKEN)) text = text.replaceAll(word, spoken);
-  const key = process.env.ELEVENLABS_API_KEY;
+  // the second account (the first ran out of credits) when it is set
+  const key = process.env.ELEVENLABS_API_KEY_2 || process.env.ELEVENLABS_API_KEY;
   const res = await fetch(`${API}/${voice[1]}?output_format=mp3_44100_128`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'audio/mpeg', ...(key ? { 'xi-api-key': key } : {}) },
