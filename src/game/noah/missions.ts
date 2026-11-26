@@ -141,7 +141,7 @@ async function sin(w: NoahScene, id: string): Promise<void> {
     b.emote('exclaim');
     a.hold('noah-sack', 'arms');
     await w.say('sin-robbery');
-    void w.walk(a, [a.x - 260, a.y + 60], 220).then(() => w.hide(a));
+    void w.leave(a, 200);
     b.emote('drop');
   } else if (id === 'violence') {
     await w.walk(a, [b.x - 34, b.y], 110);
@@ -162,7 +162,7 @@ async function sin(w: NoahScene, id: string): Promise<void> {
     a.face(b);
     b.face(a);
     await w.say('sin-harass');
-    void w.walk(b, [b.x + 160, b.y + 40], 180).then(() => w.hide(b));
+    void w.leave(b, 170);
   } else {
     a.face(b);
     b.face(a);

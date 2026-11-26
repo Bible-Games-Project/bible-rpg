@@ -6,7 +6,7 @@ import { settings } from '../../core/settings';
 import { voices } from '../../core/voices';
 import type { FlagValue } from '../../core/save';
 import { CHARACTERS } from '../../data/characters';
-import { ARK, ARK_DOOR, BOUNDS, FAMILY, PAIRS, POINTS, SINS, WORLD_H, WORLD_W, ZONES } from '../../data/noah/map';
+import { ARK, ARK_DOOR, BOUNDS, CITY_HOUSES, FAMILY, PAIRS, POINTS, SINS, WORLD_H, WORLD_W, ZONES } from '../../data/noah/map';
 import type { Pt } from '../../data/eden/map';
 import type { Line } from '../../ui/DialogueBox';
 import { ui } from '../bridge';
@@ -681,10 +681,40 @@ export class NoahScene extends Phaser.Scene {
     });
   }
 
+  /**
+   * Someone leaving the scene: they walk round the nearest house (or tree)
+   * and on behind it, fading out on the last steps in case any of them still
+   * shows (the maintainer: they vanished all at once, in the open).
+   */
+  async leave(actor: Actor, speed = 150): Promise<void> {
+    const covers: { x: number; y: number; l: number; r: number }[] = [];
+    if (this.world.cityStanding)
+      for (const h of CITY_HOUSES) {
+        const [l, r] = h.small ? [94, 106] : [124, 146];
+        const k = ART * 0.9;
+        covers.push({ x: h.at[0], y: h.at[1], l: (h.flip ? r : l) * k, r: (h.flip ? l : r) * k });
+      }
+    for (const t of this.world.trees) if (t.trunk.visible) covers.push({ x: t.x, y: t.y, l: 14, r: 14 });
+    const near = covers.sort((a, b) => Phaser.Math.Distance.Between(actor.x, actor.y, a.x, a.y) - Phaser.Math.Distance.Between(actor.x, actor.y, b.x, b.y))[0];
+    if (!near || Phaser.Math.Distance.Between(actor.x, actor.y, near.x, near.y) > 700) {
+      await Promise.all([this.walk(actor, [actor.x - 160, actor.y - 60], speed), this.vanish(actor, (170 / speed) * 1000)]);
+      return;
+    }
+    const left = actor.x < near.x;
+    const side = left ? near.x - near.l - 16 : near.x + near.r + 16;
+    // a house is drawn from above: behind it is well up its picture; a trunk hides little, the crown the rest
+    const behind: Pt = [left ? near.x - near.l * 0.35 : near.x + near.r * 0.35, near.y - (near.l > 20 ? 46 : 12)];
+    const path: Pt[] = [];
+    if (actor.y > near.y - 20) path.push([side, near.y + 12], [side, behind[1]]);
+    await this.walk(actor, path, speed);
+    const last = Phaser.Math.Distance.Between(actor.x, actor.y, behind[0], behind[1]);
+    await Promise.all([this.walk(actor, behind, speed * 0.8), this.vanish(actor, Math.max(400, (last / (speed * 0.8)) * 1000))]);
+  }
+
   vanish(actor: Actor, ms = 1100): Promise<void> {
     return new Promise((resolve) => {
       if (!actor.visible) return resolve();
-      const parts = [actor.sprite, actor.shadow].filter((o): o is NonNullable<typeof o> => !!o);
+      const parts = [actor.sprite, actor.shadow, ...actor.carried].filter((o): o is NonNullable<typeof o> => !!o);
       const from = parts.map((o) => o.alpha);
       if (actor === this.god) void this.holy.fadeOut(ms);
       this.tweens.add({

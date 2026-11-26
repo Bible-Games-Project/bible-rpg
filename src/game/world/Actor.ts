@@ -175,6 +175,11 @@ export class Actor {
     this.refresh(true);
   }
 
+  /** What the character holds, shown (to fade it out with them). */
+  get carried(): Phaser.GameObjects.Image[] {
+    return [this.heldSprite, this.offSprite, this.gripSprite].filter((o): o is Phaser.GameObjects.Image => !!o && o.visible);
+  }
+
   setVisible(v: boolean): this {
     this.sprite.setVisible(v);
     this.shadow?.setVisible(v);

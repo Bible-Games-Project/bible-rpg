@@ -275,7 +275,11 @@ export class NoahWorld {
   }
 
   /** After the flood the city is gone: ruins in its place (Genesis 7:23). */
+  /** whether the city stands (before the flood) */
+  cityStanding = true;
+
   setCity(standing: boolean): void {
+    this.cityStanding = standing;
     for (const o of this.city) (o as unknown as Phaser.GameObjects.Components.Visible).setVisible(standing);
     for (const o of this.ruins) (o as unknown as Phaser.GameObjects.Components.Visible).setVisible(!standing);
     for (const b of this.cityBodies) (b.body as Phaser.Physics.Arcade.StaticBody).enable = standing;
