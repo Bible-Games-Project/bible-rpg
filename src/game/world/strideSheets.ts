@@ -26,6 +26,7 @@ export function strideCharacters(scene: Phaser.Scene): void {
         c.width = img.width;
         c.height = img.height;
         c.getContext('2d')!.drawImage(img, 0, 0);
+        SOURCE_SHEETS[key] = { ...a };
         const made = strideSheet(c, a, dir, SIDE_ARMS[`${id}-${outfit}`], STAFF_SHEETS.includes(`${id}-${outfit}`));
         if (!made) continue;
         const [canvas, asset, all, fists] = made;
@@ -47,6 +48,9 @@ export function strideCharacters(scene: Phaser.Scene): void {
   }
 }
 
+/** Each sheet as it was before it was rebuilt (by its texture key): Noah's people are rebuilt from Adam's and Eve's sheets' shapes (noah/people.ts). */
+export const SOURCE_SHEETS: Record<string, SheetAsset> = {};
+
 /**
  * The near arm in each side sheet (sheet pixels: x0, x1, y0, y1, from the
  * shoulder to the bottom of the fist), as from_generated.py's SIDE_ARMS
@@ -55,7 +59,7 @@ export function strideCharacters(scene: Phaser.Scene): void {
  * the others). Measure again if a sheet is redrawn. `true` last: a bare arm
  * over a leaf skirt, whose green stays with the body.
  */
-const SIDE_ARMS: Record<string, ArmBand> = {
+export const SIDE_ARMS: Record<string, ArmBand> = {
   'adam-tunic': [22, 32, 41, 92],
   'adam-leaves': [25, 33, 41, 92, true],
   'adam-fig': [19, 28, 40, 92],
@@ -133,7 +137,7 @@ const WORK = {
 /** One direction of a sheet: from the side the walk with more arm swing and
  * a run with bent knees and elbows; from the front and back a run with the
  * knees coming higher, bobbing; bending down; the poses of a blow. */
-function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm: ArmBand | undefined, staff = false): [HTMLCanvasElement, SheetAsset, Px[], HTMLCanvasElement | null] | null {
+export function strideSheet(src: HTMLCanvasElement, a: SheetAsset, dir: Direction, arm: ArmBand | undefined, staff = false): [HTMLCanvasElement, SheetAsset, Px[], HTMLCanvasElement | null] | null {
   const walk = a.walk ?? [];
   if (walk.length !== 8 || (dir === 'right' && !arm)) return null;
   const fw = a.frameWidth;
