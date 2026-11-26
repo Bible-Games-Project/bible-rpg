@@ -28,6 +28,27 @@
     "art/reference/v2/style-scene.webp"
    ],
    "prompt": "A sheet of small sprites, in two rows with clear space between every item, all seen from the top-down three-quarter view of the reference scene. Top row: 1) a woodcutter’s axe with a long wooden handle and a grey iron head, lying flat, pointing right; 2) a neat pile of six cut logs of brown wood stacked in a pyramid; 3) a tree stump freshly cut flat, pale wood on top with rings, short roots; 4) one single cut log lying on its side, much wider than tall; 5) a stack of sawn wooden planks. Bottom row: 6) a grapevine growing up a wooden stake, green leaves and bunches of dark purple grapes; 7) the same vine with leaves but no grapes; 8) a sack of grain tied at the top; 9) a small bundle of hay; 10) a small olive branch with a few slender silvery green leaves."
+  },
+  {
+   "id": "noah-portraits-men",
+   "title": "Noah, his sons, the wicked and a giant: talk portraits",
+   "size": "1536x1024",
+   "style": "portraitStyle",
+   "references": [
+    "art/generated/v3-adam-portrait-tunic/20261024-060740-medium.png"
+   ],
+   "prompt": "A sheet of eight separate dialogue portraits in two rows of four, for a family Bible game set before the Flood. Top row, left to right: 1) NOAH, a very old, kind and wise man, a long-nosed weathered face with deep laugh lines, long white hair and a long full white beard down to his chest, white bushy brows, a warm patient smile, a plain cream linen robe. 2) SHEM, a calm, serious grown man, a long narrow face, straight dark-brown hair tied back, a short neat dark-brown beard, a thoughtful look, a red tunic. 3) HAM, a cheerful strong man with dark brown skin, a broad round face, short tightly curled black hair, a short black beard, a big friendly grin, an ochre-yellow tunic. 4) JAPHETH, the youngest brother, fair skin with freckles, wavy copper-red hair to his shoulders, only light red stubble, eager wide eyes and raised brows, a blue tunic. Bottom row, left to right: 5) a proud, scornful city man, black hair slicked back, a thin black moustache, narrow eyes and a sneering smirk, a dark grey tunic with a bronze necklace. 6) a stocky mocking man, olive skin, a round heavy face with a thick neck, very short cropped dark-brown hair, no beard, a broken nose, laughing at someone, a brown leather vest. 7) a lean sly man, a long thin face, shaggy black hair, a pointed black beard, one eyebrow raised, a gold earring, a dark-red tunic. 8) a GIANT of those days, an enormous man with a huge square jaw, a heavy brow, wild long black hair and a thick black beard, a stern frown (not frightening for children), broad shoulders with a bronze armband over a dark maroon tunic."
+  },
+  {
+   "id": "noah-portraits-women",
+   "title": "Noah’s wife, the three wives and a city woman: talk portraits",
+   "size": "1536x1024",
+   "style": "portraitStyle",
+   "references": [
+    "art/generated/v3-adam-portrait-tunic/20261024-060740-medium.png"
+   ],
+   "prompt": "A sheet of five separate dialogue portraits for a family Bible game set before the Flood, three in the top row and two in the bottom row, all women in modest dresses covering the shoulders. Top row, left to right: 1) NOAH’S WIFE, an old, gentle and lively woman, a round face with laugh lines, long silver-grey hair in a loose braid over one shoulder, a warm motherly smile, a blue dress. 2) SHEM’S WIFE, a calm young woman, an oval face, dark-brown hair in a neat bun, soft kind eyes, a plum-rose dress. 3) HAM’S WIFE, a joyful young woman with dark brown skin, a heart-shaped face, black hair wrapped in an olive-green headscarf, a bright laugh, an olive-green dress. Bottom row, left to right: 4) JAPHETH’S WIFE, a shy young woman, fair skin with freckles, auburn hair in two long braids, a small smile, a soft pink dress. 5) a haughty rich city woman, black hair piled high with gold pins, dark painted eyes, chin raised with a smug look, gold earrings and necklace, a deep purple dress."
   }
- ]
+ ],
+ "portraitStyle": "STYLE RULES: Soft, modern pixel art exactly in the style of the reference portrait of Adam: the same small soft pixel blocks, gentle painterly shading with light from the upper left, warm natural colours, smooth flat areas with little texture noise, and NO dark outlines. Every portrait matches the reference EXACTLY in framing and scale: head and shoulders, facing the viewer, centered in its place, the head the same size as Adam’s, the bust cut straight at the bottom, the same big friendly eyes with white and dark-brown iris and the same simple mouth. The reference shows the style only: each person is a different, new face (different face shape, nose, brows, age, hair and expression); do not copy Adam’s face. BACKGROUND: one flat solid magenta colour (#FF00FF) everywhere around the portraits, with no shadow, glow or texture on it. Leave wide clear magenta space between portraits; they never touch. No text, letters, numbers, labels, borders or frames."
 }

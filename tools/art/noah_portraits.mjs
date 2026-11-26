@@ -1,228 +1,201 @@
-// Noah's people's talk portraits, from Adam's and Eve's (the maintainer: take
-// Adam's as the reference, adapted to each): hair and clothes recoloured,
-// skin toned, and beards drawn on the men. Writes public/assets/noah/portraits/.
-// Run: node tools/art/noah_portraits.mjs
-import fs from 'fs';
+#!/usr/bin/env node
+// Noah's people's talk portraits, cut from the two generated sheets
+// (art/generated/noah-portraits-men, -women; the maintainer: "create them
+// with OpenAI, taking Adam from story 1 as the reference"). Each bust is
+// fitted to Adam's portrait (94 x 87, bottom-aligned, centred), and its blink
+// (half shut, shut) and talk (half open, open) patches are made from the
+// face itself: the eyes are found by their whites, the mouth by the darkest
+// line under them. Writes public/assets/noah/faces/ and
+// src/data/noah/portraits.json.
+//
+//   node tools/art/noah_portraits.mjs [--debug]
+import fs from 'node:fs';
+import path from 'node:path';
 import { PNG } from 'pngjs';
+import { keyed, newest, resample, subjects } from './noah_ingest.mjs';
 
-const SRC = 'public/assets/portraits';
-const OUT = 'public/assets/noah/portraits';
-const read = (f) => PNG.sync.read(fs.readFileSync(f));
-const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
-const lum = (r, g, b) => 0.299 * r + 0.587 * g + 0.114 * b;
-const clamp = (v) => Math.max(0, Math.min(255, Math.round(v)));
+const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
+const OUT = 'assets/noah/faces';
+const W = 94;
+const H = 87;
+/** how much taller than the frame the bust is drawn (its bottom cut off) */
+const ZOOM = 1.12;
+const DEBUG = process.argv.includes('--debug');
 
-/** A colour ramp through dark → base → light, by luminance 0..1 */
-function ramp(base, t, lift = 0.35) {
-  const c = hex(base);
-  if (t < 0.55) {
-    const k = 0.3 + (t / 0.55) * 0.7;
-    return c.map((v) => v * k);
-  }
-  const k = ((t - 0.55) / 0.45) * lift;
-  return c.map((v) => v + (255 - v) * k);
-}
-
-/** where each source's parts are (portrait pixels) */
-const SOURCES = {
-  adam: { file: 'adam-tunic', face: [47, 40, 15.5, 19.5], hairline: 21, neckTop: 60, neck: [[33, 60], [61, 60], [48, 84]], chin: 58, mouth: [42, 52, 48, 51], brows: [28, 32], ears: [34, 46, 25, 69] },
-  eve: { file: 'eve-tunic', face: [47, 34.5, 15, 19.5], hairline: 18, neckTop: 57, neck: [[33, 57], [63, 57], [48, 96]], chin: 53, mouth: [42, 52, 42, 45], brows: [23, 27], ears: [30, 40, 29, 65], sideHair: true, noFringe: true },
+/** Each sheet's people in reading order (rows top to bottom, left to right). */
+const SHEETS = {
+  'noah-portraits-men': ['noah', 'shem', 'ham', 'japheth', 'wicked', 'wicked-b', 'wicked-c', 'giant'],
+  'noah-portraits-women': ['noah-wife', 'shem-wife', 'ham-wife', 'japheth-wife', 'wicked-woman'],
 };
 
-/** the cast: base portrait, hair, cloth, skin (multiply), beard (rows below the chin, 0 none; -1 stubble), mirror */
-const CAST = {
-  noah: { src: 'adam', hair: '#e9e6df', cloth: '#d9ceb0', skin: [0.98, 0.95, 0.93], beard: 26, age: 0.5 },
-  'noah-wife': { src: 'eve', hair: '#b3aba3', cloth: '#3f6e8e', skin: [0.98, 0.95, 0.94], age: 0.35 },
-  shem: { src: 'adam', hair: '#3a2416', cloth: '#b0352c', skin: [1, 0.98, 0.96], beard: 6 },
-  ham: { src: 'adam', hair: '#17110e', cloth: '#c98a2a', skin: [0.74, 0.7, 0.68], beard: 4, mirror: true },
-  japheth: { src: 'adam', hair: '#8a4a24', cloth: '#2e6a8e', skin: [1.06, 1.04, 1.03], beard: 3, mirror: true },
-  'shem-wife': { src: 'eve', hair: '#2a1a12', cloth: '#8e3a5a', skin: [1, 0.97, 0.95] },
-  'ham-wife': { src: 'eve', hair: '#140e0c', cloth: '#6a8a3a', skin: [0.78, 0.73, 0.7], mirror: true },
-  'japheth-wife': { src: 'eve', hair: '#a0582a', cloth: '#c07a9a', skin: [1.05, 1.03, 1.02], mirror: true },
-  wicked: { src: 'adam', hair: '#1c1512', cloth: '#40444c', skin: [0.9, 0.86, 0.84], beard: -1, scowl: true },
-  giant: { src: 'adam', hair: '#120d0b', cloth: '#5a2a2a', skin: [0.82, 0.76, 0.72], beard: 10, scowl: true, mirror: true },
+/**
+ * Where each face's eyes (centres) and mouth (the middle of its closing line,
+ * and its width) are, measured on the cut portraits (a grid of 10 px over
+ * them). An open smile's line is under the teeth: talking opens it further.
+ */
+const FACES = {
+  noah: { eyes: [[37.7, 34.9], [57, 34.9]], mouth: [47, 52, 8] },
+  shem: { eyes: [[39.2, 34.2], [57.7, 34.2]], mouth: [47.5, 52, 8] },
+  ham: { eyes: [[37.7, 35.6], [57, 35.6]], mouth: [47.5, 55, 10] },
+  japheth: { eyes: [[36.3, 37.7], [56.3, 37.7]], mouth: [46.3, 54, 8] },
+  wicked: { eyes: [[45.6, 34.2], [62.6, 34.2]], mouth: [55.5, 51, 8] },
+  'wicked-b': { eyes: [[38.5, 28.5], [57, 28.5]], mouth: [47.5, 53, 12] },
+  'wicked-c': { eyes: [[36.3, 37], [52.7, 37.3]], mouth: [45.6, 53, 8] },
+  giant: { eyes: [[38.5, 28.5], [55.5, 28.5]], mouth: [47.5, 48, 8] },
+  'noah-wife': { eyes: [[37.7, 36.3], [57.7, 36.3]], mouth: [47.5, 53, 8] },
+  'shem-wife': { eyes: [[37.7, 43.4], [57, 43.4]], mouth: [47, 60, 7] },
+  'ham-wife': { eyes: [[34.9, 40.6], [57, 40.6]], mouth: [46.3, 57, 9] },
+  'japheth-wife': { eyes: [[37.7, 37], [58.4, 37]], mouth: [47.5, 53, 7] },
+  'wicked-woman': { eyes: [[36.3, 41.9], [56.3, 41.9]], mouth: [46.9, 57.5, 8] },
 };
 
-function hash(x, y) {
-  let h = (x * 374761393 + y * 668265263) ^ 0x5bd1e995;
-  h = (h ^ (h >>> 13)) * 1274126177;
-  return ((h ^ (h >>> 16)) >>> 0) / 4294967295;
-}
-
-/** the face: an ellipse, its hairline fringe left to the hair; per row, how far it reaches (for the beard) */
-function faceSpans(S) {
-  const [cx, cy, rx, ry] = S.face;
-  const spans = [];
-  for (let y = 0; y < 100; y++) {
-    const t = (y - cy) / ry;
-    if (Math.abs(t) >= 1) { spans.push(null); continue; }
-    const h = rx * Math.sqrt(1 - t * t);
-    spans.push([Math.round(cx - h), Math.round(cx + h)]);
-  }
-  return spans;
-}
-
-const inTri = (x, y, [a, b, c]) => {
-  const s = (p, q, r) => (p[0] - r[0]) * (q[1] - r[1]) - (q[0] - r[0]) * (p[1] - r[1]);
-  const pt = [x, y];
-  const d1 = s(pt, a, b), d2 = s(pt, b, c), d3 = s(pt, c, a);
-  return !((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0));
+const lum = (d, i) => 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+const sat = (d, i) => {
+  const mx = Math.max(d[i], d[i + 1], d[i + 2]);
+  return mx ? (mx - Math.min(d[i], d[i + 1], d[i + 2])) / mx : 0;
 };
 
-/** what each pixel of the base is: 'hair' | 'skin' | 'cloth' */
-function classify(p, S) {
-  const spans = faceSpans(S);
-  const W = p.width;
-  const [cx, cy, rx, ry] = S.face;
-  const kind = new Array(W * p.height).fill(null);
-  for (let y = 0; y < p.height; y++)
-    for (let x = 0; x < W; x++) {
-      const i = y * W + x;
-      if (!p.data[i * 4 + 3]) continue;
-      const l = lum(p.data[i * 4], p.data[i * 4 + 1], p.data[i * 4 + 2]);
-      const e = ((x - cx) / (rx * 1.06)) ** 2 + ((y - cy) / (ry * 1.04)) ** 2;
-      let k;
-      if (e < 1) k = !S.noFringe && y < S.hairline + 7 && l < 100 ? 'hair' : 'skin';
-      else if (y <= cy && l >= 140 && e < 1.25) k = 'skin';
-      // the jaw and the neck's shadows beside the face
-      else if (y > cy && y < S.neckTop && l >= 100 && e < 1.5) k = 'skin';
-      else if (y < S.neckTop) {
-        const neck = y > cy && Math.abs(x - cx) < rx * 0.62;
-        const ear = y >= S.ears[0] && y <= S.ears[1] && (x >= S.ears[2] && x <= S.ears[3]) && l >= 105;
-        k = neck || ear ? 'skin' : 'hair';
-      } else if (inTri(x, y, S.neck)) k = 'skin';
-      else k = 'cloth';
-      // long hair over the shoulders
-      if (S.sideHair && k !== 'skin' && y >= S.neckTop - 4) {
-        const bottom = x < 34 ? 59 + (34 - x) * 0.5 : x > 61 ? 59 + (x - 61) * 0.5 : 0;
-        if (y < bottom) k = 'hair';
+/** The bust in a 94 x 87 frame, centred: a little taller than the frame, cut at
+ * the bottom, so the heads are Adam's size. */
+function frame(img, box) {
+  const sw = box.x1 - box.x0 + 1;
+  const sh = box.y1 - box.y0 + 1;
+  const th = Math.round(H * ZOOM);
+  const tw = Math.round(sw * (th / sh));
+  const fit = resample(img, box, tw, th);
+  const out = new PNG({ width: W, height: H });
+  const ox = Math.round((W - tw) / 2);
+  for (let y = 0; y < H; y++)
+    for (let x = 0; x < tw; x++) {
+      const tx = x + ox;
+      if (tx < 0 || tx >= W) continue;
+      fit.data.copy(out.data, (y * W + tx) * 4, (y * tw + x) * 4, (y * tw + x) * 4 + 4);
+    }
+  // the magenta's fringe on the edges (only near-magenta: the wicked woman's dress is purple)
+  const d = out.data;
+  for (let i = 0; i < d.length; i += 4) if (d[i + 3] && d[i] > 150 && d[i + 2] > 140 && d[i + 1] < 110) d[i + 3] = 0;
+  // and the pink left on light edges (white hair)
+  for (let pass = 0; pass < 2; pass++) {
+    const drop = [];
+    for (let y = 0; y < H; y++)
+      for (let x = 0; x < W; x++) {
+        const i = (y * W + x) * 4;
+        if (!d[i + 3]) continue;
+        const edge = x === 0 || x === W - 1 || y === 0 || !d[i - 1] || !d[i + 7] || !d[i - W * 4 + 3] || (y < H - 1 && !d[i + W * 4 + 3]);
+        if (edge && Math.min(d[i], d[i + 2]) - d[i + 1] > 12 && lum(d, i) > 110) drop.push(i);
       }
-      // the brows take the hair's colour
-      if (k === 'skin' && y >= S.brows[0] && y <= S.brows[1] && l < 95) k = 'brow';
-      kind[i] = k;
-    }
-  return { kind, spans };
-}
-
-function recolour(d, i, k, c, x, y) {
-  const r = d[i], g = d[i + 1], b = d[i + 2];
-  const l = lum(r, g, b) / 255;
-  if (k === 'hair' || k === 'brow') {
-    const o = ramp(c.hair, Math.min(1, l * 1.35 + 0.05), 0.4);
-    d.set(o.map(clamp), i);
-  } else if (k === 'cloth') {
-    const o = ramp(c.cloth, Math.min(1, l * 0.95 + 0.05), 0.3);
-    d.set(o.map(clamp), i);
-  } else {
-    let [mr, mg, mb] = c.skin;
-    // older: a little paler and less ruddy
-    if (c.age) { mr *= 1 - c.age * 0.06; mg *= 1 + c.age * 0.02; }
-    d.set([clamp(r * mr), clamp(g * mg), clamp(b * mb)], i);
+    for (const i of drop) d[i + 3] = 0;
   }
+  return out;
 }
 
-/** a beard over the jaw (and down the chest for a long one), a moustache, leaving the lips */
-function beard(p, S, spans, c, hair) {
-  if (!c.beard) return;
-  const W = p.width;
-  const [mx0, mx1, my0, my1] = S.mouth;
-  const top = my0 - 3;
-  const chin = S.chin;
-  const stubble = c.beard < 0;
-  const bottom = chin + Math.max(0, c.beard);
-  for (let y = top; y <= bottom; y++) {
-    const sp = spans[Math.min(y, chin)] ?? spans[chin];
-    if (!sp) continue;
-    let x0 = sp[0], x1 = sp[1];
-    if (y > chin) {
-      // hanging below the chin, narrowing to a rounded point
-      const t = (y - chin) / Math.max(1, bottom - chin);
-      const half = ((x1 - x0) / 2) * (1 - 0.75 * t * t) + 1;
-      const m = (x0 + x1) / 2;
-      x0 = Math.round(m - half); x1 = Math.round(m + half);
-    }
-    for (let x = x0; x <= x1; x++) {
+/** An eye's box: the iris, lashes and whites around the measured centre. */
+function eyeBox(p, [cx, cy]) {
+  const d = p.data;
+  let x0 = 99, x1 = -1, y0 = 99, y1 = -1;
+  for (let y = Math.round(cy) - 3; y <= Math.round(cy) + 2; y++)
+    for (let x = Math.round(cx) - 5; x <= Math.round(cx) + 5; x++) {
       const i = (y * W + x) * 4;
-      // the lips stay, and the cheeks above the mouth line (only a moustache over it)
-      if (y >= my0 - 1 && y <= my1 && x >= mx0 + 1 && x <= mx1 - 1) continue;
-      if (y < my0 - 1 && (x < mx0 - 2 || x > mx1 + 2)) continue;
-      if (y < my0 + 2 && (x < x0 + 2 || x > x1 - 2) && y <= chin - 6) continue;
-      const edge = x === x0 || x === x1 || y === bottom;
-      const n = hash(x, y);
-      if (stubble) {
-        if (n < 0.45 || y < my0 + 1) continue;
-        const o = ramp(c.hair, 0.3).map((v, j) => v * 0.6 + p.data[i + j] * 0.4);
-        p.data.set(o.map(clamp), i);
-        p.data[i + 3] = 255;
-        continue;
+      if (!d[i + 3] || !(lum(d, i) < 85 || (lum(d, i) > 165 && sat(d, i) < 0.3))) continue;
+      x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+    }
+  if (x1 < 0) throw new Error('no eye near ' + cx + ',' + cy);
+  return { x0, x1, y0, y1 };
+}
+
+const px = (d, x, y) => [...d.slice((y * W + x) * 4, (y * W + x) * 4 + 4)];
+const shade = (c, k) => [c[0] * k, c[1] * k, c[2] * k, 255].map((v) => Math.round(Math.max(0, Math.min(255, v))));
+
+/** The blink patches over both eyes: half shut (the lid down to the middle) and shut (skin with the lash line). */
+function blink(p, boxes) {
+  const x0 = Math.min(...boxes.map((b) => b.x0)) - 1;
+  const x1 = Math.max(...boxes.map((b) => b.x1)) + 1;
+  const y0 = Math.min(...boxes.map((b) => b.y0)) - 1;
+  const y1 = Math.max(...boxes.map((b) => b.y1)) + 1;
+  const w = x1 - x0 + 1, h = y1 - y0 + 1;
+  const frames = [0, 1].map(() => {
+    const o = new PNG({ width: w, height: h });
+    for (let y = 0; y < h; y++) p.data.copy(o.data, y * w * 4, ((y + y0) * W + x0) * 4, ((y + y0) * W + x1 + 1) * 4);
+    return o;
+  });
+  for (const b of boxes) {
+    // the lash colour: the darkest pixel of the eye; the skin: the row under it (lid a shade darker)
+    let lash = [40, 25, 20, 255], dl = 999;
+    for (let y = b.y0; y <= b.y1; y++)
+      for (let x = b.x0; x <= b.x1; x++) {
+        const i = (y * W + x) * 4;
+        if (lum(p.data, i) < dl) { dl = lum(p.data, i); lash = px(p.data, x, y); }
       }
-      if (edge && n < 0.35) continue;
-      // the curls of the hair on the head, repeated down the beard
-      const hy = 3 + ((y - top) % 15);
-      const hx = 34 + ((x - 34 + Math.floor((y - top) / 15) * 7) % 26 + 26) % 26;
-      const hi = (hy * W + hx) * 4;
-      const hl = hair.data[hi + 3] ? lum(hair.data[hi], hair.data[hi + 1], hair.data[hi + 2]) / 255 : 0.4;
-      const t = edge ? 0.1 : Math.max(0.05, Math.min(1, hl * 1.35 + 0.05));
-      p.data.set(ramp(c.hair, t, 0.4).map(clamp), i);
-      p.data[i + 3] = 255;
+    const mid = Math.round((b.y0 + b.y1) / 2);
+    for (let x = b.x0; x <= b.x1; x++) {
+      const skin = px(p.data, x, Math.min(H - 1, b.y1 + 2));
+      const lid = shade(skin, 0.9);
+      const set = (f, y, c) => f.data.set(c, ((y - y0) * w + x - x0) * 4);
+      const edge = x === b.x0 || x === b.x1;
+      // half shut: the lid over the top half, the lashes on its edge
+      for (let y = b.y0; y < mid; y++) set(frames[0], y, lid);
+      if (!edge) set(frames[0], mid, lash);
+      // shut: skin, and the lashes as a line a little low, curving down at the ends
+      for (let y = b.y0; y <= b.y1; y++) set(frames[1], y, lid);
+      set(frames[1], edge ? mid : mid + 1, lash);
     }
   }
+  return [frames, x0, y0];
 }
 
-/** a frown: the inner ends of the brows lowered a pixel */
-function scowl(p, S) {
-  const W = p.width;
-  const mid = 47;
-  for (let y = S.brows[1] + 1; y >= S.brows[0]; y--)
-    for (let x = mid - 8; x <= mid + 8; x++) {
-      if (Math.abs(x - mid) < 2) continue;
-      const i = (y * W + x) * 4;
-      const l = lum(p.data[i], p.data[i + 1], p.data[i + 2]);
-      if (l < 95 && Math.abs(x - mid) < 7) {
-        const j = ((y + 1) * W + x) * 4;
-        p.data.copyWithin(j, i, i + 4);
+/** Talk patches: the jaw below the mouth line dropped 1 and 2 pixels, the gap the mouth's dark inside. */
+function talk(p, m) {
+  const x0 = m.x0 - 1, x1 = m.x1 + 1, y0 = m.y, h = 6;
+  const w = x1 - x0 + 1;
+  const inside = [70, 28, 26, 255];
+  return [1, 2].map((drop) => {
+    const o = new PNG({ width: w, height: h });
+    for (let y = 0; y < h; y++)
+      for (let x = 0; x < w; x++) {
+        const sx = x + x0;
+        const end = sx < m.x0 || sx > m.x1;
+        // the corners open less
+        const dd = end ? 0 : sx === m.x0 || sx === m.x1 ? Math.min(1, drop) : drop;
+        let c;
+        if (y === 0) c = px(p.data, sx, y0);
+        else if (y <= dd) c = sx === m.x0 || sx === m.x1 ? shade(inside, 1.2) : inside;
+        else c = px(p.data, sx, Math.min(H - 1, y0 + y - dd));
+        o.data.set(c, (y * w + x) * 4);
       }
-    }
+    return { png: o, x: x0, y: y0, w, h };
+  });
 }
 
-const mirror = (p) => {
-  const o = new PNG({ width: p.width, height: p.height });
-  for (let y = 0; y < p.height; y++) for (let x = 0; x < p.width; x++) p.data.copy(o.data, (y * p.width + p.width - 1 - x) * 4, (y * p.width + x) * 4, (y * p.width + x) * 4 + 4);
-  return o;
-};
-
-const manifest = JSON.parse(fs.readFileSync('src/data/generated/assets.json', 'utf8')).portraits;
 const out = {};
-for (const [id, c] of Object.entries(CAST)) {
-  const S = SOURCES[c.src];
-  const entry = manifest[S.file];
-  const base = read(`${SRC}/${S.file}.png`);
-  const { kind, spans } = classify(base, S);
-  const W = base.width;
-  const paint = (p, ox, oy) => {
-    for (let y = 0; y < p.height; y++)
-      for (let x = 0; x < p.width; x++) {
-        const i = (y * p.width + x) * 4;
-        if (!p.data[i + 3]) continue;
-        const k = kind[(y + oy) * W + x + ox] ?? 'skin';
-        recolour(p.data, i, k, c, x + ox, y + oy);
-      }
-  };
-  paint(base, 0, 0);
-  if (c.scowl) scowl(base, S);
-  beard(base, S, spans, c, read(`${SRC}/${S.file}.png`));
-  const final = c.mirror ? mirror(base) : base;
-  fs.writeFileSync(`${OUT}/${id}.png`, PNG.sync.write(final));
-  const patches = (list, name) =>
-    list.map((q, n) => {
-      const pp = read(`public/${q.file}`);
-      paint(pp, q.x, q.y);
-      const f = c.mirror ? mirror(pp) : pp;
-      const file = `assets/noah/portraits/${id}-${name}-${n}.png`;
-      fs.writeFileSync(`public/${file}`, PNG.sync.write(f));
-      return { file, x: c.mirror ? W - q.x - q.w : q.x, y: q.y, w: q.w, h: q.h };
-    });
-  out[id] = { file: `assets/noah/portraits/${id}.png`, width: entry.width, height: entry.height, mouth: patches(entry.mouth, 'mouth'), eyes: patches(entry.eyes, 'eyes') };
+const dir = path.join(ROOT, 'public', OUT);
+fs.mkdirSync(dir, { recursive: true });
+for (const f of fs.readdirSync(dir)) fs.unlinkSync(path.join(dir, f));
+for (const [job, names] of Object.entries(SHEETS)) {
+  const img = keyed(PNG.sync.read(fs.readFileSync(newest(job))));
+  const found = subjects(img, 6).filter((b) => b.n > 20000);
+  if (found.length !== names.length) {
+    console.error(`${job}: found ${found.length} portraits, expected ${names.length}`);
+    for (const b of found) console.error(`  ${b.x0},${b.y0} ${b.x1 - b.x0 + 1}x${b.y1 - b.y0 + 1} (${b.n} px)`);
+    process.exit(1);
+  }
+  names.forEach((id, n) => {
+    const p = frame(img, found[n]);
+    const save = (png, name) => {
+      const file = `${OUT}/${name}.png`;
+      fs.writeFileSync(path.join(ROOT, 'public', file), PNG.sync.write(png));
+      return file;
+    };
+    const entry = { file: save(p, id), width: W, height: H, mouth: [], eyes: [] };
+    const face = FACES[id];
+    const boxes = face.eyes.map((e) => eyeBox(p, e));
+    const [frames, x, y] = blink(p, boxes);
+    entry.eyes = frames.map((f, i) => ({ file: save(f, `${id}-eyes-${i}`), x, y, w: f.width, h: f.height }));
+    const [mx, my, mw] = face.mouth;
+    const m = { x0: Math.round(mx - mw / 2), x1: Math.round(mx - mw / 2) + mw - 1, y: Math.round(my) };
+    entry.mouth = talk(p, m).map((t, i) => ({ file: save(t.png, `${id}-mouth-${i}`), x: t.x, y: t.y, w: t.w, h: t.h }));
+    if (DEBUG) console.log(id, 'eyes', boxes, 'mouth', m);
+    out[id] = entry;
+  });
 }
-fs.writeFileSync('src/data/noah/portraits.json', JSON.stringify(out, null, 1) + '\n');
+fs.writeFileSync(path.join(ROOT, 'src/data/noah/portraits.json'), JSON.stringify(out, null, 1) + '\n');
 console.log('portraits:', Object.keys(out).join(' '));

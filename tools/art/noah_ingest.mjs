@@ -9,6 +9,7 @@
 //   node tools/art/noah_ingest.mjs [--debug]
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { PNG } from 'pngjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
@@ -43,7 +44,7 @@ const SHEETS = {
   ],
 };
 
-function newest(job) {
+export function newest(job) {
   const dir = path.join(ROOT, 'art/generated', job);
   const files = fs.readdirSync(dir).filter((f) => f.endsWith('.png')).sort();
   // a medium (finished) version wins over the low drafts
@@ -52,7 +53,7 @@ function newest(job) {
 }
 
 /** RGBA float image with the magenta keyed out. */
-function keyed(png) {
+export function keyed(png) {
   const { width: w, height: h, data } = png;
   // the background: the average of the corners
   let br = 0, bg = 0, bb = 0, n = 0;
@@ -90,7 +91,7 @@ function keyed(png) {
 }
 
 /** Bounding boxes of the subjects (shapes closer than `gap` px are one). */
-function subjects(img, gap = 10) {
+export function subjects(img, gap = 10) {
   const { w, h, data } = img;
   const solid = new Uint8Array(w * h);
   for (let p = 0; p < w * h; p++) solid[p] = data[p * 4 + 3] > 0.5 ? 1 : 0;
@@ -149,7 +150,7 @@ function subjects(img, gap = 10) {
 }
 
 /** Area-average resample of a box to `tw` × `th`, alpha cut hard. */
-function resample(img, box, tw, th) {
+export function resample(img, box, tw, th) {
   const { w, data } = img;
   const sw = box.x1 - box.x0 + 1;
   const sh = box.y1 - box.y0 + 1;
@@ -212,6 +213,10 @@ function base(png) {
   return { ax: w / 2, ay: h - 1 };
 }
 
+// run as a script (noah_portraits.mjs imports the cutting tools)
+if (import.meta.url === pathToFileURL(process.argv[1]).href) main();
+
+function main() {
 fs.mkdirSync(OUT, { recursive: true });
 const manifest = {};
 for (const [job, items] of Object.entries(SHEETS)) {
@@ -241,3 +246,4 @@ for (const [job, items] of Object.entries(SHEETS)) {
 }
 fs.writeFileSync(DATA, JSON.stringify(manifest, null, 1) + '\n');
 console.log(`${Object.keys(manifest).length} sprites -> public/assets/noah/`);
+}

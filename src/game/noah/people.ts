@@ -26,13 +26,13 @@ interface Person {
   scale?: number;
 }
 
-/** The cast, in the colours of their talk portraits (tools/art/noah_portraits.mjs). */
+/** The cast, in the colours of their talk portraits (art/generated/noah-portraits-*). */
 export const PEOPLE: Record<string, Person> = {
   noah: { base: 'man-robe', hair: '#e9e6df', cloth: '#d9ceb0', skin: [0.98, 0.95, 0.93] },
   'noah-wife': { base: 'woman', hair: '#b3aba3', cloth: '#3f6e8e', skin: [0.98, 0.95, 0.94] },
   shem: { base: 'man-beard', hair: '#3a2416', cloth: '#b0352c', skin: [1, 0.98, 0.96] },
   ham: { base: 'man-beard', hair: '#17110e', cloth: '#c98a2a', skin: [0.74, 0.7, 0.68] },
-  japheth: { base: 'man-beard', hair: '#8a4a24', cloth: '#2e6a8e', skin: [1.06, 1.04, 1.03] },
+  japheth: { base: 'man-beard', hair: '#b4521e', cloth: '#2e6a8e', skin: [1.06, 1.04, 1.03] },
   'shem-wife': { base: 'woman', hair: '#2a1a12', cloth: '#8e3a5a', skin: [1, 0.97, 0.95] },
   'ham-wife': { base: 'woman', hair: '#140e0c', cloth: '#6a8a3a', skin: [0.78, 0.73, 0.7] },
   'japheth-wife': { base: 'woman', hair: '#a0582a', cloth: '#c07a9a', skin: [1.05, 1.03, 1.02] },
@@ -138,9 +138,6 @@ export function buildNoahPeople(scene: Phaser.Scene): void {
     }
     MANIFEST.characters[id] = { robe: set };
   }
-  // the talk portraits (drawn from Adam's and Eve's, tools/art/noah_portraits.mjs)
+  // the talk portraits, one face each (generated with Adam's as the reference, tools/art/noah_portraits.mjs)
   for (const [id, entry] of Object.entries(PORTRAITS as Record<string, PortraitAsset>)) MANIFEST.portraits[`noah-${id}`] ??= entry;
-  // the wicked share their portraits
-  for (const w of ['wicked-b', 'wicked-c']) MANIFEST.portraits[`noah-${w}`] ??= MANIFEST.portraits['noah-wicked'];
-  if (MANIFEST.portraits['noah-noah-wife']) MANIFEST.portraits['noah-wicked-woman'] ??= MANIFEST.portraits['noah-shem-wife'];
 }

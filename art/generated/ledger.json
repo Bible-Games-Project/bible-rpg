@@ -2559,5 +2559,49 @@
    "total_tokens": 2045
   },
   "at": "20261126-080310"
+ },
+ {
+  "job": "noah-portraits-men",
+  "chapter": "noah",
+  "file": "art/generated/noah-portraits-men/20261126-101014-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0201,
+  "usage": {
+   "input_tokens": 2155,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 619
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 2313
+  },
+  "at": "20261126-101014"
+ },
+ {
+  "job": "noah-portraits-women",
+  "chapter": "noah",
+  "file": "art/generated/noah-portraits-women/20261126-101032-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0194,
+  "usage": {
+   "input_tokens": 2003,
+   "input_tokens_details": {
+    "image_tokens": 1536,
+    "text_tokens": 467
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 2161
+  },
+  "at": "20261126-101032"
  }
 ]

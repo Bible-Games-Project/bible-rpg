@@ -653,7 +653,12 @@ $1 play at `WALK_FPS` 15 at the player's
   Its art is rebuilt at runtime in the day palette (`colors.ts`). The
   player switches between the spirit of God (m01), Noah, the birds
   (`fly()`), Ham and Shem (m11). Small talk (`npc:*`) loses ties to
-  mission steps at the same person.
+  mission steps at the same person. Its talk portraits are generated
+  (`noah-portraits-men/-women` in `art/prompts/noah.json`, Adam's portrait
+  as reference; the maintainer rejected Adam recoloured with beards) and cut
+  by `tools/art/noah_portraits.mjs`, whose `FACES` table holds each face's
+  measured eye and mouth spots for the blink and talk patches. The spirit
+  holds its idle frame and leans toward where it flies (`flySpirit`).
 - Phaser reuses a Scene object between games: field initialisers run once.
   Reset every list and state in `create` (stale destroyed actors gave a
   black screen on "Erase and start again").
@@ -665,7 +670,8 @@ $1 play at `WALK_FPS` 15 at the player's
   both floating with the arm and staying planted). Sheep move slowly calm
   (`CALM_HERD`) and run with quicker legs only when the dog frightened them
   (`rush`, `RUSH_LEGS`); Abel alone only makes them walk.
-- Cain strikes with the `attack` action (left click on the canvas, the
+- Cain strikes with the `attack` action (left click on the canvas, or F,
+  never shown: a Mac trackpad drops taps while keys are held; the
   touch pad's ⚔ button shown while `input.setAttack(true)`); the dog's bark
   and other sounds with numbered slots (`bark-1..3`) play through
   `audio.variant`, one at random, never the same twice in a row. Dirt steps
