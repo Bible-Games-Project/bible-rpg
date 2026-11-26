@@ -860,7 +860,7 @@
     }
   },
   "noah.make-ark.0": {
-    "text": "Noah. The end of all flesh has come before me: the earth is filled with violence.",
+    "text": "Noah, the earth is filled with violence. Make an ark of gopher wood.",
     "voice": "W. Storytime Oxley",
     "model": "eleven_v4",
     "settings": {
@@ -870,7 +870,7 @@
     }
   },
   "noah.make-ark.1": {
-    "text": "Make an ark of gopher wood, with rooms, and pitch it inside and out.",
+    "text": "I will bring a flood on the earth. But with you I will establish my covenant.",
     "voice": "W. Storytime Oxley",
     "model": "eleven_v4",
     "settings": {
@@ -880,16 +880,6 @@
     }
   },
   "noah.make-ark.2": {
-    "text": "I will bring a flood of waters on the earth. But with you I will establish my covenant.",
-    "voice": "W. Storytime Oxley",
-    "model": "eleven_v4",
-    "settings": {
-      "stability": 0.3,
-      "similarity_boost": 0.75,
-      "speed": 1
-    }
-  },
-  "noah.make-ark.3": {
     "text": "I will do it, LORD.",
     "voice": "Michael Moody",
     "model": "eleven_v4",
