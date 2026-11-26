@@ -647,6 +647,13 @@ $1 play at `WALK_FPS` 15 at the player's
   `world/shadows.ts`, set by each scene in `create` (Eden: false, 1).
   The maintainer rejected a full-screen filter. Never touch Eden's look
   when working on this chapter. It opens by finishing Eden.
+- Noah (`src/game/noah/`, `src/data/noah/`, `noah.json`) has its own
+  scene and `NoahRunner` (11 missions, `stage(w, n, place)` sets the world
+  for each so a save resumes anywhere); it opens by finishing Cain and Abel.
+  Its art is rebuilt at runtime in the day palette (`colors.ts`). The
+  player switches between the spirit of God (m01), Noah, the birds
+  (`fly()`), Ham and Shem (m11). Small talk (`npc:*`) loses ties to
+  mission steps at the same person.
 - Phaser reuses a Scene object between games: field initialisers run once.
   Reset every list and state in `create` (stale destroyed actors gave a
   black screen on "Erase and start again").
@@ -680,6 +687,8 @@ $1 play at `WALK_FPS` 15 at the player's
   `art.ts` recolours them to the night (`TREE_ART` maps the world's tree ids;
   trees are split trunk/crown at the lowest leafy row). If a sheet is
   regenerated, check that the subject count and order still match.
+  The @sparticuz Chromium is x86-64 only: on an arm64 console (uname -m
+  aarch64) it cannot run, and there is no other browser to fetch.
   Both chapters run in the console's headless Chromium (open `/?debug` on
   `node tools/shorts/serve.mjs` of a fresh build for `window.bibleRpg`;
   Eden needs the args without single-process/no-zygote, and Enter ×3 past

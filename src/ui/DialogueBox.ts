@@ -91,8 +91,11 @@ export class DialogueBox {
     if (!lines.length) return Promise.resolve();
     // after the narration being told, never over it
     return this.passive.then(() => new Promise<void>((resolve) => {
+      // a dialogue shown over another ends the first one: its caller goes on
+      const before = this.resolve;
       this.queue = [...lines];
       this.resolve = resolve;
+      before?.();
       // the recorded voices load while the first line starts
       for (const l of lines) if (l.voice) void voices.prepare(l.voice, l.text);
       if (!this.open) {

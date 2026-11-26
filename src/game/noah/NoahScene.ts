@@ -164,6 +164,8 @@ export class NoahScene extends Phaser.Scene {
   private wind = 1;
   /** Shem and Japheth go backward (Genesis 9:23): the player faces away from where they go */
   private backward = false;
+  /** counts the times the followers were reset, so a boarding from before is dropped */
+  private boarding = 0;
   /** one who walks beside the player (Japheth beside Shem) */
   private buddy: Actor | null = null;
   /** the seven days: those still waiting are called, not talked to */
@@ -484,7 +486,7 @@ export class NoahScene extends Phaser.Scene {
     this.busy = true;
     this.player().stop();
     const at = typeof spec.at === 'function' ? spec.at() : spec.at;
-    if (this.ctrlKind === 'human') this.player().face({ x: at[0], y: at[1] });
+    if (this.ctrlKind === 'human' && !this.backward) this.player().face({ x: at[0], y: at[1] });
     ui().hud.setPrompt(null);
     this.currentInteract = null;
     try {
@@ -772,9 +774,12 @@ export class NoahScene extends Phaser.Scene {
 
   /** Everyone back where they wait (the seven days begin again), or in the ark. */
   resetFollowers(inArk: boolean): void {
+    this.boarding++;
     for (const f of this.followers) {
       f.state = inArk ? 'in' : 'wait';
       const a = f.actor;
+      this.tweens.killTweensOf(a.feet);
+      a.scripted = false;
       a.stop();
       a.lift = 0;
       if (f.kind === 'animal') {
@@ -823,12 +828,15 @@ export class NoahScene extends Phaser.Scene {
   /** Those following go up into the ark (Genesis 7:7–9). Resolves when all are in. */
   async boardFollowers(onIn: (f: Follower) => void): Promise<void> {
     const going = this.followers.filter((f) => f.state === 'follow');
+    const round = this.boarding;
     await Promise.all(
       going.map(async (f, k) => {
         f.state = 'in';
         await this.wait(k * 260);
+        if (round !== this.boarding) return;
         const a = f.actor;
         await a.walkPath([ARK_DOOR, [ARK_DOOR[0] + 70, ARK_DOOR[1] - 80]], 150);
+        if (round !== this.boarding) return;
         a.setVisible(false);
         a.lift = 0;
         onIn(f);
@@ -1213,7 +1221,8 @@ export class NoahScene extends Phaser.Scene {
       const fx = p.facing === 'left' ? -1 : p.facing === 'right' ? 1 : 0;
       const fy = p.facing === 'up' ? -1 : p.facing === 'down' ? 1 : 0;
       const dot = ((at[0] - p.x) * fx + (at[1] - p.y + 20) * fy) / Math.max(1, d);
-      const score = d - dot * 25;
+      // small talk never hides a mission step at the same person
+      const score = d - dot * 25 + (s.id.startsWith('npc:') ? 1000 : 0);
       if (score < bestScore) {
         bestScore = score;
         best = s;
@@ -1266,8 +1275,7 @@ export class NoahScene extends Phaser.Scene {
       dpr,
       settings.get().reduceMotion,
     );
-    if (sees(best.at) || this.ctrlKind !== 'bird') this.edgeArrow(best.mark);
-    else hud.setArrow(null);
+    this.edgeArrow(best.mark);
   }
 
   private edgeArrow(mark: Pt): void {

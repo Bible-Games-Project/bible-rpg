@@ -91,9 +91,9 @@ function stage(w: NoahScene, n: number, place: boolean): void {
   w.setRain(false);
   w.setWind(1);
   w.setBow(n >= 10);
-  w.setAltarFire(false);
+  w.setAltarFire(n >= 9);
   w.world.showAltar(n >= 9);
-  w.world.showTent(n >= 10);
+  w.world.showTent(n >= 11);
   w.world.vines.forEach((_, i) => w.world.setVine(i, n >= 11 ? 'grown' : 'none'));
   w.setBackward(false);
   w.setBuddy(null);
@@ -106,17 +106,15 @@ function stage(w: NoahScene, n: number, place: boolean): void {
   for (const id of ['ham', 'shem', 'japheth'] as const) w.family[id].hold(null);
   for (const m of w.mockers) (n === 2 || n === 3 ? w.show(m, [m.x, m.y], 'up') : w.hide(m));
   // the family and the animals: waiting before the flood, in the ark during it, out after it
-  w.resetFollowers(n >= 4);
-  if (n >= 8) {
-    for (const f of w.followers) if (f.kind === 'animal') w.hide(f.actor);
-    for (const id of FAMILY_IDS) w.show(w.family[id], AFTER[id], 'up');
-  }
-  if (!before && n < 8) w.hide(w.noah);
+  // after the flood the animals are out in the land again (from mission 9)
+  w.resetFollowers(n >= 4 && n <= 8);
+  if (n >= 9) for (const id of FAMILY_IDS) w.show(w.family[id], AFTER[id], 'up');
+  if (!before && n < 9) w.hide(w.noah);
   w.setPlayer(n === 1 ? w.god : n === 11 ? w.family.ham : w.noah);
   if (n === 1) w.spirit(true);
   if (!place) return;
   if (n <= 3) w.show(w.noah, n === 1 ? POINTS.house.map((v, i) => v + (i ? 70 : 60)) as Pt : POINTS.noahStart, n === 1 ? 'left' : 'right');
-  else if (n >= 8) w.show(w.noah, [ARK_DOOR[0] - 30, ARK_DOOR[1] + 70], 'down');
+  else if (n >= 9) w.show(w.noah, [ARK_DOOR[0] - 30, ARK_DOOR[1] + 70], 'down');
   if (n === 11) {
     w.show(w.noah, POINTS.tentDoor, 'down');
     w.hide(w.noah);
@@ -574,6 +572,8 @@ const MISSIONS: NoahMission[] = [
       w.cutscene(true);
       for (const id of FAMILY_IDS) w.hide(w.family[id]);
       w.show(w.noah, [ARK_DOOR[0] + 70, ARK_DOOR[1] - 80], 'down');
+      // inside the hull: no body, or the ark's would push him out
+      w.noah.body.enable = false;
       await w.appear(w.god, [ARK_DOOR[0] - 160, ARK_DOOR[1] + 140], 'up', { beam: true });
       await w.say('go-forth');
       // out they come, the family and every beast after their kinds (Genesis 8:18–19)
@@ -868,11 +868,13 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
   let food = 0;
   let family = 0;
   let carrying: number | null = null;
-  const start = w.time.now;
+  // the days count only while the game runs (not while paused)
+  let elapsed = 0;
+  const clock = w.time.addEvent({ delay: 100, loop: true, callback: () => (elapsed += 100) });
   const offs: (() => void)[] = [];
   const pairsIn = () => PAIRS.filter((_, i) => w.pairIn(i)).length;
   const done = () => family >= FAMILY_IDS.length && food >= FOOD_NEEDED && pairsIn() >= PAIRS.length;
-  const day = () => Math.min(7, 1 + Math.floor((w.time.now - start) / DAY_MS));
+  const day = () => Math.min(7, 1 + Math.floor(elapsed / DAY_MS));
   const aim = () => {
     const text = step('m03', 'days', { day: day(), family, familyTotal: FAMILY_IDS.length, food, foodTotal: FOOD_NEEDED, pairs: pairsIn(), pairsTotal: PAIRS.length });
     w.objective(text, () => {
@@ -978,10 +980,12 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
       delay: 250,
       loop: true,
       callback: () => {
+        // never in the middle of someone speaking
+        if (ui().dialogue.open) return;
         if (done()) {
           check.remove();
           resolve(true);
-        } else if (w.time.now - start > DAY_MS * 7) {
+        } else if (elapsed > DAY_MS * 7) {
           check.remove();
           resolve(false);
         }
@@ -989,6 +993,7 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
     });
   });
   tick.remove();
+  clock.remove();
   boarding.remove();
   for (const off of offs) off();
   w.gathering = false;
