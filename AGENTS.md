@@ -659,6 +659,12 @@ $1 play at `WALK_FPS` 15 at the player's
   by `tools/art/noah_portraits.mjs`, whose `FACES` table holds each face's
   measured eye and mouth spots for the blink and talk patches. The spirit
   holds its idle frame and leans toward where it flies (`flySpirit`).
+  Its people's full bodies must match their portraits (the maintainer):
+  `tools/art/noah_people.mjs` writes three bald bodies from Adam's/Eve's
+  tunic sheets plus one overlay sheet per person (`people/hair/<id>.png`:
+  hair, beard, scarf, band, gold, apron; rows down/up/right), colour-marked
+  (grey cloth, blue-grey hair, green-grey extras) and coloured by
+  `PEOPLE` in `noah/people.ts`; a new person needs an entry in both.
 - Phaser reuses a Scene object between games: field initialisers run once.
   Reset every list and state in `create` (stale destroyed actors gave a
   black screen on "Erase and start again").
