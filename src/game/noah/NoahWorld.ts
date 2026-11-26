@@ -184,9 +184,8 @@ export class NoahWorld {
     this.place('noah-house', hx, hy);
     this.solid(hx - 10, hy - 40, 170, 70);
     this.taken.push([hx, hy - 40]);
+    // the axe on the ground (the stacked logs looked false: the maintainer)
     const [wx, wy] = POINTS.woodpile;
-    this.place('noah-logs', wx, wy);
-    this.solid(wx - 4, wy - 10, 50, 18);
     this.axe = this.scene.add.image(wx + 34, wy + 14, 'noah-axe').setScale(ART).setAngle(-18).setDepth(wy + 14);
     this.place('noah-day-basket', hx + 110, hy + 30, undefined, 'basket');
     this.place('noah-jars', hx - 120, hy + 6);
@@ -202,8 +201,7 @@ export class NoahWorld {
   private arkSite(): void {
     const [lx, ly] = POINTS.lumber;
     this.place('noah-planks', lx - 40, ly);
-    this.place('noah-logs', lx + 30, ly + 10);
-    this.solid(lx - 5, ly - 8, 110, 20);
+    this.solid(lx - 40, ly - 8, 70, 20);
     this.ark = this.scene.add.image(ARK.x, ARK.y, 'noah-ark-0').setVisible(false);
     // the hull, beside the ramp
     const body = (x: number, y: number, w: number, h: number) => {

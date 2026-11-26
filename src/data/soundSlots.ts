@@ -43,6 +43,10 @@ export const SOUND_SLOTS: SoundSlot[] = [
   { id: 'slither', group: 'serpent', category: 'serpent', sound: sfx('serpent-crawl'), gain: 0.5 },
   // thunder that rolls away (cut at 4 s it stopped dead)
   { id: 'land', group: 'cherubim', category: 'land', sound: sfx('cherubim-land'), gain: 0.85 },
+  // Noah: the same thunder now and then before the flood, with a flash of lightning
+  { id: 'thunder', group: 'other', category: 'land', sound: sfx('cherubim-land'), gain: 0.7 },
+  // a gopher tree falls (the maintainer: not the thunder)
+  { id: 'treeFall', group: 'other', category: 'other', sound: 'assets/sfx/noah/tree-fall.mp3', gain: 0.6 },
   // the river's murmur near the water, looped (synthesized without one)
   { id: 'river', group: 'water', category: 'river', sound: sfx('river'), gain: 1 },
   { id: 'fill', group: 'water', category: 'water', sound: sfx('fill'), gain: 0.5 },

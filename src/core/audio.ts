@@ -37,6 +37,8 @@ export const SFX = [
   'bite',
   'leaves',
   'land',
+  'thunder',
+  'treeFall',
   'hiss',
   'slither',
   'seed',
@@ -614,6 +616,13 @@ class AudioManager {
           src.stop(t + d + 0.35);
         });
         break;
+      case 'treeFall':
+        // a tree comes down: the crack, then the trunk on the ground
+        this.crackle(t, 0.5, 0.3 * v, 300, 3000, 0.5, 2);
+        this.tone(70, t + 0.35, 0.6, 0.45 * v, 'sine', undefined, 30);
+        this.noiseBurst(t + 0.35, 0.5, 0.4 * v, 'lowpass', 500, 0.8);
+        break;
+      case 'thunder':
       case 'land':
         // a cherub landing: a deep, heavy thud that shakes the ground, earth
         // and grit thrown up and falling back, a low rumble dying away

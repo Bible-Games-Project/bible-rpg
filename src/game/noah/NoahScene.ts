@@ -172,6 +172,7 @@ export class NoahScene extends Phaser.Scene {
   /** the flood: its water, the rain, the fog over the birds' sight */
   private water!: Phaser.GameObjects.TileSprite;
   private rain: Phaser.GameObjects.Particles.ParticleEmitter | null = null;
+  private storm: Phaser.Time.TimerEvent | null = null;
   private fog!: Phaser.GameObjects.Image;
   private fogRadius = 0;
   private bar!: Phaser.GameObjects.Graphics;
@@ -852,8 +853,9 @@ export class NoahScene extends Phaser.Scene {
     g.hits++;
     if (g.hits < CHOPS) return false;
     audio.play('leaves');
+    // the crash as the trunk reaches the ground (it falls over 0.9 s)
+    this.time.delayedCall(720, () => audio.play('treeFall'));
     await this.world.fell(i, this.noah.x < g.tree.x ? 1 : -1);
-    audio.play('land');
     return true;
   }
 
@@ -1064,6 +1066,52 @@ export class NoahScene extends Phaser.Scene {
   }
 
   /** Rain over the land (Genesis 7:12): streaks falling across the view. */
+  /**
+   * Thunder now and then, each with a flash of lightning (the maintainer:
+   * from halfway through the building of the ark, through the seven days).
+   */
+  setStorm(on: boolean): void {
+    this.storm?.remove();
+    this.storm = null;
+    if (!on) return;
+    const strike = () => {
+      this.storm = this.time.delayedCall(16000 + Math.random() * 16000, () => {
+        this.lightning();
+        strike();
+      });
+    };
+    this.storm = this.time.delayedCall(4000 + Math.random() * 5000, () => {
+      this.lightning();
+      strike();
+    });
+  }
+
+  /** A flash of lightning over the whole view, then its thunder a moment after. */
+  lightning(): void {
+    const cam = this.cameras.main;
+    const soft = settings.get().reduceMotion;
+    const flash = this.add
+      .rectangle(0, 0, this.scale.width, this.scale.height, 0xeef2ff)
+      .setOrigin(0)
+      .setScrollFactor(0)
+      .setDepth(FOG_DEPTH + 10)
+      .setAlpha(0);
+    // the camera's zoom must not shrink a screen-wide flash
+    flash.setScale(1 / cam.zoom).setPosition(cam.width / 2 - cam.width / 2 / cam.zoom, cam.height / 2 - cam.height / 2 / cam.zoom);
+    const peak = soft ? 0.18 : 0.5;
+    this.tweens.chain({
+      targets: flash,
+      tweens: [
+        { alpha: peak, duration: 40 },
+        { alpha: peak * 0.2, duration: 70 },
+        { alpha: peak * 0.8, duration: 40 },
+        { alpha: 0, duration: 420, ease: 'Quad.easeOut' },
+      ],
+      onComplete: () => flash.destroy(),
+    });
+    this.time.delayedCall(350 + Math.random() * 900, () => audio.play('thunder', { volume: 0.7 + Math.random() * 0.3, pitch: 0.9 + Math.random() * 0.15 }));
+  }
+
   setRain(on: boolean): void {
     if (!on) {
       this.rain?.stop();

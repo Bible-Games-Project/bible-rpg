@@ -89,6 +89,8 @@ function stage(w: NoahScene, n: number, place: boolean): void {
   w.setAfloat(afloat);
   w.showIsland(n === 7);
   w.setRain(false);
+  // thunder now and then through the seven days (and from halfway through the building)
+  w.setStorm(n === 3);
   w.setWind(1);
   w.setBow(n >= 10);
   w.setAltarFire(n >= 9);
@@ -284,8 +286,11 @@ const MISSIONS: NoahMission[] = [
             onUse: async () => {
               if (!(await w.chop(i))) return;
               felled++;
-              // the axe goes to the belt: both arms for the logs
-              if (felled >= LOGS_NEEDED) w.holdAxe(false);
+              // the axe goes to the belt: both arms for the logs; from now on the sky darkens with thunder now and then
+              if (felled >= LOGS_NEEDED) {
+                w.holdAxe(false);
+                w.setStorm(true);
+              }
               aim();
             },
           }),
@@ -403,6 +408,7 @@ const MISSIONS: NoahMission[] = [
       w.cameraAt([POINTS.well[0], POINTS.well[1] - 120]);
       w.music('tension');
       w.setRain(true);
+      w.setStorm(true);
       await w.fade(0, 1200);
       await w.scripture('fountains');
       void w.setWater(0.5, 7000);
@@ -425,6 +431,7 @@ const MISSIONS: NoahMission[] = [
       await w.scripture('lifted');
       await w.scripture('remained');
       w.setRain(false);
+      w.setStorm(false);
       await w.scripture('prevailed');
       w.music('wonder');
       w.setWind(3.5);
