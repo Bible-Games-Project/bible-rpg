@@ -90,8 +90,8 @@ export const GOPHER: Pt[] = [
   [1520, 2260],
   [1150, 2560],
 ];
-/** How many of them the ark needs (one log for each stage of building). */
-export const LOGS_NEEDED = 4;
+/** How many of them Noah fells and carries to the ark, all at once. */
+export const LOGS_NEEDED = 3;
 
 /** What the spirit of God sees on the earth (Genesis 6:5, 11–12). */
 export const SINS: { id: string; at: Pt }[] = [

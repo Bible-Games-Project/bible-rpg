@@ -80,7 +80,7 @@ function canvasOf(p: Pixels): HTMLCanvasElement {
  * A texture from frames of one size side by side, with its manifest entry;
  * `shadow`: it casts its own shadow on the ground (like Eden's props).
  */
-function addSheet(scene: Phaser.Scene, key: string, frames: Pixels[], ax: number, ay: number, o: { scale?: number; icon?: boolean; shadow?: boolean } = {}): void {
+function addSheet(scene: Phaser.Scene, key: string, frames: Pixels[], ax: number, ay: number, o: { scale?: number; icon?: boolean; shadow?: boolean; ground?: ArrayLike<number> } = {}): void {
   const w = frames[0].w;
   const h = frames[0].h;
   if (scene.textures.exists(key)) scene.textures.remove(key);
@@ -92,7 +92,7 @@ function addSheet(scene: Phaser.Scene, key: string, frames: Pixels[], ax: number
   const file = o.icon ? canvasOf(frames[0]).toDataURL() : '';
   MANIFEST.sprites[key] = { file, frameWidth: w, frameHeight: h, frames: frames.length, anchorX: ax, anchorY: ay, scale: o.scale ?? ART };
   if (o.shadow) {
-    const [strip, shadow] = castShadows(frames.map((f) => ({ w: f.w, h: f.h, d: f.data })), ax, ay);
+    const [strip, shadow] = castShadows(frames.map((f) => ({ w: f.w, h: f.h, d: f.data })), ax, ay, o.ground);
     if (scene.textures.exists(shadowKey(key))) scene.textures.remove(shadowKey(key));
     scene.textures.addSpriteSheet(shadowKey(key), strip as unknown as HTMLImageElement, { frameWidth: shadow.frameWidth, frameHeight: shadow.frameHeight });
     MANIFEST.sprites[key].shadow = shadow;
@@ -179,11 +179,46 @@ function genTree(scene: Phaser.Scene, id: string, name: CainGen): void {
  * the hull planked up from the keel to a height, and above it only its ribs,
  * dark, as a frame (Genesis 6:14–16).
  */
+/**
+ * The row each column of a long thing seen at a slant stands on: the line
+ * under its lowest points (the ark's blocks and ramp), bent no more than
+ * they are. One anchor row for all of it cast the bow's shadow down at the
+ * stern's level, a thin strip far from the hull ("the ark's shadow is awful").
+ */
+function groundLine(p: Pixels): Float32Array {
+  const pts: [number, number][] = [];
+  for (let x = 0; x < p.w; x++)
+    for (let y = p.h - 1; y >= 0; y--)
+      if (p.data[(y * p.w + x) * 4 + 3]) {
+        pts.push([x, y]);
+        break;
+      }
+  // the hull below the points (y grows downwards): monotone chain
+  const hull: [number, number][] = [];
+  for (const q of pts) {
+    while (hull.length >= 2) {
+      const [a, b] = [hull[hull.length - 2], hull[hull.length - 1]];
+      if ((b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]) >= 0) hull.pop();
+      else break;
+    }
+    hull.push(q);
+  }
+  const g = new Float32Array(p.w);
+  let k = 0;
+  for (let x = 0; x < p.w; x++) {
+    while (k < hull.length - 2 && hull[k + 1][0] < x) k++;
+    const [a, b] = [hull[k], hull[Math.min(k + 1, hull.length - 1)]];
+    g[x] = b[0] === a[0] ? a[1] : a[1] + ((b[1] - a[1]) * (x - a[0])) / (b[0] - a[0]);
+  }
+  return g;
+}
+
 function arkStages(scene: Phaser.Scene): void {
   const g = GEN.ark;
   const whole = pixelsOf(scene, 'noah-gen:ark');
   const { w, h } = whole;
   const ax = Math.round(w / 2);
+  const ground = groundLine(whole);
   for (let k = 0; k < ARK_STAGES - 1; k++) {
     const p = new Pixels(w, h);
     const level = h - ((k + 1) / ARK_STAGES) * h * 0.92;
@@ -201,9 +236,34 @@ function arkStages(scene: Phaser.Scene): void {
           p.data[i + 3] = 255;
         }
       }
-    addSheet(scene, `noah-ark-${k}`, [p], ax, g.ay - 4, { shadow: true });
+    addSheet(scene, `noah-ark-${k}`, [p], ax, g.ay - 4, { shadow: true, ground });
   }
-  addSheet(scene, `noah-ark-${ARK_STAGES - 1}`, [whole], ax, g.ay - 4, { shadow: true });
+  addSheet(scene, `noah-ark-${ARK_STAGES - 1}`, [whole], ax, g.ay - 4, { shadow: true, ground });
+}
+
+/**
+ * The logs Noah carries in both hands, one to three (noah-log-bundle-<n>):
+ * two below and one on top (the maintainer: "collect only 3 logs, all
+ * together"). All the same size, held by the same point.
+ */
+function logBundle(scene: Phaser.Scene): void {
+  const log = pixelsOf(scene, 'noah-gen:log');
+  const places = [[[13, 21]], [[0, 20], [26, 21]], [[0, 20], [26, 21], [13, 1]]];
+  places.forEach((at, n) => logPile(scene, log, at, `noah-log-bundle-${n + 1}`));
+}
+
+function logPile(scene: Phaser.Scene, log: Pixels, at: number[][], key: string): void {
+  const p = new Pixels(82, 62);
+  for (const [ox, oy] of at)
+    for (let y = 0; y < log.h; y++)
+      for (let x = 0; x < log.w; x++) {
+        const i = (y * log.w + x) * 4;
+        const X = x + ox;
+        const Y = y + oy;
+        if (log.data[i + 3] < 128 || X >= p.w || Y >= p.h) continue;
+        p.data.set(log.data.subarray(i, i + 4), (Y * p.w + X) * 4);
+      }
+  addSheet(scene, key, [p], 41, 61, { scale: ART * 0.78 });
 }
 
 /** The raven: the dove in black feathers with a blue sheen (Genesis 8:7). */
@@ -346,6 +406,7 @@ export function buildNoahArt(scene: Phaser.Scene): void {
   addProp(scene, 'vine-bare', { sink: 2 });
   addProp(scene, 'axe', { icon: true, centre: true, shadow: false });
   addProp(scene, 'log', { icon: true, centre: true, shadow: false });
+  logBundle(scene);
   addProp(scene, 'sack', { icon: true, sink: 2 });
   addProp(scene, 'hay', { icon: true, sink: 2 });
   addProp(scene, 'olive', { icon: true, centre: true, shadow: false });

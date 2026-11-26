@@ -14,9 +14,9 @@
       "desc": "God tells Noah to build an ark of gopher wood.",
       "steps": {
         "axe": "Take the axe by the woodpile",
-        "chop": "Fell gopher trees in the forest ({n}/{total} built)",
-        "carry": "Bring the log to the ark ({n}/{total})",
-        "pitch": "Pitch the ark within and without"
+        "chop": "Fell gopher trees in the forest ({n}/{total})",
+        "gather": "Pick up the logs ({n}/{total})",
+        "carry": "Bring the logs to the ark"
       }
     },
     "m03": {
@@ -95,6 +95,7 @@
     "corrupt": { "text": "The earth also was corrupt before God, and the earth was filled with violence.", "ref": "Genesis 6:11" },
     "grace": { "text": "But Noah found grace in the eyes of the LORD.", "ref": "Genesis 6:8" },
     "just": { "text": "Noah was a just man and perfect in his generations, and Noah walked with God.", "ref": "Genesis 6:9" },
+    "built": { "text": "So Noah and his sons built the ark of gopher wood, with rooms in it, and pitched it within and without with pitch.", "ref": "Genesis 6:14–16" },
     "did": { "text": "Thus did Noah; according to all that God commanded him, so did he.", "ref": "Genesis 6:22" },
     "enter": { "text": "And Noah went in, and his sons, and his wife, and his sons' wives with him, into the ark, because of the waters of the flood.", "ref": "Genesis 7:7" },
     "shut": { "text": "And the LORD shut him in.", "ref": "Genesis 7:16" },
@@ -365,7 +366,6 @@
   "prompts": {
     "chop": "Chop",
     "build": "Build the ark",
-    "pitch": "Pitch the ark",
     "call": "Call {name}",
     "pair": "Lead the {name}",
     "unclean": "Lead the {name}",

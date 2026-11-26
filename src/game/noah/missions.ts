@@ -259,18 +259,17 @@ const MISSIONS: NoahMission[] = [
           w.toast(N('toasts.axe'));
         },
       });
-      let built = 0;
-      let carrying = false;
-      let mocked = false;
+      // three trees felled, then their three logs taken up together and carried at once (the maintainer: no going back and forth)
+      let felled = 0;
+      let logs = 0;
       const g = w.world.gopher;
       const offs: (() => void)[] = [];
       const aim = () => {
-        const text = step('m02', carrying ? 'carry' : 'chop', { n: built, total: LOGS_NEEDED });
-        const target = carrying ? POINTS.lumber : () => {
-          const lying = g.filter((x) => x.tree.felled && !x.taken);
-          return (lying.length ? lying.map((x) => [x.log.x, x.log.y] as Pt) : g.filter((x) => !x.tree.felled).map((x) => [x.tree.x, x.tree.y - 20] as Pt));
-        };
-        w.objective(text, target as Pt | (() => Pt[]), { markAll: !carrying });
+        if (felled < LOGS_NEEDED)
+          w.objective(step('m02', 'chop', { n: felled, total: LOGS_NEEDED }), () => g.filter((x) => !x.tree.felled).map((x) => [x.tree.x, x.tree.y - 20] as Pt), { markAll: true });
+        else if (logs < LOGS_NEEDED)
+          w.objective(step('m02', 'gather', { n: logs, total: LOGS_NEEDED }), () => g.filter((x) => x.tree.felled && !x.taken).map((x) => [x.log.x, x.log.y] as Pt), { markAll: true });
+        else w.objective(step('m02', 'carry'), POINTS.lumber);
       };
       aim();
       g.forEach((x, i) => {
@@ -281,9 +280,13 @@ const MISSIONS: NoahMission[] = [
             radius: 72,
             attack: true,
             prompt: () => N('prompts.chop'),
-            enabled: () => !x.tree.felled && !carrying,
+            enabled: () => !x.tree.felled && felled < LOGS_NEEDED,
             onUse: async () => {
-              if (await w.chop(i)) aim();
+              if (!(await w.chop(i))) return;
+              felled++;
+              // the axe goes to the belt: both arms for the logs
+              if (felled >= LOGS_NEEDED) w.holdAxe(false);
+              aim();
             },
           }),
           w.interact({
@@ -291,13 +294,14 @@ const MISSIONS: NoahMission[] = [
             at: () => [x.log.x, x.log.y - 10],
             radius: 66,
             prompt: () => t('prompt.pickUp', { name: N('items.log') }),
-            enabled: () => x.tree.felled && !x.taken && !carrying,
+            enabled: () => felled >= LOGS_NEEDED && x.tree.felled && !x.taken,
             onUse: async () => {
               await w.noah.stoop();
               x.taken = true;
               x.log.setVisible(false);
-              carrying = true;
-              w.noah.hold('noah-log', 'arms', [0.5, 0.7]);
+              logs++;
+              // carried in both hands, like Cain's basket: the bundle grows with each log
+              w.noah.hold(`noah-log-bundle-${logs}`, 'carry', [0.5, 0.82]);
               w.give('log');
               audio.play('pickup');
               aim();
@@ -305,57 +309,40 @@ const MISSIONS: NoahMission[] = [
           }),
         );
       });
-      await new Promise<void>((resolve) => {
-        offs.push(
-          w.interact({
-            id: 'build',
-            at: [POINTS.lumber[0], POINTS.lumber[1] - 20],
-            radius: 110,
-            prompt: () => N('prompts.build'),
-            enabled: () => carrying,
-            onUse: async () => {
-              carrying = false;
-              w.take('log');
-              w.holdAxe(true);
-              w.noah.face('right');
-              for (let k = 0; k < 3; k++) {
-                audio.play('swing', { volume: 0.6 });
-                await w.noah.attack('swing');
-                audio.play('hit', { volume: 0.7 });
-              }
-              await w.fade(1, 350);
-              w.world.setArk(built);
-              built++;
-              await w.fade(0, 450);
-              w.fx('sparkle', [ARK.x - 100, ARK.y - 60]);
-              if (!mocked) {
-                mocked = true;
-                await w.say('mock');
-              }
-              if (built >= LOGS_NEEDED) resolve();
-              else aim();
-            },
-          }),
-        );
-      });
-      for (const off of offs) off();
-      // pitch it within and without with pitch (Genesis 6:14)
-      w.objective(step('m02', 'pitch'), [ARK.x - 140, ARK.y - 30]);
       await useOnce(w, {
-        id: 'pitch',
-        at: [ARK.x - 160, ARK.y - 10],
-        radius: 130,
-        prompt: () => N('prompts.pitch'),
+        id: 'build',
+        at: [POINTS.lumber[0], POINTS.lumber[1] - 20],
+        radius: 110,
+        prompt: () => N('prompts.build'),
+        enabled: () => logs >= LOGS_NEEDED,
         onUse: async () => {
-          w.holdAxe(false);
-          await w.noah.work('pour', { ms: 1400 });
-          await w.fade(1, 400);
+          w.cutscene(true);
+          w.noah.hold(null);
+          w.take('log', LOGS_NEEDED);
+          audio.play('drop');
+          // the years of the building, in the dark: the narrator over the sound of the work, then the ark stands finished
+          await w.fade(1, 700);
+          let working = true;
+          void (async () => {
+            const beats: [Parameters<typeof audio.play>[0], number][] = [['hit', 0.55], ['hit', 0.45], ['cut', 0.4], ['hit', 0.5], ['swing', 0.3], ['hit', 0.55]];
+            for (let k = 0; working; k++) {
+              const [name, volume] = beats[k % beats.length];
+              audio.play(name, { volume, pitch: 0.9 + Math.random() * 0.2 });
+              await w.wait(260 + Math.random() * 260 + (k % 6 === 5 ? 500 : 0));
+            }
+          })();
+          await w.wait(900);
           w.world.setArk(ARK_STAGES - 1);
-          await w.fade(0, 600);
+          await w.scripture('built');
+          working = false;
+          await w.wait(300);
+          await w.fade(0, 900);
           w.fx('holy', [ARK.x - 60, ARK.y]);
           audio.play('holy');
+          await w.say('mock');
         },
       });
+      for (const off of offs) off();
       w.take('axe');
       w.world.axe.setVisible(true);
       w.cutscene(true);

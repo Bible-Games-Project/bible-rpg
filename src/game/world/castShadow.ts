@@ -24,16 +24,18 @@ interface Shot {
   n: number;
 }
 
-function cast(f: Px, ax: number, ay: number, mirror: boolean): Shot {
+function cast(f: Px, ax: number, ay: number, mirror: boolean, ground?: ArrayLike<number>): Shot {
   const pts = new Int16Array(f.w * f.h * 2);
   let n = 0;
   for (let y = 0; y < f.h; y++)
     for (let x = 0; x < f.w; x++) {
       if (!f.d[(y * f.w + x) * 4 + 3]) continue;
-      const z = Math.max(0, ay - y);
+      // a long thing seen from above stands on a ground line, not a row: each column's height from its own
+      const g = ground ? ground[x] : ay;
+      const z = Math.max(0, g - y);
       const sx = (mirror ? f.w - 1 - x : x) - (mirror ? f.w - ax : ax);
       pts[n++] = Math.round(sx + SHADOW_X * z);
-      pts[n++] = Math.round(SHADOW_Y * z);
+      pts[n++] = Math.round(SHADOW_Y * z + g - ay);
     }
   return { pts, n };
 }
@@ -63,22 +65,27 @@ function boxBlur(src: Float32Array, w: number, h: number, r: number): Float32Arr
   return out;
 }
 
-/** The shadow strip of `frames` (feet at ax, ay) and its entry; `file` is unused. */
-export function castShadows(frames: Px[], ax: number, ay: number): [HTMLCanvasElement, ShadowAsset] {
-  const shots = [...frames.map((f) => cast(f, ax, ay, false)), ...frames.map((f) => cast(f, ax, ay, true))];
+/**
+ * The shadow strip of `frames` (feet at ax, ay) and its entry; `file` is unused.
+ * `ground`: the row each column stands on, for a long thing seen at a slant (the ark).
+ */
+export function castShadows(frames: Px[], ax: number, ay: number, ground?: ArrayLike<number>): [HTMLCanvasElement, ShadowAsset] {
+  const shots = [...frames.map((f) => cast(f, ax, ay, false, ground)), ...frames.map((f) => cast(f, ax, ay, true, ground))];
   let x0 = 0;
   let x1 = 0;
+  let y0 = 0;
   let y1 = 0;
   for (const s of shots)
     for (let i = 0; i < s.n; i += 2) {
       x0 = Math.min(x0, s.pts[i]);
       x1 = Math.max(x1, s.pts[i]);
+      y0 = Math.min(y0, s.pts[i + 1]);
       y1 = Math.max(y1, s.pts[i + 1]);
     }
   const left = MARGIN - x0;
-  const up = MARGIN;
+  const up = MARGIN - y0;
   const cw = x1 - x0 + 2 * MARGIN + 1;
-  const ch = y1 + 2 * MARGIN + 1;
+  const ch = y1 - y0 + 2 * MARGIN + 1;
   const c = document.createElement('canvas');
   c.width = cw * shots.length;
   c.height = ch;

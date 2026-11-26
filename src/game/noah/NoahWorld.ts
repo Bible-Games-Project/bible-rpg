@@ -487,6 +487,15 @@ export class NoahWorld {
     // buildings are drawn from above: their base runs back up the picture, so the shadow starts higher (the maintainer: it looked like they floated)
     const lift = SHADOW_LIFT[k];
     if (lift && this.lastShadow) this.lastShadow.y -= lift * a!.frameHeight * textureScale(k);
+    // the shadow comes and goes with its thing (hidden food, rubble and vines left their shadows lying about: the maintainer saw six under Noah's house)
+    const shadow = this.lastShadow;
+    if (shadow) {
+      const show = img.setVisible.bind(img);
+      img.setVisible = (on: boolean) => {
+        shadow.setVisible(on);
+        return show(on);
+      };
+    }
     return img;
   }
 
