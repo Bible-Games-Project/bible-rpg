@@ -1,0 +1,372 @@
+{
+ "noah": {
+  "file": "assets/noah/portraits/noah.png",
+  "width": 94,
+  "height": 87,
+  "mouth": [
+   {
+    "file": "assets/noah/portraits/noah-mouth-0.png",
+    "x": 43,
+    "y": 48,
+    "w": 8,
+    "h": 2
+   },
+   {
+    "file": "assets/noah/portraits/noah-mouth-1.png",
+    "x": 43,
+    "y": 48,
+    "w": 8,
+    "h": 3
+   }
+  ],
+  "eyes": [
+   {
+    "file": "assets/noah/portraits/noah-eyes-0.png",
+    "x": 31,
+    "y": 33,
+    "w": 32,
+    "h": 6
+   },
+   {
+    "file": "assets/noah/portraits/noah-eyes-1.png",
+    "x": 31,
+    "y": 33,
+    "w": 32,
+    "h": 6
+   }
+  ]
+ },
+ "noah-wife": {
+  "file": "assets/noah/portraits/noah-wife.png",
+  "width": 94,
+  "height": 87,
+  "mouth": [
+   {
+    "file": "assets/noah/portraits/noah-wife-mouth-0.png",
+    "x": 43,
+    "y": 42,
+    "w": 8,
+    "h": 2
+   },
+   {
+    "file": "assets/noah/portraits/noah-wife-mouth-1.png",
+    "x": 43,
+    "y": 42,
+    "w": 8,
+    "h": 3
+   }
+  ],
+  "eyes": [
+   {
+    "file": "assets/noah/portraits/noah-wife-eyes-0.png",
+    "x": 32,
+    "y": 28,
+    "w": 27,
+    "h": 5
+   },
+   {
+    "file": "assets/noah/portraits/noah-wife-eyes-1.png",
+    "x": 32,
+    "y": 28,
+    "w": 27,
+    "h": 5
+   }
+  ]
+ },
+ "shem": {
+  "file": "assets/noah/portraits/shem.png",
+  "width": 94,
+  "height": 87,
+  "mouth": [
+   {
+    "file": "assets/noah/portraits/shem-mouth-0.png",
+    "x": 43,
+    "y": 48,
+    "w": 8,
+    "h": 2
+   },
+   {
+    "file": "assets/noah/portraits/shem-mouth-1.png",
+    "x": 43,
+    "y": 48,
+    "w": 8,
+    "h": 3
+   }
+  ],
+  "eyes": [
+   {
+    "file": "assets/noah/portraits/shem-eyes-0.png",
+    "x": 31,
+    "y": 33,
+    "w": 32,
+    "h": 6
+   },
+   {
+    "file": "assets/noah/portraits/shem-eyes-1.png",
+    "x": 31,
+    "y": 33,
+    "w": 32,
+    "h": 6
+   }
+  ]
+ },
+ "ham": {
+  "file": "assets/noah/portraits/ham.png",
+  "width": 94,
+  "height": 87,
+  "mouth": [
+   {
+    "file": "assets/noah/portraits/ham-mouth-0.png",
+    "x": 43,
+    "y": 48,
+    "w": 8,
+    "h": 2
+   },
+   {
+    "file": "assets/noah/portraits/ham-mouth-1.png",
+    "x": 43,
+    "y": 48,
+    "w": 8,
+    "h": 3
+   }
+  ],
+  "eyes": [
+   {
+    "file": "assets/noah/portraits/ham-eyes-0.png",
+    "x": 31,
+    "y": 33,
+    "w": 32,
+    "h": 6
+   },
+   {
+    "file": "assets/noah/portraits/ham-eyes-1.png",
+    "x": 31,
+    "y": 33,
+    "w": 32,
+    "h": 6
+   }
+  ]
+ },
+ "japheth": {
+  "file": "assets/noah/portraits/japheth.png",
+  "width": 94,
+  "height": 87,
+  "mouth": [
+   {
+    "file": "assets/noah/portraits/japheth-mouth-0.png",
+    "x": 43,
+    "y": 48,
+    "w": 8,
+    "h": 2
+   },
+   {
+    "file": "assets/noah/portraits/japheth-mouth-1.png",
+    "x": 43,
+    "y": 48,
+    "w": 8,
+    "h": 3
+   }
+  ],
+  "eyes": [
+   {
+    "file": "assets/noah/portraits/japheth-eyes-0.png",
+    "x": 31,
+    "y": 33,
+    "w": 32,
+    "h": 6
+   },
+   {
+    "file": "assets/noah/portraits/japheth-eyes-1.png",
+    "x": 31,
+    "y": 33,
+    "w": 32,
+    "h": 6
+   }
+  ]
+ },
+ "shem-wife": {
+  "file": "assets/noah/portraits/shem-wife.png",
+  "width": 94,
+  "height": 87,
+  "mouth": [
+   {
+    "file": "assets/noah/portraits/shem-wife-mouth-0.png",
+    "x": 43,
+    "y": 42,
+    "w": 8,
+    "h": 2
+   },
+   {
+    "file": "assets/noah/portraits/shem-wife-mouth-1.png",
+    "x": 43,
+    "y": 42,
+    "w": 8,
+    "h": 3
+   }
+  ],
+  "eyes": [
+   {
+    "file": "assets/noah/portraits/shem-wife-eyes-0.png",
+    "x": 32,
+    "y": 28,
+    "w": 27,
+    "h": 5
+   },
+   {
+    "file": "assets/noah/portraits/shem-wife-eyes-1.png",
+    "x": 32,
+    "y": 28,
+    "w": 27,
+    "h": 5
+   }
+  ]
+ },
+ "ham-wife": {
+  "file": "assets/noah/portraits/ham-wife.png",
+  "width": 94,
+  "height": 87,
+  "mouth": [
+   {
+    "file": "assets/noah/portraits/ham-wife-mouth-0.png",
+    "x": 43,
+    "y": 42,
+    "w": 8,
+    "h": 2
+   },
+   {
+    "file": "assets/noah/portraits/ham-wife-mouth-1.png",
+    "x": 43,
+    "y": 42,
+    "w": 8,
+    "h": 3
+   }
+  ],
+  "eyes": [
+   {
+    "file": "assets/noah/portraits/ham-wife-eyes-0.png",
+    "x": 35,
+    "y": 28,
+    "w": 27,
+    "h": 5
+   },
+   {
+    "file": "assets/noah/portraits/ham-wife-eyes-1.png",
+    "x": 35,
+    "y": 28,
+    "w": 27,
+    "h": 5
+   }
+  ]
+ },
+ "japheth-wife": {
+  "file": "assets/noah/portraits/japheth-wife.png",
+  "width": 94,
+  "height": 87,
+  "mouth": [
+   {
+    "file": "assets/noah/portraits/japheth-wife-mouth-0.png",
+    "x": 43,
+    "y": 42,
+    "w": 8,
+    "h": 2
+   },
+   {
+    "file": "assets/noah/portraits/japheth-wife-mouth-1.png",
+    "x": 43,
+    "y": 42,
+    "w": 8,
+    "h": 3
+   }
+  ],
+  "eyes": [
+   {
+    "file": "assets/noah/portraits/japheth-wife-eyes-0.png",
+    "x": 35,
+    "y": 28,
+    "w": 27,
+    "h": 5
+   },
+   {
+    "file": "assets/noah/portraits/japheth-wife-eyes-1.png",
+    "x": 35,
+    "y": 28,
+    "w": 27,
+    "h": 5
+   }
+  ]
+ },
+ "wicked": {
+  "file": "assets/noah/portraits/wicked.png",
+  "width": 94,
+  "height": 87,
+  "mouth": [
+   {
+    "file": "assets/noah/portraits/wicked-mouth-0.png",
+    "x": 43,
+    "y": 48,
+    "w": 8,
+    "h": 2
+   },
+   {
+    "file": "assets/noah/portraits/wicked-mouth-1.png",
+    "x": 43,
+    "y": 48,
+    "w": 8,
+    "h": 3
+   }
+  ],
+  "eyes": [
+   {
+    "file": "assets/noah/portraits/wicked-eyes-0.png",
+    "x": 31,
+    "y": 33,
+    "w": 32,
+    "h": 6
+   },
+   {
+    "file": "assets/noah/portraits/wicked-eyes-1.png",
+    "x": 31,
+    "y": 33,
+    "w": 32,
+    "h": 6
+   }
+  ]
+ },
+ "giant": {
+  "file": "assets/noah/portraits/giant.png",
+  "width": 94,
+  "height": 87,
+  "mouth": [
+   {
+    "file": "assets/noah/portraits/giant-mouth-0.png",
+    "x": 43,
+    "y": 48,
+    "w": 8,
+    "h": 2
+   },
+   {
+    "file": "assets/noah/portraits/giant-mouth-1.png",
+    "x": 43,
+    "y": 48,
+    "w": 8,
+    "h": 3
+   }
+  ],
+  "eyes": [
+   {
+    "file": "assets/noah/portraits/giant-eyes-0.png",
+    "x": 31,
+    "y": 33,
+    "w": 32,
+    "h": 6
+   },
+   {
+    "file": "assets/noah/portraits/giant-eyes-1.png",
+    "x": 31,
+    "y": 33,
+    "w": 32,
+    "h": 6
+   }
+  ]
+ }
+}
