@@ -173,6 +173,8 @@ export class NoahScene extends Phaser.Scene {
   private water!: Phaser.GameObjects.TileSprite;
   private rain: Phaser.GameObjects.Particles.ParticleEmitter | null = null;
   private storm: Phaser.Time.TimerEvent | null = null;
+  /** the one of the people Noah is talking with (small talk) */
+  private chatting: Actor | null = null;
   private fog!: Phaser.GameObjects.Image;
   private fogRadius = 0;
   private bar!: Phaser.GameObjects.Graphics;
@@ -317,6 +319,7 @@ export class NoahScene extends Phaser.Scene {
     audio.setMood('none');
     this.runner?.stop();
     this.flight = null;
+    this.storm = null;
     input.setAttack(false);
   }
 
@@ -468,6 +471,9 @@ export class NoahScene extends Phaser.Scene {
     if (id === 'noah') return this.noah;
     if (id === 'god') return this.god.visible ? this.god : null;
     if (id in this.family) return this.family[id as FamilyId];
+    // the people of the earth (small talk, the mockers): the one talked to first
+    if (this.chatting?.charId === id && this.chatting.visible) return this.chatting;
+    for (const a of [...this.mockers, ...Object.values(this.sinners).flat()]) if (a.charId === id && a.visible) return a;
     return null;
   }
 
@@ -523,7 +529,12 @@ export class NoahScene extends Phaser.Scene {
           this.flags[key] = i;
           const was = actor.facing;
           actor.face(this.player());
-          await this.lines([this.line(who, list[i] ?? '…', undefined, `noah.npc.${who}.${this.phase}.${i}`)]);
+          this.chatting = actor;
+          try {
+            await this.lines([this.line(who, list[i] ?? '…', undefined, `noah.npc.${who}.${this.phase}.${i}`)]);
+          } finally {
+            this.chatting = null;
+          }
           if (!actor.scripted && !this.followerOf(actor)) actor.face(was);
         },
       });

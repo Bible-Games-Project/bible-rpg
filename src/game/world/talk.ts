@@ -1,4 +1,7 @@
+import Phaser from 'phaser';
+import { settings } from '../../core/settings';
 import { ui } from '../bridge';
+import { DEPTH_OVERLAY } from './Actor';
 import type { Actor } from './Actor';
 
 /** Someone the player can talk with: an actor, or a figure like Adam sitting by the house. */
@@ -23,11 +26,17 @@ export class Conversation {
   /** where a narration in a cutscene is happening (whom it is about), for the arrow */
   spot: Talker | null = null;
   private moved = false;
+  /** the small speech bubble over whoever is speaking (the maintainer: in every conversation) */
+  private bubble: Phaser.GameObjects.Container | null = null;
+  private dots: Phaser.GameObjects.Arc[] = [];
 
-  /** Every frame; `cast` gives the actor of a speaker's id. */
-  update(player: Actor, cast: (id: string) => Actor | null): void {
+  /** Every frame; `cast` gives the actor of a speaker's id, `talkers` anyone
+   * who can speak (an actor, or a figure like Adam sitting by the house). */
+  update(player: Actor, cast: (id: string) => Actor | null, talkers: (id: string) => Talker | null = cast): void {
     const d = ui().dialogue;
     const partner = d.open && this.partner?.visible ? this.partner : null;
+    const talker = d.open && d.speaker ? talkers(d.speaker) : null;
+    this.showBubble(player.sprite.scene, talker?.visible ? talker : null);
     if (!d.open) {
       this.moved = false;
       return;
@@ -48,6 +57,31 @@ export class Conversation {
       npc.faceVector(dx, dy);
       if (npc.facing !== was) npc.refresh(true);
     }
+  }
+
+  /** A small white bubble with three dots over the one speaking; none when no one is. */
+  private showBubble(scene: Phaser.Scene, who: Talker | null): void {
+    let b = this.bubble;
+    if (!who) {
+      b?.setVisible(false);
+      return;
+    }
+    // a scene is used again for the next game: its old objects are gone
+    if (!b || b.scene !== scene || !b.active) {
+      const g = scene.add.graphics();
+      g.fillStyle(0x2a2016, 0.35).fillRoundedRect(-12, -9, 26, 18, 7);
+      g.fillStyle(0xfffdf6, 1).fillRoundedRect(-13, -10, 26, 17, 7);
+      g.fillTriangle(-5, 6, 2, 6, -6, 12);
+      g.lineStyle(1.5, 0x5a4630, 0.9).strokeRoundedRect(-13, -10, 26, 17, 7);
+      this.dots = [-6, 0, 6].map((x) => scene.add.circle(x, -1.5, 2, 0x5a4630));
+      b = this.bubble = scene.add.container(0, 0, [g, ...this.dots]).setDepth(DEPTH_OVERLAY - 5);
+    }
+    const [x, y] = Conversation.mark(who);
+    const now = scene.time.now;
+    const still = settings.get().reduceMotion;
+    b.setVisible(true).setPosition(x + 10, y - 14 + (still ? 0 : Math.sin(now / 300) * 1.2));
+    // the dots rise in turn, as someone talking
+    this.dots.forEach((dot, i) => dot.setAlpha(still ? 0.8 : 0.35 + 0.65 * Math.max(0, Math.sin(now / 160 - i * 0.9))));
   }
 
   /**

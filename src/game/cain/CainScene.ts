@@ -1310,7 +1310,7 @@ export class CainScene extends Phaser.Scene {
       p.stop();
     }
     this.updateFollower(dt);
-    this.talk.update(p, (id) => (this.chaseState ? null : this.castOf(id)));
+    this.talk.update(p, (id) => (this.chaseState ? null : this.castOf(id)), (id) => this.talkerOf(id));
     // fleeing, Abel runs (the maintainer); badly hurt (slower than this pace ×1.15) he only walks
     this.abel.stridePace = this.chaseState ? ABEL_FLEE_STRIDE : undefined;
     this.updateChase(dt);
