@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { ARK, BOUNDS, CITY, CITY_HOUSES, CLEAR, FOOD, GOPHER, GROVES, PATHS, POINTS, POND, STALLS, TILE, VINES, WORLD_H, WORLD_W } from '../../data/noah/map';
 import type { Pt } from '../../data/eden/map';
 import type { Surface } from '../../data/soundSlots';
-import { MANIFEST, sized } from '../manifest';
+import { MANIFEST, sized, textureScale } from '../manifest';
 import { DEPTH_GROUND, DEPTH_SHADOW } from '../world/Actor';
 import { distToPolyline, rng, wobble } from '../world/geometry';
 import { extrudedTiles } from '../world/Terrain';
@@ -53,6 +53,9 @@ function pondDistance(x: number, y: number): number {
  * Noah's house and the place of the ark, the great forest with its gopher
  * trees, the walled city of the wicked, and the woods closing it all in.
  */
+/** How far up (a share of the picture's height) a building's shadow starts. */
+const SHADOW_LIFT: Record<string, number> = { 'noah-house': 0.18, 'noah-house-small': 0.18, 'noah-stall': 0.12, 'noah-tent': 0.15, 'noah-well': 0.08 };
+
 export class NoahWorld {
   readonly cols = Math.ceil(WORLD_W / TILE);
   readonly rows = Math.ceil(WORLD_H / TILE);
@@ -240,11 +243,11 @@ export class NoahWorld {
       let da = Math.abs(a - ((CITY.gate + Math.PI * 2) % (Math.PI * 2)));
       da = Math.min(da, Math.PI * 2 - da);
       if (da < CITY.gateWidth / 2) continue;
+      // only some stretches of wall still stand (the maintainer): two and a gap
+      if (i % 5 >= 2) continue;
       const x = CITY.x + Math.cos(a) * CITY.rx;
       const y = CITY.y + Math.sin(a) * CITY.ry;
       const img = this.place('noah-town-wall', x, y + 10);
-      // the walls run round the ring: turned a little along it
-      img.setRotation(Math.atan2(Math.cos(a) * CITY.ry, -Math.sin(a) * CITY.rx) * 0.12);
       add(img);
       add(this.lastShadow);
       this.cityBodies.push(this.solid(x, y, 104, 34));
@@ -252,7 +255,7 @@ export class NoahWorld {
     }
     for (const h of CITY_HOUSES) {
       const [x, y] = h.at;
-      const img = this.place(h.small ? 'noah-house-small' : 'noah-house', x, y).setFlipX(!!h.flip);
+      const img = this.place(h.small ? 'noah-house-small' : 'noah-house', x, y, y, undefined, !!h.flip);
       add(img);
       add(this.lastShadow);
       this.cityBodies.push(this.solid(x, y - 30, h.small ? 120 : 170, 60));
@@ -475,11 +478,15 @@ export class NoahWorld {
   private lastShadow: Phaser.GameObjects.Image | undefined;
 
   /** A sprite standing on the ground at its base point, sorted by it. */
-  place(key: string, x: number, y: number, depth = y, shared?: string): Phaser.GameObjects.Image {
+  place(key: string, x: number, y: number, depth = y, shared?: string, flip = false): Phaser.GameObjects.Image {
     const k = shared ? daySprite(this.scene, shared) : key.startsWith('noah-') ? key : daySprite(this.scene, key);
     const a = MANIFEST.sprites[k];
-    const img = sized(this.scene.add.image(x, y, k).setOrigin(a ? a.anchorX / a.frameWidth : 0.5, a ? (a.anchorY + 1) / a.frameHeight : 1).setDepth(depth));
-    this.lastShadow = addShadow(this.scene, x, y, k);
+    const img = sized(this.scene.add.image(x, y, k).setOrigin(a ? a.anchorX / a.frameWidth : 0.5, a ? (a.anchorY + 1) / a.frameHeight : 1).setDepth(depth).setFlipX(flip));
+    if (flip && a) img.setOrigin(1 - a.anchorX / a.frameWidth, img.originY);
+    this.lastShadow = addShadow(this.scene, x, y, k, flip);
+    // buildings are drawn from above: their base runs back up the picture, so the shadow starts higher (the maintainer: it looked like they floated)
+    const lift = SHADOW_LIFT[k];
+    if (lift && this.lastShadow) this.lastShadow.y -= lift * a!.frameHeight * textureScale(k);
     return img;
   }
 

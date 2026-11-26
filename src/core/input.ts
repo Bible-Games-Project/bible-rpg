@@ -18,6 +18,8 @@ const KEYMAP: Record<string, Action> = {
   ArrowRight: 'right',
   KeyD: 'right',
   KeyE: 'interact',
+  // F also strikes, never shown (the maintainer: a Mac trackpad ignores taps while keys are held)
+  KeyF: 'attack',
   Enter: 'interact',
   NumpadEnter: 'interact',
   Space: 'interact',
@@ -41,7 +43,7 @@ export const KEY_LABELS: Record<Action, string> = {
   pause: 'Esc',
   switch: 'Tab',
   run: 'Shift',
-  // attacking is a left click only (the maintainer, 2026-11-26: E interacts, the mouse strikes; F was dropped)
+  // shown as a left click (the maintainer, 2026-11-26); F works too but is not shown
   attack: 'Click',
 };
 
@@ -69,7 +71,7 @@ class InputManager {
     window.addEventListener('touchstart', () => (this.lastDevice = 'touch'), { passive: true });
     // a left click on the game itself attacks (the maintainer: Cain strikes with the mouse)
     window.addEventListener('pointerdown', (e) => {
-      if (e.pointerType !== 'mouse' || e.button !== 0 || (e.target as HTMLElement | null)?.tagName !== 'CANVAS') return;
+      if (e.pointerType === 'touch' || e.button !== 0 || (e.target as HTMLElement | null)?.tagName !== 'CANVAS') return;
       this.lastDevice = 'keyboard';
       this.dispatch('attack');
     });

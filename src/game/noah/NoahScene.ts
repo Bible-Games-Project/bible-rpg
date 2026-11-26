@@ -139,6 +139,9 @@ export class NoahScene extends Phaser.Scene {
   private atmosphere!: Atmosphere;
   private holy!: GodLight;
   private godLit = false;
+  /** the spirit flies: no steps, leaning over to the side it flies (the maintainer) */
+  private spiritOn = false;
+  private spiritTilt = 0;
   private inventory: Record<string, number> = {};
   private flags: Record<string, FlagValue> = {};
   private layer!: InputLayer;
@@ -194,6 +197,8 @@ export class NoahScene extends Phaser.Scene {
     this.objectiveTarget = null;
     this.objectiveAll = false;
     this.godLit = false;
+    this.spiritOn = false;
+    this.spiritTilt = 0;
     this.inventory = {};
     this.flags = {};
     this.phase = 'before';
@@ -342,6 +347,9 @@ export class NoahScene extends Phaser.Scene {
     g.sprite.setBlendMode(on ? Phaser.BlendModes.ADD : Phaser.BlendModes.NORMAL).setAlpha(on ? 0.62 : 1);
     g.shadow?.setAlpha(on ? 0.25 : 1);
     g.lift = on ? 16 : 0;
+    this.spiritOn = on;
+    this.spiritTilt = 0;
+    g.sprite.setRotation(0);
     g.depthBias = on ? 2000 : 0;
     g.body.setCollideWorldBounds(true);
     if (on) {
@@ -351,6 +359,25 @@ export class NoahScene extends Phaser.Scene {
     } else {
       this.godLight(false);
     }
+  }
+
+  /**
+   * The spirit does not walk: it keeps still (its idle frames) and lies over
+   * on its side towards where it flies, turning round its middle.
+   */
+  private flySpirit(dt: number): void {
+    const g = this.god;
+    const sp = g.sprite;
+    const tex = sp.texture.key;
+    if (this.anims.exists(`${tex}:idle`) && sp.anims.currentAnim?.key !== `${tex}:idle`) sp.play(`${tex}:idle`, true);
+    const v = g.body.velocity;
+    const speed = Math.hypot(v.x, v.y);
+    const target = g.moving && speed > 1 ? (v.x / speed) * 1.15 : 0;
+    this.spiritTilt += (target - this.spiritTilt) * Math.min(1, dt * 6);
+    const a = this.spiritTilt;
+    const half = sp.displayHeight / 2;
+    sp.setRotation(a);
+    sp.setPosition(sp.x - half * Math.sin(a), sp.y - half + half * Math.cos(a));
   }
 
   // --------------------------------------------------------------- dialogue
@@ -1192,6 +1219,7 @@ export class NoahScene extends Phaser.Scene {
     for (const a of actors) if (!a.scripted) a.refresh();
     for (const f of this.followers) if (f.kind === 'animal' && !f.actor.scripted) f.actor.refresh();
     for (const pair of Object.values(this.sinners)) for (const a of pair) if (!a.scripted) a.refresh();
+    if (this.spiritOn && !this.god.scripted) this.flySpirit(dt);
     const cam = this.cameras.main;
     this.atmosphere.update(delta, cam);
     this.world.updateWater(delta);
