@@ -63,6 +63,9 @@ const ITEM_ICONS: Record<string, string> = {
 };
 
 /** Who speaks with which portrait. */
+/** how far the spirit leans flying sideways (radians; the maintainer: 1.15 was too much) */
+const SPIRIT_LEAN = 0.38;
+
 const PORTRAITS: Record<string, string> = {
   god: 'god',
   noah: 'noah-noah',
@@ -372,7 +375,7 @@ export class NoahScene extends Phaser.Scene {
     if (this.anims.exists(`${tex}:idle`) && sp.anims.currentAnim?.key !== `${tex}:idle`) sp.play(`${tex}:idle`, true);
     const v = g.body.velocity;
     const speed = Math.hypot(v.x, v.y);
-    const target = g.moving && speed > 1 ? (v.x / speed) * 1.15 : 0;
+    const target = g.moving && speed > 1 ? (v.x / speed) * SPIRIT_LEAN : 0;
     this.spiritTilt += (target - this.spiritTilt) * Math.min(1, dt * 6);
     const a = this.spiritTilt;
     const half = sp.displayHeight / 2;

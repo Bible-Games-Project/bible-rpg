@@ -185,11 +185,8 @@ const MISSIONS: NoahMission[] = [
     async intro(w) {
       w.music('solemn');
       w.cutscene(true, true);
+      // one line only (the maintainer: the rest is told while the spirit flies)
       await w.say('generations');
-      await w.scripture('sons');
-      await w.scripture('giants');
-      await w.scripture('wicked');
-      await w.scripture('grieved');
       w.cameraSnap();
     },
     async run(w) {
@@ -200,22 +197,28 @@ const MISSIONS: NoahMission[] = [
       const left = () => SINS.filter((s) => !seen.has(s.id));
       const aim = () => w.objective(step('m01', 'see', { n: seen.size, total: SINS.length }), () => left().map((s) => s.at), { markAll: true });
       aim();
+      // the Scripture is told while the spirit flies, a verse after each sin seen
+      const told = ['wicked', 'giants', 'corrupt'];
+      void w.scripture('wicked');
       while (seen.size < SINS.length) {
         let found: string | null = null;
         await w.until(() => {
+          if (ui().dialogue.narrating) return false;
           found = left().find((s) => w.near(s.at, 200))?.id ?? null;
           return !!found;
         });
         seen.add(found!);
         await sin(w, found!);
         aim();
+        if (seen.size < SINS.length && told[seen.size]) void w.scripture(told[seen.size]);
       }
       w.music('sorrow');
-      await w.scripture('corrupt');
+      await w.scripture('grieved');
       await w.say('repent');
       w.music('wonder');
       w.objective(step('m01', 'noah'), w.noah);
-      await w.until(() => w.near([w.noah.x, w.noah.y], 160));
+      void w.scripture('sons');
+      await w.until(() => w.near([w.noah.x, w.noah.y], 160) && !ui().dialogue.narrating);
       w.cutscene(true);
       w.god.stop();
       w.noah.face(w.god);

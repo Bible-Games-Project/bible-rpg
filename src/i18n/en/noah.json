@@ -124,8 +124,7 @@
   },
   "dialogue": {
     "generations": [
-      { "s": "narrator", "t": "From Adam came Seth, and from Seth many generations. Men lived long, and filled the earth.", "ref": "Genesis 5" },
-      { "s": "narrator", "t": "Then Lamech had a son, and called him Noah: \"This one shall comfort us.\"", "ref": "Genesis 5:29" }
+      { "s": "narrator", "t": "Many generations after Adam, people filled the earth, and their hearts turned to evil.", "ref": "Genesis 6:1, 5" }
     ],
     "sin-robbery": [
       { "s": "wicked-b", "t": "Your bread is mine now." },
