@@ -20,6 +20,20 @@ export const CHARACTERS: Record<string, CharacterDef> = {
   // Genesis 4: Adam's sons, drawn from his sprite in the tunic God made
   cain: { nameKey: 'characters.cain', portrait: 'cain', sprite: 'cain', outfit: 'tunic', voice: 135, speed: 140 },
   abel: { nameKey: 'characters.abel', portrait: 'abel', sprite: 'abel', outfit: 'tunic', voice: 175, speed: 170 },
+  // Genesis 6–9: Noah, his house and the wicked of his day, drawn from Adam and Eve
+  noah: { nameKey: 'characters.noah', portrait: 'noah-noah', voice: 125, speed: 140 },
+  'noah-wife': { nameKey: 'characters.noah-wife', portrait: 'noah-noah-wife', voice: 220, speed: 150 },
+  shem: { nameKey: 'characters.shem', portrait: 'noah-shem', voice: 150, speed: 165 },
+  ham: { nameKey: 'characters.ham', portrait: 'noah-ham', voice: 160, speed: 165 },
+  japheth: { nameKey: 'characters.japheth', portrait: 'noah-japheth', voice: 170, speed: 165 },
+  'shem-wife': { nameKey: 'characters.shem-wife', portrait: 'noah-shem-wife', voice: 235, speed: 160 },
+  'ham-wife': { nameKey: 'characters.ham-wife', portrait: 'noah-ham-wife', voice: 245, speed: 160 },
+  'japheth-wife': { nameKey: 'characters.japheth-wife', portrait: 'noah-japheth-wife', voice: 255, speed: 160 },
+  wicked: { nameKey: 'characters.wicked', portrait: 'noah-wicked', voice: 140, speed: 170 },
+  'wicked-b': { nameKey: 'characters.wicked-b', portrait: 'noah-wicked-b', voice: 130, speed: 170 },
+  'wicked-c': { nameKey: 'characters.wicked-c', portrait: 'noah-wicked-c', voice: 165, speed: 170 },
+  'wicked-woman': { nameKey: 'characters.wicked-woman', portrait: 'noah-wicked-woman', voice: 250, speed: 170 },
+  giant: { nameKey: 'characters.giant', portrait: 'noah-giant', voice: 90, speed: 130 },
   narrator: { nameKey: 'characters.narrator', portrait: null, voice: 180, speed: 0 },
 };
 

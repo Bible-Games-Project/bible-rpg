@@ -58,6 +58,8 @@ const ITEM_ICONS: Record<string, string> = {
   sack: 'noah-sack',
   hay: 'noah-hay',
   olive: 'noah-olive',
+  grapes: 'noah-grapes',
+  wine: 'noah-wine',
 };
 
 /** Who speaks with which portrait. */

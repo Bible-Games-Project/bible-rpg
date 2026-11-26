@@ -8,9 +8,10 @@ import { setUiBridge } from '../game/bridge';
 import { EdenScene, type EdenStartData } from '../game/EdenScene';
 import { CainScene } from '../game/cain/CainScene';
 import { buildCainPortraits } from '../game/cain/art';
+import { NoahScene } from '../game/noah/NoahScene';
 
 /** The scene that plays each chapter; its key is also its i18n namespace. */
-const CHAPTER_SCENES: Record<string, 'eden' | 'cain'> = { eden: 'eden', 'cain-abel': 'cain' };
+const CHAPTER_SCENES: Record<string, 'eden' | 'cain' | 'noah'> = { eden: 'eden', 'cain-abel': 'cain', noah: 'noah' };
 import { DialogueBox } from './DialogueBox';
 import { h } from './dom';
 import { HUD } from './HUD';
@@ -39,7 +40,7 @@ export class App {
   private pause: OverlayHandle | null = null;
   private playing = false;
   /** the scene of the chapter being played */
-  private sceneKey: 'eden' | 'cain' = 'eden';
+  private sceneKey: 'eden' | 'cain' | 'noah' = 'eden';
 
   constructor(private host: HTMLElement) {
     this.hud = new HUD(host, {
@@ -71,7 +72,7 @@ export class App {
       physics: { default: 'arcade', arcade: { debug: false, fixedStep: false } },
       input: { keyboard: false },
       audio: { noAudio: true },
-      scene: [BootScene, EdenScene, CainScene],
+      scene: [BootScene, EdenScene, CainScene, NoahScene],
     });
     this.assetsReady = new Promise((resolve) => this.game.events.once('assets-ready', () => resolve()));
     onViewChange(() => this.fit());
@@ -89,11 +90,11 @@ export class App {
     this.showMenu();
   }
 
-  private chapterScene(): EdenScene | CainScene | null {
+  private chapterScene(): EdenScene | CainScene | NoahScene | null {
     const m = this.game.scene;
     const key = this.sceneKey;
     if (!m.isActive(key) && !m.isPaused(key)) return null;
-    return m.getScene(key) as EdenScene | CainScene;
+    return m.getScene(key) as EdenScene | CainScene | NoahScene;
   }
 
   // ---------------------------------------------------------------- screens

@@ -59,6 +59,9 @@ class SaveStore {
       // Cain and Abel was open to everyone while it was being built; it opens
       // again by finishing Eden (or with Game Dev Debug).
       if (!this.data.chapters.eden?.completed) this.data.unlocked = this.data.unlocked.filter((id) => id !== 'cain-abel');
+      // Noah opens by finishing Cain and Abel (saves that finished it before Noah existed too).
+      if (!this.data.chapters['cain-abel']?.completed) this.data.unlocked = this.data.unlocked.filter((id) => id !== 'noah');
+      else if (!this.data.unlocked.includes('noah')) this.data.unlocked.push('noah');
     } else {
       // Keep the unreadable save aside instead of silently erasing it.
       storage.write(`${KEY}.unreadable-${Date.now()}`, raw);

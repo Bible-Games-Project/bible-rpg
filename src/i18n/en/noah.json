@@ -1,0 +1,399 @@
+{
+  "chapter": { "title": "Noah and the Flood", "reference": "Genesis 6–9" },
+  "missions": {
+    "m01": {
+      "title": "The Earth Was Corrupt",
+      "desc": "The LORD looks upon the earth, and sees what men do.",
+      "steps": {
+        "see": "Look upon the earth ({n}/{total})",
+        "noah": "Find Noah"
+      }
+    },
+    "m02": {
+      "title": "Make Thee an Ark",
+      "desc": "God tells Noah to build an ark of gopher wood.",
+      "steps": {
+        "axe": "Take the axe by the woodpile",
+        "chop": "Fell gopher trees in the forest ({n}/{total} built)",
+        "carry": "Bring the log to the ark ({n}/{total})",
+        "pitch": "Pitch the ark within and without"
+      }
+    },
+    "m03": {
+      "title": "Come into the Ark",
+      "desc": "In seven days the rain will come. Bring in your house, food and the animals.",
+      "steps": {
+        "days": "Day {day} of 7 · Family {family}/{familyTotal} · Food {food}/{foodTotal} · Animals {pairs}/{pairsTotal}"
+      }
+    },
+    "m04": {
+      "title": "The Flood",
+      "desc": "Forty days and forty nights of rain."
+    },
+    "m05": {
+      "title": "The Raven",
+      "desc": "Noah opens the window of the ark and sends forth a raven.",
+      "steps": {
+        "land": "Find dry land"
+      }
+    },
+    "m06": {
+      "title": "The Dove",
+      "desc": "Noah sends forth a dove, to see if the waters are gone.",
+      "steps": {
+        "land": "Find dry land",
+        "back": "Fly back to the ark"
+      }
+    },
+    "m07": {
+      "title": "The Olive Leaf",
+      "desc": "Seven days later, the dove flies again.",
+      "steps": {
+        "olive": "Find the olive tree on the hilltop",
+        "back": "Bring the olive leaf to the ark"
+      }
+    },
+    "m08": {
+      "title": "The Altar",
+      "desc": "Noah goes out of the ark and builds an altar to the LORD.",
+      "steps": {
+        "altar": "Build an altar to the LORD",
+        "offer": "Offer a burnt offering"
+      }
+    },
+    "m09": {
+      "title": "The Bow in the Cloud",
+      "desc": "God makes a covenant with Noah and every living creature.",
+      "steps": {
+        "sons": "Tell your sons about the covenant ({n}/{total})"
+      }
+    },
+    "m10": {
+      "title": "The Vineyard",
+      "desc": "Noah becomes a farmer and plants a vineyard.",
+      "steps": {
+        "plant": "Plant the vineyard ({n}/{total})",
+        "grapes": "Gather grapes ({n}/{total})",
+        "tent": "Go to your tent"
+      }
+    },
+    "m11": {
+      "title": "The Garment",
+      "desc": "Ham sees his father. Shem and Japheth cover him.",
+      "steps": {
+        "tent": "Go to your father's tent",
+        "tell": "Tell your brothers",
+        "cover": "Walk backward to the tent and cover your father"
+      }
+    }
+  },
+  "scripture": {
+    "sons": { "text": "And Noah was five hundred years old: and Noah begat Shem, Ham, and Japheth.", "ref": "Genesis 5:32" },
+    "giants": { "text": "There were giants in the earth in those days.", "ref": "Genesis 6:4" },
+    "wicked": { "text": "And GOD saw that the wickedness of man was great in the earth, and that every imagination of the thoughts of his heart was only evil continually.", "ref": "Genesis 6:5" },
+    "grieved": { "text": "And it repented the LORD that he had made man on the earth, and it grieved him at his heart.", "ref": "Genesis 6:6" },
+    "corrupt": { "text": "The earth also was corrupt before God, and the earth was filled with violence.", "ref": "Genesis 6:11" },
+    "grace": { "text": "But Noah found grace in the eyes of the LORD.", "ref": "Genesis 6:8" },
+    "just": { "text": "Noah was a just man and perfect in his generations, and Noah walked with God.", "ref": "Genesis 6:9" },
+    "did": { "text": "Thus did Noah; according to all that God commanded him, so did he.", "ref": "Genesis 6:22" },
+    "enter": { "text": "And Noah went in, and his sons, and his wife, and his sons' wives with him, into the ark, because of the waters of the flood.", "ref": "Genesis 7:7" },
+    "shut": { "text": "And the LORD shut him in.", "ref": "Genesis 7:16" },
+    "fountains": { "text": "The same day were all the fountains of the great deep broken up, and the windows of heaven were opened. And the rain was upon the earth forty days and forty nights.", "ref": "Genesis 7:11–12" },
+    "died": { "text": "All in whose nostrils was the breath of life, of all that was in the dry land, died.", "ref": "Genesis 7:22" },
+    "lifted": { "text": "And the waters increased, and bare up the ark, and it was lift up above the earth.", "ref": "Genesis 7:17" },
+    "remained": { "text": "And Noah only remained alive, and they that were with him in the ark.", "ref": "Genesis 7:23" },
+    "prevailed": { "text": "And the waters prevailed upon the earth an hundred and fifty days.", "ref": "Genesis 7:24" },
+    "remembered": { "text": "And God remembered Noah, and every living thing… and God made a wind to pass over the earth, and the waters asswaged.", "ref": "Genesis 8:1" },
+    "rested": { "text": "And the ark rested in the seventh month, on the seventeenth day of the month, upon the mountains of Ararat.", "ref": "Genesis 8:4" },
+    "window": { "text": "Noah opened the window of the ark which he had made: and he sent forth a raven.", "ref": "Genesis 8:6–7" },
+    "dove": { "text": "Also he sent forth a dove from him, to see if the waters were abated from off the face of the ground.", "ref": "Genesis 8:8" },
+    "no-rest": { "text": "But the dove found no rest for the sole of her foot, and she returned unto him into the ark.", "ref": "Genesis 8:9" },
+    "again": { "text": "And he stayed yet other seven days; and again he sent forth the dove out of the ark.", "ref": "Genesis 8:10" },
+    "olive": { "text": "And the dove came in to him in the evening; and, lo, in her mouth was an olive leaf pluckt off: so Noah knew that the waters were abated from off the earth.", "ref": "Genesis 8:11" },
+    "not-again": { "text": "And he stayed yet other seven days; and sent forth the dove; which returned not again unto him any more.", "ref": "Genesis 8:12" },
+    "dry": { "text": "And Noah removed the covering of the ark, and looked, and, behold, the face of the ground was dry.", "ref": "Genesis 8:13" },
+    "altar": { "text": "And Noah builded an altar unto the LORD; and took of every clean beast, and of every clean fowl, and offered burnt offerings on the altar.", "ref": "Genesis 8:20" },
+    "savour": { "text": "And the LORD smelled a sweet savour.", "ref": "Genesis 8:21" },
+    "seedtime": { "text": "While the earth remaineth, seedtime and harvest, and cold and heat, and summer and winter, and day and night shall not cease.", "ref": "Genesis 8:22" },
+    "bow": { "text": "I do set my bow in the cloud, and it shall be for a token of a covenant between me and the earth.", "ref": "Genesis 9:13" },
+    "scattered": { "text": "These are the three sons of Noah: and of them was the whole earth overspread.", "ref": "Genesis 9:19" },
+    "husbandman": { "text": "And Noah began to be an husbandman, and he planted a vineyard.", "ref": "Genesis 9:20" },
+    "drunk": { "text": "And he drank of the wine, and was drunken; and he was uncovered within his tent.", "ref": "Genesis 9:21" },
+    "covered": { "text": "And Shem and Japheth took a garment, and laid it upon both their shoulders, and went backward, and covered their father; and their faces were backward.", "ref": "Genesis 9:23" },
+    "years": { "text": "And Noah lived after the flood three hundred and fifty years. And all the days of Noah were nine hundred and fifty years: and he died.", "ref": "Genesis 9:28–29" }
+  },
+  "dialogue": {
+    "generations": [
+      { "s": "narrator", "t": "From Adam came Seth, and from Seth many generations. Men lived long, and filled the earth.", "ref": "Genesis 5" },
+      { "s": "narrator", "t": "Then Lamech had a son, and called him Noah: \"This one shall comfort us.\"", "ref": "Genesis 5:29" }
+    ],
+    "sin-robbery": [
+      { "s": "wicked-b", "t": "Your bread is mine now." },
+      { "s": "wicked", "t": "Thief! Give it back!" }
+    ],
+    "sin-violence": [
+      { "s": "wicked-c", "t": "Please! I'll pay you tomorrow!" },
+      { "s": "giant", "t": "No one says no to me." }
+    ],
+    "sin-harass": [
+      { "s": "wicked-woman", "t": "Leave me alone!" },
+      { "s": "wicked", "t": "Where are you going? Stay with me." }
+    ],
+    "sin-lies": [
+      { "s": "wicked-c", "t": "Two sacks of wheat for your goat. A fair trade, I swear it." },
+      { "s": "wicked-b", "t": "…These sacks are full of sand!" }
+    ],
+    "repent": [
+      { "s": "god", "t": "I will wipe man whom I have created from the face of the earth.", "ref": "Genesis 6:7" }
+    ],
+    "make-ark": [
+      { "s": "god", "t": "Noah. The end of all flesh has come before me: the earth is filled with violence.", "ref": "Genesis 6:13" },
+      { "s": "god", "t": "Make an ark of gopher wood, with rooms, and pitch it inside and out.", "ref": "Genesis 6:14" },
+      { "s": "god", "t": "I will bring a flood of waters on the earth. But with you I will establish my covenant.", "ref": "Genesis 6:17–18" },
+      { "s": "noah", "t": "I will do it, LORD." }
+    ],
+    "mock": [
+      { "s": "wicked-b", "t": "A boat? On a hill? Ha!" },
+      { "s": "wicked-c", "t": "Where's the sea, old man?" },
+      { "s": "noah", "t": "Turn from your ways. The LORD sees everything." }
+    ],
+    "come-in": [
+      { "s": "god", "t": "Come into the ark, you and all your house: I have seen you righteous before me.", "ref": "Genesis 7:1" },
+      { "s": "god", "t": "Take seven pairs of every clean beast and fowl, and one pair of the unclean.", "ref": "Genesis 7:2–3" },
+      { "s": "god", "t": "And take food for you and for them. In seven days I will send rain.", "ref": "Genesis 6:21; 7:4" }
+    ],
+    "too-late": [
+      { "s": "narrator", "t": "Seven days passed, and not all were in the ark. Try again." }
+    ],
+    "call-noah-wife": [
+      { "s": "noah", "t": "It's time. Come, my wife." },
+      { "s": "noah-wife", "t": "Where you go, I go." }
+    ],
+    "call-shem": [
+      { "s": "noah", "t": "Shem, my son. Into the ark." },
+      { "s": "shem", "t": "I'm coming, father. The LORD has spoken." }
+    ],
+    "call-ham": [
+      { "s": "noah", "t": "Ham! Leave that and come." },
+      { "s": "ham", "t": "Already? The sky is clear… Fine, fine." }
+    ],
+    "call-japheth": [
+      { "s": "noah", "t": "Japheth, come to the ark." },
+      { "s": "japheth", "t": "Right behind you, father!" }
+    ],
+    "call-shem-wife": [
+      { "s": "noah", "t": "Daughter, come with us." },
+      { "s": "shem-wife", "t": "I'll bring the blankets." }
+    ],
+    "call-ham-wife": [
+      { "s": "noah", "t": "Come, daughter. The rain is near." },
+      { "s": "ham-wife", "t": "Is Ham coming too?" }
+    ],
+    "call-japheth-wife": [
+      { "s": "noah", "t": "Come, daughter. Into the ark." },
+      { "s": "japheth-wife", "t": "So many animals… I'll help!" }
+    ],
+    "lion": [
+      { "s": "noah", "t": "One pair of the unclean, the LORD said. Come, lion. Gently." }
+    ],
+    "drowning": [
+      { "s": "wicked", "t": "The water! It's everywhere!" },
+      { "s": "wicked-b", "t": "Noah! Open the door!" }
+    ],
+    "raven-lost": [
+      { "s": "narrator", "t": "The raven went to and fro, and did not come back to the ark.", "ref": "Genesis 8:7" }
+    ],
+    "call-back": [
+      { "s": "noah", "t": "Come back, little dove! There is no land yet." }
+    ],
+    "go-forth": [
+      { "s": "god", "t": "Go out of the ark, you, your wife, your sons and their wives.", "ref": "Genesis 8:16" },
+      { "s": "god", "t": "Bring out every living thing with you, that they may fill the earth.", "ref": "Genesis 8:17" }
+    ],
+    "blessed": [
+      { "s": "god", "t": "Be fruitful, and multiply, and fill the earth.", "ref": "Genesis 9:1" }
+    ],
+    "covenant": [
+      { "s": "god", "t": "I make my covenant with you: never again will a flood destroy the earth.", "ref": "Genesis 9:11" }
+    ],
+    "remember": [
+      { "s": "god", "t": "When the bow is in the cloud, I will look on it and remember my covenant.", "ref": "Genesis 9:16" }
+    ],
+    "tell-shem": [
+      { "s": "noah", "t": "Shem, see the bow? It is the LORD's promise." },
+      { "s": "shem", "t": "Blessed be the LORD. I will remember it." }
+    ],
+    "tell-ham": [
+      { "s": "noah", "t": "Ham, no flood will ever destroy the earth again." },
+      { "s": "ham", "t": "Good. I've had enough water for a lifetime." }
+    ],
+    "tell-japheth": [
+      { "s": "noah", "t": "Japheth, the bow is God's sign. Be fruitful and fill the earth." },
+      { "s": "japheth", "t": "So many colours! I'll tell my children about it." }
+    ],
+    "ham-saw": [
+      { "s": "ham", "t": "Father is drunk… and uncovered! Wait until my brothers hear this." }
+    ],
+    "ham-tells": [
+      { "s": "ham", "t": "Come and see our father! He lies drunk and naked in his tent!", "ref": "Genesis 9:22" },
+      { "s": "shem", "t": "We will not look at our father's shame." },
+      { "s": "japheth", "t": "Take the garment. We'll walk in backward." }
+    ],
+    "awoke": [
+      { "s": "noah", "t": "I know what you did, Ham. Cursed be Canaan, your son: a servant of servants shall he be to his brothers.", "ref": "Genesis 9:24–25" },
+      { "s": "noah", "t": "Blessed be the LORD God of Shem. God shall enlarge Japheth.", "ref": "Genesis 9:26–27" }
+    ]
+  },
+  "npc": {
+    "noah": {
+      "after": [
+        "The LORD kept us through the water. Never forget it, son.",
+        "Every time it rains, look for the bow in the cloud."
+      ]
+    },
+    "noah-wife": {
+      "before": [
+        "Noah walks with God. People laugh at him, but I don't.",
+        "An ark? Here? If the LORD says so, then build it, husband.",
+        "Be careful in the city. It's not safe anymore."
+      ],
+      "days": [
+        "Seven days… Hurry, Noah, call the boys!",
+        "Don't forget the food. The animals will be hungry."
+      ],
+      "after": [
+        "Dry ground! I thought I'd never walk on grass again.",
+        "So quiet after all that rain."
+      ]
+    },
+    "shem": {
+      "before": [
+        "Father says the LORD spoke to him. I believe him.",
+        "Gopher wood is strong. Fell it near the forest paths."
+      ],
+      "days": [
+        "Seven pairs of the clean animals, father. I'll count them with you."
+      ],
+      "after": [
+        "Blessed be the LORD, who kept us alive."
+      ]
+    },
+    "ham": {
+      "before": [
+        "A boat on dry land. The neighbours think we're mad.",
+        "I'll help… after I rest a little."
+      ],
+      "days": [
+        "Is it really going to rain? Not one cloud."
+      ],
+      "after": [
+        "One hundred and fifty days of water. I never want to see a fish again."
+      ]
+    },
+    "japheth": {
+      "before": [
+        "I want to see the animals come! Even the lion!",
+        "Two by two, father says. How will they all fit?"
+      ],
+      "days": [
+        "The deer are in the meadows to the south-east."
+      ],
+      "after": [
+        "The whole world is new. Where shall we go first?"
+      ]
+    },
+    "shem-wife": {
+      "before": ["My father-in-law prays every morning. The others only shout."],
+      "days": ["I'll carry what I can. We need grain for many days."],
+      "after": ["The sky is so clean. Like the first morning."]
+    },
+    "ham-wife": {
+      "before": ["The city frightens me. Men there do whatever they want."],
+      "days": ["Where is Ham? Have you seen him?"],
+      "after": ["We were eight in the ark. Only eight."]
+    },
+    "japheth-wife": {
+      "before": ["The neighbours stole our goat last week. Nobody did anything."],
+      "days": ["Hay for the animals is out in the meadows."],
+      "after": ["Look, the olive trees are growing again!"]
+    },
+    "wicked-b": {
+      "before": [
+        "Rain? What's rain, old man?",
+        "Build your boat. We'll laugh from the hill."
+      ],
+      "days": ["Still at it, Noah? Ha!"]
+    },
+    "wicked-c": {
+      "before": [
+        "Everyone lies. I'm just better at it.",
+        "Preaching again? Nobody's listening, Noah."
+      ],
+      "days": ["Go on, get in your box. We'll be at the feast."]
+    },
+    "wicked": {
+      "before": [
+        "Mind your business, stranger.",
+        "In this city the strong take what they want."
+      ],
+      "days": ["Eat, drink, marry. Tomorrow is like today."]
+    },
+    "wicked-woman": {
+      "before": ["Nobody here helps anybody.", "Don't trust anyone in this city."],
+      "days": ["They say old Noah built a giant boat. Strange man."]
+    },
+    "giant": {
+      "before": ["I am a mighty man of renown. Bow down, little one.", "Who will stop me? Nobody."],
+      "days": ["Rain can't hurt me."]
+    }
+  },
+  "animals": {
+    "sheep": "sheep",
+    "goat": "goats",
+    "deer": "deer",
+    "dove": "doves",
+    "lion": "lions"
+  },
+  "items": {
+    "axe": "Axe",
+    "log": "Gopher log",
+    "sack": "Sack of grain",
+    "hay": "Hay",
+    "olive": "Olive leaf",
+    "grapes": "Grapes",
+    "wine": "Wine"
+  },
+  "prompts": {
+    "chop": "Chop",
+    "build": "Build the ark",
+    "pitch": "Pitch the ark",
+    "call": "Call {name}",
+    "pair": "Lead the {name}",
+    "unclean": "Lead the {name}",
+    "olive": "Pluck the olive leaf",
+    "altar": "Build the altar",
+    "offer": "Offer",
+    "plant": "Plant a vine",
+    "grapes": "Gather grapes",
+    "look": "Look into the tent",
+    "cover": "Cover your father"
+  },
+  "toasts": {
+    "spirit": "You are the Spirit of the LORD. Look upon the earth.",
+    "axe": "Strike a gopher tree to fell it.",
+    "day": "Day {day}",
+    "food": "Food stored ({n}/{total})",
+    "tryAgain": "Try again",
+    "seasons": "The seasons pass…",
+    "wine": "The grapes become wine.",
+    "backward": "Walk backward. Don't look!"
+  },
+  "hud": {
+    "strength": "Strength {s}"
+  },
+  "complete": {
+    "chapter": "Noah and the Flood",
+    "body": "By faith Noah prepared an ark to the saving of his house (Hebrews 11:7). And the bow in the cloud still tells of God's promise.",
+    "next": "Next on the path: the Tower of Babel."
+  }
+}

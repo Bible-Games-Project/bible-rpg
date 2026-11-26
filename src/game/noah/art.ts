@@ -3,7 +3,7 @@ import { MANIFEST, assetUrl, shadowKey } from '../manifest';
 import { castShadows } from '../world/castShadow';
 import { loadCainArt } from '../cain/art';
 import { drawFire, drawShadow } from '../cain/drawings';
-import { Pixels } from '../cain/pixels';
+import { Pixels, ellipse, type RGB } from '../cain/pixels';
 import CAIN_GEN from '../../data/cain/generatedArt.json';
 import GEN from '../../data/noah/generatedArt.json';
 import { dayPixels, NOAH_RAMPS, rampAt, type DayOptions } from './colors';
@@ -361,5 +361,42 @@ export function buildNoahArt(scene: Phaser.Scene): void {
   const fire = drawFire(2, true);
   addSheet(scene, 'noah-fire', fire.frames, Math.round(fire.ax), Math.round(fire.ay) - 1);
   if (!scene.anims.exists('noah-fire:loop')) scene.anims.create({ key: 'noah-fire:loop', frames: scene.anims.generateFrameNumbers('noah-fire', {}), frameRate: 7, repeat: -1 });
+  smallThings(scene);
   buildNoahPeople(scene);
+}
+
+/** The garment of Genesis 9:23, the grapes and the wine, drawn in code. */
+function smallThings(scene: Phaser.Scene): void {
+  const { RED, STRAW, WOOD, LEAVES } = NOAH_RAMPS;
+  const c = (r: readonly number[][], i: number) => r[Math.max(0, Math.min(r.length - 1, i))] as RGB;
+  // a cloak held between two: a long fold of red cloth with a hem
+  const g = new Pixels(30, 11);
+  for (let x = 1; x < 29; x++) {
+    const sag = Math.round(Math.sin((x / 28) * Math.PI) * 2);
+    for (let y = 1 + sag; y < 9 + sag; y++) {
+      const fold = Math.sin(x * 0.9) > 0.55 ? -1 : 0;
+      g.set(x, y, c(RED, y === 8 + sag ? 2 : 4 + fold - (y > 6 + sag ? 1 : 0)));
+    }
+    g.set(x, 7 + sag, c(STRAW, 5));
+  }
+  g.outline(c(RED, 0));
+  addSheet(scene, 'noah-garment', [g], 15, 6, { shadow: false });
+  // a bunch of grapes on its stem
+  const gr = new Pixels(11, 13);
+  for (const [x, y] of [[3, 4], [6, 4], [9, 4], [4, 7], [7, 7], [5, 10], [3, 10 - 3], [8, 10 - 3], [6, 12 - 1]] as const)
+    ellipse(gr, x - 0.5, y - 0.5, 1.6, 1.6, (_x, _y, nx, ny) => (nx + ny < -0.6 ? [150, 110, 190] : [92, 50, 120]));
+  gr.set(5, 0, c(WOOD, 4));
+  gr.set(5, 1, c(WOOD, 4));
+  gr.set(6, 1, c(LEAVES, 4));
+  gr.set(7, 1, c(LEAVES, 4));
+  gr.outline([40, 20, 50]);
+  addSheet(scene, 'noah-grapes', [gr], 5, 12, { icon: true });
+  // a clay jar of wine
+  const j = new Pixels(11, 14);
+  ellipse(j, 5, 8.5, 4.2, 4.6, (_x, _y, nx) => c(STRAW, nx < -0.3 ? 5 : nx > 0.4 ? 2 : 3));
+  for (let y = 1; y < 5; y++) for (let x = 3; x < 8; x++) j.set(x, y, c(STRAW, x === 3 ? 5 : 3));
+  for (let x = 2; x < 9; x++) j.set(x, 1, c(STRAW, 6));
+  for (let x = 3; x < 8; x++) j.set(x, 0, [92, 30, 60]);
+  j.outline(c(WOOD, 1));
+  addSheet(scene, 'noah-wine', [j], 5, 13, { icon: true });
 }

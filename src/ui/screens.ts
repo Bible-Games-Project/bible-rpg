@@ -4,9 +4,10 @@ import { CHAPTERS, MAP_ART, MAP_HEIGHT, chaptersOf, newTestamentOpen, previousCh
 import { MORE_GAMES } from '../data/moreGames';
 import { EDEN_MISSION_IDS } from '../data/eden/missionOrder';
 import { CAIN_MISSION_IDS } from '../data/cain/missionOrder';
+import { NOAH_MISSION_IDS } from '../data/noah/missionOrder';
 
 /** How many missions each playable chapter has. */
-const MISSION_COUNT: Record<string, number> = { eden: EDEN_MISSION_IDS.length, 'cain-abel': CAIN_MISSION_IDS.length };
+const MISSION_COUNT: Record<string, number> = { eden: EDEN_MISSION_IDS.length, 'cain-abel': CAIN_MISSION_IDS.length, noah: NOAH_MISSION_IDS.length };
 import { h, arrowNav } from './dom';
 import { wireButtonSounds, confirmDialog } from './overlays';
 

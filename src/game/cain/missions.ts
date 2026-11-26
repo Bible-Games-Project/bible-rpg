@@ -514,7 +514,7 @@ export class CainRunner {
     save.commitMission(CHAPTER, m.id, next, w.getState());
     audio.play('missionComplete');
     if (!next) {
-      save.completeChapter(CHAPTER, []);
+      save.completeChapter(CHAPTER, ['noah']);
       await w.chapterComplete();
       return;
     }
