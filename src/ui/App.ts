@@ -107,6 +107,7 @@ export class App {
 
   private showMenu(): void {
     audio.setMood('none');
+    audio.stopSong(1.5);
     this.setScreen(
       mainMenuScreen({
         play: () => this.showMap(),

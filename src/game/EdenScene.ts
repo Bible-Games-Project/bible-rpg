@@ -218,6 +218,7 @@ export class EdenScene extends Phaser.Scene implements WorldApi {
     this.scale.off('resize', this.applyZoom, this);
     audio.setAmbience('none');
     audio.setMood('none');
+    audio.stopSong(1.5);
     this.runner?.stop();
   }
 

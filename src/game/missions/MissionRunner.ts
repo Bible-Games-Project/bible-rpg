@@ -77,8 +77,11 @@ export class MissionRunner {
     const title = t(`eden.missions.${m.key}.title`);
     hud.setMission({ number: m.number, title, objective: t(`eden.missions.${m.key}.desc`), kind: m.kind, reference: m.reference });
     if (chapterStart) {
+      // the maintainer's song for the opening, faded out over 5 seconds when it ends
+      audio.playSong('the-first-light');
       if (this.mode !== 'restart') await ui().chapterIntro();
       await this.scene.creationIntro();
+      audio.stopSong(5);
     }
     if (fromSave) await w.fade(0, 900);
     audio.play('missionStart');

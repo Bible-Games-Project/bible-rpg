@@ -92,6 +92,12 @@ class AudioManager {
   private noise!: AudioBuffer;
   private mood: Mood = 'none';
   private musicTimer: number | null = null;
+  /** the recorded song playing (playSong), and the one asked for before sound was allowed */
+  private song: { name: string; src: AudioBufferSourceNode; gain: GainNode } | null = null;
+  private songWanted: string | null = null;
+  /** until when (audio clock) a stopped song is still fading */
+  private songFading = 0;
+  private songBuffers = new Map<string, Promise<AudioBuffer | null>>();
   private ambience: Ambience = 'none';
   private ambNodes: AudioNode[] = [];
   private ambGain: GainNode | null = null;
@@ -151,6 +157,7 @@ class AudioManager {
     const a = this.ambience;
     this.ambience = 'none';
     this.setAmbience(a);
+    if (this.songWanted) void this.startSong(this.songWanted);
     return ctx;
   }
 
@@ -682,6 +689,50 @@ class AudioManager {
 
   // ---------------------------------------------------------------- music
 
+  /**
+   * A recorded song (public/assets/music/<name>.mp3; the maintainer's, for
+   * the cinematics, not all the time) on the music channel, looping until
+   * stopSong. The generated music is silent meanwhile.
+   */
+  playSong(name: string): void {
+    this.songWanted = name;
+    if (this.song?.name === name) return;
+    if (this.ctx) void this.startSong(name);
+  }
+
+  /** Fades the song out (the maintainer: over 5 seconds when a cinematic ends). */
+  stopSong(fade = 5): void {
+    this.songWanted = null;
+    const s = this.song;
+    if (!s || !this.ctx) return;
+    this.song = null;
+    const t = this.ctx.currentTime;
+    s.gain.gain.cancelScheduledValues(t);
+    s.gain.gain.setValueAtTime(s.gain.gain.value, t);
+    s.gain.gain.linearRampToValueAtTime(0.0001, t + fade);
+    s.src.stop(t + fade + 0.05);
+    this.songFading = Math.max(this.songFading, t + fade);
+  }
+
+  private async startSong(name: string): Promise<void> {
+    if (!this.songBuffers.has(name)) this.songBuffers.set(name, this.decode(`${import.meta.env.BASE_URL}assets/music/${name}.mp3`));
+    const buf = await this.songBuffers.get(name)!;
+    const ctx = this.ctx;
+    if (!buf || !ctx || this.songWanted !== name || this.song?.name === name) return;
+    this.stopSong(1.5);
+    this.songWanted = name;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.loop = true;
+    const gain = ctx.createGain();
+    const t = ctx.currentTime;
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.linearRampToValueAtTime(1, t + 1.5);
+    src.connect(gain).connect(this.music);
+    src.start(t);
+    this.song = { name, src, gain };
+  }
+
   setMood(mood: Mood): void {
     if (mood === this.mood) return;
     this.mood = mood;
@@ -694,6 +745,7 @@ class AudioManager {
     const tick = () => {
       if (!this.ctx || this.mood !== mood) return;
       const ctx = this.ctx;
+      const quiet = !!this.song || !!this.songWanted || ctx.currentTime < this.songFading;
       const t = ctx.currentTime + 0.05;
       const cfg = {
         peaceful: { root: 220, scale: PENTA_MAJOR, beat: 0.42, density: 0.75 },
@@ -702,11 +754,13 @@ class AudioManager {
         tension: { root: 174.6, scale: PENTA_MINOR, beat: 0.75, density: 0.35 },
         sorrow: { root: 164.8, scale: PENTA_MINOR, beat: 0.7, density: 0.45 },
       }[mood];
-      if (step % 8 === 0) {
+      if (quiet) {
+        // a recorded song is playing: wait
+      } else if (step % 8 === 0) {
         // soft drone / pad on the root and fifth
         for (const s of [0, 7]) this.tone(cfg.root / 2 * Math.pow(2, s / 12), t, cfg.beat * 8, 0.03, 'sine', this.music);
       }
-      if (Math.random() < cfg.density) {
+      if (!quiet && Math.random() < cfg.density) {
         const deg = cfg.scale[Math.floor(Math.random() * cfg.scale.length)];
         const oct = Math.random() < 0.3 ? 2 : 1;
         const f = cfg.root * oct * Math.pow(2, deg / 12);

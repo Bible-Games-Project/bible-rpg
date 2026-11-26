@@ -521,6 +521,11 @@ $1 play at `WALK_FPS` 15 at the player's
   of `{ s, t, ref }` read with `tRaw()`. Add a language only when complete.
 - Depth = feet Y. Trees are split into trunk (collider) and canopy (fades when
   the player walks behind it).
+- Songs: the maintainer sends their own tracks (`public/assets/music/`,
+  `audio.playSong(name)` / `audio.stopSong(5)`, the generated music waits
+  meanwhile). They want them in cinematics and a few chosen moments, not
+  all the time, faded out over 5 s when the cinematic ends. The Eden
+  opening (chapter card + creation) uses `the-first-light`.
 - Sounds are synthesized in `src/core/audio.ts`, except recorded effects
   the maintainer asked for (footsteps, seeds, filling and pouring water,
   fig leaves, the bite, the sewing, the serpent's hiss, the cherubim
