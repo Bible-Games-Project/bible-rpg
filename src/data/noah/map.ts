@@ -109,7 +109,6 @@ export const CITY_HOUSES: { at: Pt; small?: boolean; flip?: boolean }[] = [
   { at: [420, 3720], small: true },
   { at: [700, 3960] },
   { at: [1000, 4000], small: true, flip: true },
-  { at: [1220, 3860], small: true },
   { at: [380, 3990], small: true, flip: true },
 ];
 export const STALLS: Pt[] = [[600, 3560], [1060, 3540], [880, 3820]];

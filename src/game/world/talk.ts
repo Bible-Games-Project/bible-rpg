@@ -17,14 +17,18 @@ export interface Talker {
  * lines go on by themselves and cannot be skipped, wherever the player
  * walks (no pause when they walk off: the maintainer, 2026-11-12).
  * Whoever is speaking, and the one they talk with, turn to look at a
- * player who walks about. In
- * cutscenes the player is held instead (the scenes' `mayWalk`).
+ * player who walks about, unless two of them are talking with each other
+ * (the maintainer: "si dos NPCs están hablando entre sí, que no se giren
+ * para mirar al player"). In cutscenes the player is held instead (the
+ * scenes' `mayWalk`).
  */
 export class Conversation {
   /** the one the player is talking with (the scene's `lines` sets it) */
   partner: Talker | null = null;
   /** where a narration in a cutscene is happening (whom it is about), for the arrow */
   spot: Talker | null = null;
+  /** two others talk with each other in these lines, not with the player: no one turns to the player */
+  among = false;
   private moved = false;
   /** the small speech bubble over whoever is speaking (the maintainer: in every conversation) */
   private bubble: Phaser.GameObjects.Container | null = null;
@@ -45,7 +49,7 @@ export class Conversation {
     // the one speaking, and the one they talk with, look at a player who
     // walks about (a staged look is kept until then): God speaking to Adam
     // turns to follow him (the maintainer)
-    if (!this.moved) return;
+    if (!this.moved || this.among) return;
     const speaker = d.speaker ? cast(d.speaker) : null;
     const listener = partner ? cast(partner.id) : null;
     for (const npc of [speaker, listener === speaker ? null : listener]) {
@@ -103,6 +107,18 @@ export class Conversation {
   static mark(t: Talker): [number, number] {
     const top = (t as Partial<Actor>).topY;
     return [t.x, typeof top === 'function' ? top.call(t) - 4 : t.y - 60];
+  }
+
+  /** Whether these lines are between others: two or more speakers, none of them the player (nor the narrator). */
+  static amongOthers(speakers: string[], player: Actor, cast: (id: string) => Talker | null): boolean {
+    const who = new Set<Talker>();
+    for (const id of speakers) {
+      if (id === 'narrator') continue;
+      const a = cast(id);
+      if (a === player) return false;
+      if (a) who.add(a);
+    }
+    return who.size >= 2;
   }
 
   /** The one the player talks with in these lines: the first speaker in the scene other than the player. */

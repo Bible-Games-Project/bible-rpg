@@ -130,6 +130,43 @@ function stage(w: NoahScene, n: number, place: boolean): void {
 
 // ------------------------------------------------------------ the wicked
 
+/** Blood from a blow (the maintainer: when the giant strikes and kills): drops
+ * thrown from the chest away from the one striking, falling to the ground. */
+function bleed(w: NoahScene, b: Actor, from: Actor, n: number): void {
+  const dir = b.x >= from.x ? 1 : -1;
+  const y0 = b.y + (b.topY() - b.y) * 0.55;
+  for (let k = 0; k < n; k++) {
+    const r = 1 + Math.random() * 1.4;
+    const drop = w.add.circle(b.x + dir * 4, y0 + (Math.random() - 0.5) * 8, r, 0x8e0f0f).setDepth(b.y + 2);
+    const vx = dir * (20 + Math.random() * 60);
+    const up = 18 + Math.random() * 26;
+    const land = b.y - 2 + (Math.random() - 0.5) * 10 - y0;
+    const x0 = drop.x;
+    const yStart = drop.y;
+    w.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: 380 + Math.random() * 200,
+      onUpdate: (tw) => {
+        const p = tw.getValue() ?? 0;
+        drop.setPosition(x0 + vx * p, yStart - up * 4 * p * (1 - p) + land * p * p);
+      },
+      onComplete: () => {
+        // a stain where it fell, gone after a while
+        drop.setScale(1.6, 0.7).setDepth(b.y - 2);
+        w.tweens.add({ targets: drop, alpha: 0, delay: 14000, duration: 2000, onComplete: () => drop.destroy() });
+      },
+    });
+  }
+}
+
+/** A pool of blood under one who fell. */
+function pool(w: NoahScene, b: Actor): void {
+  const p = w.add.ellipse(b.x + 22, b.y - 2, 40, 12, 0x7a0c0c, 0).setDepth(b.y - 2).setScale(0.3);
+  w.tweens.add({ targets: p, scale: 1, alpha: 0.8, duration: 1600, ease: 'Quad.easeOut' });
+  w.tweens.add({ targets: p, alpha: 0, delay: 16000, duration: 2000, onComplete: () => p.destroy() });
+}
+
 /** What the spirit of God sees in the city (Genesis 6:5, 11–12), each in a few moves. */
 async function sin(w: NoahScene, id: string): Promise<void> {
   const [a, b] = w.sinners[id];
@@ -153,10 +190,13 @@ async function sin(w: NoahScene, id: string): Promise<void> {
       audio.play('swing');
       await a.attack('swing');
       audio.play('hit');
+      bleed(w, b, a, 9);
       w.cameras.main.shake(140, 0.005);
     }
     w.tweens.add({ targets: b.sprite, angle: 90, duration: 380 });
-    await w.wait(600);
+    await w.wait(380);
+    pool(w, b);
+    await w.wait(500);
   } else if (id === 'harass') {
     b.emote('exclaim');
     await w.walk(b, [b.x + 90, b.y - 10], 120);

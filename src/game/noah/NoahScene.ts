@@ -437,6 +437,7 @@ export class NoahScene extends Phaser.Scene {
     }
     this.talk.spot = spot;
     this.player().stop();
+    this.talk.among = Conversation.amongOthers(lines.map((l) => l.speaker), this.player(), (id) => this.castOf(id));
     this.talk.partner = Conversation.partnerOf(
       lines.map((l) => l.speaker),
       this.player(),
@@ -446,6 +447,7 @@ export class NoahScene extends Phaser.Scene {
       await ui().dialogue.show(lines);
     } finally {
       this.talk.partner = null;
+      this.talk.among = false;
       if (this.talk.spot === spot) this.talk.spot = null;
     }
   }

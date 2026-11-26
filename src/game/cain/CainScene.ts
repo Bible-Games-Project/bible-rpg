@@ -401,11 +401,13 @@ export class CainScene extends Phaser.Scene {
     }
     this.player().stop();
     this.facePartners(lines);
+    this.talk.among = Conversation.amongOthers(lines.map((l) => l.speaker), this.player(), (id) => this.talkerOf(id));
     this.talk.partner = Conversation.partnerOf(lines.map((l) => l.speaker), this.player(), (id) => this.talkerOf(id));
     try {
       await ui().dialogue.show(lines);
     } finally {
       this.talk.partner = null;
+      this.talk.among = false;
     }
   }
 
