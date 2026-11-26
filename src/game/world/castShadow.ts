@@ -24,9 +24,27 @@ interface Shot {
   n: number;
 }
 
-function cast(f: Px, ax: number, ay: number, mirror: boolean, ground?: ArrayLike<number>): Shot {
-  const pts = new Int16Array(f.w * f.h * 2);
+function cast(f: Px, ax: number, ay: number, mirror: boolean, ground?: ArrayLike<number>, under?: [number, number]): Shot {
+  const pts = new Int16Array(f.w * f.h * 2 + (ground ? f.w * f.h * 2 : 0));
   let n = 0;
+  // the ground under a long thing raised on blocks (the ark): between its
+  // lowest pixel and the line it stands on, it is in its shade (the
+  // maintainer: the ark's shadow was badly made, light under the hull)
+  if (ground && under)
+    for (let x = Math.max(0, under[0]); x <= Math.min(f.w - 1, under[1]); x++) {
+      let low = -1;
+      for (let y = f.h - 1; y >= 0; y--)
+        if (f.d[(y * f.w + x) * 4 + 3]) {
+          low = y;
+          break;
+        }
+      if (low < 0) continue;
+      const sx = (mirror ? f.w - 1 - x : x) - (mirror ? f.w - ax : ax);
+      for (let y = low + 1; y <= ground[x]; y++) {
+        pts[n++] = sx;
+        pts[n++] = Math.round(y - ay);
+      }
+    }
   for (let y = 0; y < f.h; y++)
     for (let x = 0; x < f.w; x++) {
       if (!f.d[(y * f.w + x) * 4 + 3]) continue;
@@ -67,10 +85,11 @@ function boxBlur(src: Float32Array, w: number, h: number, r: number): Float32Arr
 
 /**
  * The shadow strip of `frames` (feet at ax, ay) and its entry; `file` is unused.
- * `ground`: the row each column stands on, for a long thing seen at a slant (the ark).
+ * `ground`: the row each column stands on, for a long thing seen at a slant (the ark);
+ * `under`: the columns (between its blocks) where the ground under it is shaded.
  */
-export function castShadows(frames: Px[], ax: number, ay: number, ground?: ArrayLike<number>): [HTMLCanvasElement, ShadowAsset] {
-  const shots = [...frames.map((f) => cast(f, ax, ay, false, ground)), ...frames.map((f) => cast(f, ax, ay, true, ground))];
+export function castShadows(frames: Px[], ax: number, ay: number, ground?: ArrayLike<number>, under?: [number, number]): [HTMLCanvasElement, ShadowAsset] {
+  const shots = [...frames.map((f) => cast(f, ax, ay, false, ground, under)), ...frames.map((f) => cast(f, ax, ay, true, ground, under))];
   let x0 = 0;
   let x1 = 0;
   let y0 = 0;

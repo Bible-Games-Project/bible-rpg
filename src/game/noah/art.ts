@@ -80,7 +80,7 @@ function canvasOf(p: Pixels): HTMLCanvasElement {
  * A texture from frames of one size side by side, with its manifest entry;
  * `shadow`: it casts its own shadow on the ground (like Eden's props).
  */
-function addSheet(scene: Phaser.Scene, key: string, frames: Pixels[], ax: number, ay: number, o: { scale?: number; icon?: boolean; shadow?: boolean; ground?: ArrayLike<number> } = {}): void {
+function addSheet(scene: Phaser.Scene, key: string, frames: Pixels[], ax: number, ay: number, o: { scale?: number; icon?: boolean; shadow?: boolean; ground?: ArrayLike<number>; under?: [number, number] } = {}): void {
   const w = frames[0].w;
   const h = frames[0].h;
   if (scene.textures.exists(key)) scene.textures.remove(key);
@@ -92,7 +92,7 @@ function addSheet(scene: Phaser.Scene, key: string, frames: Pixels[], ax: number
   const file = o.icon ? canvasOf(frames[0]).toDataURL() : '';
   MANIFEST.sprites[key] = { file, frameWidth: w, frameHeight: h, frames: frames.length, anchorX: ax, anchorY: ay, scale: o.scale ?? ART };
   if (o.shadow) {
-    const [strip, shadow] = castShadows(frames.map((f) => ({ w: f.w, h: f.h, d: f.data })), ax, ay, o.ground);
+    const [strip, shadow] = castShadows(frames.map((f) => ({ w: f.w, h: f.h, d: f.data })), ax, ay, o.ground, o.under);
     if (scene.textures.exists(shadowKey(key))) scene.textures.remove(shadowKey(key));
     scene.textures.addSpriteSheet(shadowKey(key), strip as unknown as HTMLImageElement, { frameWidth: shadow.frameWidth, frameHeight: shadow.frameHeight });
     MANIFEST.sprites[key].shadow = shadow;
@@ -185,7 +185,7 @@ function genTree(scene: Phaser.Scene, id: string, name: CainGen): void {
  * they are. One anchor row for all of it cast the bow's shadow down at the
  * stern's level, a thin strip far from the hull ("the ark's shadow is awful").
  */
-function groundLine(p: Pixels): Float32Array {
+function groundLine(p: Pixels): { ground: Float32Array; under: [number, number] } {
   const pts: [number, number][] = [];
   for (let x = 0; x < p.w; x++)
     for (let y = p.h - 1; y >= 0; y--)
@@ -203,14 +203,20 @@ function groundLine(p: Pixels): Float32Array {
     }
     hull.push(q);
   }
+  // the hull's ends curve up off the ground: the line runs from the outermost
+  // blocks on, straight (it rose with the bow and the stern, casting their
+  // shadows up in the air beside them)
+  while (hull.length > 2 && (hull[1][1] - hull[0][1]) / Math.max(1, hull[1][0] - hull[0][0]) > 0.6) hull.shift();
+  while (hull.length > 2 && hull[hull.length - 1][1] < hull[hull.length - 2][1]) hull.pop();
   const g = new Float32Array(p.w);
+  const under: [number, number] = [hull[0][0], hull[hull.length - 1][0]];
   let k = 0;
   for (let x = 0; x < p.w; x++) {
     while (k < hull.length - 2 && hull[k + 1][0] < x) k++;
     const [a, b] = [hull[k], hull[Math.min(k + 1, hull.length - 1)]];
     g[x] = b[0] === a[0] ? a[1] : a[1] + ((b[1] - a[1]) * (x - a[0])) / (b[0] - a[0]);
   }
-  return g;
+  return { ground: g, under };
 }
 
 function arkStages(scene: Phaser.Scene): void {
@@ -218,7 +224,7 @@ function arkStages(scene: Phaser.Scene): void {
   const whole = pixelsOf(scene, 'noah-gen:ark');
   const { w, h } = whole;
   const ax = Math.round(w / 2);
-  const ground = groundLine(whole);
+  const { ground, under } = groundLine(whole);
   for (let k = 0; k < ARK_STAGES - 1; k++) {
     const p = new Pixels(w, h);
     const level = h - ((k + 1) / ARK_STAGES) * h * 0.92;
@@ -236,9 +242,9 @@ function arkStages(scene: Phaser.Scene): void {
           p.data[i + 3] = 255;
         }
       }
-    addSheet(scene, `noah-ark-${k}`, [p], ax, g.ay - 4, { shadow: true, ground });
+    addSheet(scene, `noah-ark-${k}`, [p], ax, g.ay - 4, { shadow: true, ground, under });
   }
-  addSheet(scene, `noah-ark-${ARK_STAGES - 1}`, [whole], ax, g.ay - 4, { shadow: true, ground });
+  addSheet(scene, `noah-ark-${ARK_STAGES - 1}`, [whole], ax, g.ay - 4, { shadow: true, ground, under });
 }
 
 /**
