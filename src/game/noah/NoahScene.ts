@@ -1189,6 +1189,7 @@ export class NoahScene extends Phaser.Scene {
   /** The ark lifted up above the earth (Genesis 7:17), bobbing on the water. */
   setAfloat(on: boolean): void {
     const ark = this.world.ark;
+    this.world.setArkAfloat(on);
     this.arkBob?.stop();
     this.arkBob = null;
     ark.y = ARK.y;

@@ -7,7 +7,7 @@ import { DEPTH_GROUND, DEPTH_SHADOW } from '../world/Actor';
 import { distToPolyline, rng, wobble } from '../world/geometry';
 import { extrudedTiles } from '../world/Terrain';
 import { addShadow } from '../world/shadows';
-import { ARK_STAGES, ART, TREES, daySprite, dayTiles } from './art';
+import { ARK_BASE, ARK_STAGES, ART, TREES, daySprite, dayTiles } from './art';
 
 export interface NoahTree {
   id: string;
@@ -56,6 +56,9 @@ function pondDistance(x: number, y: number): number {
 /** How far up (a share of the picture's height) a building's shadow starts. */
 const SHADOW_LIFT: Record<string, number> = { 'noah-house': 0.18, 'noah-house-small': 0.18, 'noah-stall': 0.12, 'noah-tent': 0.15, 'noah-well': 0.08 };
 
+/** The width of the ark's strips, in its sprite's pixels. */
+const ARK_STRIP = 40;
+
 export class NoahWorld {
   readonly cols = Math.ceil(WORLD_W / TILE);
   readonly rows = Math.ceil(WORLD_H / TILE);
@@ -67,6 +70,8 @@ export class NoahWorld {
   arkShadow: Phaser.GameObjects.Image | undefined;
   arkStage = -1;
   private arkBodies: Phaser.GameObjects.Rectangle[] = [];
+  private arkParts: Phaser.GameObjects.Image[] = [];
+  private arkAfloat = false;
   /** the axe by the woodpile */
   axe!: Phaser.GameObjects.Image;
   /** food lying ready for the ark */
@@ -203,14 +208,25 @@ export class NoahWorld {
     this.place('noah-planks', lx - 40, ly);
     this.solid(lx - 40, ly - 8, 70, 20);
     this.ark = this.scene.add.image(ARK.x, ARK.y, 'noah-ark-0').setVisible(false);
-    // the hull, beside the ramp
-    const body = (x: number, y: number, w: number, h: number) => {
-      const b = this.solid(x, y, w, h);
-      this.arkBodies.push(b);
-    };
-    body(ARK.x + 60, ARK.y - 90, 600, 130);
-    body(ARK.x - 300, ARK.y - 110, 150, 110);
-    body(ARK.x - 150, ARK.y - 150, 170, 80);
+    // On the ground the ark is drawn as upright strips, each at the depth of
+    // its own foot: one depth for all of it hid whoever stood below the bow
+    // (its foot is higher than the stern's), and its colliders follow the
+    // same feet, the ramp's too ("I can walk through the ladder and the ark")
+    const a = MANIFEST.sprites['noah-ark-0'];
+    const top = ARK.y - 170;
+    for (let x0 = 0; x0 < ARK_BASE.length; x0 += ARK_STRIP) {
+      const x1 = Math.min(ARK_BASE.length, x0 + ARK_STRIP);
+      const foot = Math.max(...ARK_BASE.slice(x0, x1));
+      if (foot < 0) continue;
+      const bottom = ARK.y + (foot - a.anchorY) * ART;
+      const part = this.scene.add.image(ARK.x, ARK.y, 'noah-ark-0').setVisible(false).setDepth(bottom);
+      part.setData('crop', [x0, x1 - x0]);
+      this.arkParts.push(part);
+      const left = ARK.x + (x0 - a.anchorX) * ART;
+      const right = ARK.x + (x1 - a.anchorX) * ART;
+      const far = Math.min(bottom - 40, Math.max(bottom - 110, top));
+      this.arkBodies.push(this.solid((left + right) / 2, (far + bottom) / 2, right - left, bottom - far));
+    }
     this.setArk(-1);
   }
 
@@ -221,12 +237,30 @@ export class NoahWorld {
     this.arkShadow = undefined;
     const on = stage >= 0;
     for (const b of this.arkBodies) (b.body as Phaser.Physics.Arcade.StaticBody).enable = on;
-    this.ark.setVisible(on);
-    if (!on) return;
-    const key = `noah-ark-${Math.min(stage, ARK_STAGES - 1)}`;
-    const a = MANIFEST.sprites[key];
-    this.ark.setTexture(key).setOrigin(a.anchorX / a.frameWidth, (a.anchorY + 1) / a.frameHeight).setScale(ART).setDepth(ARK.y);
-    this.arkShadow = addShadow(this.scene, ARK.x, ARK.y, key);
+    if (on) {
+      const key = `noah-ark-${Math.min(stage, ARK_STAGES - 1)}`;
+      const a = MANIFEST.sprites[key];
+      for (const img of [this.ark, ...this.arkParts]) img.setTexture(key).setOrigin(a.anchorX / a.frameWidth, (a.anchorY + 1) / a.frameHeight).setScale(ART);
+      for (const p of this.arkParts) {
+        const [x, w] = p.getData('crop') as [number, number];
+        p.setCrop(x, 0, w, a.frameHeight);
+      }
+      if (!this.arkAfloat) this.ark.setDepth(ARK.y);
+      this.arkShadow = addShadow(this.scene, ARK.x, ARK.y, key);
+    }
+    this.showArk();
+  }
+
+  /** Afloat the ark is one image (it bobs, above the water); on the ground, its strips. */
+  setArkAfloat(on: boolean): void {
+    this.arkAfloat = on;
+    this.showArk();
+  }
+
+  private showArk(): void {
+    const on = this.arkStage >= 0;
+    this.ark.setVisible(on && this.arkAfloat);
+    for (const p of this.arkParts) p.setVisible(on && !this.arkAfloat);
   }
 
   // ------------------------------------------------------------- city

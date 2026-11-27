@@ -46,6 +46,13 @@ const STONE_PROPS: NoahGen[] = ['house', 'house-small', 'well', 'town-wall', 'st
 /** The ark's building stages (the last is the whole ark). */
 export const ARK_STAGES = 5;
 
+/**
+ * The ark's lowest opaque row in each column of its sprite (-1: an empty
+ * column), measured when its stages are made: the world cuts the ark into
+ * strips drawn each at its own foot, and fits its colliders to it.
+ */
+export const ARK_BASE: number[] = [];
+
 /** Loads the generated sprites (from the scene's preload). */
 export function loadNoahArt(scene: Phaser.Scene): void {
   loadCainArt(scene);
@@ -225,6 +232,12 @@ function arkStages(scene: Phaser.Scene): void {
   const { w, h } = whole;
   const ax = Math.round(w / 2);
   const { ground, under } = groundLine(whole);
+  ARK_BASE.length = 0;
+  for (let x = 0; x < w; x++) {
+    let b = -1;
+    for (let y = h - 1; y >= 0 && b < 0; y--) if (whole.data[(y * w + x) * 4 + 3] > 40) b = y;
+    ARK_BASE.push(b);
+  }
   for (let k = 0; k < ARK_STAGES - 1; k++) {
     const p = new Pixels(w, h);
     const level = h - ((k + 1) / ARK_STAGES) * h * 0.92;
