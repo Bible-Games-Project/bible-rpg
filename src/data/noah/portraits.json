@@ -6,17 +6,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/noah-mouth-0.png",
-    "x": 41,
-    "y": 51,
-    "w": 12,
-    "h": 10
+    "x": 39,
+    "y": 50,
+    "w": 16,
+    "h": 13
    },
    {
     "file": "assets/noah/faces/noah-mouth-1.png",
-    "x": 41,
-    "y": 51,
-    "w": 12,
-    "h": 10
+    "x": 39,
+    "y": 50,
+    "w": 16,
+    "h": 13
    }
   ],
   "eyes": [
@@ -43,17 +43,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/shem-mouth-0.png",
-    "x": 42,
-    "y": 50,
-    "w": 12,
-    "h": 10
+    "x": 40,
+    "y": 49,
+    "w": 16,
+    "h": 13
    },
    {
     "file": "assets/noah/faces/shem-mouth-1.png",
-    "x": 42,
-    "y": 50,
-    "w": 12,
-    "h": 10
+    "x": 40,
+    "y": 49,
+    "w": 16,
+    "h": 13
    }
   ],
   "eyes": [
@@ -80,17 +80,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/japheth-mouth-0.png",
-    "x": 40,
-    "y": 52,
-    "w": 12,
-    "h": 10
+    "x": 36,
+    "y": 50,
+    "w": 19,
+    "h": 15
    },
    {
     "file": "assets/noah/faces/japheth-mouth-1.png",
-    "x": 40,
-    "y": 52,
-    "w": 12,
-    "h": 10
+    "x": 36,
+    "y": 50,
+    "w": 19,
+    "h": 15
    }
   ],
   "eyes": [
@@ -117,17 +117,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/wicked-mouth-0.png",
-    "x": 50,
-    "y": 50,
-    "w": 10,
-    "h": 10
+    "x": 46,
+    "y": 48,
+    "w": 17,
+    "h": 14
    },
    {
     "file": "assets/noah/faces/wicked-mouth-1.png",
-    "x": 50,
-    "y": 50,
-    "w": 10,
-    "h": 10
+    "x": 46,
+    "y": 48,
+    "w": 17,
+    "h": 14
    }
   ],
   "eyes": [
@@ -154,17 +154,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/wicked-c-mouth-0.png",
-    "x": 38,
-    "y": 52,
-    "w": 12,
-    "h": 10
+    "x": 35,
+    "y": 50,
+    "w": 19,
+    "h": 14
    },
    {
     "file": "assets/noah/faces/wicked-c-mouth-1.png",
-    "x": 38,
-    "y": 52,
-    "w": 12,
-    "h": 10
+    "x": 35,
+    "y": 50,
+    "w": 19,
+    "h": 14
    }
   ],
   "eyes": [
@@ -191,17 +191,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/giant-mouth-0.png",
-    "x": 41,
-    "y": 46,
-    "w": 12,
-    "h": 10
+    "x": 39,
+    "y": 45,
+    "w": 16,
+    "h": 13
    },
    {
     "file": "assets/noah/faces/giant-mouth-1.png",
-    "x": 41,
-    "y": 46,
-    "w": 12,
-    "h": 10
+    "x": 39,
+    "y": 45,
+    "w": 16,
+    "h": 13
    }
   ],
   "eyes": [
@@ -228,17 +228,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/noah-wife-mouth-0.png",
-    "x": 41,
-    "y": 52,
-    "w": 12,
-    "h": 10
+    "x": 37,
+    "y": 50,
+    "w": 20,
+    "h": 14
    },
    {
     "file": "assets/noah/faces/noah-wife-mouth-1.png",
-    "x": 41,
-    "y": 52,
-    "w": 12,
-    "h": 10
+    "x": 37,
+    "y": 50,
+    "w": 20,
+    "h": 14
    }
   ],
   "eyes": [
@@ -265,17 +265,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/shem-wife-mouth-0.png",
-    "x": 41,
-    "y": 58,
-    "w": 12,
-    "h": 10
+    "x": 37,
+    "y": 56,
+    "w": 19,
+    "h": 14
    },
    {
     "file": "assets/noah/faces/shem-wife-mouth-1.png",
-    "x": 41,
-    "y": 58,
-    "w": 12,
-    "h": 10
+    "x": 37,
+    "y": 56,
+    "w": 19,
+    "h": 14
    }
   ],
   "eyes": [
@@ -302,17 +302,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/japheth-wife-mouth-0.png",
-    "x": 41,
-    "y": 52,
-    "w": 12,
-    "h": 10
+    "x": 37,
+    "y": 50,
+    "w": 19,
+    "h": 14
    },
    {
     "file": "assets/noah/faces/japheth-wife-mouth-1.png",
-    "x": 41,
-    "y": 52,
-    "w": 12,
-    "h": 10
+    "x": 37,
+    "y": 50,
+    "w": 19,
+    "h": 14
    }
   ],
   "eyes": [
@@ -339,17 +339,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/wicked-woman-mouth-0.png",
-    "x": 41,
-    "y": 56,
-    "w": 12,
-    "h": 10
+    "x": 39,
+    "y": 55,
+    "w": 16,
+    "h": 13
    },
    {
     "file": "assets/noah/faces/wicked-woman-mouth-1.png",
-    "x": 41,
-    "y": 56,
-    "w": 12,
-    "h": 10
+    "x": 39,
+    "y": 55,
+    "w": 16,
+    "h": 13
    }
   ],
   "eyes": [
@@ -376,17 +376,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/ham-mouth-0.png",
-    "x": 42,
-    "y": 49,
-    "w": 12,
-    "h": 10
+    "x": 40,
+    "y": 48,
+    "w": 16,
+    "h": 13
    },
    {
     "file": "assets/noah/faces/ham-mouth-1.png",
-    "x": 42,
-    "y": 49,
-    "w": 12,
-    "h": 10
+    "x": 40,
+    "y": 48,
+    "w": 16,
+    "h": 13
    }
   ],
   "eyes": [
@@ -413,17 +413,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/wicked-b-mouth-0.png",
-    "x": 37,
-    "y": 47,
-    "w": 14,
-    "h": 10
+    "x": 35,
+    "y": 46,
+    "w": 18,
+    "h": 13
    },
    {
     "file": "assets/noah/faces/wicked-b-mouth-1.png",
-    "x": 37,
-    "y": 47,
-    "w": 14,
-    "h": 10
+    "x": 35,
+    "y": 46,
+    "w": 18,
+    "h": 13
    }
   ],
   "eyes": [
@@ -450,17 +450,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/thief-mouth-0.png",
-    "x": 40,
-    "y": 56,
-    "w": 12,
-    "h": 10
+    "x": 38,
+    "y": 55,
+    "w": 16,
+    "h": 13
    },
    {
     "file": "assets/noah/faces/thief-mouth-1.png",
-    "x": 40,
-    "y": 56,
-    "w": 12,
-    "h": 10
+    "x": 38,
+    "y": 55,
+    "w": 16,
+    "h": 13
    }
   ],
   "eyes": [
@@ -487,17 +487,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/baker-mouth-0.png",
-    "x": 41,
-    "y": 48,
-    "w": 12,
-    "h": 10
+    "x": 39,
+    "y": 47,
+    "w": 16,
+    "h": 13
    },
    {
     "file": "assets/noah/faces/baker-mouth-1.png",
-    "x": 41,
-    "y": 48,
-    "w": 12,
-    "h": 10
+    "x": 39,
+    "y": 47,
+    "w": 16,
+    "h": 13
    }
   ],
   "eyes": [
@@ -524,17 +524,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/debtor-mouth-0.png",
-    "x": 40,
-    "y": 51,
-    "w": 14,
-    "h": 10
+    "x": 38,
+    "y": 50,
+    "w": 18,
+    "h": 13
    },
    {
     "file": "assets/noah/faces/debtor-mouth-1.png",
-    "x": 40,
-    "y": 51,
-    "w": 14,
-    "h": 10
+    "x": 38,
+    "y": 50,
+    "w": 18,
+    "h": 13
    }
   ],
   "eyes": [
@@ -561,17 +561,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/farmer-mouth-0.png",
-    "x": 40,
-    "y": 50,
-    "w": 14,
-    "h": 10
+    "x": 38,
+    "y": 49,
+    "w": 18,
+    "h": 13
    },
    {
     "file": "assets/noah/faces/farmer-mouth-1.png",
-    "x": 40,
-    "y": 50,
-    "w": 14,
-    "h": 10
+    "x": 38,
+    "y": 49,
+    "w": 18,
+    "h": 13
    }
   ],
   "eyes": [
@@ -598,17 +598,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/mocker-mouth-0.png",
-    "x": 40,
-    "y": 52,
-    "w": 12,
-    "h": 10
+    "x": 38,
+    "y": 50,
+    "w": 16,
+    "h": 14
    },
    {
     "file": "assets/noah/faces/mocker-mouth-1.png",
-    "x": 40,
-    "y": 52,
-    "w": 12,
-    "h": 10
+    "x": 38,
+    "y": 50,
+    "w": 16,
+    "h": 14
    }
   ],
   "eyes": [
@@ -635,17 +635,17 @@
   "mouth": [
    {
     "file": "assets/noah/faces/ham-wife-mouth-0.png",
-    "x": 39,
-    "y": 52,
-    "w": 13,
-    "h": 10
+    "x": 36,
+    "y": 51,
+    "w": 19,
+    "h": 13
    },
    {
     "file": "assets/noah/faces/ham-wife-mouth-1.png",
-    "x": 39,
-    "y": 52,
-    "w": 13,
-    "h": 10
+    "x": 36,
+    "y": 51,
+    "w": 19,
+    "h": 13
    }
   ],
   "eyes": [

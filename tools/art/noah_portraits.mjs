@@ -35,25 +35,27 @@ const SHEETS = {
  * Where each face's eyes (centres) and mouth (the middle of its closing line,
  * and its width) are, measured on the cut portraits (a grid of 10 px over
  * them). An open smile's line is under the teeth: talking opens it further.
+ * A fourth number: how far (rows) the seam may wander from the line (0 in a
+ * beard: its dark hair pulled the seam apart).
  */
 const FACES = {
   noah: { eyes: [[37.7, 34.9], [57, 34.9]], mouth: [47, 53, 12] },
   shem: { eyes: [[39.2, 34.2], [57.7, 34.2]], mouth: [47.5, 52, 12] },
   ham: { eyes: [[38.5, 33.5], [58.6, 33.5]], mouth: [47.5, 51, 12] },
-  japheth: { eyes: [[36.3, 37.7], [56.3, 37.7]], mouth: [45.5, 54, 12] },
-  wicked: { eyes: [[45.6, 34.2], [62.6, 34.2]], mouth: [54.5, 52, 10] },
+  japheth: { eyes: [[36.3, 37.7], [56.3, 37.7]], mouth: [45.5, 54, 15] },
+  wicked: { eyes: [[45.6, 34.2], [62.6, 34.2]], mouth: [54.5, 52, 13] },
   'wicked-b': { eyes: [[35.3, 30.1], [55.1, 30.1]], mouth: [44, 49, 14] },
-  'wicked-c': { eyes: [[36.3, 37], [52.7, 37.3]], mouth: [43.5, 54, 12] },
-  giant: { eyes: [[38.5, 28.5], [55.5, 28.5]], mouth: [46.5, 48, 12] },
+  'wicked-c': { eyes: [[36.3, 37], [52.7, 37.3]], mouth: [44.5, 54, 15] },
+  giant: { eyes: [[38.5, 28.5], [55.5, 28.5]], mouth: [46.5, 48, 12, 0] },
   thief: { eyes: [[37, 39.8], [56.4, 39.8]], mouth: [46, 58, 12] },
-  baker: { eyes: [[37, 31], [57, 31]], mouth: [46.5, 50, 12] },
+  baker: { eyes: [[37, 31], [57, 31]], mouth: [46.5, 50, 12, 0] },
   debtor: { eyes: [[38.5, 33.8], [56.4, 33.8]], mouth: [46.5, 53, 14] },
-  farmer: { eyes: [[38.5, 32.9], [56.4, 32.9]], mouth: [47, 52, 14] },
+  farmer: { eyes: [[38.5, 32.9], [56.4, 32.9]], mouth: [47, 52, 14, 0] },
   mocker: { eyes: [[37.6, 35.3], [55.5, 35.3]], mouth: [45.5, 54, 12] },
-  'noah-wife': { eyes: [[37.7, 36.3], [57.7, 36.3]], mouth: [46.5, 54, 12] },
-  'shem-wife': { eyes: [[37.7, 43.4], [57, 43.4]], mouth: [46.5, 60, 12] },
-  'ham-wife': { eyes: [[35.7, 38.5], [55.5, 38.5]], mouth: [45, 54, 13] },
-  'japheth-wife': { eyes: [[37.7, 37], [58.4, 37]], mouth: [46.5, 54, 12] },
+  'noah-wife': { eyes: [[37.7, 36.3], [57.7, 36.3]], mouth: [46.5, 54, 16] },
+  'shem-wife': { eyes: [[37.7, 43.4], [57, 43.4]], mouth: [46.5, 60, 15] },
+  'ham-wife': { eyes: [[35.7, 38.5], [55.5, 38.5]], mouth: [45, 54, 15] },
+  'japheth-wife': { eyes: [[37.7, 37], [58.4, 37]], mouth: [46.5, 54, 15] },
   'wicked-woman': { eyes: [[36.3, 41.9], [56.3, 41.9]], mouth: [46.5, 58, 12] },
 };
 
@@ -152,33 +154,88 @@ function blink(p, boxes) {
 }
 
 /**
- * Talk patches: the mouth opens on its closing line (the line itself is the
- * first row of the gap), the upper lip lifted a pixel when wide open and the
- * jaw below dropped, the gap narrowing to the corners like lips do. Half open
- * is two rows, open three.
+ * Talk patches. The mouth's seam is found column by column (the darkest
+ * pixel near the measured line, so a smirk opens along its own curve), and it
+ * opens like lips: a lens, tall in the middle and shut at the corners, the
+ * upper lip lifted a pixel when wide open, the lower lip and the chin drawn
+ * down and easing back to the face below (no seam where the patch ends). The
+ * inside takes the lips' own colour, darkened.
+ * The maintainer: "the talking mouths are badly made, make them fit".
  */
 function talk(p, m) {
-  const y0 = m.y - 2, h = 10, w = m.x1 - m.x0 + 1;
-  const inside = [62, 24, 24, 255];
-  const tongue = [118, 48, 46, 255];
-  return [[2, 0], [3, 1]].map(([g, u]) => {
-    const o = new PNG({ width: w, height: h });
-    for (let x = 0; x < w; x++) {
-      const sx = x + m.x0;
-      const e = Math.min(x, w - 1 - x);
-      const gc = Math.min(g, 1 + e);
+  const d = p.data;
+  const w = m.x1 - m.x0 + 1;
+  const c = (m.x0 + m.x1) / 2;
+  const half = w / 2 + 0.5;
+  // the seam: the darkest pixel within a row (or `reach`) of the measured line
+  const seam = [];
+  for (let x = m.x0; x <= m.x1; x++) {
+    let best = m.y, bl = 999;
+    for (let y = m.y - m.reach; y <= m.y + m.reach; y++) {
+      const l = lum(d, (y * W + x) * 4) + Math.abs(y - m.y) * 10;
+      if (l < bl) { bl = l; best = y; }
+    }
+    seam.push(best);
+  }
+  // smoothed: the parabola nearest to it (a smile curves; pixel steps made it jagged)
+  const n = seam.length;
+  const xs = seam.map((_, i) => (i - (n - 1) / 2) / Math.max(1, (n - 1) / 2));
+  const S = [0, 0, 0, 0, 0], T = [0, 0, 0];
+  xs.forEach((x, i) => {
+    for (let k = 0; k < 5; k++) S[k] += x ** k;
+    for (let k = 0; k < 3; k++) T[k] += seam[i] * x ** k;
+  });
+  // the normal equations for y = c0 + c1 x + c2 x² (3 × 3, by Cramer)
+  const M = [[S[0], S[1], S[2]], [S[1], S[2], S[3]], [S[2], S[3], S[4]]];
+  const det = (A) => A[0][0] * (A[1][1] * A[2][2] - A[1][2] * A[2][1]) - A[0][1] * (A[1][0] * A[2][2] - A[1][2] * A[2][0]) + A[0][2] * (A[1][0] * A[2][1] - A[1][1] * A[2][0]);
+  const D = det(M);
+  const coef = [0, 1, 2].map((k) => det(M.map((row, r) => row.map((v, j) => (j === k ? T[r] : v)))) / D);
+  const sm = xs.map((x) => Math.round(coef[0] + coef[1] * x + coef[2] * x * x));
+  // the lips' colour, from the seam's middle
+  const mid = Math.round(c);
+  const lip = px(d, mid, sm[mid - m.x0] + 2);
+  // (half a mouth's own dark red: in a beard the "lips" sampled are hair)
+  const mix = (a, b) => [0, 1, 2].map((k) => Math.round((a[k] + b[k]) / 2)).concat(255);
+  const inside = mix(shade([lip[0] * 0.75 + 30, lip[1] * 0.45, lip[2] * 0.45], 0.42), [64, 22, 22]);
+  const deep = shade(inside, 0.75);
+  const pad = 2, below = 9;
+  const px0 = m.x0 - pad, px1 = m.x1 + pad;
+  const top = Math.min(...sm) - 3, bottom = Math.max(...sm) + below;
+  const pw = px1 - px0 + 1, ph = bottom - top + 1;
+  return [[2, 0], [3, 0]].map(([g, u]) => {
+    const o = new PNG({ width: pw, height: ph });
+    for (let x = px0; x <= px1; x++) {
+      const i = x - m.x0;
+      const sy = sm[Math.max(0, Math.min(w - 1, i))];
+      const t = (x - c) / half;
+      // the gap's height here: a lens, thin at the corners (0 past them)
+      const gc = Math.abs(t) >= 1 ? 0 : Math.max(1, Math.round(g * (1 - t * t) + 0.3));
       const uc = gc >= g ? u : 0;
-      const top = m.y - uc, bottom = top + gc - 1;
-      for (let y = 0; y < h; y++) {
-        const r = y + y0;
-        let c;
-        if (r < top) c = px(p.data, sx, r + uc);
-        else if (r <= bottom) c = e === 0 ? shade(inside, 1.25) : g === 3 && r === bottom && gc === g ? tongue : inside;
-        else c = px(p.data, sx, Math.min(H - 1, r - (gc - uc - 1)));
-        o.data.set(c, (y * w + x) * 4);
+      const g0 = sy - uc; // the gap's first row
+      const drop = Math.max(0, gc - uc - 1); // how far the lower lip comes down
+      for (let r = top; r <= bottom; r++) {
+        let col;
+        if (gc === 0 || r < g0) col = px(d, x, Math.min(H - 1, r + (r < g0 ? uc : 0)));
+        else if (r < g0 + gc) {
+          const k = r - g0;
+          col = k === 0 ? deep : inside;
+          if (gc === 1) col = shade(px(d, x, sy), 0.7);
+        } else {
+          // below the gap: drawn down by `drop`, easing to nothing by the patch's end
+          const from = g0 + gc, span = bottom - from + 1;
+          const f = (r - from) / Math.max(1, span);
+          const src = Math.round(r - drop * (1 - f));
+          col = px(d, x, Math.min(H - 1, Math.max(sy + 1, src)));
+        }
+        o.data.set(col, ((r - top) * pw + x - px0) * 4);
+      }
+      // the upper lip's shadow on the open mouth's edge
+      if (gc > 0 && g0 - 1 >= top) {
+        const j = ((g0 - 1 - top) * pw + x - px0) * 4;
+        o.data.set(shade([...o.data.slice(j, j + 4)], 0.88), j);
       }
     }
-    return { png: o, x: m.x0, y: y0, w, h };
+    return { png: o, x: px0, y: top, w: pw, h: ph };
   });
 }
 
@@ -207,8 +264,8 @@ for (const [job, names] of Object.entries(SHEETS)) {
     const boxes = face.eyes.map((e) => eyeBox(p, e));
     const [frames, x, y] = blink(p, boxes);
     entry.eyes = frames.map((f, i) => ({ file: save(f, `${id}-eyes-${i}`), x, y, w: f.width, h: f.height }));
-    const [mx, my, mw] = face.mouth;
-    const m = { x0: Math.round(mx - mw / 2), x1: Math.round(mx - mw / 2) + mw - 1, y: Math.round(my) };
+    const [mx, my, mw, reach = 1] = face.mouth;
+    const m = { x0: Math.round(mx - mw / 2), x1: Math.round(mx - mw / 2) + mw - 1, y: Math.round(my), reach };
     entry.mouth = talk(p, m).map((t, i) => ({ file: save(t.png, `${id}-mouth-${i}`), x: t.x, y: t.y, w: t.w, h: t.h }));
     if (DEBUG) console.log(id, 'eyes', boxes, 'mouth', m);
     out[id] = entry;
