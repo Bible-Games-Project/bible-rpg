@@ -11,6 +11,7 @@
 //     --retry: send it again to networks where it failed (YouTube's upload limit)
 //   node tools/shorts/publish.mjs retime [--dry]    moves every post still waiting to channel.json's time, on its own day
 //   node tools/shorts/publish.mjs list               the posts waiting at Upload-Post
+//   node tools/shorts/publish.mjs rethumb [--dry]    uploads again, with their cover, the posts waiting without one
 //
 // The key is read from the environment variable named in channel.json and
 // never written anywhere. Nothing is sent unless the key belongs to the
@@ -128,6 +129,46 @@ function nextSlot() {
   throw new Error('no slot found');
 }
 
+/** The upload of a short to Upload-Post: the video, its cover and each network's texts. */
+function uploadForm(id, t, platforms, at) {
+  const form = new FormData();
+  form.set('user', ch.profile);
+  for (const pl of platforms) form.append('platform[]', pl);
+  form.set('video', new Blob([fs.readFileSync(path.join(ROOT, `public/shorts/${id}.mp4`))], { type: 'video/mp4' }), `${id}.mp4`);
+  // the cover: the first frame, made by make.mjs (YouTube would pick a frame of its own;
+  // the maintainer: the thumbnail is the first frame)
+  form.set('thumbnail', new Blob([fs.readFileSync(path.join(ROOT, `public/shorts/${id}.jpg`))], { type: 'image/jpeg' }), `${id}.jpg`);
+  // the default title and description are YouTube's; every other network has its own
+  form.set('title', t.youtube.title);
+  form.set('description', t.youtube.description);
+  form.set('youtube_title', t.youtube.title);
+  form.set('youtube_description', t.youtube.description);
+  for (const x of t.youtube.tags) form.append('tags[]', x);
+  form.set('categoryId', t.youtube.category);
+  form.set('privacyStatus', 'public');
+  form.set('selfDeclaredMadeForKids', 'false');
+  // Instagram and TikTok keep a title and a caption apart: both get their own text
+  form.set('instagram_title', t.instagram);
+  form.set('instagram_description', t.instagram);
+  form.set('media_type', 'REELS');
+  form.set('share_to_feed', 'true');
+  form.set('thumb_offset', '0');
+  form.set('facebook_title', t.facebook);
+  form.set('facebook_description', t.facebook);
+  if (ch.facebookPage) form.set('facebook_page_id', ch.facebookPage);
+  form.set('facebook_media_type', 'REELS');
+  form.set('tiktok_title', t.tiktok);
+  form.set('tiktok_description', t.tiktok);
+  form.set('privacy_level', 'PUBLIC_TO_EVERYONE');
+  form.set('pinterest_title', t.pinterest.title);
+  form.set('pinterest_description', t.pinterest.description);
+  if (ch.wishlist) form.set('pinterest_link', ch.wishlist);
+  if (ch.pinterestBoard) form.set('pinterest_board_id', ch.pinterestBoard);
+  form.set('scheduled_date', at.toISOString());
+  form.set('timezone', ch.timezone);
+  return form;
+}
+
 if (cmd === 'check') {
   const me = await call('/uploadposts/me');
   console.log(`account ${me.email}, plan ${me.plan}${me.email !== ch.account ? ` (NOT the game's account, ${ch.account})` : ''}`);
@@ -158,6 +199,32 @@ if (cmd === 'check') {
     e.at = at.toISOString();
     fs.writeFileSync(LOG, JSON.stringify(l, null, 1) + '\n');
   }
+} else if (cmd === 'rethumb') {
+  // posts scheduled before the cover was sent (YouTube showed a frame of its
+  // own choosing): Upload-Post cannot add it to a waiting post, so each is
+  // uploaded again with its cover at the same time, then the old one cancelled
+  const { scheduled_posts: waiting = [] } = await call('/uploadposts/schedule');
+  const l = log();
+  await check();
+  for (const p of waiting) {
+    const e = l.find((x) => x.job === p.job_id && x.account === ch.account);
+    if (!e || p.profile_username !== ch.profile || p.has_thumbnail) continue;
+    if (+new Date(e.at) < Date.now() + 20 * 60e3) {
+      console.log(`${e.id}: too close to its time (${e.at}), left as it is`);
+      continue;
+    }
+    console.log(`${e.id} at ${e.at} on ${e.platforms.join(', ')}: again with its cover`);
+    if (process.argv.includes('--dry')) continue;
+    const r = await call('/upload', { method: 'POST', body: uploadForm(e.id, texts(findShort(e.id)), e.platforms, new Date(e.at)) });
+    const job = r.job_id ?? r.request_id;
+    if (!job) throw new Error(`${e.id}: no job in the answer, the old post is kept: ${JSON.stringify(r).slice(0, 300)}`);
+    await call(`/uploadposts/schedule/${e.job}`, { method: 'DELETE' });
+    e.replaced = e.job;
+    e.job = job;
+    e.thumbnail = true;
+    fs.writeFileSync(LOG, JSON.stringify(l, null, 1) + '\n');
+    await new Promise((res) => setTimeout(res, 3000));
+  }
 } else if (cmd === 'schedule') {
   const short = findShort(id);
   const platforms = opt('--platforms')?.split(',') ?? ch.platforms;
@@ -174,38 +241,7 @@ if (cmd === 'check') {
     const [h, mi] = tm.split(':').map(Number);
     at = zoned(y, mo, dd, h, mi);
   }
-  const form = new FormData();
-  form.set('user', ch.profile);
-  for (const pl of platforms) form.append('platform[]', pl);
-  form.set('video', new Blob([fs.readFileSync(path.join(ROOT, `public/shorts/${id}.mp4`))], { type: 'video/mp4' }), `${id}.mp4`);
-  // the default title and description are YouTube's; every other network has its own
-  form.set('title', t.youtube.title);
-  form.set('description', t.youtube.description);
-  form.set('youtube_title', t.youtube.title);
-  form.set('youtube_description', t.youtube.description);
-  for (const x of t.youtube.tags) form.append('tags[]', x);
-  form.set('categoryId', t.youtube.category);
-  form.set('privacyStatus', 'public');
-  form.set('selfDeclaredMadeForKids', 'false');
-  // Instagram and TikTok keep a title and a caption apart: both get their own text
-  form.set('instagram_title', t.instagram);
-  form.set('instagram_description', t.instagram);
-  form.set('media_type', 'REELS');
-  form.set('share_to_feed', 'true');
-  form.set('thumb_offset', '0');
-  form.set('facebook_title', t.facebook);
-  form.set('facebook_description', t.facebook);
-  if (ch.facebookPage) form.set('facebook_page_id', ch.facebookPage);
-  form.set('facebook_media_type', 'REELS');
-  form.set('tiktok_title', t.tiktok);
-  form.set('tiktok_description', t.tiktok);
-  form.set('privacy_level', 'PUBLIC_TO_EVERYONE');
-  form.set('pinterest_title', t.pinterest.title);
-  form.set('pinterest_description', t.pinterest.description);
-  if (ch.wishlist) form.set('pinterest_link', ch.wishlist);
-  if (ch.pinterestBoard) form.set('pinterest_board_id', ch.pinterestBoard);
-  form.set('scheduled_date', at.toISOString());
-  form.set('timezone', ch.timezone);
+  const form = uploadForm(id, t, platforms, at);
   console.log(`${id}: scheduling for ${at.toISOString()} (${ch.timezone} ${at.toLocaleString('es-ES', { timeZone: ch.timezone })}) on ${platforms.join(', ')}…`);
   const r = await call('/upload', { method: 'POST', body: form });
   console.log(JSON.stringify(r).slice(0, 1500));
