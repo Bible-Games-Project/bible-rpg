@@ -776,3 +776,5 @@ $1 play at `WALK_FPS` 15 at the player's
   account: the old biblequiz.truechrist one has the first 5, paused to 2027).
   Every short is a "Did you know…?" curiosity from a finished chapter (check
   for new chapters before a batch).
+  Comments: `tools/shorts/comments.mjs list` gives the new ones as JSON (YouTube is asked by id, the rest by URL); the agent writes the replies itself (no AI service) and posts them with
+  `reply FILE`, which records each answered or skipped comment in `comments-state.json` (commit it).
