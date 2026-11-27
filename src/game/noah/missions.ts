@@ -945,7 +945,8 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
       if (phase === 'family') return FAMILY_IDS.filter((id) => kin().some((f) => f.actor === w.family[id] && f.state === 'wait')).map((id) => w.family[id] as Actor);
       if (phase === 'food') return w.world.food.filter((img, i) => img.visible && !claimed.has(i)).map((img) => [img.x, img.y] as Pt);
       if (phase === 'ark' || w.following() > 0) return [[ARK_DOOR[0], ARK_DOOR[1] - 10] as Pt];
-      return PAIRS.map((_, i) => i).filter((i) => !w.pairIn(i)).map((i) => w.pairActors(i)[0]);
+      const waiting = PAIRS.map((_, i) => i).filter((i) => w.followers.some((f) => f.pair === i && f.state === 'wait'));
+      return waiting.length ? waiting.map((i) => w.pairActors(i)[0]) : [[ARK_DOOR[0], ARK_DOOR[1] - 10] as Pt];
     }, { markAll: phase !== 'ark' });
   };
   aim();
@@ -1060,8 +1061,12 @@ async function sevenDays(w: NoahScene): Promise<boolean> {
         onUse: async () => {
           w.lead(a);
           audio.play('correct');
-          // one pair brought, the others come by themselves (the maintainer)
-          PAIRS.forEach((_, k) => w.lead(w.pairActors(k)[0]));
+          // one pair brought, the others go to the ark by themselves, each
+          // from where it was, one after another (the maintainer)
+          let order = 0;
+          PAIRS.forEach((_, k) => {
+            if (k !== i && w.followers.some((f) => f.pair === k && f.state === 'wait')) w.sendToArk(k, 500 + order++ * 900);
+          });
           if (!p.clean) await w.say('lion');
         },
       }),

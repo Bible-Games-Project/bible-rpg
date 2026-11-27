@@ -107,7 +107,7 @@ export interface Follower {
   /** a pair counts once: both of it in */
   pair?: number;
   /** help: gone for something (the food), back to following after */
-  state: 'wait' | 'follow' | 'help' | 'in';
+  state: 'wait' | 'follow' | 'help' | 'going' | 'in';
   /** flies (the doves) */
   flies?: boolean;
 }
@@ -927,6 +927,38 @@ export class NoahScene extends Phaser.Scene {
       // the pair comes together
       for (const o of this.followers) if (o.pair === f.pair && o.state === 'wait') o.state = 'follow';
     }
+  }
+
+  /**
+   * A pair not brought goes to the ark by itself, walking from where it
+   * waits (the maintainer: one pair brought, the others come on their own,
+   * not all at once at Noah's heels). Round the pond and through the forest
+   * by the paths, then up the ramp and in.
+   */
+  sendToArk(i: number, delay = 0): void {
+    const round = this.boarding;
+    const p = PAIRS[i];
+    const route: Pt[] =
+      p.at[0] < 1500
+        ? [[1320, 2420], [1300, 1600], [1500, 1236], [1800, 1196], [2050, 1116]]
+        : [[2050, Math.min(p.at[1] - 40, 2700)], [2050, 1500], [2050, 1116]];
+    this.followers
+      .filter((f) => f.pair === i && f.state === 'wait')
+      .forEach((f, k) => {
+        f.state = 'going';
+        void (async () => {
+          await this.wait(delay + k * 450);
+          if (round !== this.boarding) return;
+          const a = f.actor;
+          if (f.flies) a.lift = 34;
+          const side = k ? 12 : -12;
+          await a.walkPath([...route.map(([x, y]): Pt => [x + side, y + (k ? 6 : 0)]), ARK_DOOR, [ARK_DOOR[0] + 70, ARK_DOOR[1] - 80]], f.flies ? 170 : 135);
+          if (round !== this.boarding) return;
+          a.setVisible(false);
+          a.lift = 0;
+          f.state = 'in';
+        })();
+      });
   }
 
   /** The animals of a pair, waiting. */
