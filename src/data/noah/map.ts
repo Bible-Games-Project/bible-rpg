@@ -69,8 +69,9 @@ export const POINTS: Record<string, Pt> = {
   tentDoor: [640, 1290],
   brothers: [900, 1500],
   vineyard: [900, 1380],
-  // the dove's island: a mountain top above the water (Genesis 8:5, 11)
-  island: [640, 3200],
+  // the dove's island: a mountain top above the water (Genesis 8:5, 11),
+  // some 5 s of flight from the ark's window (her strength lasts 15 s)
+  island: [1450, 1650],
 };
 
 export const ZONES: Record<string, Zone> = {
@@ -80,7 +81,7 @@ export const ZONES: Record<string, Zone> = {
   city: { x: CITY.x, y: CITY.y, r: 520 },
   altar: { x: 1880, y: 1450, r: 110 },
   tent: { x: 640, y: 1300, r: 90 },
-  island: { x: 640, y: 3170, r: 90 },
+  island: { x: 1450, y: 1620, r: 90 },
 };
 
 /** The gopher trees Noah fells (Genesis 6:14): cypresses at the forest's paths. */

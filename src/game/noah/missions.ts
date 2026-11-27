@@ -30,7 +30,7 @@ const nameOf = (id: string) => t(CHARACTERS[id]?.nameKey ?? id);
 const DAY_MS = 80000;
 const FOOD_NEEDED = FOOD.length;
 /** the first dove is called back once half her strength is spent */
-const CALL_AT = 0.5;
+const CALL_AT = 0.6;
 /** where the family stand by the altar after the flood */
 const AFTER: Record<FamilyId, Pt> = {
   'noah-wife': [1790, 1560],

@@ -1227,7 +1227,8 @@ export class NoahScene extends Phaser.Scene {
     this.fogRadius = kind === 'raven' ? 170 : 330;
     this.fog.setVisible(true);
     this.bar.setVisible(true);
-    const total = kind === 'raven' ? 32 : kind === 'dove' ? 40 : 55;
+    // the maintainer: 7 s, 15 s, 15 s (the island is near enough for the leaf)
+    const total = kind === 'raven' ? 7 : 15;
     return new Promise((resolve) => {
       this.flight = { kind, left: total, total, called: false, carrying: false, resolve };
     });
