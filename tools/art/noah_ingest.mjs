@@ -30,6 +30,13 @@ const SHEETS = {
     { name: 'jars', w: 64 },
     { name: 'rubble', w: 96 },
   ],
+  // more houses, each its own (the maintainer: "the houses are all the same")
+  'noah-houses': [
+    { name: 'house-mud', w: 210 },
+    { name: 'house-tall', w: 195 },
+    { name: 'house-thatch', w: 270 },
+    { name: 'house-awning', w: 240 },
+  ],
   'noah-work': [
     { name: 'axe', w: 58 },
     { name: 'logs', w: 92 },

@@ -379,6 +379,7 @@ export function buildNoahArt(scene: Phaser.Scene): void {
   built = true;
   for (const [id, name] of Object.entries(TREE_ART)) genTree(scene, id, name);
   for (const name of STONE_PROPS) addProp(scene, name, { sink: name === 'rubble' ? 3 : 2 });
+  for (const name of ['house-mud', 'house-tall', 'house-thatch', 'house-awning'] as const) addProp(scene, name, { sink: 2 });
   addProp(scene, 'tent', { sink: 3 });
   addProp(scene, 'stump', { sink: 3 });
   addProp(scene, 'logs', { sink: 2 });

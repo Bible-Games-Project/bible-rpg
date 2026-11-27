@@ -750,7 +750,8 @@ export class NoahScene extends Phaser.Scene {
     const covers: { x: number; y: number; l: number; r: number }[] = [];
     if (this.world.cityStanding)
       for (const h of CITY_HOUSES) {
-        const [l, r] = h.small ? [94, 106] : [124, 146];
+        const a = MANIFEST.sprites[`noah-${h.kind}`];
+        const [l, r] = [a.anchorX, a.frameWidth - a.anchorX];
         const k = ART * 0.9;
         covers.push({ x: h.at[0], y: h.at[1], l: (h.flip ? r : l) * k, r: (h.flip ? l : r) * k });
       }

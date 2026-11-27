@@ -2625,5 +2625,27 @@
    "total_tokens": 2334
   },
   "at": "20261126-113929"
+ },
+ {
+  "job": "noah-houses",
+  "chapter": "noah",
+  "file": "art/generated/noah-houses/20261127-150921-low.png",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "cost": 0.0187,
+  "usage": {
+   "input_tokens": 1888,
+   "input_tokens_details": {
+    "image_tokens": 1508,
+    "text_tokens": 380
+   },
+   "output_tokens": 158,
+   "output_tokens_details": {
+    "image_tokens": 158,
+    "text_tokens": 0
+   },
+   "total_tokens": 2046
+  },
+  "at": "20261127-150921"
  }
 ]

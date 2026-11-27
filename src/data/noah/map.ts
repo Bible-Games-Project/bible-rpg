@@ -103,14 +103,16 @@ export const SINS: { id: string; at: Pt }[] = [
 ];
 
 /** Houses of the city (their base points) and its market stalls. */
-export const CITY_HOUSES: { at: Pt; small?: boolean; flip?: boolean }[] = [
-  { at: [520, 3420] },
-  { at: [760, 3360], small: true },
-  { at: [1150, 3600], small: true, flip: true },
-  { at: [420, 3720], small: true },
-  { at: [700, 3960] },
-  { at: [1000, 4000], small: true, flip: true },
-  { at: [380, 3990], small: true, flip: true },
+export type HouseKind = 'house' | 'house-small' | 'house-mud' | 'house-tall' | 'house-thatch' | 'house-awning';
+/** The city's houses, each of its own kind (the maintainer: "the houses are all the same"). */
+export const CITY_HOUSES: { at: Pt; kind: HouseKind; flip?: boolean }[] = [
+  { at: [520, 3420], kind: 'house' },
+  { at: [760, 3360], kind: 'house-mud' },
+  { at: [1150, 3600], kind: 'house-small', flip: true },
+  { at: [420, 3720], kind: 'house-thatch' },
+  { at: [700, 3960], kind: 'house-tall' },
+  { at: [1000, 4000], kind: 'house-awning', flip: true },
+  { at: [380, 3990], kind: 'house-small', flip: true },
 ];
 export const STALLS: Pt[] = [[600, 3560], [1060, 3540], [880, 3820]];
 
