@@ -11,7 +11,7 @@
 //     --retry: send it again to networks where it failed (YouTube's upload limit)
 //   node tools/shorts/publish.mjs retime [--dry]    moves every post still waiting to channel.json's time, on its own day
 //   node tools/shorts/publish.mjs list               the posts waiting at Upload-Post
-//   node tools/shorts/publish.mjs rethumb [--dry]    uploads again, with their cover, the posts waiting without one
+//   node tools/shorts/publish.mjs rethumb [--dry] [--only <id>]  uploads again, with their cover, the posts waiting without one
 //
 // The key is read from the environment variable named in channel.json and
 // never written anywhere. Nothing is sent unless the key belongs to the
@@ -208,7 +208,7 @@ if (cmd === 'check') {
   await check();
   for (const p of waiting) {
     const e = l.find((x) => x.job === p.job_id && x.account === ch.account);
-    if (!e || p.profile_username !== ch.profile || p.has_thumbnail) continue;
+    if (!e || p.profile_username !== ch.profile || p.has_thumbnail || (opt('--only') && e.id !== opt('--only'))) continue;
     if (+new Date(e.at) < Date.now() + 20 * 60e3) {
       console.log(`${e.id}: too close to its time (${e.at}), left as it is`);
       continue;

@@ -372,8 +372,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "a1ec4d402c594dc2b06bf500ba94b988",
-  "scheduledAt": "2026-11-23T07:48:32.281Z"
+  "job": "dc0f4659ef0245beb22e7de3d30a665c",
+  "scheduledAt": "2026-11-23T07:48:32.281Z",
+  "replaced": "a1ec4d402c594dc2b06bf500ba94b988",
+  "thumbnail": true
  },
  {
   "id": "cain-seth",
