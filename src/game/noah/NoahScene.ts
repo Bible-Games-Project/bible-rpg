@@ -292,7 +292,11 @@ export class NoahScene extends Phaser.Scene {
         }
         if (a === 'attack') {
           if (!this.canAct()) return true;
-          if (this.currentInteract?.attack) void this.useInteract(this.currentInteract);
+          // a blow at what is in reach, even while someone talks (the
+          // prompt hides during a conversation, the axe still bites: the
+          // maintainer saw clicks do nothing)
+          const target = this.currentInteract?.attack ? this.currentInteract : this.attackTarget();
+          if (target) void this.useInteract(target);
           else if (this.ctrl === this.noah && this.noah.holding()?.[0] === 'noah-axe') void this.swing();
           return true;
         }
@@ -1394,6 +1398,23 @@ export class NoahScene extends Phaser.Scene {
     if (this.godLit && this.god.visible) this.holy.update(time, this.god.x, this.god.y - this.god.lift, this.god.sprite.displayHeight, this.god.moving);
     this.updateInteractPrompt();
     this.updateObjectiveIndicator(time);
+  }
+
+  /** The nearest blow-step in reach (a tree to fell), a little beyond its prompt's reach. */
+  private attackTarget(): InteractSpec | null {
+    const p = this.player();
+    let best: InteractSpec | null = null;
+    let bestD = Infinity;
+    for (const s of this.interactions) {
+      if (!s.attack || (s.enabled && !s.enabled())) continue;
+      const at = typeof s.at === 'function' ? s.at() : s.at;
+      const d = Phaser.Math.Distance.Between(p.x, p.y - 20, at[0], at[1]);
+      if (d <= (s.radius ?? 70) * 1.25 && d < bestD) {
+        bestD = d;
+        best = s;
+      }
+    }
+    return best;
   }
 
   private updateInteractPrompt(): void {

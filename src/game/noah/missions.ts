@@ -469,18 +469,16 @@ const MISSIONS: NoahMission[] = [
       }
       await w.setWater(1, 6000);
       w.music('sorrow');
-      await w.scripture('died');
+      // once the world is under the water, one line only (the maintainer: so
+      // much narration with nothing to do was too long); the ark is lifted
+      // up, the rain stops and the wind blows while it is read
       await w.cameraTo([ARK.x, ARK.y - 120], 3500);
       w.setAfloat(true);
-      await w.scripture('lifted');
-      await w.scripture('remained');
       w.setRain(false);
       w.setStorm(false);
-      await w.scripture('prevailed');
       w.music('wonder');
       w.setWind(3.5);
-      await w.scripture('remembered');
-      await w.scripture('rested');
+      await w.scripture('afloat');
       w.setWind(1);
     },
   },
@@ -493,10 +491,10 @@ const MISSIONS: NoahMission[] = [
     kind: 'scripture',
     reference: 'Genesis 8:6–7',
     async run(w) {
-      w.cutscene(true, true);
-      await w.scripture('window');
       w.cutscene(false);
       w.music('tension');
+      // told while the raven flies (the maintainer: narration during the flight, not before it)
+      w.time.delayedCall(700, () => void w.scripture('window'));
       const watch = w.time.addEvent({ delay: 250, loop: true, callback: () => flightObjective(w, 'm05', 'land') });
       await w.fly('raven');
       watch.remove();
@@ -516,10 +514,10 @@ const MISSIONS: NoahMission[] = [
     reference: 'Genesis 8:8–9',
     relocate: true,
     async run(w) {
-      w.cutscene(true);
-      await w.scripture('dove');
       w.cutscene(false);
       w.music('peaceful');
+      // read as she flies, not before (the maintainer)
+      w.time.delayedCall(700, () => void w.scripture('dove'));
       for (;;) {
         let calling = false;
         const watch = w.time.addEvent({
@@ -560,10 +558,10 @@ const MISSIONS: NoahMission[] = [
     reference: 'Genesis 8:10–14',
     relocate: true,
     async run(w) {
-      w.cutscene(true);
-      await w.scripture('again');
       w.cutscene(false);
       w.music('peaceful');
+      // read as she flies, not before (the maintainer)
+      w.time.delayedCall(700, () => void w.scripture('again'));
       const [ix, iy] = POINTS.island;
       for (;;) {
         const off = w.interact({
