@@ -175,6 +175,9 @@ export class NoahScene extends Phaser.Scene {
   private storm: Phaser.Time.TimerEvent | null = null;
   /** the one of the people Noah is talking with (small talk) */
   private chatting: Actor | null = null;
+  /** The city's people's small steps of their own (see updateSinners). */
+  private idleSteps = new Map<Actor, { to: Pt; speed: number; until: number; face?: Actor }>();
+  private idleNext: Record<string, number> = {};
   private fog!: Phaser.GameObjects.Image;
   private fogRadius = 0;
   private bar!: Phaser.GameObjects.Graphics;
@@ -206,6 +209,8 @@ export class NoahScene extends Phaser.Scene {
   create(data: NoahStartData): void {
     this.family = {} as Record<FamilyId, Actor>;
     this.sinners = {};
+    this.idleSteps = new Map();
+    this.idleNext = {};
     this.mockers = [];
     this.followers = [];
     this.colliders = new Map();
@@ -1415,6 +1420,7 @@ export class NoahScene extends Phaser.Scene {
     if (this.ctrlKind === 'spirit') this.god.lift = 16 + Math.sin(time / 420) * 4;
     this.updateFollowers(dt);
     this.updateBuddy();
+    this.updateSinners(time);
     this.updateFlight(dt);
     this.talk.update(p, (id) => this.castOf(id));
     const actors = [this.noah, this.god, ...Object.values(this.family), ...this.mockers, this.raven, this.dove];
@@ -1432,6 +1438,113 @@ export class NoahScene extends Phaser.Scene {
     if (this.godLit && this.god.visible) this.holy.update(time, this.god.x, this.god.y - this.god.lift, this.god.sprite.displayHeight, this.god.moving);
     this.updateInteractPrompt();
     this.updateObjectiveIndicator(time);
+  }
+
+  /** The people of the city are not statues: now and then each pair moves a
+   * little, in the manner of its sin (the thief eyes the baker's bread, the
+   * giant looms, the woman steps away, the liars whisper), and goes back to
+   * its place, so the spirit's scenes still find them there. Only by
+   * velocity (never scripted: the talk and the scenes take them as they are). */
+  private updateSinners(time: number): void {
+    for (const [a, st] of this.idleSteps) {
+      if (a.scripted) {
+        this.idleSteps.delete(a);
+        continue;
+      }
+      const dx = st.to[0] - a.x;
+      const dy = st.to[1] - a.y;
+      const d = Math.hypot(dx, dy);
+      if (!this.control || !a.visible || d < 3 || time > st.until || this.chatting === a) {
+        a.stop();
+        if (st.face && this.control) a.face(st.face);
+        this.idleSteps.delete(a);
+      } else a.move((dx / d) * st.speed, (dy / d) * st.speed);
+    }
+    if (!this.control) return;
+    const human = this.ctrlKind === 'human' ? this.ctrl : null;
+    for (const s of SINS) {
+      const [a, b] = this.sinners[s.id];
+      if (!a.visible || !b.visible || a.scripted || b.scripted || a.sprite.angle || b.sprite.angle) continue;
+      if (this.chatting === a || this.chatting === b || this.idleSteps.has(a) || this.idleSteps.has(b)) continue;
+      if ((this.idleNext[s.id] ??= time + 600 + Math.random() * 2400) > time) continue;
+      this.idleNext[s.id] = time + 2600 + Math.random() * 3400;
+      const homeA: Pt = [s.at[0] - 40, s.at[1]];
+      const homeB: Pt = [s.at[0] + 40, s.at[1]];
+      // Noah close by: they stop and look at him
+      if (human && Phaser.Math.Distance.Between(human.x, human.y, s.at[0], s.at[1]) < 110) {
+        a.face(human);
+        b.face(human);
+        continue;
+      }
+      this.idleBeat(s.id, a, b, homeA, homeB, time);
+    }
+  }
+
+  private idleBeat(id: string, a: Actor, b: Actor, homeA: Pt, homeB: Pt, time: number): void {
+    const step = (x: Actor, to: Pt, speed: number, face?: Actor) => this.idleSteps.set(x, { to, speed, until: time + 2500, face });
+    const away = (x: Actor, home: Pt) => Math.hypot(x.x - home[0], x.y - home[1]) > 6;
+    const later = (ms: number, fn: () => void) =>
+      this.time.delayedCall(ms, () => {
+        if (this.control && a.visible && b.visible && !a.scripted && !b.scripted && !a.sprite.angle && !b.sprite.angle) fn();
+      });
+    // back to their places after a move
+    if (away(a, homeA) || away(b, homeB)) {
+      if (away(a, homeA)) step(a, homeA, 50, b);
+      if (away(b, homeB)) step(b, homeB, 45, a);
+      return;
+    }
+    const r = Math.random();
+    const jitter = (h: Pt, dx: number, dy: number): Pt => [h[0] + (Math.random() * 2 - 1) * dx, h[1] + (Math.random() * 2 - 1) * dy];
+    // the common ones: a few words, a look round, a shift of the feet
+    if (r < 0.3) {
+      const [first, second] = Math.random() < 0.5 ? [a, b] : [b, a];
+      first.face(second);
+      first.emote('dots', 1300);
+      later(1500, () => {
+        second.face(first);
+        second.emote(id === 'lies' ? 'question' : 'dots', 1200);
+      });
+      return;
+    }
+    if (r < 0.5) {
+      const x = Math.random() < 0.5 ? a : b;
+      const other = x === a ? b : a;
+      const dirs: Facing[] = ['down', x === a ? 'left' : 'right', 'up'];
+      x.face(dirs[Math.floor(Math.random() * dirs.length)]);
+      later(1100 + Math.random() * 900, () => x.face(other));
+      return;
+    }
+    if (r < 0.65) {
+      step(a, jitter(homeA, 14, 8), 40, b);
+      if (Math.random() < 0.5) step(b, jitter(homeB, 14, 8), 40, a);
+      return;
+    }
+    // each sin its own way
+    if (id === 'robbery') {
+      // the thief edges round behind the baker, looking about him
+      step(a, [homeB[0] - 22, homeB[1] + 14], 45, b);
+      later(400, () => b.emote('question', 1300));
+      later(1700, () => a.face('down'));
+    } else if (id === 'violence') {
+      // the giant looms over the debtor, who backs away
+      step(a, [homeA[0] + 30, homeA[1]], 60, b);
+      a.emote('exclaim', 1100);
+      later(250, () => step(b, [homeB[0] + 22, homeB[1] - 4], 70, a));
+      later(700, () => b.emote('drop', 1200));
+    } else if (id === 'harass') {
+      // he comes close; she turns and steps away
+      step(a, [homeA[0] + 26, homeA[1] + 4], 50, b);
+      later(500, () => {
+        b.emote('exclaim', 1100);
+        step(b, [homeB[0] + 26, homeB[1] - 10], 60);
+      });
+    } else {
+      // the two liars put their heads together, then look round
+      step(a, [homeA[0] + 18, homeA[1]], 40, b);
+      step(b, [homeB[0] - 18, homeB[1]], 40, a);
+      later(1600, () => a.emote('dots', 1200));
+      later(2600, () => b.face('down'));
+    }
   }
 
   /** The nearest blow-step in reach (a tree to fell), a little beyond its prompt's reach. */
