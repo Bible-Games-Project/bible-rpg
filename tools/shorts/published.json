@@ -148,8 +148,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "2772d43d6e234d98a96a1d746e957460",
-  "scheduledAt": "2026-11-20T11:32:00.207Z"
+  "job": "4ae6c365229243f1a4b3a7e3a0e48231",
+  "scheduledAt": "2026-11-20T11:32:00.207Z",
+  "replaced": "2772d43d6e234d98a96a1d746e957460",
+  "thumbnail": true
  },
  {
   "id": "cain-offering",
@@ -164,8 +166,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "9b75178086964000aacbbdb803d611ea",
-  "scheduledAt": "2026-11-20T11:32:18.948Z"
+  "job": "a34c5bd7317e47b881de3a65c452ae3f",
+  "scheduledAt": "2026-11-20T11:32:18.948Z",
+  "replaced": "9b75178086964000aacbbdb803d611ea",
+  "thumbnail": true
  },
  {
   "id": "eden-cherubim",
@@ -180,8 +184,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "c29907540bb24f7fbfba2192aba18a62",
-  "scheduledAt": "2026-11-21T09:50:58.643Z"
+  "job": "2a8c2465cf894beca60fa5c46effe6d8",
+  "scheduledAt": "2026-11-21T09:50:58.643Z",
+  "replaced": "c29907540bb24f7fbfba2192aba18a62",
+  "thumbnail": true
  },
  {
   "id": "cain-keeper",
@@ -196,8 +202,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "9efe5ab82fd243cab4892a70f20284d2",
-  "scheduledAt": "2026-11-21T09:51:02.399Z"
+  "job": "b3757222f59a408391d955d7ff4c3d78",
+  "scheduledAt": "2026-11-21T09:51:02.399Z",
+  "replaced": "9efe5ab82fd243cab4892a70f20284d2",
+  "thumbnail": true
  },
  {
   "id": "eden-gardener",
@@ -212,8 +220,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "597f2e6f77544c79a5ae2188b8c85e4d",
-  "scheduledAt": "2026-11-21T13:26:03.661Z"
+  "job": "45321500aaa044238fc86c19877021ab",
+  "scheduledAt": "2026-11-21T13:26:03.661Z",
+  "replaced": "597f2e6f77544c79a5ae2188b8c85e4d",
+  "thumbnail": true
  },
  {
   "id": "cain-warning",
@@ -228,8 +238,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "a6b155f6c1e347f29e7571c64380b606",
-  "scheduledAt": "2026-11-21T13:26:08.366Z"
+  "job": "d6fa38765d374f7bae3b51879c48ef23",
+  "scheduledAt": "2026-11-21T13:26:08.366Z",
+  "replaced": "a6b155f6c1e347f29e7571c64380b606",
+  "thumbnail": true
  },
  {
   "id": "eden-twotrees",
@@ -244,8 +256,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "310239120bbd451fb8fff2003ea4de81",
-  "scheduledAt": "2026-11-21T13:26:18.761Z"
+  "job": "9affc7f2f76448b8888320bfdfc4e0f3",
+  "scheduledAt": "2026-11-21T13:26:18.761Z",
+  "replaced": "310239120bbd451fb8fff2003ea4de81",
+  "thumbnail": true
  },
  {
   "id": "cain-mark",
@@ -260,8 +274,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "1cff0e0b5d2e403a817b0abc240565e8",
-  "scheduledAt": "2026-11-21T13:26:21.566Z"
+  "job": "99c4ba8917c24dd7a603f734f65f74f2",
+  "scheduledAt": "2026-11-21T13:26:21.566Z",
+  "replaced": "1cff0e0b5d2e403a817b0abc240565e8",
+  "thumbnail": true
  },
  {
   "id": "eden-serpent",
@@ -276,8 +292,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "3694f190ec444c548234ea66a4c9efb5",
-  "scheduledAt": "2026-11-21T13:26:33.033Z"
+  "job": "ac22b4a0770041b49a93dde2b5b8b811",
+  "scheduledAt": "2026-11-21T13:26:33.033Z",
+  "replaced": "3694f190ec444c548234ea66a4c9efb5",
+  "thumbnail": true
  },
  {
   "id": "cain-brothers",
@@ -292,8 +310,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "c6b499779ad34a11932e1c0ff9b8137d",
-  "scheduledAt": "2026-11-21T13:26:36.687Z"
+  "job": "d7e62b56518f464c890daa3a1e7beacd",
+  "scheduledAt": "2026-11-21T13:26:36.687Z",
+  "replaced": "c6b499779ad34a11932e1c0ff9b8137d",
+  "thumbnail": true
  },
  {
   "id": "eden-hiding",
@@ -308,8 +328,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "8881963c089d443cbd5a410f9992beee",
-  "scheduledAt": "2026-11-21T13:26:46.145Z"
+  "job": "627a670e63674370af521bd526afbb7c",
+  "scheduledAt": "2026-11-21T13:26:46.145Z",
+  "replaced": "8881963c089d443cbd5a410f9992beee",
+  "thumbnail": true
  },
  {
   "id": "eden-promise",
@@ -324,8 +346,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "bfda1370ce724e2b9ab121e5608258c1",
-  "scheduledAt": "2026-11-21T13:27:01.906Z"
+  "job": "2f0f1bbe368d49e5b2f3ac80c00846ee",
+  "scheduledAt": "2026-11-21T13:27:01.906Z",
+  "replaced": "bfda1370ce724e2b9ab121e5608258c1",
+  "thumbnail": true
  },
  {
   "id": "eden-dust",
@@ -390,8 +414,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "dde345e45b1a49349d0f57dc3f34f195",
-  "scheduledAt": "2026-11-23T07:48:35.687Z"
+  "job": "254388e852384b79b4ffe43e98f8a007",
+  "scheduledAt": "2026-11-23T07:48:35.687Z",
+  "replaced": "dde345e45b1a49349d0f57dc3f34f195",
+  "thumbnail": true
  },
  {
   "id": "eden-alone",
@@ -406,8 +432,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "0d7592bd21094badaebbda74f302e127",
-  "scheduledAt": "2026-11-23T07:48:39.405Z"
+  "job": "123299178a134427af43b969b9b1bc63",
+  "scheduledAt": "2026-11-23T07:48:39.405Z",
+  "replaced": "0d7592bd21094badaebbda74f302e127",
+  "thumbnail": true
  },
  {
   "id": "cain-music",
@@ -422,8 +450,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "41ce07db84904d16a0f54f1f08caf133",
-  "scheduledAt": "2026-11-23T07:48:42.602Z"
+  "job": "5de7146137434730b3723acc59db4cd1",
+  "scheduledAt": "2026-11-23T07:48:42.602Z",
+  "replaced": "41ce07db84904d16a0f54f1f08caf133",
+  "thumbnail": true
  },
  {
   "id": "eden-mist",
@@ -438,8 +468,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "de4bd34024584717bd18ad3f470f7a4b",
-  "scheduledAt": "2026-11-23T07:48:55.929Z"
+  "job": "e4f3ecbfc84f4fec8fbee1ea7ff67b01",
+  "scheduledAt": "2026-11-23T07:48:55.929Z",
+  "replaced": "de4bd34024584717bd18ad3f470f7a4b",
+  "thumbnail": true
  },
  {
   "id": "cain-righteous",
@@ -454,8 +486,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "69169a0a8aa243d299e39c224ab494e1",
-  "scheduledAt": "2026-11-23T07:48:59.341Z"
+  "job": "f4c39b16c75c4ff58a3cd5eea96623f8",
+  "scheduledAt": "2026-11-23T07:48:59.341Z",
+  "replaced": "69169a0a8aa243d299e39c224ab494e1",
+  "thumbnail": true
  },
  {
   "id": "eden-freely",
@@ -470,8 +504,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "ab913f25113549ca8173cb55fb9d542d",
-  "scheduledAt": "2026-11-23T07:49:31.609Z"
+  "job": "f7a05a1eb5d34945a7c79d2624eec2f5",
+  "scheduledAt": "2026-11-23T07:49:31.609Z",
+  "replaced": "ab913f25113549ca8173cb55fb9d542d",
+  "thumbnail": true
  },
  {
   "id": "eden-blame",
@@ -486,8 +522,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "e474cc6733804f4cb753ac07110637fd",
-  "scheduledAt": "2026-11-23T07:49:37.415Z"
+  "job": "ea0da9afdf6c4c04981783f44f530743",
+  "scheduledAt": "2026-11-23T07:49:37.415Z",
+  "replaced": "e474cc6733804f4cb753ac07110637fd",
+  "thumbnail": true
  },
  {
   "id": "cain-nod",
@@ -502,8 +540,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "52ff2a9c77fe435f831a58ca7e4ef583",
-  "scheduledAt": "2026-11-23T07:49:46.189Z"
+  "job": "4abf99e6bf5a453fa0b866a9ee36e73c",
+  "scheduledAt": "2026-11-23T07:49:46.189Z",
+  "replaced": "52ff2a9c77fe435f831a58ca7e4ef583",
+  "thumbnail": true
  },
  {
   "id": "cain-callupon",
@@ -518,8 +558,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "209cd59587f645b4a36eaf9867f82821",
-  "scheduledAt": "2026-11-23T07:49:50.194Z"
+  "job": "40cc8db9a8b34135b5472db2d2db9c14",
+  "scheduledAt": "2026-11-23T07:49:50.194Z",
+  "replaced": "209cd59587f645b4a36eaf9867f82821",
+  "thumbnail": true
  },
  {
   "id": "eden-thorns",
@@ -534,8 +576,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "7419f64c1951415c9c92418f847a3d71",
-  "scheduledAt": "2026-11-23T07:49:53.559Z"
+  "job": "28b8c06be8894ea6abac211a15ad04b6",
+  "scheduledAt": "2026-11-23T07:49:53.559Z",
+  "replaced": "7419f64c1951415c9c92418f847a3d71",
+  "thumbnail": true
  },
  {
   "id": "eden-evename",
@@ -550,8 +594,10 @@
    "tiktok",
    "pinterest"
   ],
-  "job": "cef029a1f7b649dab32c3faf2ecdb90f",
-  "scheduledAt": "2026-11-23T07:49:59.215Z"
+  "job": "17a49012b4994175815383a7c9b8e63b",
+  "scheduledAt": "2026-11-23T07:49:59.215Z",
+  "replaced": "cef029a1f7b649dab32c3faf2ecdb90f",
+  "thumbnail": true
  },
  {
   "id": "eden-dust",

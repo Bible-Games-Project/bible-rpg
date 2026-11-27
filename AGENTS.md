@@ -765,6 +765,8 @@ $1 play at `WALK_FPS` 15 at the player's
   draws the blink. The mouth follows each syllable (shut in the dips). He shows in the scene's `narrator` spans,
   his mouth following the voice's loudness. The first frame is the
   thumbnail (hook in full, narrator in), saved as `public/shorts/<id>.jpg`.
+  publish.mjs sends it as Upload-Post's `thumbnail` (without it YouTube picks
+  its own frame); a waiting post can't get it later: `rethumb` re-uploads it.
   Publishing: `tools/shorts/publish.mjs` (preview <id> | check | schedule <id>
   | list) schedules a short on Upload-Post, which posts it by itself, on the
   game profile of the premium account biblegamesproject@gmail.com (YouTube,
