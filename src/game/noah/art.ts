@@ -6,6 +6,7 @@ import { drawFire, drawShadow } from '../cain/drawings';
 import { Pixels, ellipse, type RGB } from '../cain/pixels';
 import CAIN_GEN from '../../data/cain/generatedArt.json';
 import GEN from '../../data/noah/generatedArt.json';
+import { groundLine } from '../world/groundLine';
 import { dayPixels, NOAH_RAMPS, rampAt, type DayOptions } from './colors';
 import { buildNoahPeople, loadNoahPeople } from './people';
 
@@ -112,7 +113,9 @@ function addProp(scene: Phaser.Scene, name: NoahGen, o: { icon?: boolean; sink?:
   const p = pixelsOf(scene, `noah-gen:${name}`);
   if (STONE_PROPS.includes(name)) dayPixels(p.data, { walls: true });
   const ax = o.centre ? Math.round(g.w / 2) : g.ax;
-  addSheet(scene, `noah-${name}`, [p], ax, g.ay - (o.sink ?? 1), { icon: o.icon, shadow: o.shadow ?? true });
+  // seen at a slant, a prop stands on its front walls' feet, not on one row
+  const shadow = o.shadow ?? true;
+  addSheet(scene, `noah-${name}`, [p], ax, g.ay - (o.sink ?? 1), { icon: o.icon, shadow, ground: shadow ? groundLine(p).ground : undefined });
 }
 
 const leafy = (d: Uint8ClampedArray, i: number) => d[i + 3] > 0 && d[i + 1] > d[i] + 2 && d[i + 1] >= d[i + 2];
@@ -186,52 +189,12 @@ function genTree(scene: Phaser.Scene, id: string, name: CainGen): void {
  * the hull planked up from the keel to a height, and above it only its ribs,
  * dark, as a frame (Genesis 6:14–16).
  */
-/**
- * The row each column of a long thing seen at a slant stands on: the line
- * under its lowest points (the ark's blocks and ramp), bent no more than
- * they are. One anchor row for all of it cast the bow's shadow down at the
- * stern's level, a thin strip far from the hull ("the ark's shadow is awful").
- */
-function groundLine(p: Pixels): { ground: Float32Array; under: [number, number] } {
-  const pts: [number, number][] = [];
-  for (let x = 0; x < p.w; x++)
-    for (let y = p.h - 1; y >= 0; y--)
-      if (p.data[(y * p.w + x) * 4 + 3]) {
-        pts.push([x, y]);
-        break;
-      }
-  // the hull below the points (y grows downwards): monotone chain
-  const hull: [number, number][] = [];
-  for (const q of pts) {
-    while (hull.length >= 2) {
-      const [a, b] = [hull[hull.length - 2], hull[hull.length - 1]];
-      if ((b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]) >= 0) hull.pop();
-      else break;
-    }
-    hull.push(q);
-  }
-  // the hull's ends curve up off the ground: the line runs from the outermost
-  // blocks on, straight (it rose with the bow and the stern, casting their
-  // shadows up in the air beside them)
-  while (hull.length > 2 && (hull[1][1] - hull[0][1]) / Math.max(1, hull[1][0] - hull[0][0]) > 0.6) hull.shift();
-  while (hull.length > 2 && hull[hull.length - 1][1] < hull[hull.length - 2][1]) hull.pop();
-  const g = new Float32Array(p.w);
-  const under: [number, number] = [hull[0][0], hull[hull.length - 1][0]];
-  let k = 0;
-  for (let x = 0; x < p.w; x++) {
-    while (k < hull.length - 2 && hull[k + 1][0] < x) k++;
-    const [a, b] = [hull[k], hull[Math.min(k + 1, hull.length - 1)]];
-    g[x] = b[0] === a[0] ? a[1] : a[1] + ((b[1] - a[1]) * (x - a[0])) / (b[0] - a[0]);
-  }
-  return { ground: g, under };
-}
-
 function arkStages(scene: Phaser.Scene): void {
   const g = GEN.ark;
   const whole = pixelsOf(scene, 'noah-gen:ark');
   const { w, h } = whole;
   const ax = Math.round(w / 2);
-  const { ground, under } = groundLine(whole);
+  const { ground, under } = groundLine(whole, true);
   ARK_BASE.length = 0;
   for (let x = 0; x < w; x++) {
     let b = -1;

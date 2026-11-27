@@ -32,15 +32,18 @@ function cast(f: Px, ax: number, ay: number, mirror: boolean, ground?: ArrayLike
   // maintainer: the ark's shadow was badly made, light under the hull)
   if (ground && under)
     for (let x = Math.max(0, under[0]); x <= Math.min(f.w - 1, under[1]); x++) {
-      let low = -1;
-      for (let y = f.h - 1; y >= 0; y--)
+      // every clear pixel below its top, not only those below its lowest
+      // one: beside the ramp, under the hull, the ground stayed light
+      let top = -1;
+      for (let y = 0; y < f.h; y++)
         if (f.d[(y * f.w + x) * 4 + 3]) {
-          low = y;
+          top = y;
           break;
         }
-      if (low < 0) continue;
+      if (top < 0) continue;
       const sx = (mirror ? f.w - 1 - x : x) - (mirror ? f.w - ax : ax);
-      for (let y = low + 1; y <= ground[x]; y++) {
+      for (let y = top + 1; y <= ground[x]; y++) {
+        if (f.d[(y * f.w + x) * 4 + 3]) continue;
         pts[n++] = sx;
         pts[n++] = Math.round(y - ay);
       }
