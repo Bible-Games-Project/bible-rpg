@@ -1,0 +1,178 @@
+{
+  "model": "eleven_v4",
+  "seed": 7,
+  "lines": {
+    "noah": "Shem, see the bow? It is the Lord's promise. The Lord kept us through the water. Never forget it, son. Every time it rains, look for the bow in the cloud.",
+    "shem": "Father says the Lord spoke to him. I believe him. Seven pairs of the clean animals, father. I'll count them with you. Blessed be the Lord, who kept us alive."
+  },
+  "options": [
+    {
+      "number": 1,
+      "who": "noah",
+      "name": "Michael Moody",
+      "voice_id": "PerZoH0r6nxBZXCoIPpv",
+      "current": true,
+      "file": "noah-1.mp3",
+      "description_es": "Abuelo cálido y profundo; es la voz que suena «dentro de una habitación».",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.75,
+        "speed": 1
+      }
+    },
+    {
+      "number": 2,
+      "who": "noah",
+      "name": "The Pharaoh - Wisdom Bearer",
+      "voice_id": "y2Y5MeVPm6ZQXK64WUui",
+      "current": false,
+      "file": "noah-2.mp3",
+      "description_es": "Abuelo cercano y cálido que cuenta historias con calma.",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.75,
+        "speed": 1
+      }
+    },
+    {
+      "number": 3,
+      "who": "noah",
+      "name": "Joe Davis - Deep, Clear, and Warm",
+      "voice_id": "ch0vU2DwfJVmFG2iZy89",
+      "current": false,
+      "file": "noah-3.mp3",
+      "description_es": "Hombre mayor sabio, voz grave, clara y cálida.",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.75,
+        "speed": 1
+      }
+    },
+    {
+      "number": 4,
+      "who": "noah",
+      "name": "Lawrence",
+      "voice_id": "8wePOEVMsHVU2qfSJbtC",
+      "current": false,
+      "file": "noah-4.mp3",
+      "description_es": "Grave y natural, cálido y sereno, de ritmo pausado e íntimo.",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.75,
+        "speed": 1
+      }
+    },
+    {
+      "number": 5,
+      "who": "noah",
+      "name": "Don - Beautiful Voice",
+      "voice_id": "6Qxy5k2hvoNF2omYzGNz",
+      "current": false,
+      "file": "noah-5.mp3",
+      "description_es": "Maduro y suave, amable, reflexivo e inteligente.",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.75,
+        "speed": 1
+      }
+    },
+    {
+      "number": 6,
+      "who": "noah",
+      "name": "Joseph Ortman - Deep & Raspy",
+      "voice_id": "TTyZrDYo6LQowrH8mixJ",
+      "current": false,
+      "file": "noah-6.mp3",
+      "description_es": "Grave y algo rasposo, curtido pero tranquilo y natural.",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.75,
+        "speed": 1
+      }
+    },
+    {
+      "number": 1,
+      "who": "shem",
+      "name": "Lowy",
+      "voice_id": "24EI9FmmGvJruwUi7TJM",
+      "current": true,
+      "file": "shem-1.mp3",
+      "description_es": "Joven, algo grave, suave, amable y esperanzado.",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.75,
+        "speed": 1
+      }
+    },
+    {
+      "number": 2,
+      "who": "shem",
+      "name": "Jordan - Warm Narrator",
+      "voice_id": "8riBCvtxjQFA3tP1sfno",
+      "current": false,
+      "file": "shem-2.mp3",
+      "description_es": "Joven sencillo y cálido, de narrador.",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.75,
+        "speed": 1
+      }
+    },
+    {
+      "number": 3,
+      "who": "shem",
+      "name": "Ethan - Engaging Storyteller",
+      "voice_id": "doIqdTgCLMFq7wTmTuUN",
+      "current": false,
+      "file": "shem-3.mp3",
+      "description_es": "Cálido y de confianza, claro y cercano.",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.75,
+        "speed": 1
+      }
+    },
+    {
+      "number": 4,
+      "who": "shem",
+      "name": "Tate Dalton - Grounded Male Lead",
+      "voice_id": "QZ1okeFI43NQd6lXAzQ5",
+      "current": false,
+      "file": "shem-4.mp3",
+      "description_es": "Veinteañero natural, seguro y con los pies en la tierra.",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.75,
+        "speed": 1
+      }
+    },
+    {
+      "number": 5,
+      "who": "shem",
+      "name": "Logan - Genuine, Steady, and Deep",
+      "voice_id": "jD4PjnscE4XmlzgsuqY0",
+      "current": false,
+      "file": "shem-5.mp3",
+      "description_es": "Joven sincero y firme, grave y cálido, un poco rasposo.",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.75,
+        "speed": 1
+      }
+    },
+    {
+      "number": 6,
+      "who": "shem",
+      "name": "David - Deep, Warm, and Steady",
+      "voice_id": "VJwFZoxTZo5aI0IowiXA",
+      "current": false,
+      "file": "shem-6.mp3",
+      "description_es": "Joven grave, cálido y sereno, con autoridad.",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.75,
+        "speed": 1
+      }
+    }
+  ]
+}
